@@ -5,7 +5,6 @@ import {
 } from './AnotherScreenContent';
 
 const STORY_META: Meta<AnotherScreenContentProps> = {
-  title: 'Components/AnotherScreenContent',
   component: AnotherScreenContent,
   args: {
     text: 'Some text',
