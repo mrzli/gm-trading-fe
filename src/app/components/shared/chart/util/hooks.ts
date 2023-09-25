@@ -1,24 +1,20 @@
 import { useLayoutEffect, useMemo } from 'react';
 import * as d3 from 'd3';
 import {
-  getCandlestickChartScales,
-  toCandlestickChartDataItem,
-  getCandlestickChartXAxis,
-  getCandlestickChartXGrid,
-  getCandlestickChartYAxis,
-  getCandlestickChartYGrid,
-} from './candlestick-chart-util';
-import {
   TickerDataRow,
   TickerDataResolution,
   NumericRange,
 } from '../../../../types';
+import { CandlestickChartDataItem } from '../types';
 import {
   CandlestickChartScales,
   CandlestickChartXScale,
   CandlestickChartYScale,
-  CandlestickChartDataItem,
-} from '../types';
+  getScales,
+} from './scale';
+import { getXAxis, getYAxis } from './axes';
+import { getXGrid, getYGrid } from './grid';
+import { toCandlestickChartDataItem } from './item';
 
 export function useCandlestickChartScales(
   rows: readonly TickerDataRow[],
@@ -28,7 +24,7 @@ export function useCandlestickChartScales(
   height: number,
 ): CandlestickChartScales {
   return useMemo(
-    () => getCandlestickChartScales(rows, interval, valueRange, width, height),
+    () => getScales(rows, interval, valueRange, width, height),
     [rows, interval, valueRange, width, height],
   );
 }
@@ -56,7 +52,7 @@ export function useCandlestickChartXAxis(
       return;
     }
 
-    const xAxis = getCandlestickChartXAxis(xScale);
+    const xAxis = getXAxis(xScale);
     d3.select(xAxisRef.current)
       .call(xAxis)
       .call((g) =>
@@ -80,7 +76,7 @@ export function useCandlestickChartXGrid(
       return;
     }
 
-    const xGrid = getCandlestickChartXGrid(xScale, resolution, rows, height);
+    const xGrid = getXGrid(xScale, resolution, rows, height);
     d3.select(xGridLinesRef.current).call(xGrid);
   }, [xGridLinesRef, xScale, resolution, rows, height]);
 }
@@ -95,7 +91,7 @@ export function useCandlestickChartYAxis(
       return;
     }
 
-    const yAxis = getCandlestickChartYAxis(yScale, precision);
+    const yAxis = getYAxis(yScale, precision);
     d3.select(yAxisRef.current).call(yAxis);
   }, [yAxisRef, yScale, precision]);
 }
@@ -110,7 +106,7 @@ export function useCandlestickChartYGrid(
       return;
     }
 
-    const yGrid = getCandlestickChartYGrid(yScale, width);
+    const yGrid = getYGrid(yScale, width);
     d3.select(yGridLinesRef.current).call(yGrid);
   }, [yGridLinesRef, yScale, width]);
 }
