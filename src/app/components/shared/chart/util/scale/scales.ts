@@ -15,11 +15,13 @@ export function getScales(
   data: readonly TickerDataRow[],
   interval: TickerDataResolution,
   valueRange: NumericRange,
-  width: number,
-  height: number,
+  x1: number,
+  x2: number,
+  y1: number,
+  y2: number,
 ): CandlestickChartScales {
   return {
-    xScale: getXScale(data, interval, width),
-    yScale: getYScale(valueRange, height),
+    xScale: getXScale(data, interval, x1, x2),
+    yScale: getYScale(valueRange, y1, y2),
   };
 }

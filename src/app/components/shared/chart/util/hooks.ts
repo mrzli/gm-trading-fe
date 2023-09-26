@@ -20,12 +20,14 @@ export function useCandlestickChartScales(
   rows: readonly TickerDataRow[],
   interval: TickerDataResolution,
   valueRange: NumericRange,
-  width: number,
-  height: number,
+  x1: number,
+  x2: number,
+  y1: number,
+  y2: number,
 ): CandlestickChartScales {
   return useMemo(
-    () => getScales(rows, interval, valueRange, width, height),
-    [rows, interval, valueRange, width, height],
+    () => getScales(rows, interval, valueRange, x1, x2, y1, y2),
+    [rows, interval, valueRange, x1, x2, y1, y2],
   );
 }
 
