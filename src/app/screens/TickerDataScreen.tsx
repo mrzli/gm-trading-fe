@@ -12,7 +12,9 @@ export function TickerDataScreen(): React.ReactElement {
     getTickerData();
   }, [getTickerData]);
 
-  const [selectedItem, setSelectedItem] = useState<number | undefined>(undefined);
+  const [selectedItem, setSelectedItem] = useState<number | undefined>(
+    undefined,
+  );
 
   if (isLoadingTickerData || !tickerData) {
     return <div>{'Loading...'}</div>;
@@ -25,11 +27,8 @@ export function TickerDataScreen(): React.ReactElement {
   };
 
   return (
-    <div>
-      <div>{'TickerDataScreen'}</div>
+    <div className='h-screen'>
       <CandlestickChart
-        width={1600}
-        height={800}
         precision={1}
         data={data}
         interval={'day'}
@@ -37,12 +36,6 @@ export function TickerDataScreen(): React.ReactElement {
         selectedItem={selectedItem}
         onSelectItem={setSelectedItem}
       />
-      {isLoadingTickerData && <div>{'Loading...'}</div>}
-      <div className='p-4'>
-        <pre className='border border-black bg-slate-200 p-2'>
-          {JSON.stringify(tickerData, undefined, 2)}
-        </pre>
-      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { CandlestickChart, CandlestickChartProps } from './CandlestickChart';
-import { decoratorPadding, disableControl } from '../../../../storybook';
+import { decoratorContainer, disableControl } from '../../../../storybook';
 import { TEST_TICKER_ROWS } from './data';
 import { NumericRange, TickerDataRow } from '../../../types';
 import { maxBy, minBy } from '@gmjs/value-transformers';
@@ -18,7 +18,7 @@ const VALUE_RANGE: NumericRange = {
 const STORY_META: Meta<CandlestickChartProps> = {
   component: CandlestickChart,
   tags: ['autodocs'],
-  decorators: [decoratorPadding()],
+  decorators: [decoratorContainer({ height: '100vh', padding: 16 })],
   argTypes: {
     data: disableControl(),
     interval: disableControl(),
@@ -51,8 +51,6 @@ export const Primary: StoryObj<CandlestickChartProps> = {
     );
   },
   args: {
-    width: 800,
-    height: 600,
     precision: 2,
   },
 };

@@ -1,5 +1,14 @@
 /* eslint-disable react/display-name */
+import { CSSProperties } from 'react';
 import { Decorator, StoryFn } from '@storybook/react';
+
+export function decoratorContainer(properties: CSSProperties): Decorator {
+  return (Story: StoryFn) => (
+    <div style={properties}>
+      <Story />
+    </div>
+  );
+}
 
 export function decoratorFullHeight(): Decorator {
   return (Story: StoryFn) => (
