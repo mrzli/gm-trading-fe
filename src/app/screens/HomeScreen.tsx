@@ -19,7 +19,12 @@ export function HomeScreen(): React.ReactElement {
     <>
       <div>
         <div>
-          <Link to='/another'>Another Screen</Link>
+          <div>
+            <Link to='/another'>Another Screen</Link>
+          </div>
+          <div>
+            <Link to='/ticker-data'>Ticker Data Screen</Link>
+          </div>
         </div>
         <br />
         <div className='text-3xl font-bold underline'>Tailwind styled</div>

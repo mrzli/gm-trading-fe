@@ -17,6 +17,7 @@ const VALUE_RANGE: NumericRange = {
 
 const STORY_META: Meta<CandlestickChartProps> = {
   component: CandlestickChart,
+  tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
     data: disableControl(),
