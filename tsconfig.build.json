@@ -1,5 +1,6 @@
 {
   "include": ["vite.config.ts"],
+  "exclude": ["src/**/*.test.ts{x}"],
   "compilerOptions": {
     "composite": true,
     "skipLibCheck": true,
