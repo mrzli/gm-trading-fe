@@ -9,7 +9,7 @@ export function toCandlestickChartDataItem(
   yScale: CandlestickChartYScale,
 ): CandlestickChartDataItem {
   return {
-    x: getItemX(item.ts.toString(), xScale),
+    x: getItemX(item.ts, xScale),
     w: xScale.bandwidth(),
     o: yScale(item.o),
     h: yScale(item.h),

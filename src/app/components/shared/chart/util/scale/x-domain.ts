@@ -1,13 +1,14 @@
 import { invariant } from '@gmjs/assert';
 import { TickerDataResolution, TickerDataRow } from '../../../../../types';
+import { tickerDataResolutionToSeconds } from '../data';
 
 export function toXDomain(
   data: readonly TickerDataRow[],
   interval: TickerDataResolution,
-): readonly string[] {
+): readonly number[] {
   const tsList = data.map((data) => data.ts);
   const extendedTsList = extendTimestampListByOne(tsList, interval);
-  return extendedTsList.map((ts) => ts.toString());
+  return extendedTsList;
 }
 
 function extendTimestampListByOne(
@@ -24,21 +25,4 @@ function extendTimestampListByOne(
   return [...tsList, nextTs];
 }
 
-function tickerDataResolutionToSeconds(
-  resolution: TickerDataResolution,
-): number {
-  switch (resolution) {
-    case 'day': {
-      return 24 * 60 * 60;
-    }
-    case 'quarter': {
-      return 15 * 60;
-    }
-    case 'minute': {
-      return 60;
-    }
-    default: {
-      invariant(false, `Invalid ticker data resolution: '${resolution}'.`);
-    }
-  }
-}
+

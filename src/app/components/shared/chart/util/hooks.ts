@@ -48,13 +48,15 @@ export function useCandlestickChartData(
 export function useCandlestickChartXAxis(
   xAxisRef: React.MutableRefObject<SVGGElement | null>,
   xScale: CandlestickChartXScale,
+  resolution: TickerDataResolution,
+  rows: readonly TickerDataRow[],
 ): void {
   useLayoutEffect(() => {
     if (!xAxisRef.current) {
       return;
     }
 
-    const xAxis = getXAxis(xScale);
+    const xAxis = getXAxis(xScale, resolution, rows);
     d3.select(xAxisRef.current)
       .call(xAxis)
       .call((g) =>
@@ -63,7 +65,7 @@ export function useCandlestickChartXAxis(
           .attr('transform', 'rotate(45)')
           .style('text-anchor', 'start'),
       );
-  }, [xAxisRef, xScale]);
+  }, [xAxisRef, xScale, resolution]);
 }
 
 export function useCandlestickChartXGrid(

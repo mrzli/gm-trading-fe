@@ -82,7 +82,7 @@ export function CandlestickChart({
 
   const chartData = useCandlestickChartData(data, xScale, yScale);
 
-  useCandlestickChartXAxis(xAxisRef, xScale);
+  useCandlestickChartXAxis(xAxisRef, xScale, interval, data);
   useCandlestickChartXGrid(
     xGridLinesRef,
     xScale,
