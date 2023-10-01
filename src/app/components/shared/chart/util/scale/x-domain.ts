@@ -24,5 +24,3 @@ function extendTimestampListByOne(
 
   return [...tsList, nextTs];
 }
-
-

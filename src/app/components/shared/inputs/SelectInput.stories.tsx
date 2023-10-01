@@ -8,12 +8,14 @@ import {
 import { decoratorPadding, disableControl } from '../../../../storybook';
 import { useState } from 'react';
 
-const OPTIONS: readonly SelectInputOption[] = arrayOfMapped(5, (i) => ({
+type MySelectInputProps = SelectInputProps<string>;
+
+const OPTIONS: readonly SelectInputOption<string>[] = arrayOfMapped(5, (i) => ({
   value: `value-${i}`,
   label: `Label ${i}`,
 }));
 
-const STORY_META: Meta<SelectInputProps> = {
+const STORY_META: Meta<MySelectInputProps> = {
   component: SelectInput,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
@@ -23,13 +25,14 @@ const STORY_META: Meta<SelectInputProps> = {
     onValueChange: disableControl(),
   },
   args: {
+    placeholder: "Placeholder",
     options: OPTIONS,
   },
 };
 export default STORY_META;
 
-export const Primary: StoryObj<SelectInputProps> = {
-  render: (args: SelectInputProps) => {
+export const Primary: StoryObj<MySelectInputProps> = {
+  render: (args: MySelectInputProps) => {
     const { value: _ignore1, onValueChange: _ignore2, ...rest } = args;
 
     const [value, setValue] = useState<string>('');

@@ -1,8 +1,16 @@
 import * as d3 from 'd3';
 import { CandlestickChartXScale } from '../scale';
 import { TickerDataResolution, TickerDataRow } from '../../../../../types';
-import { getTimeUnitDifferencesBetweenTimestamps, tickerDataResolutionToSeconds } from '../data';
-import { timestampToDay, timestampToMonth, timestampToTime, timestampToYear } from './format';
+import {
+  getTimeUnitDifferencesBetweenTimestamps,
+  tickerDataResolutionToSeconds,
+} from '../data';
+import {
+  timestampToDay,
+  timestampToMonth,
+  timestampToTime,
+  timestampToYear,
+} from './format';
 
 export function getXAxis(
   xScale: CandlestickChartXScale,
@@ -18,21 +26,20 @@ export function getXAxis(
 
   return d3
     .axisBottom(xScale)
-    .tickFormat((_v: number, i: number) =>
-      format(i, extendedTimestamps),
-    );
+    .tickFormat((_v: number, i: number) => format(i, extendedTimestamps));
 }
 
-function format(
-  index: number,
-  extendedTimestamps: readonly number[],
-): string {
+function format(index: number, extendedTimestamps: readonly number[]): string {
   const timezone = 'UTC';
 
   const prevTs = extendedTimestamps[index] ?? 0; // in extendedTimestamps
   const currTs = extendedTimestamps[index + 1] ?? 0; // in extendedTimestamps
 
-  const steps = getTimeUnitDifferencesBetweenTimestamps(prevTs, currTs, timezone);
+  const steps = getTimeUnitDifferencesBetweenTimestamps(
+    prevTs,
+    currTs,
+    timezone,
+  );
 
   if (steps.has('year')) {
     return timestampToYear(currTs, timezone);

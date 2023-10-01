@@ -1,3 +1,3 @@
-export * from './ticker-data-resolution';
 export * from './ticker-data-row';
+export * from './ticker-filter-data';
 export * from './types';

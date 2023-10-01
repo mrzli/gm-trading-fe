@@ -1,10 +1,6 @@
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { useMeasure } from '@uidotdev/usehooks';
-import {
-  TickerDataResolution,
-  NumericRange,
-  TickerDataRow,
-} from '../../../types';
+import { NumericRange, TickerDataRow } from '../../../types';
 import { CandlestickItem } from './CandlestickItem';
 import {
   useCandlestickChartScales,
@@ -14,6 +10,7 @@ import {
   useCandlestickChartYAxis,
   useCandlestickChartYGrid,
 } from './util';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 interface CandlestickChartMargin {
   readonly top: number;
@@ -39,7 +36,7 @@ export interface CandlestickChartProps {
   readonly onKeyDown?: (event: React.KeyboardEvent<SVGElement>) => void;
 }
 
-export function CandlestickChart({
+function CandlestickChartInternal({
   precision,
   data,
   interval,
@@ -104,7 +101,7 @@ export function CandlestickChart({
           // finalWidth={finalWidth}
           // finalHeight={finalHeight}
           viewBox={`0 0 ${finalWidth} ${finalHeight}`}
-          className='bg-slate-100'
+          className='bg-slate-100 outline-none select-none'
           onKeyDown={onKeyDown}
         >
           <defs>
@@ -161,3 +158,5 @@ export function CandlestickChart({
     </div>
   );
 }
+
+export const CandlestickChart = React.memo(CandlestickChartInternal);

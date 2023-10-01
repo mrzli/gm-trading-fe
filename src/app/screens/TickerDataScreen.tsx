@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useStoreInstrument, useStoreTickerData } from '../../store';
-import { CandlestickChart } from '../components/shared/chart/CandlestickChart';
-import { NumericRange, TickerDataRow } from '../types';
-import { parseFloatOrThrow, parseIntegerOrThrow } from '@gmjs/number-util';
+import { TickerFilterData } from '../types';
 import { LoadingDisplay } from '../components/shared/display/LoadingDisplay';
+import { TickerDataFilter } from '../components/ticker-data/TickerDataFilter';
+import { Button } from '../components/shared/buttons/Button';
+import { TickerDataChart } from '../components/ticker-data/TickerDataChart';
+import { DEFAULT_TICKER_DATA_FILTER_DATA } from '../util';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -14,52 +16,55 @@ export function TickerDataScreen(): React.ReactElement {
 
   useEffect(() => {
     getAllInstruments();
-    // getTickerData();
   }, [getAllInstruments]);
 
-  const [selectedItem, setSelectedItem] = useState<number | undefined>(
-    undefined,
-  );
+  const tickerNames = useMemo(() => {
+    return allInstruments?.map((instrument) => instrument.name) ?? [];
+  }, [allInstruments]);
+
+  const [filterData, setFilterData] = useState<TickerFilterData>({
+    ...DEFAULT_TICKER_DATA_FILTER_DATA,
+    fromDate: '2022-01-01T00:00:00Z',
+    toDate: '2024-01-01T00:00:00Z',
+  });
+
+  const handleApplyFilterClick = useCallback(() => {
+    const { name, resolution, fromDate, toDate } = filterData;
+    if (resolution === '') {
+      return;
+    }
+
+    getTickerData({
+      name,
+      resolution,
+      from: fromDate,
+      to: toDate,
+    });
+  }, [getTickerData, filterData]);
 
   if (isLoadingAllInstruments || !allInstruments) {
     return <LoadingDisplay />;
   }
 
+  const dataChartElement =
+    !isLoadingTickerData && tickerData ? (
+      <TickerDataChart
+        resolution={tickerData.resolution}
+        rawData={tickerData.data}
+      />
+    ) : undefined;
+
   return (
-    <div>
-      <pre>{JSON.stringify(allInstruments, undefined, 2)}</pre>
+    <div className='h-screen flex flex-col'>
+      <div className='flex flex-col gap-2 p-4'>
+        <TickerDataFilter
+          tickerNames={tickerNames}
+          data={filterData}
+          onDataChange={setFilterData}
+        />
+        <Button label='Apply' onClick={handleApplyFilterClick} />
+      </div>
+      <div className='flex-1'>{dataChartElement}</div>
     </div>
   );
-
-  // const data = tickerData.map((line) => tickerDataLineToRow(line)).slice(-100);
-  // const valueRange: NumericRange = {
-  //   start: 15_000,
-  //   end: 17_000,
-  // };
-
-  // return (
-  //   <div className='h-screen'>
-  //     <CandlestickChart
-  //       precision={1}
-  //       data={data}
-  //       interval={'day'}
-  //       valueRange={valueRange}
-  //       selectedItem={selectedItem}
-  //       onSelectItem={setSelectedItem}
-  //     />
-  //   </div>
-  // );
-}
-
-function tickerDataLineToRow(line: string): TickerDataRow {
-  const parts = line.split(',');
-
-  return {
-    ts: parseIntegerOrThrow(parts[0] ?? ''),
-    date: parts[1] ?? '',
-    o: parseFloatOrThrow(parts[2] ?? ''),
-    h: parseFloatOrThrow(parts[3] ?? ''),
-    l: parseFloatOrThrow(parts[4] ?? ''),
-    c: parseFloatOrThrow(parts[5] ?? ''),
-  };
 }

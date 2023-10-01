@@ -1,24 +1,29 @@
 import React, { useCallback } from 'react';
 
-export interface SelectInputOption {
-  readonly value: string;
+type EmptyString = '';
+
+export interface SelectInputOption<TValue extends string = string> {
+  readonly value: TValue;
   readonly label: string;
 }
 
-export interface SelectInputProps {
-  readonly options: readonly SelectInputOption[];
-  readonly value: string;
-  readonly onValueChange: (value: string) => void;
+export interface SelectInputProps<TValue extends string = string> {
+  readonly placeholder?: string;
+  readonly options: readonly SelectInputOption<TValue>[];
+  readonly value: TValue | EmptyString;
+  readonly onValueChange: (value: TValue | EmptyString) => void;
 }
 
-export function SelectInput({
+export function SelectInput<TValue extends string = string>({
+  placeholder,
   options,
   value,
   onValueChange,
-}: SelectInputProps): React.ReactElement {
-  const handleChange = useCallback(
+}: SelectInputProps<TValue>): React.ReactElement {
+  const handleValueChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
-      onValueChange(event.target.value);
+      const value = event.target.value as TValue | EmptyString;
+      onValueChange(value);
     },
     [onValueChange],
   );
@@ -28,10 +33,10 @@ export function SelectInput({
       className='block w-full px-2 py-1 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
       defaultValue={undefined}
       value={value}
-      onChange={handleChange}
+      onChange={handleValueChange}
     >
-      <option value='' disabled={true} hidden={true}>
-        Select an option
+      <option value={''} disabled={true} hidden={true}>
+        {placeholder}
       </option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>

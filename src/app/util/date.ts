@@ -12,7 +12,9 @@ export function timestampToDatetimeUtc(ts: number): DateTime {
 }
 
 export function timestampToIsoDatetime(ts: number): string {
-  const result = timestampToDatetimeUtc(ts).toISO({ suppressMilliseconds: true });
+  const result = timestampToDatetimeUtc(ts).toISO({
+    suppressMilliseconds: true,
+  });
   invariant(result !== null, 'Invalid timestamp.');
   return result;
 }
@@ -30,7 +32,7 @@ export function dateIsoToHourMinuteUtc(dateIso: string): string {
 export function getTimestampAtTimeAndZone(
   dayTimestamp: number,
   time: string,
-  timezone: string
+  timezone: string,
 ): number {
   const { hour, minute } = timeToHourMinute(time);
   const date = timestampToDatetimeUtc(dayTimestamp)
@@ -46,4 +48,3 @@ function timeToHourMinute(time: string): HourMinute {
     minute: parseIntegerOrThrow(parts[1] ?? ''),
   };
 }
-
