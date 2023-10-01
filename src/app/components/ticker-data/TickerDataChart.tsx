@@ -20,8 +20,8 @@ export function TickerDataChart({
   const data = rawData.map((element) => tickerDataLineToRow(element));
 
   const valueRange: NumericRange = {
-    start: 15_000,
-    end: 17_000,
+    start: 15_100,
+    end: 15_160,
   };
 
   return (

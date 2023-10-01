@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { TickerDataResolution } from '../../../../../types';
 import { invariant } from '@gmjs/assert';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export type CandlestickTimeUnit = 'year' | 'month' | 'week' | 'day' | 'hour';
 

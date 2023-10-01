@@ -1,5 +1,5 @@
-import { invariant } from '@gmjs/assert';
-import { TickerDataResolution, TickerDataRow } from '../../../../../types';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { TickerDataRow } from '../../../../../types';
 import { tickerDataResolutionToSeconds } from '../data';
 
 export function toXDomain(

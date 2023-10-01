@@ -164,11 +164,8 @@ function getTooltipElement(
   const dt = DateTime.fromSeconds(ts, { zone: 'UTC' });
   const dateText = dt.toFormat('yyyy-MM-dd HH:mm ccc');
 
-  const minOc = Math.min(o, c);
-  const maxOc = Math.max(o, c);
-  const hw = h - maxOc;
-  const lw = minOc - l;
-  const df = c - o;
+  const hl = h - l;
+  const oc = c - o;
 
   return (
     <div className='grid gap-x-2 font-mono text-[14px]' style={TOOLTIP_STYLES}>
@@ -179,9 +176,8 @@ function getTooltipElement(
       {getValueRow(3, 'H:', h.toFixed(precision), 'right')}
       {getValueRow(4, 'L:', l.toFixed(precision), 'right')}
       {getValueRow(5, 'C:', c.toFixed(precision), 'right')}
-      {getValueRow(6, 'HW:', hw.toFixed(precision), 'right')}
-      {getValueRow(7, 'LW:', lw.toFixed(precision), 'right')}
-      {getValueRow(8, 'DF:', df.toFixed(precision), 'right')}
+      {getValueRow(6, 'HL:', hl.toFixed(precision), 'right')}
+      {getValueRow(7, 'OC:', oc.toFixed(precision), 'right')}
     </div>
   );
 }

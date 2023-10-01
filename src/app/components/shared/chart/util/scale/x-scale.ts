@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { toXDomain } from './x-domain';
-import { TickerDataRow, TickerDataResolution } from '../../../../../types';
+import { TickerDataRow } from '../../../../../types';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export type CandlestickChartXScale = d3.ScaleBand<number>;
 

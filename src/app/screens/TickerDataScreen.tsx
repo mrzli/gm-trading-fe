@@ -24,8 +24,10 @@ export function TickerDataScreen(): React.ReactElement {
 
   const [filterData, setFilterData] = useState<TickerFilterData>({
     ...DEFAULT_TICKER_DATA_FILTER_DATA,
-    fromDate: '2022-01-01T00:00:00Z',
-    toDate: '2024-01-01T00:00:00Z',
+    name: 'DAX',
+    resolution: 'minute',
+    fromDate: '2023-02-01T07:30:00Z',
+    toDate: '2023-02-01T08:30:00Z',
   });
 
   const handleApplyFilterClick = useCallback(() => {

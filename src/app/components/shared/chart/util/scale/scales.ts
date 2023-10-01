@@ -1,6 +1,6 @@
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import {
   TickerDataRow,
-  TickerDataResolution,
   NumericRange,
 } from '../../../../../types';
 import { CandlestickChartXScale, getXScale } from './x-scale';

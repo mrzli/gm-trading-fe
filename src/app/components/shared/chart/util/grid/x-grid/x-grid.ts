@@ -1,9 +1,10 @@
 import { invariant } from '@gmjs/assert';
-import { TickerDataResolution, TickerDataRow } from '../../../../../../types';
+import { TickerDataRow } from '../../../../../../types';
 import { CandlestickChartD3GSelectionFn } from '../../../types';
 import { CandlestickChartXScale } from '../../scale';
 import { getTickX } from '../../position';
 import { getTimeUnitDifferencesBetweenTimestamps } from '../../data';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function getXGrid(
   xScale: CandlestickChartXScale,
@@ -11,10 +12,7 @@ export function getXGrid(
   rows: readonly TickerDataRow[],
   chartHeight: number,
 ): CandlestickChartD3GSelectionFn {
-  const ticks = xScale
-    .domain()
-    .slice(1)
-    .map((d) => getTickX(d, xScale));
+  const ticks = xScale.domain().map((d) => getTickX(d, xScale));
 
   return getXGridFromTicks(ticks, chartHeight);
 }

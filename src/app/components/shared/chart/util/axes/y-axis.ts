@@ -6,6 +6,6 @@ export function getYAxis(
   precision: number,
 ): d3.Axis<d3.NumberValue> {
   return d3
-    .axisLeft(yScale)
+    .axisRight(yScale)
     .tickFormat((value) => value.valueOf().toFixed(precision));
 }

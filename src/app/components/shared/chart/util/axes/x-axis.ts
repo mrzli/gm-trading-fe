@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { CandlestickChartXScale } from '../scale';
-import { TickerDataResolution, TickerDataRow } from '../../../../../types';
+import { TickerDataRow } from '../../../../../types';
 import {
   getTimeUnitDifferencesBetweenTimestamps,
   tickerDataResolutionToSeconds,
@@ -11,6 +11,7 @@ import {
   timestampToTime,
   timestampToYear,
 } from './format';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function getXAxis(
   xScale: CandlestickChartXScale,

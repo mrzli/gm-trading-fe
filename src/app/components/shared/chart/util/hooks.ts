@@ -2,7 +2,6 @@ import { useLayoutEffect, useMemo } from 'react';
 import * as d3 from 'd3';
 import {
   TickerDataRow,
-  TickerDataResolution,
   NumericRange,
 } from '../../../../types';
 import { CandlestickChartDataItem } from '../types';
@@ -15,6 +14,7 @@ import {
 import { getXAxis, getYAxis } from './axes';
 import { getXGrid, getYGrid } from './grid';
 import { toCandlestickChartDataItem } from './item';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function useCandlestickChartScales(
   rows: readonly TickerDataRow[],
