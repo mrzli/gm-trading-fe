@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useStore } from 'zustand';
 import { AppContext } from '../../app-setup';
 import { AppStoreApi } from './app-store-api';
-import { StateExample, StateTickerData } from '../parts';
+import { StateExample, StateInstrument, StateTickerData } from '../parts';
 
 function useAppStore(): AppStoreApi {
   return useContext(AppContext).store;
@@ -11,6 +11,11 @@ function useAppStore(): AppStoreApi {
 export function useStoreExample(): StateExample {
   const store = useAppStore();
   return useStore(store.example);
+}
+
+export function useStoreInstrument(): StateInstrument {
+  const store = useAppStore();
+  return useStore(store.instrument);
 }
 
 export function useStoreTickerData(): StateTickerData {
