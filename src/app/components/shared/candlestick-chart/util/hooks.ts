@@ -3,29 +3,32 @@ import * as d3 from 'd3';
 import { TickerDataRow, NumericRange } from '../../../../types';
 import { CandlestickChartDataItem } from '../types';
 import {
-  CandlestickChartScales,
   CandlestickChartXScale,
   CandlestickChartYScale,
-  getScales,
+  getXScale,
+  getYScale,
 } from './scale';
 import { getXAxis, getYAxis } from './axes';
 import { getXGrid, getYGrid } from './grid';
 import { toCandlestickChartDataItem } from './item';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
-export function useCandlestickChartScales(
+export function useCandlestickChartXScale(
   rows: readonly TickerDataRow[],
-  interval: TickerDataResolution,
-  valueRange: NumericRange,
-  x1: number,
-  x2: number,
-  y1: number,
-  y2: number,
-): CandlestickChartScales {
+  resolution: TickerDataResolution,
+  width: number,
+): CandlestickChartXScale {
   return useMemo(
-    () => getScales(rows, interval, valueRange, x1, x2, y1, y2),
-    [rows, interval, valueRange, x1, x2, y1, y2],
+    () => getXScale(rows, resolution, width),
+    [rows, resolution, width],
   );
+}
+
+export function useCandlestickChartYScale(
+  valueRange: NumericRange,
+  height: number,
+): CandlestickChartYScale {
+  return useMemo(() => getYScale(valueRange, height), [valueRange, height]);
 }
 
 export function useCandlestickChartData(

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CandlestickChart } from '../shared/candlestick-chart/CandlestickChart';
 import { NumericRange, TickerDataRow } from '../../types';
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
@@ -13,10 +13,6 @@ export function TickerDataChart({
   resolution,
   rawData,
 }: TickerDataChartProps): React.ReactElement {
-  const [selectedItem, setSelectedItem] = useState<number | undefined>(
-    undefined,
-  );
-
   const data = rawData.map((element) => tickerDataLineToRow(element));
 
   const valueRange: NumericRange = {
@@ -28,10 +24,8 @@ export function TickerDataChart({
     <CandlestickChart
       precision={1}
       data={data}
-      interval={resolution}
+      resolution={resolution}
       valueRange={valueRange}
-      selectedItem={selectedItem}
-      onSelectItem={setSelectedItem}
     />
   );
 }

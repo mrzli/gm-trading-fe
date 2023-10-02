@@ -1,16 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useMemo } from 'react';
 import { useMeasure } from '@uidotdev/usehooks';
-import { NumericRange, TickerDataRow } from '../../../types';
-import { CandlestickItem } from './components/CandlestickItem';
-import {
-  useCandlestickChartScales,
-  useCandlestickChartData,
-  useCandlestickChartXAxis,
-  useCandlestickChartXGrid,
-  useCandlestickChartYAxis,
-  useCandlestickChartYGrid,
-} from './util';
+import { NumericRange, Rect, TickerDataRow } from '../../../types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { CandlestickChartArea } from './components/CandlestickChartArea';
+import { XAxis } from './components/XAxis';
+import { YAxis } from './components/YAxis';
+import { XGrid } from './components/XGrid';
+import { YGrid } from './components/YGrid';
 
 interface CandlestickChartMargin {
   readonly top: number;
@@ -29,20 +25,16 @@ const CANDLESTICK_CHART_MARGIN: CandlestickChartMargin = {
 export interface CandlestickChartProps {
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
-  readonly interval: TickerDataResolution;
+  readonly resolution: TickerDataResolution;
   readonly valueRange: NumericRange;
-  readonly selectedItem: number | undefined;
-  readonly onSelectItem: (index: number | undefined) => void;
   readonly onKeyDown?: (event: React.KeyboardEvent<SVGElement>) => void;
 }
 
 function CandlestickChartInternal({
   precision,
   data,
-  interval,
+  resolution,
   valueRange,
-  selectedItem,
-  onSelectItem,
   onKeyDown,
 }: CandlestickChartProps): React.ReactElement {
   const [containerRef, { width, height }] = useMeasure<HTMLDivElement>();
@@ -50,46 +42,25 @@ function CandlestickChartInternal({
   const finalWidth = width ?? 0;
   const finalHeight = height ?? 0;
 
-  const chartAreaX = CANDLESTICK_CHART_MARGIN.left;
-  const chartAreaY = finalHeight - CANDLESTICK_CHART_MARGIN.bottom;
-
-  const chartAreaWidth =
-    finalWidth - CANDLESTICK_CHART_MARGIN.left - CANDLESTICK_CHART_MARGIN.right;
-
-  const chartAreaHeight =
-    finalHeight -
-    CANDLESTICK_CHART_MARGIN.top -
-    CANDLESTICK_CHART_MARGIN.bottom;
-
-  const xAxisRef = useRef<SVGGElement | null>(null);
-  const yAxisRef = useRef<SVGGElement | null>(null);
-
-  const xGridLinesRef = useRef<SVGGElement | null>(null);
-  const yGridLinesRef = useRef<SVGGElement | null>(null);
-
-  const { xScale, yScale } = useCandlestickChartScales(
-    data,
-    interval,
-    valueRange,
-    chartAreaX,
-    chartAreaX + chartAreaWidth,
-    chartAreaY,
-    chartAreaY - chartAreaHeight,
+  const chartRect = useMemo<Rect>(
+    () => ({
+      x: CANDLESTICK_CHART_MARGIN.left,
+      y: CANDLESTICK_CHART_MARGIN.top,
+      width: Math.max(
+        finalWidth -
+          CANDLESTICK_CHART_MARGIN.left -
+          CANDLESTICK_CHART_MARGIN.right,
+        0,
+      ),
+      height: Math.max(
+        finalHeight -
+          CANDLESTICK_CHART_MARGIN.top -
+          CANDLESTICK_CHART_MARGIN.bottom,
+        0,
+      ),
+    }),
+    [finalHeight, finalWidth],
   );
-
-  const chartData = useCandlestickChartData(data, xScale, yScale);
-
-  useCandlestickChartXAxis(xAxisRef, xScale, interval, data);
-  useCandlestickChartXGrid(
-    xGridLinesRef,
-    xScale,
-    interval,
-    data,
-    chartAreaHeight,
-  );
-
-  useCandlestickChartYAxis(yAxisRef, yScale, precision);
-  useCandlestickChartYGrid(yGridLinesRef, yScale, chartAreaWidth);
 
   const isValidSize = finalHeight > 0 && finalWidth > 0;
 
@@ -104,57 +75,22 @@ function CandlestickChartInternal({
           className='bg-slate-100 outline-none select-none'
           onKeyDown={onKeyDown}
         >
-          <defs>
-            <clipPath id={'chartArea'}>
-              <rect
-                x={CANDLESTICK_CHART_MARGIN.left}
-                y={CANDLESTICK_CHART_MARGIN.top}
-                width={chartAreaWidth}
-                height={chartAreaHeight}
-              />
-            </clipPath>
-          </defs>
+          <XAxis chartRect={chartRect} resolution={resolution} data={data} />
+          <YAxis
+            chartRect={chartRect}
+            valueRange={valueRange}
+            precision={precision}
+          />
+          <XGrid chartRect={chartRect} resolution={resolution} data={data} />
+          <YGrid chartRect={chartRect} valueRange={valueRange} />
 
-          <g
-            ref={xAxisRef}
-            transform={`translate(0, ${
-              finalHeight - CANDLESTICK_CHART_MARGIN.bottom
-            })`}
+          <CandlestickChartArea
+            chartRect={chartRect}
+            resolution={resolution}
+            precision={precision}
+            valueRange={valueRange}
+            data={data}
           />
-          <g
-            ref={yAxisRef}
-            transform={`translate(${
-              CANDLESTICK_CHART_MARGIN.left + chartAreaWidth
-            }, 0)`}
-          />
-
-          <g
-            ref={xGridLinesRef}
-            transform={`translate(0, ${CANDLESTICK_CHART_MARGIN.top})`}
-          />
-          <g
-            ref={yGridLinesRef}
-            transform={`translate(${CANDLESTICK_CHART_MARGIN.left}, 0)`}
-          />
-
-          <g clipPath={'url(#chartArea)'} transform={`translate(0, 0)`}>
-            {chartData.map(({ x, w, o, h, l, c, tooltip }, i) => (
-              <CandlestickItem
-                key={i}
-                x={x}
-                w={w}
-                o={o}
-                h={h}
-                l={l}
-                c={c}
-                i={i}
-                onMouseOver={onSelectItem}
-                isSelected={selectedItem === i}
-                precision={precision}
-                tooltipData={tooltip}
-              />
-            ))}
-          </g>
         </svg>
       )}
     </div>

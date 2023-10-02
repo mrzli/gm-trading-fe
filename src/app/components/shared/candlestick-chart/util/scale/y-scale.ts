@@ -5,11 +5,10 @@ export type CandlestickChartYScale = d3.ScaleLinear<number, number, never>;
 
 export function getYScale(
   valueRange: NumericRange,
-  y1: number,
-  y2: number,
+  size: number,
 ): CandlestickChartYScale {
   return d3
     .scaleLinear()
     .domain([valueRange.start, valueRange.end])
-    .range([y1, y2]);
+    .range([size, 0]);
 }

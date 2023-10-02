@@ -12,15 +12,14 @@ const ALIGN = 0.5;
 export function getXScale(
   data: readonly TickerDataRow[],
   interval: TickerDataResolution,
-  x1: number,
-  x2: number,
+  size: number,
 ): CandlestickChartXScale {
   const domain = toXDomain(data, interval);
 
   return d3
     .scaleBand<number>()
     .domain(domain)
-    .range([x1, x2])
+    .range([0, size])
     .paddingInner(PADDING_INNER)
     .paddingOuter(PADDING_OUTER)
     .align(ALIGN);

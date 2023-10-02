@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { CandlestickChart, CandlestickChartProps } from './CandlestickChart';
 import { decoratorContainer, disableControl } from '../../../../storybook';
@@ -21,14 +20,12 @@ const STORY_META: Meta<CandlestickChartProps> = {
   decorators: [decoratorContainer({ height: '100vh', padding: 16 })],
   argTypes: {
     data: disableControl(),
-    interval: disableControl(),
-    selectedItem: disableControl(),
-    onSelectItem: disableControl(),
+    resolution: disableControl(),
     onKeyDown: disableControl(),
   },
   args: {
     data: DATA,
-    interval: 'quarter',
+    resolution: 'quarter',
     valueRange: VALUE_RANGE,
   },
 };
@@ -36,19 +33,7 @@ export default STORY_META;
 
 export const Primary: StoryObj<CandlestickChartProps> = {
   render: (args: CandlestickChartProps) => {
-    const { selectedItem: _ignore1, onSelectItem: _ignore2, ...rest } = args;
-
-    const [selectedItem, setSelectedItem] = useState<number | undefined>(
-      undefined,
-    );
-
-    return (
-      <CandlestickChart
-        {...rest}
-        selectedItem={selectedItem}
-        onSelectItem={setSelectedItem}
-      />
-    );
+    return <CandlestickChart {...args} />;
   },
   args: {
     precision: 2,
