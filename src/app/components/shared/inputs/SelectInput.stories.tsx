@@ -25,7 +25,7 @@ const STORY_META: Meta<MySelectInputProps> = {
     onValueChange: disableControl(),
   },
   args: {
-    placeholder: "Placeholder",
+    placeholder: 'Placeholder',
     options: OPTIONS,
   },
 };

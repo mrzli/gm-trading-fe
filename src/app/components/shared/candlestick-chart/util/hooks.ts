@@ -1,9 +1,6 @@
 import { useLayoutEffect, useMemo } from 'react';
 import * as d3 from 'd3';
-import {
-  TickerDataRow,
-  NumericRange,
-} from '../../../../types';
+import { TickerDataRow, NumericRange } from '../../../../types';
 import { CandlestickChartDataItem } from '../types';
 import {
   CandlestickChartScales,
@@ -65,7 +62,7 @@ export function useCandlestickChartXAxis(
           .attr('transform', 'rotate(45)')
           .style('text-anchor', 'start'),
       );
-  }, [xAxisRef, xScale, resolution]);
+  }, [xAxisRef, xScale, resolution, rows]);
 }
 
 export function useCandlestickChartXGrid(

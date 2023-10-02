@@ -12,7 +12,7 @@ export function createTickerDataApi(server: AxiosInstance): TickerDataApi {
     async getTickerData(data: TickerDataRequest): Promise<TickerDataResponse> {
       const response = await server.post<TickerDataResponse>(
         'api/ticker-data/ticker-data',
-        data
+        data,
       );
       return response.data;
     },

@@ -18,7 +18,9 @@ const INITIAL_STATE: StateInstrumentPlain = {
 
 export type StoreInstrument = StoreApi<StateInstrument>;
 
-export function createStoreInstrument(dependencies: AppDependencies): StoreInstrument {
+export function createStoreInstrument(
+  dependencies: AppDependencies,
+): StoreInstrument {
   return createStore<StateInstrument>((setState, _getState, _store) => ({
     ...INITIAL_STATE,
     getAllInstruments(): void {

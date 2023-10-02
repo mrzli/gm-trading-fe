@@ -123,7 +123,9 @@ function CandlestickChartInternal({
           />
           <g
             ref={yAxisRef}
-            transform={`translate(${CANDLESTICK_CHART_MARGIN.left + chartAreaWidth}, 0)`}
+            transform={`translate(${
+              CANDLESTICK_CHART_MARGIN.left + chartAreaWidth
+            }, 0)`}
           />
 
           <g
