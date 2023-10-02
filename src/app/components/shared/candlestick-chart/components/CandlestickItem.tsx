@@ -10,8 +10,8 @@ import {
 } from '@floating-ui/react';
 import { DateTime } from 'luxon';
 import cls from 'classnames';
-import { TooltipDisplay } from '../display/TooltipDisplay';
-import { CandlestickChartTooltipData } from './types';
+import { TooltipDisplay } from '../../display/TooltipDisplay';
+import { CandlestickChartTooltipData } from '../types';
 
 export interface CandlestickItemProps {
   readonly x: number;

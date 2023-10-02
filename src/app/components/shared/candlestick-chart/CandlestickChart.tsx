@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useMeasure } from '@uidotdev/usehooks';
 import { NumericRange, TickerDataRow } from '../../../types';
-import { CandlestickItem } from './CandlestickItem';
+import { CandlestickItem } from './components/CandlestickItem';
 import {
   useCandlestickChartScales,
   useCandlestickChartData,
