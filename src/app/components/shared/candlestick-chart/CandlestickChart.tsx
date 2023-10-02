@@ -135,7 +135,7 @@ function CandlestickChartInternal({
             transform={`translate(${CANDLESTICK_CHART_MARGIN.left}, 0)`}
           />
 
-          <g clipPath={'url(#chartArea)'}>
+          <g clipPath={'url(#chartArea)'} transform={`translate(0, 0)`}>
             {chartData.map(({ x, w, o, h, l, c, tooltip }, i) => (
               <CandlestickItem
                 key={i}

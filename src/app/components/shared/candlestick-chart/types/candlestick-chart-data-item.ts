@@ -1,4 +1,4 @@
-import { CandlestickChartTooltipData } from "./candlestick-chart-tooltip-data";
+import { CandlestickChartTooltipData } from './candlestick-chart-tooltip-data';
 
 export interface CandlestickChartDataItem {
   readonly x: number;

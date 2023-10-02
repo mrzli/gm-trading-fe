@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/numeric-separators-style */
-import { TickerDataRow } from '../../../../types/ticker-data-row';
+import { TickerDataRow } from '../../../../types';
 
 export const TEST_TICKER_ROWS: readonly TickerDataRow[] = [
   {

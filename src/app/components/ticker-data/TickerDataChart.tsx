@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CandlestickChart } from '../shared/chart/CandlestickChart';
+import { CandlestickChart } from '../shared/candlestick-chart/CandlestickChart';
 import { NumericRange, TickerDataRow } from '../../types';
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
