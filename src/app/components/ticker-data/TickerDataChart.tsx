@@ -17,7 +17,7 @@ export function TickerDataChart({
 
   const valueRange: NumericRange = {
     start: 15_100,
-    end: 15_160,
+    end: 15_180,
   };
 
   return (

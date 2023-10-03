@@ -1,16 +1,16 @@
 import { useLayoutEffect, useMemo } from 'react';
 import * as d3 from 'd3';
-import { TickerDataRow, NumericRange } from '../../../../types';
-import { CandlestickChartDataItem } from '../types';
+import { TickerDataRow, NumericRange } from '../../../../../types';
+import { CandlestickChartDataItem } from '../../types';
 import {
   CandlestickChartXScale,
   CandlestickChartYScale,
   getXScale,
   getYScale,
-} from './scale';
-import { getXAxis, getYAxis } from './axes';
-import { getXGrid, getYGrid } from './grid';
-import { toCandlestickChartDataItem } from './item';
+} from '../scale';
+import { getXAxis, getYAxis } from '../axes';
+import { getXGrid, getYGrid } from '../grid';
+import { toCandlestickChartDataItem } from '../item';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function useCandlestickChartXScale(
