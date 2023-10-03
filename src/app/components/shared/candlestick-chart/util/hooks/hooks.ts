@@ -25,10 +25,10 @@ export function useCandlestickChartXScale(
 }
 
 export function useCandlestickChartYScale(
-  valueRange: NumericRange,
+  priceRange: NumericRange,
   height: number,
 ): CandlestickChartYScale {
-  return useMemo(() => getYScale(valueRange, height), [valueRange, height]);
+  return useMemo(() => getYScale(priceRange, height), [priceRange, height]);
 }
 
 export function useCandlestickChartData(

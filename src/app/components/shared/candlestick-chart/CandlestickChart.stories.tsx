@@ -26,7 +26,7 @@ const STORY_META: Meta<CandlestickChartProps> = {
   args: {
     data: DATA,
     resolution: 'quarter',
-    valueRange: VALUE_RANGE,
+    priceRange: VALUE_RANGE,
   },
 };
 export default STORY_META;

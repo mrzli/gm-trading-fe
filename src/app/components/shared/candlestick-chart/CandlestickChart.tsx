@@ -26,7 +26,7 @@ export interface CandlestickChartProps {
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
   readonly resolution: TickerDataResolution;
-  readonly valueRange: NumericRange;
+  readonly priceRange: NumericRange;
   readonly onKeyDown?: (event: React.KeyboardEvent<SVGElement>) => void;
 }
 
@@ -34,7 +34,7 @@ function CandlestickChartInternal({
   precision,
   data,
   resolution,
-  valueRange,
+  priceRange,
   onKeyDown,
 }: CandlestickChartProps): React.ReactElement {
   const [containerRef, { width, height }] = useMeasure<HTMLDivElement>();
@@ -78,17 +78,17 @@ function CandlestickChartInternal({
           <XAxis chartRect={chartRect} resolution={resolution} data={data} />
           <YAxis
             chartRect={chartRect}
-            valueRange={valueRange}
+            priceRange={priceRange}
             precision={precision}
           />
           <XGrid chartRect={chartRect} resolution={resolution} data={data} />
-          <YGrid chartRect={chartRect} valueRange={valueRange} />
+          <YGrid chartRect={chartRect} priceRange={priceRange} />
 
           <CandlestickChartArea
             chartRect={chartRect}
             resolution={resolution}
             precision={precision}
-            valueRange={valueRange}
+            priceRange={priceRange}
             data={data}
           />
         </svg>

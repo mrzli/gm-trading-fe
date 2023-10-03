@@ -15,9 +15,9 @@ export function TickerDataChart({
 }: TickerDataChartProps): React.ReactElement {
   const data = rawData.map((element) => tickerDataLineToRow(element));
 
-  const valueRange: NumericRange = {
-    start: 15_100,
-    end: 15_180,
+  const priceRange: NumericRange = {
+    start: 15_320,
+    end: 15_520,
   };
 
   return (
@@ -25,7 +25,7 @@ export function TickerDataChart({
       precision={1}
       data={data}
       resolution={resolution}
-      valueRange={valueRange}
+      priceRange={priceRange}
     />
   );
 }

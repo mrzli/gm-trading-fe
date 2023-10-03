@@ -4,16 +4,16 @@ import { useCandlestickChartYGrid, useCandlestickChartYScale } from '../util';
 
 export interface YGridProps {
   readonly chartRect: Rect;
-  readonly valueRange: NumericRange;
+  readonly priceRange: NumericRange;
 }
 
 export function YGrid({
   chartRect,
-  valueRange,
+  priceRange,
 }: YGridProps): React.ReactElement {
   const ref = useRef<SVGGElement | null>(null);
 
-  const yScale = useCandlestickChartYScale(valueRange, chartRect.height);
+  const yScale = useCandlestickChartYScale(priceRange, chartRect.height);
 
   useCandlestickChartYGrid(ref, yScale, chartRect.width);
 

@@ -13,7 +13,7 @@ export interface CandlestickChartAreaProps {
   readonly chartRect: Rect;
   readonly resolution: TickerDataResolution;
   readonly precision: number;
-  readonly valueRange: NumericRange;
+  readonly priceRange: NumericRange;
   readonly data: readonly TickerDataRow[];
 }
 
@@ -21,7 +21,7 @@ export function CandlestickChartArea({
   chartRect,
   resolution,
   precision,
-  valueRange,
+  priceRange,
   data,
 }: CandlestickChartAreaProps): React.ReactElement {
   const { x, y, width, height } = chartRect;
@@ -29,7 +29,7 @@ export function CandlestickChartArea({
   const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
 
   const xScale = useCandlestickChartXScale(data, resolution, width);
-  const yScale = useCandlestickChartYScale(valueRange, height);
+  const yScale = useCandlestickChartYScale(priceRange, height);
 
   const chartData = useCandlestickChartData(data, xScale, yScale);
 

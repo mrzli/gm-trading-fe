@@ -4,18 +4,18 @@ import { useCandlestickChartYAxis, useCandlestickChartYScale } from '../util';
 
 export interface YAxisProps {
   readonly chartRect: Rect;
-  readonly valueRange: NumericRange;
+  readonly priceRange: NumericRange;
   readonly precision: number;
 }
 
 export function YAxis({
   chartRect,
-  valueRange,
+  priceRange,
   precision,
 }: YAxisProps): React.ReactElement {
   const ref = useRef<SVGGElement | null>(null);
 
-  const yScale = useCandlestickChartYScale(valueRange, chartRect.height);
+  const yScale = useCandlestickChartYScale(priceRange, chartRect.height);
 
   useCandlestickChartYAxis(ref, yScale, precision);
 

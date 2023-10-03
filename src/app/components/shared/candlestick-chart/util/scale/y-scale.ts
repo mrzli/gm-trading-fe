@@ -4,11 +4,11 @@ import { NumericRange } from '../../../../../types';
 export type CandlestickChartYScale = d3.ScaleLinear<number, number, never>;
 
 export function getYScale(
-  valueRange: NumericRange,
+  priceRange: NumericRange,
   size: number,
 ): CandlestickChartYScale {
   return d3
     .scaleLinear()
-    .domain([valueRange.start, valueRange.end])
+    .domain([priceRange.start, priceRange.end])
     .range([size, 0]);
 }
