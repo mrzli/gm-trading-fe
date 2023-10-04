@@ -73,13 +73,23 @@ function CandlestickChartInternal({
           viewBox={`0 0 ${finalWidth} ${finalHeight}`}
           className='bg-slate-100 outline-none select-none'
         >
-          <XAxis chartRect={chartRect} resolution={resolution} data={data} />
+          <XAxis
+            chartRect={chartRect}
+            resolution={resolution}
+            data={data}
+            position={position}
+          />
           <YAxis
             chartRect={chartRect}
             position={position}
             precision={precision}
           />
-          <XGrid chartRect={chartRect} resolution={resolution} data={data} />
+          <XGrid
+            chartRect={chartRect}
+            resolution={resolution}
+            data={data}
+            position={position}
+          />
           <YGrid chartRect={chartRect} position={position} />
 
           <CandlestickChartArea

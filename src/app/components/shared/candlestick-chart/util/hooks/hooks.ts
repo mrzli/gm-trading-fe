@@ -19,11 +19,12 @@ import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 export function useCandlestickChartXScale(
   rows: readonly TickerDataRow[],
   resolution: TickerDataResolution,
+  position: CandlestickChartPosition,
   width: number,
 ): CandlestickChartXScale {
   return useMemo(
-    () => getXScale(rows, resolution, width),
-    [rows, resolution, width],
+    () => getXScale(rows, resolution, position, width),
+    [rows, resolution, position, width],
   );
 }
 

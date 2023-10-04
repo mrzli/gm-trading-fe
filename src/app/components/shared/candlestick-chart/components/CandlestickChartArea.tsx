@@ -29,7 +29,7 @@ export function CandlestickChartArea({
 
   const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
 
-  const xScale = useCandlestickChartXScale(data, resolution, width);
+  const xScale = useCandlestickChartXScale(data, resolution, position, width);
   const yScale = useCandlestickChartYScale(position, height);
 
   const chartData = useCandlestickChartData(data, xScale, yScale);

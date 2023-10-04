@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { toXDomain } from './x-domain';
 import { TickerDataRow } from '../../../../../types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { CandlestickChartPosition } from '../../types';
 
 export type CandlestickChartXScale = d3.ScaleBand<number>;
 
@@ -12,9 +13,10 @@ const ALIGN = 0.5;
 export function getXScale(
   data: readonly TickerDataRow[],
   interval: TickerDataResolution,
+  position: CandlestickChartPosition,
   size: number,
 ): CandlestickChartXScale {
-  const domain = toXDomain(data, interval);
+  const domain = toXDomain(data, interval, position);
 
   return d3
     .scaleBand<number>()
