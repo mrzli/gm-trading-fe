@@ -1,21 +1,22 @@
 import React, { useMemo, useRef } from 'react';
-import { NumericRange, Rect } from '../../../../types';
+import { Rect } from '../../../../types';
 import { useCandlestickChartYAxis, useCandlestickChartYScale } from '../util';
+import { CandlestickChartPosition } from '../types';
 
 export interface YAxisProps {
   readonly chartRect: Rect;
-  readonly priceRange: NumericRange;
+  readonly position: CandlestickChartPosition;
   readonly precision: number;
 }
 
 export function YAxis({
   chartRect,
-  priceRange,
+  position,
   precision,
 }: YAxisProps): React.ReactElement {
   const ref = useRef<SVGGElement | null>(null);
 
-  const yScale = useCandlestickChartYScale(priceRange, chartRect.height);
+  const yScale = useCandlestickChartYScale(position, chartRect.height);
 
   useCandlestickChartYAxis(ref, yScale, precision);
 

@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import { useMeasure } from '@uidotdev/usehooks';
-import { NumericRange, Rect, TickerDataRow } from '../../../types';
+import { Rect, TickerDataRow } from '../../../types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { CandlestickChartArea } from './components/CandlestickChartArea';
 import { XAxis } from './components/XAxis';
 import { YAxis } from './components/YAxis';
 import { XGrid } from './components/XGrid';
 import { YGrid } from './components/YGrid';
+import { CandlestickChartPosition } from './types';
 
 interface CandlestickChartMargin {
   readonly top: number;
@@ -26,16 +27,14 @@ export interface CandlestickChartProps {
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
   readonly resolution: TickerDataResolution;
-  readonly priceRange: NumericRange;
-  readonly onKeyDown?: (event: React.KeyboardEvent<SVGElement>) => void;
+  readonly position: CandlestickChartPosition;
 }
 
 function CandlestickChartInternal({
   precision,
   data,
   resolution,
-  priceRange,
-  onKeyDown,
+  position,
 }: CandlestickChartProps): React.ReactElement {
   const [containerRef, { width, height }] = useMeasure<HTMLDivElement>();
 
@@ -73,23 +72,22 @@ function CandlestickChartInternal({
           // finalHeight={finalHeight}
           viewBox={`0 0 ${finalWidth} ${finalHeight}`}
           className='bg-slate-100 outline-none select-none'
-          onKeyDown={onKeyDown}
         >
           <XAxis chartRect={chartRect} resolution={resolution} data={data} />
           <YAxis
             chartRect={chartRect}
-            priceRange={priceRange}
+            position={position}
             precision={precision}
           />
           <XGrid chartRect={chartRect} resolution={resolution} data={data} />
-          <YGrid chartRect={chartRect} priceRange={priceRange} />
+          <YGrid chartRect={chartRect} position={position} />
 
           <CandlestickChartArea
             chartRect={chartRect}
             resolution={resolution}
             precision={precision}
-            priceRange={priceRange}
             data={data}
+            position={position}
           />
         </svg>
       )}

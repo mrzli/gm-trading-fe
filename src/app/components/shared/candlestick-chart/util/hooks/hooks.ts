@@ -1,7 +1,10 @@
 import { useLayoutEffect, useMemo } from 'react';
 import * as d3 from 'd3';
-import { TickerDataRow, NumericRange } from '../../../../../types';
-import { CandlestickChartDataItem } from '../../types';
+import { TickerDataRow } from '../../../../../types';
+import {
+  CandlestickChartDataItem,
+  CandlestickChartPosition,
+} from '../../types';
 import {
   CandlestickChartXScale,
   CandlestickChartYScale,
@@ -25,10 +28,10 @@ export function useCandlestickChartXScale(
 }
 
 export function useCandlestickChartYScale(
-  priceRange: NumericRange,
+  position: CandlestickChartPosition,
   height: number,
 ): CandlestickChartYScale {
-  return useMemo(() => getYScale(priceRange, height), [priceRange, height]);
+  return useMemo(() => getYScale(position, height), [position, height]);
 }
 
 export function useCandlestickChartData(

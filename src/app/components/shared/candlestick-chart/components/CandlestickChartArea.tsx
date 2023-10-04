@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NumericRange, Position, Rect, TickerDataRow } from '../../../../types';
+import { Position, Rect, TickerDataRow } from '../../../../types';
 import {
   useCandlestickChartData,
   useCandlestickChartXScale,
@@ -8,28 +8,29 @@ import {
 import { CandlestickItem } from './CandlestickItem';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { useDragOffset } from '../util/hooks/drag-offset';
+import { CandlestickChartPosition } from '../types';
 
 export interface CandlestickChartAreaProps {
   readonly chartRect: Rect;
   readonly resolution: TickerDataResolution;
   readonly precision: number;
-  readonly priceRange: NumericRange;
   readonly data: readonly TickerDataRow[];
+  readonly position: CandlestickChartPosition;
 }
 
 export function CandlestickChartArea({
   chartRect,
   resolution,
   precision,
-  priceRange,
   data,
+  position,
 }: CandlestickChartAreaProps): React.ReactElement {
   const { x, y, width, height } = chartRect;
 
   const [offset, setOffset] = useState<Position>({ x: 0, y: 0 });
 
   const xScale = useCandlestickChartXScale(data, resolution, width);
-  const yScale = useCandlestickChartYScale(priceRange, height);
+  const yScale = useCandlestickChartYScale(position, height);
 
   const chartData = useCandlestickChartData(data, xScale, yScale);
 

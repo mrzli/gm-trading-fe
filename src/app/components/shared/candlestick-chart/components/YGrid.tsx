@@ -1,19 +1,17 @@
 import React, { useMemo, useRef } from 'react';
-import { NumericRange, Rect } from '../../../../types';
+import { Rect } from '../../../../types';
 import { useCandlestickChartYGrid, useCandlestickChartYScale } from '../util';
+import { CandlestickChartPosition } from '../types';
 
 export interface YGridProps {
   readonly chartRect: Rect;
-  readonly priceRange: NumericRange;
+  readonly position: CandlestickChartPosition;
 }
 
-export function YGrid({
-  chartRect,
-  priceRange,
-}: YGridProps): React.ReactElement {
+export function YGrid({ chartRect, position }: YGridProps): React.ReactElement {
   const ref = useRef<SVGGElement | null>(null);
 
-  const yScale = useCandlestickChartYScale(priceRange, chartRect.height);
+  const yScale = useCandlestickChartYScale(position, chartRect.height);
 
   useCandlestickChartYGrid(ref, yScale, chartRect.width);
 
