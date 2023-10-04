@@ -26,12 +26,11 @@ export function TickerDataScreen(): React.ReactElement {
     ...DEFAULT_TICKER_DATA_FILTER_DATA,
     name: 'DAX',
     resolution: 'minute',
-    fromDate: '2023-02-01T07:30:00Z',
-    toDate: '2023-02-01T08:30:00Z',
+    date: '',
   });
 
   const handleApplyFilterClick = useCallback(() => {
-    const { name, resolution, fromDate, toDate } = filterData;
+    const { name, resolution, date } = filterData;
     if (resolution === '') {
       return;
     }
@@ -39,8 +38,7 @@ export function TickerDataScreen(): React.ReactElement {
     getTickerData({
       name,
       resolution,
-      from: fromDate,
-      to: toDate,
+      date: date === '' ? undefined : date,
     });
   }, [getTickerData, filterData]);
 

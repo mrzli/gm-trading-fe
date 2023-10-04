@@ -18,7 +18,7 @@ export function TickerDataFilter({
   data,
   onDataChange,
 }: TickerDataFilterProps): React.ReactElement {
-  const { name, resolution, fromDate, toDate } = data;
+  const { name, resolution, date } = data;
 
   const tickerNameOptions: readonly SelectInputOption[] = useMemo(
     () =>
@@ -64,22 +64,12 @@ export function TickerDataFilter({
         }}
       />
       <TextInput
-        placeholder='From'
-        value={fromDate}
+        placeholder='Date'
+        value={date}
         onValueChange={(value: string): void => {
           onDataChange({
             ...data,
-            fromDate: value,
-          });
-        }}
-      />
-      <TextInput
-        placeholder='To'
-        value={toDate}
-        onValueChange={(value: string): void => {
-          onDataChange({
-            ...data,
-            toDate: value,
+            date: value,
           });
         }}
       />
