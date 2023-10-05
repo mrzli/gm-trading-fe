@@ -21,7 +21,6 @@ const STORY_META: Meta<CandlestickChartProps> = {
   argTypes: {
     data: disableControl(),
     resolution: disableControl(),
-    onKeyDown: disableControl(),
   },
   args: {
     data: DATA,

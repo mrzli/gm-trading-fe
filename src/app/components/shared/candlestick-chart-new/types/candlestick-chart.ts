@@ -1,6 +1,6 @@
 export interface CandlestickChartPosition {
-  readonly xIndex: number;
-  readonly xIndexWidth: number;
+  readonly xOffset: number;
+  readonly xItemsWidth: number;
   readonly yPrice: number;
   readonly yPriceHeight: number;
 }
