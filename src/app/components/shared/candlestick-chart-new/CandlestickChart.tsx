@@ -1,16 +1,23 @@
 import React, { useMemo } from 'react';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { Rect, TickerDataRow } from '../../../types';
-import { CandleVisualData, CandlestickChartPosition } from './types';
+import {
+  AxisTickItem,
+  CandleVisualData,
+  CandlestickChartPosition,
+} from './types';
 import { useMeasure } from '@uidotdev/usehooks';
 import {
   CANDLESTICK_CHART_MARGIN,
+  getXAxisTicks,
   nomalizeXOffset,
   toCandleVisualData,
   toFirstXIndex,
 } from './util';
 import { CandlestickChartArea } from './components/chart/CandlestickChartArea';
-import { first } from '@gmjs/value-transformers';
+import { XAxis } from './components/axis/XAxis';
+import { YAxis } from './components/axis/YAxis';
+import { Grid } from './components/grid/Grid';
 
 export interface CandlestickChartProps {
   readonly resolution: TickerDataResolution;
@@ -19,7 +26,7 @@ export interface CandlestickChartProps {
   readonly data: readonly TickerDataRow[];
 }
 
-export function CandlestickChart({
+export function CandlestickChartInternal({
   resolution,
   precision,
   position,
@@ -66,17 +73,34 @@ export function CandlestickChart({
     [chartRect, xItemsWidth],
   );
 
-  console.log(firstXIndex, xNormalizedOffset, lastXIndex);
-
-  const finalData = useMemo<readonly TickerDataRow[]>(
-    () => data.slice(firstXIndex, lastXIndex + 1),
+  const normalizedData = useMemo<readonly TickerDataRow[]>(
+    () => data.slice(firstXIndex, lastXIndex + 2),
     [data, firstXIndex, lastXIndex],
   );
 
   const visualData = useMemo<readonly CandleVisualData[]>(
     () =>
-      finalData.map((item) => toCandleVisualData(item, position, chartRect)),
-    [finalData, position, chartRect],
+      normalizedData.map((item) =>
+        toCandleVisualData(item, position, chartRect),
+      ),
+    [normalizedData, position, chartRect],
+  );
+
+  const xAxisTicks = useMemo<readonly AxisTickItem[]>(
+    () =>
+      getXAxisTicks(
+        resolution,
+        normalizedData,
+        xNormalizedOffset,
+        slotWidth,
+        chartRect.width,
+      ),
+    [resolution, normalizedData, xNormalizedOffset, slotWidth, chartRect.width],
+  );
+
+  const verticalGridLines = useMemo<readonly number[]>(
+    () => xAxisTicks.map((tick) => tick.offset),
+    [xAxisTicks],
   );
 
   return (
@@ -87,11 +111,26 @@ export function CandlestickChart({
           viewBox={`0 0 ${finalWidth} ${finalHeight}`}
           className='bg-slate-100 outline-none select-none'
         >
+          <Grid {...chartRect} horizontal={[0]} vertical={verticalGridLines} />
           <CandlestickChartArea
             {...chartRect}
             candleOffset={xNormalizedOffset}
             slotWidth={slotWidth}
             items={visualData}
+          />
+          <XAxis
+            x={chartRect.x}
+            y={chartRect.y + chartRect.height}
+            location={'bottom'}
+            size={chartRect.width}
+            ticks={xAxisTicks}
+          />
+          <YAxis
+            x={chartRect.x + chartRect.width}
+            y={chartRect.y}
+            location={'right'}
+            size={chartRect.height}
+            ticks={[]}
           />
           {/* <XAxis
             chartRect={chartRect}
@@ -124,3 +163,5 @@ export function CandlestickChart({
     </div>
   );
 }
+
+export const CandlestickChart = React.memo(CandlestickChartInternal);

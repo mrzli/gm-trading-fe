@@ -1,5 +1,5 @@
-import { Rect, TickerDataRow } from '../../../../types';
-import { CandlestickChartPosition, CandleVisualData } from '../types';
+import { Rect, TickerDataRow } from '../../../../../types';
+import { CandlestickChartPosition, CandleVisualData } from '../../types';
 
 export function toCandleVisualData(
   item: TickerDataRow,
@@ -32,8 +32,8 @@ export function priceToCoord(
   const { yPrice, yPriceHeight } = position;
   const { height } = chartRect;
 
-  const minPrice = yPrice - yPriceHeight / 2;
-  const maxPrice = yPrice + yPriceHeight / 2;
+  const minPrice = yPrice;
+  const maxPrice = yPrice + yPriceHeight;
 
   const priceFraction = 1 - (price - minPrice) / (maxPrice - minPrice);
 

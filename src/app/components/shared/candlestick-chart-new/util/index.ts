@@ -1,3 +1,2 @@
-export * from './candlestick-chart-area-margin';
-export * from './converters';
-export * from './x-adjustment';
+export * from './axis';
+export * from './other';

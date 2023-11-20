@@ -16,7 +16,7 @@ const STORY_META: Meta<CandlestickChartProps> = {
     position: {
       xOffset: 0,
       xItemsWidth: 30,
-      yPrice: 13_950,
+      yPrice: 13_800,
       yPriceHeight: 300,
     },
     data: DATA,

@@ -36,7 +36,7 @@ export function CandlestickChartArea({
         y={0}
         width={width}
         height={height}
-        stroke='red'
+        stroke='transparent'
         fill='transparent'
       />
       <g clipPath={'url(#chartArea)'}>
