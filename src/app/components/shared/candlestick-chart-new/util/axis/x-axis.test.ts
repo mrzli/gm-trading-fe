@@ -3,7 +3,7 @@ import { getXAxisTicks } from './x-axis';
 import { AxisTickItem } from '../../types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { TickerDataRow } from '../../../../../types';
-import { TEST_TICKER_ROWS } from '../../data';
+import { TEST_TICKER_ROWS_QUARTER } from '../../data';
 
 describe('x-axis', () => {
   describe('getXAxisTicks()', () => {
@@ -24,7 +24,7 @@ describe('x-axis', () => {
         description: 'xOffset 0',
         input: {
           resolution: 'quarter',
-          normalizedData: TEST_TICKER_ROWS,
+          normalizedData: TEST_TICKER_ROWS_QUARTER,
           xNormalizedOffset: 0,
           slotWidth: 50,
           chartWidth: 200,
@@ -56,7 +56,7 @@ describe('x-axis', () => {
         description: 'xOffset -1',
         input: {
           resolution: 'quarter',
-          normalizedData: TEST_TICKER_ROWS,
+          normalizedData: TEST_TICKER_ROWS_QUARTER,
           xNormalizedOffset: -1,
           slotWidth: 50,
           chartWidth: 200,
@@ -84,7 +84,7 @@ describe('x-axis', () => {
         description: 'xOffset -1.2',
         input: {
           resolution: 'quarter',
-          normalizedData: TEST_TICKER_ROWS,
+          normalizedData: TEST_TICKER_ROWS_QUARTER,
           xNormalizedOffset: -1.2,
           slotWidth: 50,
           chartWidth: 200,
@@ -108,7 +108,7 @@ describe('x-axis', () => {
         description: 'xOffset 1',
         input: {
           resolution: 'quarter',
-          normalizedData: TEST_TICKER_ROWS.slice(1),
+          normalizedData: TEST_TICKER_ROWS_QUARTER.slice(1),
           xNormalizedOffset: 0, // +1
           slotWidth: 50,
           chartWidth: 200,
@@ -140,7 +140,7 @@ describe('x-axis', () => {
         description: 'xOffset 1.2',
         input: {
           resolution: 'quarter',
-          normalizedData: TEST_TICKER_ROWS.slice(1),
+          normalizedData: TEST_TICKER_ROWS_QUARTER.slice(1),
           xNormalizedOffset: 0.2, // +1
           slotWidth: 50,
           chartWidth: 200,

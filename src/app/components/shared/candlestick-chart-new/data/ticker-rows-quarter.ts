@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/numeric-separators-style */
 import { TickerDataRow } from '../../../../types';
 
-export const TEST_TICKER_ROWS: readonly TickerDataRow[] = [
+export const TEST_TICKER_ROWS_QUARTER: readonly TickerDataRow[] = [
   {
     ts: 1672622100,
     date: '2023-01-02T01:15:00.000Z',

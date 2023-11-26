@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { decoratorContainer } from '../../../../storybook';
+import { decoratorContainer, disableControl } from '../../../../storybook';
 import { CandlestickChart, CandlestickChartProps } from './CandlestickChart';
-import { TEST_TICKER_ROWS } from './data';
+import {
+  TEST_TICKER_ROWS_DAY,
+  TEST_TICKER_ROWS_MINUTE,
+  TEST_TICKER_ROWS_QUARTER,
+} from './data';
 import { TickerDataRow } from '../../../types';
-
-const DATA: readonly TickerDataRow[] = TEST_TICKER_ROWS;
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { useMemo } from 'react';
 
 const STORY_META: Meta<CandlestickChartProps> = {
   component: CandlestickChart,
@@ -19,14 +23,36 @@ const STORY_META: Meta<CandlestickChartProps> = {
       yPrice: 13_800,
       yPriceHeight: 300,
     },
-    data: DATA,
+  },
+  argTypes: {
+    data: disableControl(),
   },
 };
 export default STORY_META;
 
 export const Primary: StoryObj<CandlestickChartProps> = {
   render: (args: CandlestickChartProps) => {
-    return <CandlestickChart {...args} />;
+    const { data: _ignore1, ...rest } = args;
+
+    const { resolution } = args;
+
+    const data = useMemo(() => getData(resolution), [resolution]);
+
+    return <CandlestickChart {...rest} data={data} />;
   },
   args: {},
 };
+
+function getData(resolution: TickerDataResolution): readonly TickerDataRow[] {
+  switch (resolution) {
+    case 'day': {
+      return TEST_TICKER_ROWS_DAY;
+    }
+    case 'minute': {
+      return TEST_TICKER_ROWS_MINUTE;
+    }
+    case 'quarter': {
+      return TEST_TICKER_ROWS_QUARTER;
+    }
+  }
+}
