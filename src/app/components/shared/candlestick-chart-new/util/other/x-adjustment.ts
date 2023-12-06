@@ -9,7 +9,7 @@ export function nomalizeXOffset(xOffset: number): number {
   return round(normalized, PRECISION);
 }
 
-export function round(value: number, precision: number): number {
+function round(value: number, precision: number): number {
   const multiplier = 10 ** precision;
   return Math.round(value * multiplier) / multiplier;
 }

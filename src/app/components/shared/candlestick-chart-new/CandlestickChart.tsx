@@ -8,7 +8,7 @@ import {
 } from './types';
 import { useMeasure } from '@uidotdev/usehooks';
 import {
-  CANDLESTICK_CHART_MARGIN,
+  getChartArea,
   getXAxisTicks,
   nomalizeXOffset,
   toCandleVisualData,
@@ -38,22 +38,7 @@ export function CandlestickChartInternal({
   const finalHeight = height ?? 0;
 
   const chartRect = useMemo<Rect>(
-    () => ({
-      x: CANDLESTICK_CHART_MARGIN.left,
-      y: CANDLESTICK_CHART_MARGIN.top,
-      width: Math.max(
-        finalWidth -
-          CANDLESTICK_CHART_MARGIN.left -
-          CANDLESTICK_CHART_MARGIN.right,
-        0,
-      ),
-      height: Math.max(
-        finalHeight -
-          CANDLESTICK_CHART_MARGIN.top -
-          CANDLESTICK_CHART_MARGIN.bottom,
-        0,
-      ),
-    }),
+    () => getChartArea(finalWidth, finalHeight),
     [finalHeight, finalWidth],
   );
 
