@@ -1,15 +1,21 @@
 import { IChartApi } from 'lightweight-charts';
 import { TickerDataRow } from '../../../../../types';
-import { TwInitInput } from '../types';
-import { getChartOptions, getDataSeriesOptions, getTimeScaleOptions } from './options';
+import { CrosshairMoveFn, TwInitInput } from '../types';
+import {
+  getChartOptions,
+  getDataSeriesOptions,
+  getTimeScaleOptions,
+} from './options';
 
 export function getTwInitInput(
   precision: number,
   data: readonly TickerDataRow[],
+  onCrosshairMove: CrosshairMoveFn,
 ): TwInitInput {
   return {
     precision,
     data,
+    onCrosshairMove,
   };
 }
 
@@ -21,7 +27,7 @@ export function initChart(
     return;
   }
 
-  const { precision, data } = input;
+  const { precision, data, onCrosshairMove } = input;
 
   const chartOptions = getChartOptions();
   chart.applyOptions(chartOptions);
@@ -32,6 +38,16 @@ export function initChart(
 
   const timeScaleOptions = getTimeScaleOptions();
   chart.timeScale().applyOptions(timeScaleOptions);
+
+  chart.subscribeCrosshairMove((param) => {
+    const item = param.seriesData.get(candlestickSeries);
+    if (!item) {
+      onCrosshairMove(undefined);
+      return;
+    }
+
+    onCrosshairMove(item as TickerDataRow);
+  });
 }
 
 export function destroyChart(chart: IChartApi | undefined): void {

@@ -6,6 +6,7 @@ import {
   CandlestickSeriesPartialOptions,
   TimeScaleOptions,
 } from 'lightweight-charts';
+import { COLOR_UP, COLOR_DOWN } from './colors';
 
 export function getChartOptions(): DeepPartial<TimeChartOptions> {
   return {
@@ -24,17 +25,14 @@ export function getChartOptions(): DeepPartial<TimeChartOptions> {
   };
 }
 
-const UP_COLOR = '#26A69A';
-const DOWN_COLOR = '#EF5350';
-
 export function getDataSeriesOptions(
   precision: number,
 ): CandlestickSeriesPartialOptions {
   return {
-    upColor: UP_COLOR,
-    downColor: DOWN_COLOR,
-    wickUpColor: UP_COLOR,
-    wickDownColor: DOWN_COLOR,
+    upColor: COLOR_UP,
+    downColor: COLOR_DOWN,
+    wickUpColor: COLOR_UP,
+    wickDownColor: COLOR_DOWN,
     borderVisible: false,
     priceFormat: {
       type: 'custom',
