@@ -30,7 +30,7 @@ export function TwOhlcLabel({
   }, [o, h, l, c]);
 
   return (
-    <div className='flex flex-row gap-1'>
+    <div className='inline-flex flex-row gap-1 px-1 bg-slate-100/40 border border-slate-300 rounded'>
       {items.map(([label, value]) => {
         return (
           <span key={label} className=''>

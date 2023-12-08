@@ -64,16 +64,6 @@ function getInitialPosition(
   const visiblePriceRange = maxPrice - minPrice;
   const priceHeight = visiblePriceRange * (1 + PRICE_RANGE_PADDING * 2);
 
-  console.log(
-    visibleDataCount,
-    visibleData,
-    minPrice,
-    maxPrice,
-    centerPrice,
-    visiblePriceRange,
-    priceHeight,
-  );
-
   return {
     xTs: lastTs,
     xCandleOffset: INITIAL_CANDLE_OFFSET,

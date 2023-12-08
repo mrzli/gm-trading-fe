@@ -41,3 +41,18 @@ export function decoratorBorder(): Decorator {
     </div>
   );
 }
+
+export function decoratorAbsolute(
+  left: number = 0,
+  top: number = 0,
+  right: number = 0,
+  bottom: number = 0,
+): Decorator {
+  return (Story: StoryFn) => (
+    <div style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', left, top, right, bottom }}>
+        <Story />
+      </div>
+    </div>
+  );
+}

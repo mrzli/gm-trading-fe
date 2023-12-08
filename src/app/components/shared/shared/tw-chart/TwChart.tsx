@@ -25,7 +25,6 @@ export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
 
   const handleCrosshairMove = useCallback<CrosshairMoveFn>(
     (param) => {
-      console.log('handleCrosshairMove', param);
       setCurrCrosshairItem(param);
     },
     [setCurrCrosshairItem],

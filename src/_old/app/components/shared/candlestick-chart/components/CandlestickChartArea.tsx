@@ -44,8 +44,6 @@ export function CandlestickChartArea({
     setOffset({ x: -dragX, y: -dragY });
   }, [dragX, dragY]);
 
-  // console.log(dragX, dragY);
-
   return (
     <svg
       ref={chartAreaRef}
