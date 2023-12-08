@@ -7,6 +7,10 @@ import { TickerDataScreen } from '../screens/TickerDataScreen';
 export const ROUTES: readonly RouteData[] = [
   {
     path: '/',
+    element: <TickerDataScreen />,
+  },
+  {
+    path: '/home',
     element: <HomeScreen />,
   },
   {

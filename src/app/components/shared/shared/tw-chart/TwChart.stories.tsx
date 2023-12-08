@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChart, TwChartProps } from './TwChart';
-import { decoratorContainer } from '../../../../storybook';
+import { decoratorContainer } from '../../../../../storybook';
 
 const STORY_META: Meta<TwChartProps> = {
   component: TwChart,

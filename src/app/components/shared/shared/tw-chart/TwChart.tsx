@@ -3,9 +3,7 @@ import {
   ColorType,
   DeepPartial,
   IChartApi,
-  ISeriesApi,
   TimeChartOptions,
-  UTCTimestamp,
   createChart,
 } from 'lightweight-charts';
 

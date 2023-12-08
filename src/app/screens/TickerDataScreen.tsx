@@ -4,8 +4,8 @@ import { TickerFilterData } from '../types';
 import { LoadingDisplay } from '../components/shared/display/LoadingDisplay';
 import { TickerDataFilter } from '../components/ticker-data/TickerDataFilter';
 import { Button } from '../components/shared/buttons/Button';
-import { TickerDataChart } from '../components/ticker-data/TickerDataChart';
 import { DEFAULT_TICKER_DATA_FILTER_DATA } from '../util';
+import { TwChart } from '../components/shared/shared/tw-chart/TwChart';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -24,7 +24,7 @@ export function TickerDataScreen(): React.ReactElement {
 
   const [filterData, setFilterData] = useState<TickerFilterData>({
     ...DEFAULT_TICKER_DATA_FILTER_DATA,
-    name: 'DAX',
+    name: 'EUR_USD',
     resolution: 'minute',
     date: '',
   });
@@ -48,15 +48,16 @@ export function TickerDataScreen(): React.ReactElement {
 
   const dataChartElement =
     !isLoadingTickerData && tickerData ? (
-      <TickerDataChart
-        resolution={tickerData.resolution}
-        rawData={tickerData.data}
-      />
-    ) : undefined;
+      <TwChart data={[]} />
+    ) : isLoadingTickerData ? (
+      <LoadingDisplay />
+    ) : (
+      'None'
+    );
 
   return (
-    <div className='h-screen flex flex-col'>
-      <div className='flex flex-col gap-2 p-4'>
+    <div className='h-screen flex flex-col gap-4 p-4'>
+      <div className='flex flex-col gap-2'>
         <TickerDataFilter
           tickerNames={tickerNames}
           data={filterData}
