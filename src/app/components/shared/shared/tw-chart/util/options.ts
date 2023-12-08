@@ -19,7 +19,9 @@ export function getChartOptions(): DeepPartial<TimeChartOptions> {
       background: { type: ColorType.Solid, color: 'white' },
     },
     localization: {
-      locale: 'en-US',
+      // 'en-US' causes an error in Chrome, displays 24:15 instead of 00:15 (up to 01:00)
+      // could be related to this: https://stackoverflow.com/a/55823036/520229 (hourCycle)
+      locale: 'en-GB',
       dateFormat: 'yyyy-MM-dd',
     },
   };
