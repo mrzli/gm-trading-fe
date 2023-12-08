@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useStoreInstrument, useStoreTickerData } from '../../store';
-import { TickerFilterData } from '../types';
+import { TickerFilterData, TickerDataRow } from '../types';
 import { LoadingDisplay } from '../components/shared/display/LoadingDisplay';
 import { TickerDataFilter } from '../components/ticker-data/TickerDataFilter';
 import { Button } from '../components/shared/buttons/Button';
 import { DEFAULT_TICKER_DATA_FILTER_DATA } from '../util';
 import { TwChart } from '../components/shared/shared/tw-chart/TwChart';
+import { parseFloatOrThrow, parseIntegerOrThrow } from '@gmjs/number-util';
+import { UTCTimestamp } from 'lightweight-charts';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -42,13 +44,18 @@ export function TickerDataScreen(): React.ReactElement {
     });
   }, [getTickerData, filterData]);
 
+  const finalData = useMemo(
+    () => toTickerDataRows(tickerData?.data ?? []),
+    [tickerData],
+  );
+
   if (isLoadingAllInstruments || !allInstruments) {
     return <LoadingDisplay />;
   }
 
   const dataChartElement =
-    !isLoadingTickerData && tickerData ? (
-      <TwChart data={[]} />
+    !isLoadingTickerData && finalData.length > 0 ? (
+      <TwChart precision={2} data={finalData} />
     ) : isLoadingTickerData ? (
       <LoadingDisplay />
     ) : (
@@ -68,4 +75,20 @@ export function TickerDataScreen(): React.ReactElement {
       <div className='flex-1'>{dataChartElement}</div>
     </div>
   );
+}
+
+function toTickerDataRows(lines: readonly string[]): TickerDataRow[] {
+  return lines.map((element) => toTickerDataRow(element));
+}
+
+function toTickerDataRow(line: string): TickerDataRow {
+  const [timestamp, _date, open, high, low, close] = line.split(',');
+
+  return {
+    time: parseIntegerOrThrow(timestamp) as UTCTimestamp,
+    open: parseFloatOrThrow(open),
+    high: parseFloatOrThrow(high),
+    low: parseFloatOrThrow(low),
+    close: parseFloatOrThrow(close),
+  };
 }
