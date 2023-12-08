@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CandlestickChart, CandlestickChartProps } from './CandlestickChart';
-import { decoratorContainer, disableControl } from '../../../../storybook';
+import { decoratorContainer, disableControl } from '../../../../../storybook';
 import { TEST_TICKER_ROWS } from './data';
 import { NumericRange, TickerDataRow } from '../../../../app/types';
 import { maxBy, minBy } from '@gmjs/value-transformers';
@@ -25,7 +25,7 @@ const STORY_META: Meta<CandlestickChartProps> = {
   args: {
     data: DATA,
     resolution: 'quarter',
-    priceRange: VALUE_RANGE,
+    // priceRange: VALUE_RANGE,
   },
 };
 export default STORY_META;

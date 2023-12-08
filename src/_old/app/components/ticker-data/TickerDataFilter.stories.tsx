@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TickerDataFilter, TickerDataFilterProps } from './TickerDataFilter';
-import { decoratorPadding, disableControl } from '../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../storybook';
 import { useState } from 'react';
 import { TickerFilterData } from '../../../app/types';
 import { DEFAULT_TICKER_DATA_FILTER_DATA } from '../../../app/util';

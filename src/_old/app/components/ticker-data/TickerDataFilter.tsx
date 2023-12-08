@@ -7,8 +7,8 @@ import { TickerFilterData } from '../../../app/types';
 import {
   SelectInput,
   SelectInputOption,
-} from '../../../app/components/shared/inputs/SelectInput';
-import { TextInput } from '../../../app/components/shared/inputs/TextInput';
+} from '../../../../app/components/shared/inputs/SelectInput';
+import { TextInput } from '../../../../app/components/shared/inputs/TextInput';
 
 export interface TickerDataFilterProps {
   readonly tickerNames: readonly string[];

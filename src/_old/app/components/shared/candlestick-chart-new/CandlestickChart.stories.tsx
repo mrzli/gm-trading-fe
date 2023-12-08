@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { decoratorContainer, disableControl } from '../../../../storybook';
+import { decoratorContainer, disableControl } from '../../../../../storybook';
 import { CandlestickChart, CandlestickChartProps } from './CandlestickChart';
 import {
   TEST_TICKER_ROWS_DAY,
