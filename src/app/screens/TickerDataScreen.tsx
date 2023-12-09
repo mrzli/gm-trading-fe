@@ -31,6 +31,10 @@ export function TickerDataScreen(): React.ReactElement {
     date: '',
   });
 
+  const instrument = useMemo(() => {
+    return allInstruments?.find((instrument) => instrument.name === filterData.name);
+  }, [allInstruments, filterData.name]);
+
   const handleApplyFilterClick = useCallback(() => {
     const { name, resolution, date } = filterData;
     if (resolution === '') {
@@ -49,13 +53,13 @@ export function TickerDataScreen(): React.ReactElement {
     [tickerData],
   );
 
-  if (isLoadingAllInstruments || !allInstruments) {
+  if (isLoadingAllInstruments || !allInstruments || !instrument) {
     return <LoadingDisplay />;
   }
 
   const dataChartElement =
     !isLoadingTickerData && finalData.length > 0 ? (
-      <TwChart precision={2} data={finalData} />
+      <TwChart precision={instrument.precision} data={finalData} />
     ) : isLoadingTickerData ? (
       <LoadingDisplay />
     ) : (
