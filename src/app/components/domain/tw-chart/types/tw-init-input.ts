@@ -1,4 +1,4 @@
-import { TickerDataRow } from '../../../../../types';
+import { TickerDataRow } from '../../../../types';
 
 export interface TwInitInput {
   readonly precision: number;

@@ -1,5 +1,5 @@
 import { IChartApi } from 'lightweight-charts';
-import { TickerDataRow } from '../../../../../types';
+import { TickerDataRow } from '../../../../types';
 import { CrosshairMoveFn, TwInitInput } from '../types';
 import {
   getChartOptions,

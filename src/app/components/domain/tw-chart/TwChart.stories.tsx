@@ -4,9 +4,9 @@ import {
   argTypeInteger,
   decoratorContainer,
   disableControl,
-} from '../../../../../storybook';
+} from '../../../../storybook';
 import { useMemo } from 'react';
-import { TickerDataRow } from '../../../../types';
+import { TickerDataRow } from '../../../types';
 import {
   TEST_TICKER_ROWS_DAY,
   TEST_TICKER_ROWS_MINUTE,

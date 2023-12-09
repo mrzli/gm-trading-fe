@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { createChart } from 'lightweight-charts';
-import { TickerDataRow } from '../../../../types';
+import { TickerDataRow } from '../../../types';
 import { CrosshairMoveFn, TwChartSettings, TwInitInput } from './types';
 import {
   DEFAULT_TW_CHART_SETTINGS,

@@ -5,7 +5,7 @@ import { LoadingDisplay } from '../components/shared/display/LoadingDisplay';
 import { TickerDataFilter } from '../components/ticker-data/TickerDataFilter';
 import { Button } from '../components/shared/buttons/Button';
 import { DEFAULT_TICKER_DATA_FILTER_DATA } from '../util';
-import { TwChart } from '../components/shared/shared/tw-chart/TwChart';
+import { TwChart } from '../components/domain/tw-chart/TwChart';
 import { parseFloatOrThrow, parseIntegerOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
 
@@ -32,7 +32,9 @@ export function TickerDataScreen(): React.ReactElement {
   });
 
   const instrument = useMemo(() => {
-    return allInstruments?.find((instrument) => instrument.name === filterData.name);
+    return allInstruments?.find(
+      (instrument) => instrument.name === filterData.name,
+    );
   }, [allInstruments, filterData.name]);
 
   const handleApplyFilterClick = useCallback(() => {

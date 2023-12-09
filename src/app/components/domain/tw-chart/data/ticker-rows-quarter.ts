@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/numeric-separators-style */
 import { UTCTimestamp } from 'lightweight-charts';
-import { TickerDataRow } from '../../../../../types';
+import { TickerDataRow } from '../../../../types';
 
 export const TEST_TICKER_ROWS_QUARTER: readonly TickerDataRow[] = [
   {

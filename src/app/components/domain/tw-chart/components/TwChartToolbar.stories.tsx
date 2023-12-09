@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChartToolbar, TwChartToolbarProps } from './TwChartToolbar';
-import { decoratorPadding, disableControl } from '../../../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
 import { TwChartSettings } from '../types';
 import { DEFAULT_TW_CHART_SETTINGS } from '../util';
-import { PrettyDisplay } from '../../../display/PrettyDisplay';
+import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
 
 const STORY_META: Meta<TwChartToolbarProps> = {
   component: TwChartToolbar,
