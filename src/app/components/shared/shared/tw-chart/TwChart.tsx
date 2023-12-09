@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { IChartApi, createChart } from 'lightweight-charts';
+import { createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../../types';
 import { CrosshairMoveFn, TwChartSettings, TwInitInput } from './types';
 import {
@@ -24,13 +24,10 @@ export interface TwChartProps {
 
 export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
   const continerRef = useRef<HTMLDivElement>(null);
-  const [chart, setChart] = useState<IChartApi | undefined>(undefined);
 
   const [settings, setSettings] = useState<TwChartSettings>(
     DEFAULT_TW_CHART_SETTINGS,
   );
-
-  const { autoscale } = settings;
 
   const [currCrosshairItem, setCurrCrosshairItem] = useState<
     TickerDataRow | undefined
@@ -48,28 +45,16 @@ export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
     [precision, data, handleCrosshairMove],
   );
 
-  useEffect(
-    () => {
-      const c = continerRef.current
-        ? createChart(continerRef.current)
-        : undefined;
-      initChart(c, input);
-      setChart(c);
+  useEffect(() => {
+    const chart = continerRef.current
+      ? createChart(continerRef.current)
+      : undefined;
+    initChart(chart, input);
 
-      return () => {
-        destroyChart(chart);
-        setChart(undefined);
-      };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [input],
-  );
-
-  useEffect(
-    () => {},
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [autoscale],
-  );
+    return () => {
+      destroyChart(chart);
+    };
+  }, [input]);
 
   return (
     <div className='h-full flex flex-col'>

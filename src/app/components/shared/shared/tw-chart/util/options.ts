@@ -5,7 +5,6 @@ import {
   CrosshairMode,
   CandlestickSeriesPartialOptions,
   TimeScaleOptions,
-  PriceScaleOptions,
 } from 'lightweight-charts';
 import { COLOR_UP, COLOR_DOWN } from './colors';
 
@@ -25,6 +24,9 @@ export function getChartOptions(): DeepPartial<TimeChartOptions> {
       locale: 'en-GB',
       dateFormat: 'yyyy-MM-dd',
     },
+    rightPriceScale: {
+      autoScale: false,
+    },
   };
 }
 
@@ -42,14 +44,6 @@ export function getDataSeriesOptions(
       formatter: (price: number) => price.toFixed(precision),
       minMove: Math.pow(10, -precision),
     },
-  };
-}
-
-export function getPriceScaleOptions(
-  autoscale: boolean,
-): DeepPartial<PriceScaleOptions> {
-  return {
-    autoScale: autoscale,
   };
 }
 
