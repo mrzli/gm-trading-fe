@@ -17,7 +17,7 @@ export function TwChartToolbar({
     (autoscale: boolean) => {
       onSettingsChange({
         ...settings,
-        autoscale,
+        autoscale: autoscale,
       });
     },
     [settings, onSettingsChange],
