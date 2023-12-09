@@ -18,9 +18,9 @@ export function decoratorFullHeight(): Decorator {
   );
 }
 
-export function decoratorWidth(width: number = 200): Decorator {
+export function decoratorSize(width: number = 200, height: number = 200): Decorator {
   return (Story: StoryFn) => (
-    <div style={{ width }}>
+    <div style={{ width, height }}>
       <Story />
     </div>
   );

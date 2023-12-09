@@ -7,9 +7,15 @@ import React, {
 } from 'react';
 import { createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../../types';
-import { CrosshairMoveFn, TwInitInput } from './types';
-import { destroyChart, getTwInitInput, initChart } from './util';
-import { TwOhlcLabel } from './TwOhlcLabel';
+import { CrosshairMoveFn, TwChartSettings, TwInitInput } from './types';
+import {
+  DEFAULT_TW_CHART_SETTINGS,
+  destroyChart,
+  getTwInitInput,
+  initChart,
+} from './util';
+import { TwOhlcLabel } from './components/TwOhlcLabel';
+import { TwChartToolbar } from './components/TwChartToolbar';
 
 export interface TwChartProps {
   readonly precision: number;
@@ -17,7 +23,11 @@ export interface TwChartProps {
 }
 
 export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
-  const elementRef = useRef<HTMLDivElement>(null);
+  const continerRef = useRef<HTMLDivElement>(null);
+
+  const [settings, setSettings] = useState<TwChartSettings>(
+    DEFAULT_TW_CHART_SETTINGS,
+  );
 
   const [currCrosshairItem, setCurrCrosshairItem] = useState<
     TickerDataRow | undefined
@@ -36,8 +46,8 @@ export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
   );
 
   useEffect(() => {
-    const chart = elementRef.current
-      ? createChart(elementRef.current)
+    const chart = continerRef.current
+      ? createChart(continerRef.current)
       : undefined;
     initChart(chart, input);
 
@@ -47,9 +57,12 @@ export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
   }, [input]);
 
   return (
-    <div className='h-full overflow-hidden relative'>
-      {getOhlcLabelElement(currCrosshairItem, precision)}
-      <div ref={elementRef} className='h-full' />
+    <div className='h-full flex flex-col'>
+      <TwChartToolbar settings={settings} onSettingsChange={setSettings} />
+      <div className='h-full overflow-hidden relative'>
+        <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
+        <div ref={continerRef} className='h-full' />
+      </div>
     </div>
   );
 }
