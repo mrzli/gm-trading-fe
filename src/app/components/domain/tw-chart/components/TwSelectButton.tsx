@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   FloatingFocusManager,
   FloatingPortal,
@@ -12,22 +12,24 @@ import {
   useInteractions,
 } from '@floating-ui/react';
 
-export interface TwSelectOption {
+export interface TwSelectOption<TValue extends string> {
   readonly label: string;
-  readonly value: string;
+  readonly value: TValue;
 }
 
-export interface TwSelectButtonProps {
-  readonly options: readonly TwSelectOption[];
-  readonly value: string;
-  readonly onValueChange: (value: string) => void;
+export interface TwSelectButtonProps<TValue extends string> {
+  readonly placeholder?: string;
+  readonly options: readonly TwSelectOption<TValue>[];
+  readonly value: TValue | undefined;
+  readonly onValueChange: (value: TValue | undefined) => void;
 }
 
-export function TwSelectButton({
+export function TwSelectButton<TValue extends string = string>({
+  placeholder,
   options,
   value,
   onValueChange,
-}: TwSelectButtonProps): React.ReactElement {
+}: TwSelectButtonProps<TValue>): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
 
   const { refs, floatingStyles, context } = useFloating({
@@ -45,12 +47,17 @@ export function TwSelectButton({
   );
 
   const handleSelect = useCallback(
-    (v: string, _index: number) => {
+    (v: TValue, _index: number) => {
       setIsOpen(false);
       onValueChange(v);
     },
     [onValueChange, setIsOpen],
   );
+
+  const label = useMemo(() => {
+    const option = options.find((o) => o.value === value);
+    return option?.label;
+  }, [options, value]);
 
   return (
     <div>
@@ -59,7 +66,7 @@ export function TwSelectButton({
         className='px-1 text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center justify-center min-h-[24px] min-w-[24px]'
         {...getReferenceProps()}
       >
-        {value}
+        {label ?? placeholder}
       </div>
       {isOpen && (
         <FloatingPortal>
