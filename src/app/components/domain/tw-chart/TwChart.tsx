@@ -7,26 +7,16 @@ import React, {
 } from 'react';
 import { createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
-import { CrosshairMoveFn, TwChartSettings, TwInitInput } from './types';
+import { CrosshairMoveFn, TwInitInput } from './types';
 import { destroyChart, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
-import { TwChartToolbar } from './components/TwChartToolbar';
 
 export interface TwChartProps {
-  readonly instrumentNames: readonly string[];
-  readonly settings: TwChartSettings;
-  readonly onSettingsChange: (settings: TwChartSettings) => void;
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
 }
 
-export function TwChart({
-  instrumentNames,
-  settings,
-  onSettingsChange,
-  precision,
-  data,
-}: TwChartProps): React.ReactElement {
+export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
   const continerRef = useRef<HTMLDivElement>(null);
 
   const [currCrosshairItem, setCurrCrosshairItem] = useState<
@@ -57,16 +47,9 @@ export function TwChart({
   }, [input]);
 
   return (
-    <div className='h-full flex flex-col'>
-      <TwChartToolbar
-        instrumentNames={instrumentNames}
-        settings={settings}
-        onSettingsChange={onSettingsChange}
-      />
-      <div className='h-full overflow-hidden relative'>
-        <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
-        <div ref={continerRef} className='h-full' />
-      </div>
+    <div className='h-full overflow-hidden relative'>
+      <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
+      <div ref={continerRef} className='h-full' />
     </div>
   );
 }

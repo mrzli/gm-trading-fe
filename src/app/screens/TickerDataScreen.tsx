@@ -6,6 +6,7 @@ import { TwChart } from '../components/domain/tw-chart/TwChart';
 import { parseFloatOrThrow, parseIntegerOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
 import { TwChartSettings } from '../components/domain/tw-chart/types';
+import { TwChartToolbar } from '../components/domain/tw-chart/components/TwChartToolbar';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -74,13 +75,7 @@ export function TickerDataScreen(): React.ReactElement {
 
   const dataChartElement =
     !isLoadingTickerData && finalData.length > 0 ? (
-      <TwChart
-        instrumentNames={instrumentNames}
-        settings={settings}
-        onSettingsChange={setSettings}
-        precision={instrument.precision}
-        data={finalData}
-      />
+      <TwChart precision={instrument.precision} data={finalData} />
     ) : isLoadingTickerData ? (
       <LoadingDisplay />
     ) : (
@@ -89,6 +84,11 @@ export function TickerDataScreen(): React.ReactElement {
 
   return (
     <div className='h-screen flex flex-col gap-4 p-4'>
+      <TwChartToolbar
+        instrumentNames={instrumentNames}
+        settings={settings}
+        onSettingsChange={setSettings}
+      />
       <div className='flex-1'>{dataChartElement}</div>
     </div>
   );
