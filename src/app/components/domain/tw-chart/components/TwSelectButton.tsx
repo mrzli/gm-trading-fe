@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import {
   FloatingFocusManager,
   FloatingPortal,
@@ -17,19 +17,46 @@ export interface TwSelectOption<TValue extends string> {
   readonly value: TValue;
 }
 
-export interface TwSelectButtonProps<TValue extends string> {
+export type TwSelectValue<
+  TValue extends string,
+  TAllowUndefined extends boolean,
+> = TAllowUndefined extends true ? TValue | undefined : TValue;
+
+export type TwSelectionRenderer<TValue extends string> = (
+  option?: TwSelectOption<TValue>,
+) => React.ReactNode;
+
+export type TwSelectItemRenderer<TValue extends string> = (
+  option: TwSelectOption<TValue>,
+) => React.ReactNode;
+
+export interface TwSelectButtonProps<
+  TValue extends string,
+  TAllowUndefined extends boolean,
+> {
   readonly placeholder?: string;
   readonly options: readonly TwSelectOption<TValue>[];
-  readonly value: TValue | undefined;
-  readonly onValueChange: (value: TValue | undefined) => void;
+  readonly value: TwSelectValue<TValue, TAllowUndefined>;
+  readonly onValueChange: (
+    value: TwSelectValue<TValue, TAllowUndefined>,
+  ) => void;
+  readonly selectionRenderer?: TwSelectionRenderer<TValue>;
+  readonly selectItemRenderer?: TwSelectItemRenderer<TValue>;
+  readonly width?: CSSProperties['width'];
 }
 
-export function TwSelectButton<TValue extends string = string>({
+export function TwSelectButton<
+  TValue extends string = string,
+  TAllowUndefined extends boolean = false,
+>({
   placeholder,
   options,
   value,
   onValueChange,
-}: TwSelectButtonProps<TValue>): React.ReactElement {
+  selectionRenderer,
+  selectItemRenderer,
+  width,
+}: TwSelectButtonProps<TValue, TAllowUndefined>): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
 
   const { refs, floatingStyles, context } = useFloating({
@@ -54,19 +81,40 @@ export function TwSelectButton<TValue extends string = string>({
     [onValueChange, setIsOpen],
   );
 
-  const label = useMemo(() => {
-    const option = options.find((o) => o.value === value);
-    return option?.label;
+  const selectedOption = useMemo(() => {
+    return options.find((o) => o.value === value);
   }, [options, value]);
+
+  const finalSelectionRenderer = useMemo<TwSelectionRenderer<TValue>>(() => {
+    return (
+      selectionRenderer ??
+      ((o): React.ReactNode => (
+        <div className='px-1' style={{ width }}>
+          {o?.label ?? placeholder}
+        </div>
+      ))
+    );
+  }, [selectionRenderer, placeholder, width]);
+
+  const finalSelectItemRenderer = useMemo<TwSelectItemRenderer<TValue>>(() => {
+    return (
+      selectItemRenderer ??
+      ((o): React.ReactNode => (
+        <div className='px-1' style={{ width }}>
+          {o.label}
+        </div>
+      ))
+    );
+  }, [selectItemRenderer, width]);
 
   return (
     <div>
       <div
         ref={refs.setReference}
-        className='px-1 text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center justify-center min-h-[24px] min-w-[24px]'
+        className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px]'
         {...getReferenceProps()}
       >
-        {label ?? placeholder}
+        {finalSelectionRenderer(selectedOption)}
       </div>
       {isOpen && (
         <FloatingPortal>
@@ -80,13 +128,13 @@ export function TwSelectButton<TValue extends string = string>({
               {options.map((o, i) => (
                 <div
                   key={o.value}
-                  className={'cursor-pointer px-1 hover:bg-slate-200'}
+                  className={'cursor-pointer hover:bg-slate-200'}
                   onClick={() => {
                     handleSelect(o.value, i);
                   }}
                   {...getItemProps()}
                 >
-                  {o.label}
+                  {finalSelectItemRenderer(o)}
                 </div>
               ))}
             </div>

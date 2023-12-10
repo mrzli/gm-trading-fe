@@ -1,3 +1,5 @@
+import { TwChartResolution } from "./tw-chart-resolution";
+
 export interface TwChartSettings {
-  readonly autoscale: boolean;
+  readonly resolution: TwChartResolution;
 }

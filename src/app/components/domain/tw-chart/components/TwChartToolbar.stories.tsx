@@ -14,7 +14,8 @@ const STORY_META: Meta<TwChartToolbarProps> = {
     settings: disableControl(),
     onSettingsChange: disableControl(),
   },
-  args: {},
+  args: {
+  },
 };
 export default STORY_META;
 
