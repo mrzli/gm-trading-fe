@@ -59,12 +59,12 @@ export function TickerDataContainer({
 
   return (
     <div className='h-screen flex flex-col gap-4 p-4'>
-      <TwChartToolbar
-        instrumentNames={instrumentNames}
-        settings={settings}
-        onSettingsChange={setSettings}
-      />
-      <div className='flex-1'>{dataChartElement}</div>
+        <TwChartToolbar
+          instrumentNames={instrumentNames}
+          settings={settings}
+          onSettingsChange={setSettings}
+        />
+        <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );
 }

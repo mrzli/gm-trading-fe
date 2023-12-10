@@ -17,7 +17,7 @@ export interface TwChartProps {
 }
 
 export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
-  const continerRef = useRef<HTMLDivElement>(null);
+  const chartElementRef = useRef<HTMLDivElement>(null);
 
   const [currCrosshairItem, setCurrCrosshairItem] = useState<
     TickerDataRow | undefined
@@ -36,8 +36,8 @@ export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
   );
 
   useEffect(() => {
-    const chart = continerRef.current
-      ? createChart(continerRef.current)
+    const chart = chartElementRef.current
+      ? createChart(chartElementRef.current)
       : undefined;
     initChart(chart, input);
 
@@ -49,7 +49,7 @@ export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
   return (
     <div className='h-full overflow-hidden relative'>
       <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
-      <div ref={continerRef} className='h-full' />
+      <div ref={chartElementRef} className='h-full overflow-hidden' />
     </div>
   );
 }
