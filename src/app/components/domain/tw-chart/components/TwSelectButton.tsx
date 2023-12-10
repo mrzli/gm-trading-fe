@@ -42,7 +42,8 @@ export interface TwSelectButtonProps<
   ) => void;
   readonly selectionRenderer?: TwSelectionRenderer<TValue>;
   readonly selectItemRenderer?: TwSelectItemRenderer<TValue>;
-  readonly width?: CSSProperties['width'];
+  readonly selectionWidth?: CSSProperties['width'];
+  readonly selectItemWidth?: CSSProperties['width'];
 }
 
 export function TwSelectButton<
@@ -55,7 +56,8 @@ export function TwSelectButton<
   onValueChange,
   selectionRenderer,
   selectItemRenderer,
-  width,
+  selectionWidth,
+  selectItemWidth,
 }: TwSelectButtonProps<TValue, TAllowUndefined>): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,29 +91,29 @@ export function TwSelectButton<
     return (
       selectionRenderer ??
       ((o): React.ReactNode => (
-        <div className='px-1' style={{ width }}>
+        <div className='px-1' style={{ width: selectionWidth }}>
           {o?.label ?? placeholder}
         </div>
       ))
     );
-  }, [selectionRenderer, placeholder, width]);
+  }, [selectionRenderer, placeholder, selectionWidth]);
 
   const finalSelectItemRenderer = useMemo<TwSelectItemRenderer<TValue>>(() => {
     return (
       selectItemRenderer ??
       ((o): React.ReactNode => (
-        <div className='px-1' style={{ width }}>
+        <div className='px-1' style={{ width: selectItemWidth }}>
           {o.label}
         </div>
       ))
     );
-  }, [selectItemRenderer, width]);
+  }, [selectItemRenderer, selectItemWidth]);
 
   return (
     <div>
       <div
         ref={refs.setReference}
-        className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px]'
+        className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'
         {...getReferenceProps()}
       >
         {finalSelectionRenderer(selectedOption)}

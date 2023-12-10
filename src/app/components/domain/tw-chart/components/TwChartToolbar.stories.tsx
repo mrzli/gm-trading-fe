@@ -3,8 +3,18 @@ import { TwChartToolbar, TwChartToolbarProps } from './TwChartToolbar';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
 import { TwChartSettings } from '../types';
-import { DEFAULT_TW_CHART_SETTINGS } from '../util';
 import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
+
+const INSTRUMENT_NAMES: readonly string[] = [
+  'DJI',
+  'NDX',
+  'DAX',
+  'FTSE',
+  'NI225',
+  'EUR_USD',
+  'GBP_USD',
+  'USD_JPY',
+];
 
 const STORY_META: Meta<TwChartToolbarProps> = {
   component: TwChartToolbar,
@@ -15,6 +25,7 @@ const STORY_META: Meta<TwChartToolbarProps> = {
     onSettingsChange: disableControl(),
   },
   args: {
+    instrumentNames: INSTRUMENT_NAMES,
   },
 };
 export default STORY_META;
@@ -23,9 +34,10 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
   render: (args: TwChartToolbarProps) => {
     const { settings: _ignore1, onSettingsChange: _ignore2, ...rest } = args;
 
-    const [settings, setSettings] = useState<TwChartSettings>(
-      DEFAULT_TW_CHART_SETTINGS,
-    );
+    const [settings, setSettings] = useState<TwChartSettings>({
+      instrumentName: INSTRUMENT_NAMES[0],
+      resolution: '5m',
+    });
 
     return (
       <div>

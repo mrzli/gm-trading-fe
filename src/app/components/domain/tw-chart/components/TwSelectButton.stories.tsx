@@ -14,9 +14,12 @@ type AllowUndefined = true;
 // type SelectValue = TwSelectValue<BaseSelectValue, AllowUndefined>;
 type SelectOption = TwSelectOption<string>;
 type Props = TwSelectButtonProps<BaseSelectValue, AllowUndefined> & {
-  readonly widthOption: 'number' | 'string';
-  readonly widthNumber: number;
-  readonly widthString: NonNullable<CSSProperties['width']>;
+  readonly selectionWidthOption: 'number' | 'string';
+  readonly selectionWidthNumber: number;
+  readonly selectionWidthString: NonNullable<CSSProperties['width']>;
+  readonly selectItemWidthOption: 'number' | 'string';
+  readonly selectItemWidthNumber: number;
+  readonly selectItemWidthString: NonNullable<CSSProperties['width']>;
 };
 
 function createOption(id: number): SelectOption {
@@ -41,7 +44,11 @@ const STORY_META: Meta<Props> = {
     value: disableControl(),
     onValueChange: disableControl(),
     selectItemRenderer: disableControl(),
-    widthOption: {
+    selectionWidthOption: {
+      control: 'radio',
+      options: ['number', 'string'],
+    },
+    selectItemWidthOption: {
       control: 'radio',
       options: ['number', 'string'],
     },
@@ -49,9 +56,12 @@ const STORY_META: Meta<Props> = {
   args: {
     placeholder: 'Select an option...',
     options: OPTIONS,
-    widthOption: 'number',
-    widthNumber: 200,
-    widthString: '50vw',
+    selectionWidthOption: 'number',
+    selectionWidthNumber: 200,
+    selectionWidthString: '50vw',
+    selectItemWidthOption: 'number',
+    selectItemWidthNumber: 200,
+    selectItemWidthString: '50vw',
   },
 };
 export default STORY_META;
@@ -59,9 +69,12 @@ export default STORY_META;
 export const Primary: StoryObj<Props> = {
   render: (args: Props) => {
     const {
-      widthOption,
-      widthNumber,
-      widthString,
+      selectionWidthNumber,
+      selectionWidthOption,
+      selectionWidthString,
+      selectItemWidthNumber,
+      selectItemWidthOption,
+      selectItemWidthString,
       value: _ignore1,
       onValueChange: _ignore2,
       ...rest
@@ -69,8 +82,15 @@ export const Primary: StoryObj<Props> = {
 
     const [value, setValue] = useState<string | undefined>(undefined);
 
-    const width: CSSProperties['width'] =
-      widthOption === 'number' ? widthNumber : widthString;
+    const selectionWidth: CSSProperties['width'] =
+      selectionWidthOption === 'number'
+        ? selectionWidthNumber
+        : selectionWidthString;
+
+    const selectItemWidth: CSSProperties['width'] =
+      selectItemWidthOption === 'number'
+        ? selectItemWidthNumber
+        : selectItemWidthString;
 
     return (
       <div>
@@ -78,7 +98,8 @@ export const Primary: StoryObj<Props> = {
           {...rest}
           value={value}
           onValueChange={setValue}
-          width={width}
+          selectionWidth={selectionWidth}
+          selectItemWidth={selectItemWidth}
         />
         <br />
         <PrettyDisplay content={value} />
