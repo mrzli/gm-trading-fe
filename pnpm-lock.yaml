@@ -20,6 +20,9 @@ dependencies:
   '@gmjs/compose-function':
     specifier: ^0.0.1
     version: 0.0.1
+  '@gmjs/data-container-util':
+    specifier: ^0.0.1
+    version: 0.0.1
   '@gmjs/gm-trading-shared':
     specifier: ^0.0.17
     version: 0.0.17
@@ -76,6 +79,9 @@ devDependencies:
   '@gmjs/eslint-config':
     specifier: ^0.0.27
     version: 0.0.27(@typescript-eslint/eslint-plugin@6.13.2)(@typescript-eslint/parser@6.13.2)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.3.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@49.0.0)(eslint@8.55.0)(prettier@3.1.0)(typescript@5.2.2)
+  '@gmjs/fs-async':
+    specifier: ^0.0.5
+    version: 0.0.5
   '@gmjs/generic-types':
     specifier: ^0.0.1
     version: 0.0.1
@@ -2328,6 +2334,13 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@gmjs/data-container-util@0.0.1:
+    resolution: {integrity: sha512-mN6k1VWxiFWNSpeS2vr+sTlBleh277RNaTfI4isRjsl8m481EWDXNNoqWy3RVtfAldKMpwO/ppLZRiR6E2bmIw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
   /@gmjs/eslint-config@0.0.27(@typescript-eslint/eslint-plugin@6.13.2)(@typescript-eslint/parser@6.13.2)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.0)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.3.1)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@49.0.0)(eslint@8.55.0)(prettier@3.1.0)(typescript@5.2.2):
     resolution: {integrity: sha512-kWIAadVztV3inIUvdY7ebdjKhPgF059EFUHhFnwm/bnoA0R/TwBbsPXPwfTbtrOoFt3QxTNyxRLklfnZiFUCVw==}
     peerDependencies:
@@ -2370,6 +2383,24 @@ packages:
       prettier: 3.1.0
       tslib: 2.6.2
       typescript: 5.2.2
+    dev: true
+
+  /@gmjs/fs-async@0.0.5:
+    resolution: {integrity: sha512-ZxvevCqxQV7QoYKklVTvmIIi2mG2ji1RViRAy/zxf4hDawTkhHf5trNeRkjjEHr15b9cOP2h3COnlcaCHwqPJg==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@gmjs/fs-shared': 0.0.3
+      fs-extra: 11.2.0
+      klaw: 4.1.0
+      tslib: 2.6.2
+    dev: true
+
+  /@gmjs/fs-shared@0.0.3:
+    resolution: {integrity: sha512-FP4dfe7Sr7WexkgtyWjQ/5+gXp4oIA0c8DF6mM4upB3AghSeg/PoU9TWqaYO4n7y8c4qoRLCoE6Gp7dvpj7JBA==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      klaw: 4.1.0
+      tslib: 2.6.2
     dev: true
 
   /@gmjs/generic-functions@0.0.1:
@@ -8970,6 +9001,11 @@ packages:
   /kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /klaw@4.1.0:
+    resolution: {integrity: sha512-1zGZ9MF9H22UnkpVeuaGKOjfA2t6WrfdrJmGjy16ykcjnKQDmHVX+KI477rpbGevz/5FD4MC3xf1oxylBgcaQw==}
+    engines: {node: '>=14.14.0'}
     dev: true
 
   /kleur@3.0.3:

@@ -1,12 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { UTCTimestamp } from 'lightweight-charts';
-import { TickerDataRow } from '../../../types';
 import { LoadingDisplay } from '../../shared/display/LoadingDisplay';
 import { TwChart } from '../tw-chart/TwChart';
-import { parseFloatOrThrow, parseIntegerOrThrow } from '@gmjs/number-util';
 import { TwChartResolution, TwChartSettings } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/TwChartToolbar';
 import { Instrument } from '@gmjs/gm-trading-shared';
+import { toTickerDataRows } from './process-chart-data';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -42,7 +40,10 @@ export function TickerDataContainer({
     );
   }, [allInstruments, instrumentName]);
 
-  const finalData = useMemo(() => toTickerDataRows(rawData ?? []), [rawData]);
+  const finalData = useMemo(
+    () => toTickerDataRows(rawData ?? [], resolution),
+    [rawData, resolution],
+  );
 
   if (!instrument) {
     return <div>Instrument not found.</div>;
@@ -59,28 +60,12 @@ export function TickerDataContainer({
 
   return (
     <div className='h-screen flex flex-col gap-4 p-4'>
-        <TwChartToolbar
-          instrumentNames={instrumentNames}
-          settings={settings}
-          onSettingsChange={setSettings}
-        />
-        <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
+      <TwChartToolbar
+        instrumentNames={instrumentNames}
+        settings={settings}
+        onSettingsChange={setSettings}
+      />
+      <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );
-}
-
-function toTickerDataRows(lines: readonly string[]): TickerDataRow[] {
-  return lines.map((element) => toTickerDataRow(element));
-}
-
-function toTickerDataRow(line: string): TickerDataRow {
-  const [timestamp, _date, open, high, low, close] = line.split(',');
-
-  return {
-    time: parseIntegerOrThrow(timestamp) as UTCTimestamp,
-    open: parseFloatOrThrow(open),
-    high: parseFloatOrThrow(high),
-    low: parseFloatOrThrow(low),
-    close: parseFloatOrThrow(close),
-  };
 }

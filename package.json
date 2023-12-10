@@ -30,6 +30,7 @@
     "@gmjs/array-create": "^0.0.1",
     "@gmjs/assert": "^0.0.2",
     "@gmjs/compose-function": "^0.0.1",
+    "@gmjs/data-container-util": "^0.0.1",
     "@gmjs/gm-trading-shared": "^0.0.17",
     "@gmjs/number-util": "^0.0.1",
     "@gmjs/value-generators": "^0.0.1",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@gmjs/eslint-config": "^0.0.27",
+    "@gmjs/fs-async": "^0.0.5",
     "@gmjs/generic-types": "^0.0.1",
     "@gmjs/jest-config": "^0.0.7",
     "@gmjs/prettier-config": "^1.0.45",
