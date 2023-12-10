@@ -1,13 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useStoreInstrument, useStoreTickerData } from '../../store';
-import { TickerFilterData, TickerDataRow } from '../types';
+import { TickerDataRow } from '../types';
 import { LoadingDisplay } from '../components/shared/display/LoadingDisplay';
-import { TickerDataFilter } from '../components/ticker-data/TickerDataFilter';
-import { Button } from '../components/shared/buttons/Button';
-import { DEFAULT_TICKER_DATA_FILTER_DATA } from '../util';
 import { TwChart } from '../components/domain/tw-chart/TwChart';
 import { parseFloatOrThrow, parseIntegerOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
+import { TwChartSettings } from '../components/domain/tw-chart/types';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -20,35 +18,50 @@ export function TickerDataScreen(): React.ReactElement {
     getAllInstruments();
   }, [getAllInstruments]);
 
-  const tickerNames = useMemo(() => {
+  const instrumentNames = useMemo(() => {
     return allInstruments?.map((instrument) => instrument.name) ?? [];
   }, [allInstruments]);
 
-  const [filterData, setFilterData] = useState<TickerFilterData>({
-    ...DEFAULT_TICKER_DATA_FILTER_DATA,
-    name: 'EUR_USD',
-    resolution: 'minute',
-    date: '',
+  const [settings, setSettings] = useState<TwChartSettings>({
+    instrumentName: '',
+    resolution: '5m',
   });
+
+  const [instrumentNameInitialized, setInstrumentNameInitialized] =
+    useState(false);
+
+  useEffect(
+    () => {
+      if (instrumentNames.length === 0 || instrumentNameInitialized) {
+        return;
+      }
+
+      setInstrumentNameInitialized(true);
+
+      setSettings((s) => ({
+        ...s,
+        instrumentName: instrumentNames[0],
+      }));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [instrumentNames],
+  );
+
+  const { instrumentName, resolution } = settings;
+
+  useEffect(() => {
+    getTickerData({
+      name: instrumentName,
+      resolution: 'minute',
+      date: undefined,
+    });
+  }, [instrumentName, resolution, getTickerData]);
 
   const instrument = useMemo(() => {
     return allInstruments?.find(
-      (instrument) => instrument.name === filterData.name,
+      (instrument) => instrument.name === instrumentName,
     );
-  }, [allInstruments, filterData.name]);
-
-  const handleApplyFilterClick = useCallback(() => {
-    const { name, resolution, date } = filterData;
-    if (resolution === '') {
-      return;
-    }
-
-    getTickerData({
-      name,
-      resolution,
-      date: date === '' ? undefined : date,
-    });
-  }, [getTickerData, filterData]);
+  }, [allInstruments, instrumentName]);
 
   const finalData = useMemo(
     () => toTickerDataRows(tickerData?.data ?? []),
@@ -61,7 +74,13 @@ export function TickerDataScreen(): React.ReactElement {
 
   const dataChartElement =
     !isLoadingTickerData && finalData.length > 0 ? (
-      <TwChart precision={instrument.precision} data={finalData} />
+      <TwChart
+        instrumentNames={instrumentNames}
+        settings={settings}
+        onSettingsChange={setSettings}
+        precision={instrument.precision}
+        data={finalData}
+      />
     ) : isLoadingTickerData ? (
       <LoadingDisplay />
     ) : (
@@ -70,14 +89,6 @@ export function TickerDataScreen(): React.ReactElement {
 
   return (
     <div className='h-screen flex flex-col gap-4 p-4'>
-      <div className='flex flex-col gap-2'>
-        <TickerDataFilter
-          tickerNames={tickerNames}
-          data={filterData}
-          onDataChange={setFilterData}
-        />
-        <Button label='Apply' onClick={handleApplyFilterClick} />
-      </div>
       <div className='flex-1'>{dataChartElement}</div>
     </div>
   );

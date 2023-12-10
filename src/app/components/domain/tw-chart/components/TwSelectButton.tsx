@@ -124,7 +124,7 @@ export function TwSelectButton<
             <div
               ref={refs.setFloating}
               style={floatingStyles}
-              className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none'
+              className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none z-20'
               {...getFloatingProps()}
             >
               {options.map((o, i) => (

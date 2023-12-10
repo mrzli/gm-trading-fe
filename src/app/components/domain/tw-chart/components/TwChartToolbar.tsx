@@ -10,6 +10,7 @@ import {
   TwSelectOption,
   TwSelectionRenderer,
 } from './TwSelectButton';
+import { toSimpleTwSelectOption } from '../util';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -25,10 +26,9 @@ export function TwChartToolbar({
   const { instrumentName, resolution } = settings;
 
   const instrumentOptions = useMemo<readonly TwSelectOption<string>[]>(() => {
-    return instrumentNames.map((instrumentName) => ({
-      label: instrumentName,
-      value: instrumentName,
-    }));
+    return instrumentNames.map((instrumentName) =>
+      toSimpleTwSelectOption(instrumentName),
+    );
   }, [instrumentNames]);
 
   const handleInstrumentChange = useCallback(
@@ -90,7 +90,6 @@ export function TwChartToolbar({
 }
 
 const RESOLUTION_OPTIONS: readonly TwSelectOption<TwChartResolution>[] =
-  TYPES_OF_TW_CHART_RESOLUTION.map((resolution) => ({
-    label: resolution,
-    value: resolution,
-  }));
+  TYPES_OF_TW_CHART_RESOLUTION.map((resolution) =>
+    toSimpleTwSelectOption(resolution),
+  );

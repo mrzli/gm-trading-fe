@@ -5,7 +5,7 @@ import {
   decoratorContainer,
   disableControl,
 } from '../../../../storybook';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { TickerDataRow } from '../../../types';
 import {
   TEST_TICKER_ROWS_DAY,
@@ -13,28 +13,60 @@ import {
   TEST_TICKER_ROWS_QUARTER,
 } from './data';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { TwChartSettings } from './types';
+
+const INSTRUMENT_NAMES: readonly string[] = [
+  'DJI',
+  'NDX',
+  'DAX',
+  'FTSE',
+  'NI225',
+  'EUR_USD',
+  'GBP_USD',
+  'USD_JPY',
+];
 
 const STORY_META: Meta<TwChartProps> = {
   component: TwChart,
   tags: ['autodocs'],
   decorators: [decoratorContainer({ height: '100vh', padding: 16 })],
-  args: {
-    precision: 2,
-  },
   argTypes: {
+    settings: disableControl(),
+    onSettingsChange: disableControl(),
     precision: argTypeInteger(0, 10),
     data: disableControl(),
+  },
+  args: {
+    instrumentNames: INSTRUMENT_NAMES,
+    precision: 2,
   },
 };
 export default STORY_META;
 
 export const Primary: StoryObj<TwChartProps> = {
   render: (args: TwChartProps) => {
-    const { data: _ignore1, ...rest } = args;
+    const {
+      settings: _ignore1,
+      onSettingsChange: _ignore2,
+      data: _ignore3,
+      ...rest
+    } = args;
+
+    const [settings, setSettings] = useState<TwChartSettings>({
+      instrumentName: INSTRUMENT_NAMES[0],
+      resolution: '5m',
+    });
 
     const data = useMemo(() => getData('minute'), []);
 
-    return <TwChart {...rest} data={data} />;
+    return (
+      <TwChart
+        {...rest}
+        settings={settings}
+        onSettingsChange={setSettings}
+        data={data}
+      />
+    );
   },
 };
 
