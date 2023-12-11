@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { COLOR_DOWN, COLOR_UP } from '../util';
+import { COLOR_DOWN, COLOR_UP } from '../../util';
 
 export interface TwOhlcLabelProps {
   readonly o: number;

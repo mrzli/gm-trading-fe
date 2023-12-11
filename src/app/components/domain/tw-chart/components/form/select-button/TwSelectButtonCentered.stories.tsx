@@ -5,9 +5,12 @@ import {
   TwSelectButtonCenteredProps,
 } from './TwSelectButtonCentered';
 import { TwSelectOption } from './types';
-import { decoratorPadding, disableControl } from '../../../../../../storybook';
+import {
+  decoratorPadding,
+  disableControl,
+} from '../../../../../../../storybook';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
+import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
 
 type BaseSelectValue = string;
 type AllowUndefined = true;

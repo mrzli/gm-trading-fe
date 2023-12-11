@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChartToolbar, TwChartToolbarProps } from './TwChartToolbar';
-import { decoratorPadding, disableControl } from '../../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../../storybook';
 import { useState } from 'react';
-import { TwChartSettings } from '../types';
-import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
+import { TwChartSettings } from '../../types';
+import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -37,6 +37,7 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
     const [settings, setSettings] = useState<TwChartSettings>({
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
+      timeRange: undefined,
     });
 
     return (

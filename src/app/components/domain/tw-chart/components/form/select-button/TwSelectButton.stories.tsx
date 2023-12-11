@@ -2,8 +2,11 @@ import { CSSProperties, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwSelectButton, TwSelectButtonProps } from './TwSelectButton';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
-import { decoratorPadding, disableControl } from '../../../../../../storybook';
+import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
+import {
+  decoratorPadding,
+  disableControl,
+} from '../../../../../../../storybook';
 import { TwSelectOption } from './types';
 
 type BaseSelectValue = string;

@@ -3,11 +3,11 @@ import {
   TYPES_OF_TW_CHART_RESOLUTION,
   TwChartResolution,
   TwChartSettings,
-} from '../types';
-import { TwSelectButton } from './select-button/TwSelectButton';
-import { toSimpleTwSelectOption } from '../util';
-import { TwSelectOption } from './select-button/types';
-import { TwSelectButtonCentered } from './select-button/TwSelectButtonCentered';
+} from '../../types';
+import { TwSelectButton } from '../form/select-button/TwSelectButton';
+import { toSimpleTwSelectOption } from '../../util';
+import { TwSelectOption } from '../form/select-button/types';
+import { TwSelectButtonCentered } from '../form/select-button/TwSelectButtonCentered';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];

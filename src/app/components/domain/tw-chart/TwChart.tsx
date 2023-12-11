@@ -3,7 +3,7 @@ import { IChartApi, createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
 import { ChartTimeRangeChangeFn, TwInitInput } from './types';
 import { destroyChart, getTwInitInput, initChart } from './util';
-import { TwOhlcLabel } from './components/TwOhlcLabel';
+import { TwOhlcLabel } from './components/composite/TwOhlcLabel';
 
 export interface TwChartProps {
   readonly precision: number;
@@ -32,12 +32,7 @@ export function TwChart({
         setCurrCrosshairItem,
         onChartTimeRangeChange,
       ),
-    [
-      precision,
-      data,
-      setCurrCrosshairItem,
-      onChartTimeRangeChange,
-    ],
+    [precision, data, setCurrCrosshairItem, onChartTimeRangeChange],
   );
 
   useEffect(() => {
