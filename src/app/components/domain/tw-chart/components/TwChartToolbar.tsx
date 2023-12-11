@@ -4,13 +4,13 @@ import {
   TwChartResolution,
   TwChartSettings,
 } from '../types';
+import { TwSelectButton } from './select-button/TwSelectButton';
+import { toSimpleTwSelectOption } from '../util';
 import {
-  TwSelectButton,
-  TwSelectItemRenderer,
   TwSelectOption,
   TwSelectionRenderer,
-} from './TwSelectButton';
-import { toSimpleTwSelectOption } from '../util';
+  TwSelectItemRenderer,
+} from './select-button/types';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];

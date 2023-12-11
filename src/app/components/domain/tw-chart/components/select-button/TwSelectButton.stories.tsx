@@ -1,13 +1,10 @@
 import { CSSProperties, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import {
-  TwSelectButton,
-  TwSelectButtonProps,
-  TwSelectOption,
-} from './TwSelectButton';
+import { TwSelectButton, TwSelectButtonProps } from './TwSelectButton';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
-import { decoratorPadding, disableControl } from '../../../../../storybook';
+import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
+import { decoratorPadding, disableControl } from '../../../../../../storybook';
+import { TwSelectOption } from './types';
 
 type BaseSelectValue = string;
 type AllowUndefined = true;
@@ -43,11 +40,14 @@ const STORY_META: Meta<Props> = {
   argTypes: {
     value: disableControl(),
     onValueChange: disableControl(),
+    selectionRenderer: disableControl(),
     selectItemRenderer: disableControl(),
+    selectionWidth: disableControl(),
     selectionWidthOption: {
       control: 'radio',
       options: ['number', 'string'],
     },
+    selectItemWidth: disableControl(),
     selectItemWidthOption: {
       control: 'radio',
       options: ['number', 'string'],
@@ -69,14 +69,14 @@ export default STORY_META;
 export const Primary: StoryObj<Props> = {
   render: (args: Props) => {
     const {
+      value: _ignore1,
+      onValueChange: _ignore2,
       selectionWidthNumber,
       selectionWidthOption,
       selectionWidthString,
       selectItemWidthNumber,
       selectItemWidthOption,
       selectItemWidthString,
-      value: _ignore1,
-      onValueChange: _ignore2,
       ...rest
     } = args;
 
