@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwToggleButton, TwToggleButtonProps } from './TwToggleButton';
 import { decoratorPadding, disableControl } from '../../../../../../storybook';
-import { useState } from 'react';
 
 const STORY_META: Meta<TwToggleButtonProps> = {
   component: TwToggleButton,
