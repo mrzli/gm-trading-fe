@@ -9,6 +9,7 @@ import {
 import { TwChartToolbar } from '../tw-chart/components/TwChartToolbar';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { toTickerDataRows } from './process-chart-data';
+import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -31,7 +32,6 @@ export function TickerDataContainer({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
     timeRange: undefined,
-    logicalRange: undefined,
   });
 
   const { instrumentName, resolution } = settings;
@@ -53,7 +53,10 @@ export function TickerDataContainer({
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
-      console.log('handleChartTimeRangeChange', range);
+      setSettings((s) => ({
+        ...s,
+        timeRange: range,
+      }));
     },
     [],
   );
@@ -82,6 +85,7 @@ export function TickerDataContainer({
         settings={settings}
         onSettingsChange={setSettings}
       />
+      <PrettyDisplay content={settings} />
       <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );

@@ -33,6 +33,7 @@ export function TwChartToolbar({
       onSettingsChange({
         ...settings,
         instrumentName,
+        timeRange: undefined,
       });
     },
     [settings, onSettingsChange],
@@ -43,6 +44,7 @@ export function TwChartToolbar({
       onSettingsChange({
         ...settings,
         resolution,
+        timeRange: undefined,
       });
     },
     [settings, onSettingsChange],

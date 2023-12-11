@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { IChartApi, Time, createChart } from 'lightweight-charts';
+import { IChartApi, createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
 import { ChartTimeRangeChangeFn, TwInitInput } from './types';
 import { destroyChart, getTwInitInput, initChart } from './util';
@@ -55,27 +55,6 @@ export function TwChart({
   return (
     <div className='h-full overflow-hidden relative'>
       <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
-      <button
-        style={{ position: 'absolute', top: 30, zIndex: 10 }}
-        onClick={() => {
-          if (chart) {
-            // chart.setCrosshairPosition(
-            //   36_100,
-            //   (1_702_056_900 - 1 * 86_400) as Time,
-            //   chartInitResult.candlestickSeries,
-            // );
-            const referent = 1_702_056_900;
-            const from = referent - 5 * 86_400;
-            const to = referent - 4 * 86_400;
-            chart.timeScale().setVisibleRange({
-              from: from as Time,
-              to: to as Time,
-            });
-          }
-        }}
-      >
-        Set
-      </button>
       <div ref={chartElementRef} className='h-full overflow-hidden' />
     </div>
   );
