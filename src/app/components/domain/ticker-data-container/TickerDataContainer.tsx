@@ -1,7 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { LoadingDisplay } from '../../shared/display/LoadingDisplay';
 import { TwChart } from '../tw-chart/TwChart';
-import { TwChartResolution, TwChartSettings } from '../tw-chart/types';
+import {
+  ChartTimeRangeChangeFn,
+  TwChartResolution,
+  TwChartSettings,
+} from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/TwChartToolbar';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { toTickerDataRows } from './process-chart-data';
@@ -26,6 +30,8 @@ export function TickerDataContainer({
   const [settings, setSettings] = useState<TwChartSettings>({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
+    timeRange: undefined,
+    logicalRange: undefined,
   });
 
   const { instrumentName, resolution } = settings;
@@ -45,13 +51,24 @@ export function TickerDataContainer({
     [rawData, resolution],
   );
 
+  const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
+    (range) => {
+      console.log('handleChartTimeRangeChange', range);
+    },
+    [],
+  );
+
   if (!instrument) {
     return <div>Instrument not found.</div>;
   }
 
   const dataChartElement =
     !isLoadingData && finalData.length > 0 ? (
-      <TwChart precision={instrument.precision} data={finalData} />
+      <TwChart
+        precision={instrument.precision}
+        data={finalData}
+        onChartTimeRangeChange={handleChartTimeRangeChange}
+      />
     ) : isLoadingData ? (
       <LoadingDisplay />
     ) : (

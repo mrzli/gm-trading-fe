@@ -1,6 +1,6 @@
 import { IChartApi } from 'lightweight-charts';
 import { TickerDataRow } from '../../../../types';
-import { CrosshairMoveFn, TwInitInput } from '../types';
+import { CrosshairMoveFn, TwInitInput, ChartTimeRangeChangeFn } from '../types';
 import {
   getChartOptions,
   getDataSeriesOptions,
@@ -11,11 +11,13 @@ export function getTwInitInput(
   precision: number,
   data: readonly TickerDataRow[],
   onCrosshairMove: CrosshairMoveFn,
+  onChartTimeRangeChange: ChartTimeRangeChangeFn,
 ): TwInitInput {
   return {
     precision,
     data,
     onCrosshairMove,
+    onChartTimeRangeChange,
   };
 }
 
@@ -27,7 +29,7 @@ export function initChart(
     return;
   }
 
-  const { precision, data, onCrosshairMove } = input;
+  const { precision, data, onCrosshairMove, onChartTimeRangeChange } = input;
 
   const chartOptions = getChartOptions();
   chart.applyOptions(chartOptions);
@@ -37,7 +39,8 @@ export function initChart(
   candlestickSeries.setData([...data]);
 
   const timeScaleOptions = getTimeScaleOptions();
-  chart.timeScale().applyOptions(timeScaleOptions);
+  const timeScale = chart.timeScale();
+  timeScale.applyOptions(timeScaleOptions);
 
   chart.subscribeCrosshairMove((param) => {
     const item = param.seriesData.get(candlestickSeries);
@@ -47,6 +50,18 @@ export function initChart(
     }
 
     onCrosshairMove(item as TickerDataRow);
+  });
+
+  timeScale.subscribeVisibleLogicalRangeChange((param) => {
+    if (!param) {
+      onChartTimeRangeChange(undefined);
+      return;
+    }
+
+    onChartTimeRangeChange({
+      from: param.from,
+      to: param.to,
+    });
   });
 }
 

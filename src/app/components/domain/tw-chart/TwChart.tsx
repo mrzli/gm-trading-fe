@@ -1,54 +1,81 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { createChart } from 'lightweight-charts';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { IChartApi, Time, createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
-import { CrosshairMoveFn, TwInitInput } from './types';
+import { ChartTimeRangeChangeFn, TwInitInput } from './types';
 import { destroyChart, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 
 export interface TwChartProps {
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
+  readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
 }
 
-export function TwChart({ precision, data }: TwChartProps): React.ReactElement {
+export function TwChart({
+  precision,
+  data,
+  onChartTimeRangeChange,
+}: TwChartProps): React.ReactElement {
   const chartElementRef = useRef<HTMLDivElement>(null);
 
   const [currCrosshairItem, setCurrCrosshairItem] = useState<
     TickerDataRow | undefined
   >(undefined);
 
-  const handleCrosshairMove = useCallback<CrosshairMoveFn>(
-    (param) => {
-      setCurrCrosshairItem(param);
-    },
-    [setCurrCrosshairItem],
-  );
+  const [chart, setChart] = useState<IChartApi | undefined>(undefined);
 
   const input = useMemo<TwInitInput>(
-    () => getTwInitInput(precision, data, handleCrosshairMove),
-    [precision, data, handleCrosshairMove],
+    () =>
+      getTwInitInput(
+        precision,
+        data,
+        setCurrCrosshairItem,
+        onChartTimeRangeChange,
+      ),
+    [
+      precision,
+      data,
+      setCurrCrosshairItem,
+      onChartTimeRangeChange,
+    ],
   );
 
   useEffect(() => {
-    const chart = chartElementRef.current
+    const c = chartElementRef.current
       ? createChart(chartElementRef.current)
       : undefined;
-    initChart(chart, input);
+    initChart(c, input);
+    setChart(c);
 
     return () => {
-      destroyChart(chart);
+      destroyChart(c);
     };
   }, [input]);
 
   return (
     <div className='h-full overflow-hidden relative'>
       <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
+      <button
+        style={{ position: 'absolute', top: 30, zIndex: 10 }}
+        onClick={() => {
+          if (chart) {
+            // chart.setCrosshairPosition(
+            //   36_100,
+            //   (1_702_056_900 - 1 * 86_400) as Time,
+            //   chartInitResult.candlestickSeries,
+            // );
+            const referent = 1_702_056_900;
+            const from = referent - 5 * 86_400;
+            const to = referent - 4 * 86_400;
+            chart.timeScale().setVisibleRange({
+              from: from as Time,
+              to: to as Time,
+            });
+          }
+        }}
+      >
+        Set
+      </button>
       <div ref={chartElementRef} className='h-full overflow-hidden' />
     </div>
   );
