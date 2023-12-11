@@ -6,11 +6,8 @@ import {
 } from '../types';
 import { TwSelectButton } from './select-button/TwSelectButton';
 import { toSimpleTwSelectOption } from '../util';
-import {
-  TwSelectOption,
-  TwSelectionRenderer,
-  TwSelectItemRenderer,
-} from './select-button/types';
+import { TwSelectOption } from './select-button/types';
+import { TwSelectButtonCentered } from './select-button/TwSelectButtonCentered';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -51,24 +48,6 @@ export function TwChartToolbar({
     [settings, onSettingsChange],
   );
 
-  const selectionRenderer = useMemo<TwSelectionRenderer<TwChartResolution>>(
-    // eslint-disable-next-line react/display-name
-    () => (option) => (
-      <div className='px-1 w-8 inline-flex justify-center'>
-        {option?.label ?? '-'}
-      </div>
-    ),
-    [],
-  );
-
-  const selectItemRenderer = useMemo<TwSelectItemRenderer<TwChartResolution>>(
-    // eslint-disable-next-line react/display-name
-    () => (option) => (
-      <div className='px-1 w-8 inline-flex justify-center'>{option.label}</div>
-    ),
-    [],
-  );
-
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <TwSelectButton<string, false>
@@ -78,12 +57,11 @@ export function TwChartToolbar({
         selectionWidth={80}
         selectItemWidth={80}
       />
-      <TwSelectButton<TwChartResolution, false>
+      <TwSelectButtonCentered<TwChartResolution, false>
         options={RESOLUTION_OPTIONS}
         value={resolution}
         onValueChange={handleResolutionChange}
-        selectionRenderer={selectionRenderer}
-        selectItemRenderer={selectItemRenderer}
+        width={32}
       />
     </div>
   );
