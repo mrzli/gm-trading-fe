@@ -4,6 +4,7 @@ import { decoratorPadding, disableControl } from '../../../../../../storybook';
 import { useState } from 'react';
 import { TwChartSettings } from '../../types';
 import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
+import { TEST_TICKER_ROWS_MINUTE } from '../../data';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -22,10 +23,12 @@ const STORY_META: Meta<TwChartToolbarProps> = {
   decorators: [decoratorPadding()],
   argTypes: {
     settings: disableControl(),
+    data: disableControl(),
     onSettingsChange: disableControl(),
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
+    data: TEST_TICKER_ROWS_MINUTE,
     chartApi: undefined,
   },
 };

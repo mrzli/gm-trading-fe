@@ -98,7 +98,7 @@ export function TwSelectButton<
   }, [selectItemRenderer, selectItemWidth]);
 
   return (
-    <div>
+    <div className='inline-flex'>
       <div
         ref={refs.setReference}
         className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'

@@ -2,13 +2,13 @@ import React, { useCallback } from 'react';
 import cls from 'classnames';
 
 export interface TwButtonProps {
-  readonly label: string;
+  readonly content: React.ReactNode;
   readonly onClick: () => void;
   readonly disabled?: boolean;
 }
 
 export function TwButton({
-  label,
+  content,
   onClick,
   disabled,
 }: TwButtonProps): React.ReactElement {
@@ -23,7 +23,7 @@ export function TwButton({
 
   return (
     <button className={classes} onClick={handleClick} disabled={disabled}>
-      {label}
+      {content}
     </button>
   );
 }

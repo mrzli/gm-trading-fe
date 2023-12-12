@@ -9,7 +9,7 @@ const STORY_META: Meta<TwButtonProps> = {
     onClick: disableControl(),
   },
   args: {
-    label: 'Button',
+    content: 'Button',
     disabled: false,
   },
 };

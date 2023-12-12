@@ -8,10 +8,10 @@ export interface TwInitInput {
 }
 
 export interface TwChartApi {
-  readonly timeToLogical: TimeToLogicalConverterFn;
+  readonly setTimeRange: SetTimeRangeFn;
 }
 
-export type TimeToLogicalConverterFn = (time: number) => number | undefined;
+export type SetTimeRangeFn = (range: TwRange) => void;
 
 export interface TwRange {
   readonly from: number;

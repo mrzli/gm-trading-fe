@@ -105,6 +105,7 @@ export const Primary: StoryObj<Props> = {
           selectItemWidth={selectItemWidth}
         />
         <br />
+        <br />
         <PrettyDisplay content={value} />
       </div>
     );

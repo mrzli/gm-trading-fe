@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { z } from 'zod';
 import validator from 'validator';
+import Icon from '@mdi/react';
+import { mdiChevronDoubleLeft, mdiChevronDoubleRight } from '@mdi/js';
 import {
   TYPES_OF_TW_CHART_RESOLUTION,
-  TwChartApi,
   TwChartResolution,
   TwChartSettings,
 } from '../../types';
@@ -25,7 +26,6 @@ export interface TwChartToolbarProps {
   readonly data: readonly TickerDataRow[];
   readonly settings: TwChartSettings;
   readonly onSettingsChange: (settings: TwChartSettings) => void;
-  readonly chartApi: TwChartApi | undefined;
 }
 
 export function TwChartToolbar({
@@ -33,7 +33,6 @@ export function TwChartToolbar({
   data,
   settings,
   onSettingsChange,
-  chartApi,
 }: TwChartToolbarProps): React.ReactElement {
   const instrumentOptions = useMemo<readonly TwSelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
@@ -73,29 +72,44 @@ export function TwChartToolbar({
     [settings, onSettingsChange],
   );
 
+  const navigateTo = useCallback(
+    (logical: number) => {
+      const { timeRange } = settings;
+      const span = timeRange ? timeRange.to - timeRange.from : DEFAULT_SPAN;
+
+      const from = logical - span / 2;
+      const to = logical + span / 2;
+
+      onSettingsChange({
+        ...settings,
+        timeRange: {
+          from,
+          to,
+        },
+      });
+    },
+    [settings, onSettingsChange],
+  );
+
+  const navigateToStart = useCallback(() => {
+    const logical = 0;
+    navigateTo(logical);
+  }, [navigateTo]);
+
+  const navigateToEnd = useCallback(() => {
+    const logical = data.length - 1;
+    navigateTo(logical);
+  }, [data, navigateTo]);
+
   const handleGoToClick = useCallback(() => {
     if (!isGoToEnabled) {
       return;
     }
 
-    const { timeRange } = settings;
-
     const time = dateIsoUtcToUnixSeconds(goToInput);
     const logical = binarySearch(data, time, (row) => row.time);
-
-    const span = timeRange ? timeRange.to - timeRange.from : DEFAULT_SPAN;
-
-    const from = logical - span / 2;
-    const to = logical + span / 2;
-
-    onSettingsChange({
-      ...settings,
-      timeRange: {
-        from,
-        to,
-      },
-    });
-  }, [data, settings, onSettingsChange, goToInput, isGoToEnabled]);
+    navigateTo(logical);
+  }, [isGoToEnabled, data, goToInput, navigateTo]);
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
@@ -112,6 +126,14 @@ export function TwChartToolbar({
         onValueChange={handleResolutionChange}
         width={32}
       />
+      <TwButton
+        content={<Icon path={mdiChevronDoubleLeft} size={0.875 / 1.5} />}
+        onClick={navigateToStart}
+      />
+      <TwButton
+        content={<Icon path={mdiChevronDoubleRight} size={0.875 / 1.5} />}
+        onClick={navigateToEnd}
+      />
       {data.length > 0 && (
         <>
           <TwTextInput
@@ -122,7 +144,7 @@ export function TwChartToolbar({
             width={160}
           />
           <TwButton
-            label={'Go to'}
+            content={'Go to'}
             onClick={handleGoToClick}
             disabled={!isGoToEnabled}
           />
