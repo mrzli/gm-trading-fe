@@ -11,7 +11,13 @@ import { TwButton } from '../../form/TwButton';
 import { dateIsoUtcToUnixSeconds } from '../../../../../../util';
 import { TickerDataRow } from '../../../../../../types';
 import { binarySearch } from '../../../util/binary-search';
-import { SCHEME_GO_TO_INPUT, DEFAULT_SPAN, dateInputToIso, RESOLUTION_OPTIONS, SCHEME_DATE } from './util';
+import {
+  SCHEME_GO_TO_INPUT,
+  DEFAULT_SPAN,
+  dateInputToIso,
+  RESOLUTION_OPTIONS,
+  SCHEME_DATE,
+} from './util';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -104,6 +110,15 @@ export function TwChartToolbar({
     navigateTo(logical);
   }, [isGoToEnabled, data, goToInput, navigateTo]);
 
+  const handleGoToKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        handleGoToClick();
+      }
+    },
+    [handleGoToClick],
+  );
+
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <TwSelectButton<string, false>
@@ -133,6 +148,7 @@ export function TwChartToolbar({
             placeholder='YYYY-MM-DD [HH:mm]'
             value={goToInput}
             onValueChange={setGoToInput}
+            onKeyDown={handleGoToKeyDown}
             error={!isGoToInputValid}
             width={160}
           />

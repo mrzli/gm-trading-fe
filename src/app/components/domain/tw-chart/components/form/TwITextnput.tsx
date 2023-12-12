@@ -5,6 +5,7 @@ export interface TwTextInputProps {
   readonly placeholder?: string;
   readonly value: string;
   readonly onValueChange: (value: string) => void;
+  readonly onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   readonly disabled?: boolean;
   readonly error?: boolean;
   readonly width?: CSSProperties['width'];
@@ -14,6 +15,7 @@ export function TwTextInput({
   placeholder,
   value,
   onValueChange,
+  onKeyDown,
   disabled,
   error,
   width,
@@ -39,6 +41,7 @@ export function TwTextInput({
       disabled={disabled}
       value={value}
       onChange={handleChange}
+      onKeyDown={onKeyDown}
     />
   );
 }

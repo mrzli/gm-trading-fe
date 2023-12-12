@@ -11,6 +11,7 @@ const STORY_META: Meta<TwTextInputProps> = {
   argTypes: {
     value: disableControl(),
     onValueChange: disableControl(),
+    onKeyDown: disableControl(),
   },
   args: {
     placeholder: 'Enter text here...',
