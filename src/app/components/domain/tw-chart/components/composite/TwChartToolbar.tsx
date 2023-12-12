@@ -106,8 +106,9 @@ export function TwChartToolbar({
       return;
     }
 
-    const time = dateIsoUtcToUnixSeconds(goToInput);
+    const time = dateIsoUtcToUnixSeconds(dateInputToIso(goToInput));
     const logical = binarySearch(data, time, (row) => row.time);
+
     navigateTo(logical);
   }, [isGoToEnabled, data, goToInput, navigateTo]);
 
@@ -162,14 +163,7 @@ const RESOLUTION_OPTIONS: readonly TwSelectOption<TwChartResolution>[] =
   );
 
 const SCHEME_DATE = z.string().refine((value) => {
-  const parts = applyFn(
-    value.split(' '),
-    compose(
-      map((p) => p.trim()),
-      filter((p) => p.length > 0),
-      toArray(),
-    ),
-  );
+  const parts = getDateInputParts(value);
 
   if (parts.length === 1) {
     return validateDate(parts[0]);
@@ -192,4 +186,19 @@ function validateDate(value: string): boolean {
 
 function validateTime(value: string): boolean {
   return validator.isTime(value);
+}
+
+function dateInputToIso(value: string): string {
+  return getDateInputParts(value).join('T');
+}
+
+function getDateInputParts(value: string): readonly string[] {
+  return applyFn(
+    value.split(' '),
+    compose(
+      map((p) => p.trim()),
+      filter((p) => p.length > 0),
+      toArray(),
+    ),
+  );
 }
