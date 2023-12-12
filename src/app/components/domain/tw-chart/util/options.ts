@@ -25,7 +25,7 @@ export function getChartOptions(): DeepPartial<TimeChartOptions> {
       dateFormat: 'yyyy-MM-dd',
     },
     rightPriceScale: {
-      autoScale: false,
+      autoScale: true,
     },
   };
 }

@@ -3,6 +3,7 @@ import { UTCTimestamp } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
 import { TwChartResolution } from '../tw-chart/types';
 import { invariant } from '@gmjs/assert';
+import { DAY_TO_SECONDS, HOUR_TO_SECONDS, MINUTE_TO_SECONDS, WEEK_TO_SECONDS } from '../../../util';
 
 export function toTickerDataRows(
   lines: readonly string[],
@@ -15,7 +16,7 @@ export function toTickerDataRows(
 
 // UNIX time starts at 1970-01-01 00:00:00 UTC, which is a Thursday
 // to get a time which starts at Monday, we need to offset by 3 days
-const WEEK_BUCKET_OFFET = 60 * 60 * 24 * 3;
+const WEEK_BUCKET_OFFET = DAY_TO_SECONDS * 3;
 
 function aggregateDataRows(
   rows: readonly TickerDataRow[],
@@ -104,17 +105,17 @@ function resolutionToSeconds(resolution: TwChartResolution): number {
   switch (unit) {
     case 'm': {
       const value = parseIntegerOrThrow(resolution.slice(0, -1));
-      return value * 60;
+      return value * MINUTE_TO_SECONDS;
     }
     case 'h': {
       const value = parseIntegerOrThrow(resolution.slice(0, -1));
-      return value * 60 * 60;
+      return value * HOUR_TO_SECONDS;
     }
     case 'D': {
-      return 24 * 60 * 60;
+      return DAY_TO_SECONDS;
     }
     case 'W': {
-      return 7 * 24 * 60 * 60;
+      return WEEK_TO_SECONDS;
     }
     default: {
       invariant(false, `Unexpected unit: ${unit}`);

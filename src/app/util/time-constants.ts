@@ -1,0 +1,4 @@
+export const MINUTE_TO_SECONDS = 60;
+export const HOUR_TO_SECONDS = 60 * MINUTE_TO_SECONDS;
+export const DAY_TO_SECONDS = 24 * HOUR_TO_SECONDS;
+export const WEEK_TO_SECONDS = 7 * DAY_TO_SECONDS;

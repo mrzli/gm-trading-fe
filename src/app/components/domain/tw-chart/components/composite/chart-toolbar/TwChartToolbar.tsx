@@ -1,7 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import Icon from '@mdi/react';
-import { mdiChevronDoubleLeft, mdiChevronDoubleRight } from '@mdi/js';
-import { TwChartResolution, TwChartSettings } from '../../../types';
+import {
+  mdiChevronDoubleLeft,
+  mdiChevronDoubleRight,
+  mdiChevronLeft,
+  mdiChevronRight,
+} from '@mdi/js';
+import { TwChartResolution, TwChartSettings, TwRange } from '../../../types';
 import { TwSelectButton } from '../../form/select-button/TwSelectButton';
 import { toSimpleTwSelectOption } from '../../../util';
 import { TwSelectOption } from '../../form/select-button/types';
@@ -10,14 +15,16 @@ import { TwTextInput } from '../../form/TwITextnput';
 import { TwButton } from '../../form/TwButton';
 import { dateIsoUtcToUnixSeconds } from '../../../../../../util';
 import { TickerDataRow } from '../../../../../../types';
-import { binarySearch } from '../../../util/binary-search';
 import {
   SCHEME_GO_TO_INPUT,
   DEFAULT_SPAN,
   dateInputToIso,
   RESOLUTION_OPTIONS,
   SCHEME_DATE,
+  timeToLogical,
+  moveLogical,
 } from './util';
+import { TwTimeStep, TYPES_OF_TIME_STEPS } from './types';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -37,6 +44,8 @@ export function TwChartToolbar({
       toSimpleTwSelectOption(instrumentName),
     );
   }, [instrumentNames]);
+
+  const [timeStep, setTimeStep] = useState<TwTimeStep>('100B');
 
   const [goToInput, setGoToInput] = useState('');
   const isGoToInputValid = useMemo(
@@ -90,14 +99,31 @@ export function TwChartToolbar({
   );
 
   const navigateToStart = useCallback(() => {
-    const logical = 0;
-    navigateTo(logical);
+    navigateTo(0);
   }, [navigateTo]);
 
   const navigateToEnd = useCallback(() => {
-    const logical = data.length - 1;
-    navigateTo(logical);
+    navigateTo(data.length - 1);
   }, [data, navigateTo]);
+
+  const navigate = useCallback(
+    (isForward: boolean) => {
+      const { timeRange } = settings;
+
+      if (!timeRange) {
+        return;
+      }
+
+      const currLogical = timeRangeToLogical(timeRange);
+
+      const logical = moveLogical(currLogical, timeStep, data, isForward);
+      navigateTo(logical);
+    },
+    [settings, timeStep, data, navigateTo],
+  );
+
+  const navigateBack = useCallback(() => navigate(false), [navigate]);
+  const navigateForward = useCallback(() => navigate(true), [navigate]);
 
   const handleGoToClick = useCallback(() => {
     if (!isGoToEnabled) {
@@ -105,7 +131,7 @@ export function TwChartToolbar({
     }
 
     const time = dateIsoUtcToUnixSeconds(dateInputToIso(goToInput));
-    const logical = binarySearch(data, time, (row) => row.time);
+    const logical = timeToLogical(time, data);
 
     navigateTo(logical);
   }, [isGoToEnabled, data, goToInput, navigateTo]);
@@ -135,11 +161,25 @@ export function TwChartToolbar({
         width={32}
       />
       <TwButton
-        content={<Icon path={mdiChevronDoubleLeft} size={0.875 / 1.5} />}
+        content={<Icon path={mdiChevronDoubleLeft} size={ICON_SIZE} />}
         onClick={navigateToStart}
       />
       <TwButton
-        content={<Icon path={mdiChevronDoubleRight} size={0.875 / 1.5} />}
+        content={<Icon path={mdiChevronLeft} size={ICON_SIZE} />}
+        onClick={navigateBack}
+      />
+      <TwSelectButtonCentered<TwTimeStep, false>
+        options={TIME_STEP_OPTIONS}
+        value={timeStep}
+        onValueChange={setTimeStep}
+        width={48}
+      />
+      <TwButton
+        content={<Icon path={mdiChevronRight} size={ICON_SIZE} />}
+        onClick={navigateForward}
+      />
+      <TwButton
+        content={<Icon path={mdiChevronDoubleRight} size={ICON_SIZE} />}
         onClick={navigateToEnd}
       />
       {data.length > 0 && (
@@ -162,3 +202,13 @@ export function TwChartToolbar({
     </div>
   );
 }
+
+function timeRangeToLogical(timeRange: TwRange): number {
+  return (timeRange.from + timeRange.to) / 2;
+}
+
+const ICON_SIZE = 0.875 / 1.5;
+
+const TIME_STEP_OPTIONS = TYPES_OF_TIME_STEPS.map((timeStep) =>
+  toSimpleTwSelectOption(timeStep),
+);
