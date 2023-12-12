@@ -6,7 +6,7 @@ import {
   TwChartResolution,
   TwChartSettings,
 } from '../tw-chart/types';
-import { TwChartToolbar } from '../tw-chart/components/composite/TwChartToolbar';
+import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { toTickerDataRows } from './process-chart-data';
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';

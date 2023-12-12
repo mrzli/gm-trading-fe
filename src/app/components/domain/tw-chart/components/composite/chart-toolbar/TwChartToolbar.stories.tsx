@@ -1,10 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChartToolbar, TwChartToolbarProps } from './TwChartToolbar';
-import { decoratorPadding, disableControl } from '../../../../../../storybook';
+import {
+  decoratorPadding,
+  disableControl,
+} from '../../../../../../../storybook';
 import { useState } from 'react';
-import { TwChartSettings } from '../../types';
-import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
-import { TEST_TICKER_ROWS_MINUTE } from '../../data';
+import { TwChartSettings } from '../../../types';
+import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
+import { TEST_TICKER_ROWS_MINUTE } from '../../../data';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -29,7 +32,6 @@ const STORY_META: Meta<TwChartToolbarProps> = {
   args: {
     instrumentNames: INSTRUMENT_NAMES,
     data: TEST_TICKER_ROWS_MINUTE,
-    chartApi: undefined,
   },
 };
 export default STORY_META;
