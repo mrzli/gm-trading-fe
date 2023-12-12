@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Key } from 'ts-key-enum';
+import { Instrument } from '@gmjs/gm-trading-shared';
 import { LoadingDisplay } from '../../shared/display/LoadingDisplay';
 import { TwChart } from '../tw-chart/TwChart';
 import {
@@ -7,9 +9,11 @@ import {
   TwChartSettings,
 } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
-import { Instrument } from '@gmjs/gm-trading-shared';
 import { toTickerDataRows } from './process-chart-data';
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
+import { invariant } from '@gmjs/assert';
+import { moveLogicalRange } from '../tw-chart/util';
+import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -62,26 +66,26 @@ export function TickerDataContainer({
   );
 
   const handleChartKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      // if (e.key === 'ArrowLeft') {
-      //   setSettings((s) => ({
-      //     ...s,
-      //     timeRange: {
-      //       start: s.timeRange?.start - 1,
-      //       end: s.timeRange?.end - 1,
-      //     },
-      //   }));
-      // } else if (e.key === 'ArrowRight') {
-      //   setSettings((s) => ({
-      //     ...s,
-      //     timeRange: {
-      //       start: s.timeRange?.start + 1,
-      //       end: s.timeRange?.end + 1,
-      //     },
-      //   }));
-      // }
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      switch (event.key) {
+        case Key.ArrowLeft:
+        case Key.ArrowRight: {
+          const offset = toLogicalOffset(event);
+          const timeStep: TwTimeStep = {
+            unit: 'B',
+            value: offset,
+          };
+          setSettings((s) => ({
+            ...s,
+            logicalRange: s.logicalRange
+              ? moveLogicalRange(s.logicalRange, timeStep, finalData)
+              : undefined,
+          }));
+          break;
+        }
+      }
     },
-    [],
+    [finalData],
   );
 
   if (!instrument) {
@@ -115,4 +119,31 @@ export function TickerDataContainer({
       <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );
+}
+
+function toLogicalOffset(event: React.KeyboardEvent<HTMLDivElement>): number {
+  const base = toBaseLogicalOffset(event);
+  const multiplier = toLogicalOffsetMultiplier(event);
+  return base * multiplier;
+}
+
+function toBaseLogicalOffset(
+  event: React.KeyboardEvent<HTMLDivElement>,
+): number {
+  switch (event.key) {
+    case Key.ArrowLeft: {
+      return -1;
+    }
+    case Key.ArrowRight: {
+      return 1;
+    }
+  }
+
+  invariant(false, `Unexpected key: ${event.key}`);
+}
+
+function toLogicalOffsetMultiplier(
+  event: React.KeyboardEvent<HTMLDivElement>,
+): number {
+  return event.shiftKey ? 10 : 1;
 }

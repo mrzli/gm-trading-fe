@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
@@ -70,6 +71,7 @@ export function TwChart({
       <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
       <div
         ref={chartElementRef}
+        tabIndex={0}
         className='h-full overflow-hidden'
         onKeyDown={onChartKeyDown}
       />

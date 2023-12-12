@@ -71,6 +71,9 @@ dependencies:
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
+  ts-key-enum:
+    specifier: ^2.0.12
+    version: 2.0.12
   tslib:
     specifier: ^2.6.2
     version: 2.6.2
@@ -11219,6 +11222,10 @@ packages:
       typescript: 5.2.2
       yargs-parser: 21.1.1
     dev: true
+
+  /ts-key-enum@2.0.12:
+    resolution: {integrity: sha512-Ety4IvKMaeG34AyXMp5r11XiVZNDRL+XWxXbVVJjLvq2vxKRttEANBE7Za1bxCAZRdH2/sZT6jFyyTWxXz28hw==}
+    dev: false
 
   /ts-node@10.9.1(@types/node@20.10.3)(typescript@5.2.2):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
