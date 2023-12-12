@@ -3,6 +3,7 @@ import { LoadingDisplay } from '../../shared/display/LoadingDisplay';
 import { TwChart } from '../tw-chart/TwChart';
 import {
   ChartTimeRangeChangeFn,
+  TwChartApi,
   TwChartResolution,
   TwChartSettings,
 } from '../tw-chart/types';
@@ -34,6 +35,8 @@ export function TickerDataContainer({
     timeRange: undefined,
   });
 
+  const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
+
   const { instrumentName, resolution } = settings;
 
   useEffect(() => {
@@ -49,6 +52,13 @@ export function TickerDataContainer({
   const finalData = useMemo(
     () => toTickerDataRows(rawData ?? [], resolution),
     [rawData, resolution],
+  );
+
+  const handleChartInit = useCallback(
+    (chartApi: TwChartApi | undefined) => {
+      setChartApi(chartApi);
+    },
+    [],
   );
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
@@ -70,6 +80,7 @@ export function TickerDataContainer({
       <TwChart
         precision={instrument.precision}
         data={finalData}
+        onChartInit={handleChartInit}
         onChartTimeRangeChange={handleChartTimeRangeChange}
       />
     ) : isLoadingData ? (
@@ -82,8 +93,10 @@ export function TickerDataContainer({
     <div className='h-screen flex flex-col gap-4 p-4'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
+        data={finalData}
         settings={settings}
         onSettingsChange={setSettings}
+        chartApi={chartApi}
       />
       <PrettyDisplay content={settings} />
       <div className='flex-1 overflow-hidden'>{dataChartElement}</div>

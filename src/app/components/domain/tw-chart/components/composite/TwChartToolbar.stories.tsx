@@ -26,6 +26,7 @@ const STORY_META: Meta<TwChartToolbarProps> = {
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
+    chartApi: undefined,
   },
 };
 export default STORY_META;

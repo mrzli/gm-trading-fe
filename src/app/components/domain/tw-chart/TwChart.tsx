@@ -1,19 +1,21 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { IChartApi, createChart } from 'lightweight-charts';
+import { createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
-import { ChartTimeRangeChangeFn, TwInitInput } from './types';
+import { ChartTimeRangeChangeFn, TwChartApi, TwInitInput } from './types';
 import { destroyChart, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/composite/TwOhlcLabel';
 
 export interface TwChartProps {
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
+  readonly onChartInit: (chartApi: TwChartApi | undefined) => void;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
 }
 
 export function TwChart({
   precision,
   data,
+  onChartInit,
   onChartTimeRangeChange,
 }: TwChartProps): React.ReactElement {
   const chartElementRef = useRef<HTMLDivElement>(null);
@@ -22,7 +24,7 @@ export function TwChart({
     TickerDataRow | undefined
   >(undefined);
 
-  const [chart, setChart] = useState<IChartApi | undefined>(undefined);
+  // const [chart, setChart] = useState<IChartApi | undefined>(undefined);
 
   const input = useMemo<TwInitInput>(
     () =>
@@ -39,13 +41,14 @@ export function TwChart({
     const c = chartElementRef.current
       ? createChart(chartElementRef.current)
       : undefined;
-    initChart(c, input);
-    setChart(c);
+    const chartApi = initChart(c, input);
+    onChartInit(chartApi);
+    // setChart(c);
 
     return () => {
       destroyChart(c);
     };
-  }, [input]);
+  }, [input, onChartInit]);
 
   return (
     <div className='h-full overflow-hidden relative'>

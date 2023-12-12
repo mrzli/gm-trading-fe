@@ -1,6 +1,17 @@
-import { IChartApi } from 'lightweight-charts';
+import {
+  IChartApi,
+  ITimeScaleApi,
+  Time,
+  UTCTimestamp,
+} from 'lightweight-charts';
 import { TickerDataRow } from '../../../../types';
-import { CrosshairMoveFn, TwInitInput, ChartTimeRangeChangeFn } from '../types';
+import {
+  CrosshairMoveFn,
+  TwInitInput,
+  ChartTimeRangeChangeFn,
+  TwChartApi,
+  TimeToLogicalConverterFn,
+} from '../types';
 import {
   getChartOptions,
   getDataSeriesOptions,
@@ -24,9 +35,9 @@ export function getTwInitInput(
 export function initChart(
   chart: IChartApi | undefined,
   input: TwInitInput,
-): void {
+): TwChartApi | undefined {
   if (!chart) {
-    return;
+    return undefined;
   }
 
   const { precision, data, onCrosshairMove, onChartTimeRangeChange } = input;
@@ -63,6 +74,26 @@ export function initChart(
       to: param.to,
     });
   });
+
+  return {
+    timeToLogical: createTimeToLogicalConverter(timeScale),
+  };
+}
+
+function createTimeToLogicalConverter(
+  timeScale: ITimeScaleApi<Time>,
+): TimeToLogicalConverterFn {
+  return (time: number) => {
+    const coord = timeScale.timeToCoordinate(time as UTCTimestamp) ?? undefined;
+    console.log('time', time);
+    console.log('coord', coord);
+    if (coord === undefined) {
+      return undefined;
+    }
+
+    const logical = timeScale.coordinateToLogical(coord);
+    return logical ?? undefined;
+  };
 }
 
 export function destroyChart(chart: IChartApi | undefined): void {

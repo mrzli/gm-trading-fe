@@ -7,6 +7,12 @@ export interface TwInitInput {
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
 }
 
+export interface TwChartApi {
+  readonly timeToLogical: TimeToLogicalConverterFn;
+}
+
+export type TimeToLogicalConverterFn = (time: number) => number | undefined;
+
 export interface TwRange {
   readonly from: number;
   readonly to: number;

@@ -19,7 +19,7 @@ export function TwTextInput({
   width,
 }: TwTextInputProps): React.ReactElement {
   const classes = cls('px-1 outline-none text-sm border rounded', {
-    'border-slate-400': !disabled,
+    'border-slate-400': !error && !disabled,
     'border-slate-200 text-gray-400 cursor-not-allowed': disabled,
     'border-red-500': error && !disabled,
   });

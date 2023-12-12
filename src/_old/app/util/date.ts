@@ -7,6 +7,10 @@ export function dateIsoToUnixMillis(dateIso: string): number {
   return DateTime.fromISO(dateIso).toMillis();
 }
 
+export function dateIsoToUnixSeconds(dateIso: string): number {
+  return DateTime.fromISO(dateIso).toSeconds();
+}
+
 export function timestampToDatetimeUtc(ts: number): DateTime {
   return DateTime.fromSeconds(ts).setZone('UTC');
 }
