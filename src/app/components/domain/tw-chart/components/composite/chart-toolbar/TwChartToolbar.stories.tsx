@@ -43,7 +43,7 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
     const [settings, setSettings] = useState<TwChartSettings>({
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
-      timeRange: undefined,
+      logicalRange: undefined,
     });
 
     return (

@@ -4,5 +4,5 @@ import { TwRange } from './tw-init-input';
 export interface TwChartSettings {
   readonly instrumentName: string;
   readonly resolution: TwChartResolution;
-  readonly timeRange: TwRange | undefined;
+  readonly logicalRange: TwRange | undefined;
 }

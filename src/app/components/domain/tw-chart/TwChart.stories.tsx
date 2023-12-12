@@ -22,6 +22,7 @@ const STORY_META: Meta<TwChartProps> = {
     precision: argTypeInteger(0, 10),
     data: disableControl(),
     onChartTimeRangeChange: disableControl(),
+    onChartKeyDown: disableControl(),
   },
   args: {
     precision: 2,

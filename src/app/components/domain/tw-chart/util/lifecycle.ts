@@ -77,10 +77,10 @@ export function initChart(
 }
 
 function createSetTimeRangeFn(timeScale: ITimeScaleApi<Time>): SetTimeRangeFn {
-  return (timeRange: TwRange) => {
+  return (logicalRange: TwRange) => {
     timeScale.setVisibleLogicalRange({
-      from: timeRange.from,
-      to: timeRange.to,
+      from: logicalRange.from,
+      to: logicalRange.to,
     });
   };
 }

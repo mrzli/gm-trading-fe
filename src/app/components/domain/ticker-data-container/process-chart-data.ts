@@ -3,7 +3,12 @@ import { UTCTimestamp } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
 import { TwChartResolution } from '../tw-chart/types';
 import { invariant } from '@gmjs/assert';
-import { DAY_TO_SECONDS, HOUR_TO_SECONDS, MINUTE_TO_SECONDS, WEEK_TO_SECONDS } from '../../../util';
+import {
+  DAY_TO_SECONDS,
+  HOUR_TO_SECONDS,
+  MINUTE_TO_SECONDS,
+  WEEK_TO_SECONDS,
+} from '../../../util';
 
 export function toTickerDataRows(
   lines: readonly string[],
@@ -13,10 +18,6 @@ export function toTickerDataRows(
 
   return aggregateDataRows(rows, resolution);
 }
-
-// UNIX time starts at 1970-01-01 00:00:00 UTC, which is a Thursday
-// to get a time which starts at Monday, we need to offset by 3 days
-const WEEK_BUCKET_OFFET = DAY_TO_SECONDS * 3;
 
 function aggregateDataRows(
   rows: readonly TickerDataRow[],
@@ -39,7 +40,9 @@ function aggregateDataRows(
       return aggregateDataByFixedInterval(
         rows,
         resolutionToSeconds(resolution),
-        resolution === 'W' ? WEEK_BUCKET_OFFET : 0,
+        // UNIX time starts at 1970-01-01 00:00:00 UTC, which is a Thursday
+        // to get a time which starts at Monday, we need to offset by 3 days
+        resolution === 'W' ? DAY_TO_SECONDS * 3 : 0,
       );
     }
     case 'M': {

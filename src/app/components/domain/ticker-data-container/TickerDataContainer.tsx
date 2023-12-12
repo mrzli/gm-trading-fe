@@ -31,10 +31,10 @@ export function TickerDataContainer({
   const [settings, setSettings] = useState<TwChartSettings>({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
-    timeRange: undefined,
+    logicalRange: undefined,
   });
 
-  const { instrumentName, resolution, timeRange } = settings;
+  const { instrumentName, resolution, logicalRange } = settings;
 
   useEffect(() => {
     onRequestData(instrumentName, resolution);
@@ -55,8 +55,31 @@ export function TickerDataContainer({
     (range) => {
       setSettings((s) => ({
         ...s,
-        timeRange: range,
+        logicalRange: range,
       }));
+    },
+    [],
+  );
+
+  const handleChartKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      // if (e.key === 'ArrowLeft') {
+      //   setSettings((s) => ({
+      //     ...s,
+      //     timeRange: {
+      //       start: s.timeRange?.start - 1,
+      //       end: s.timeRange?.end - 1,
+      //     },
+      //   }));
+      // } else if (e.key === 'ArrowRight') {
+      //   setSettings((s) => ({
+      //     ...s,
+      //     timeRange: {
+      //       start: s.timeRange?.start + 1,
+      //       end: s.timeRange?.end + 1,
+      //     },
+      //   }));
+      // }
     },
     [],
   );
@@ -70,8 +93,9 @@ export function TickerDataContainer({
       <TwChart
         precision={instrument.precision}
         data={finalData}
-        timeRange={timeRange}
+        logicalRange={logicalRange}
         onChartTimeRangeChange={handleChartTimeRangeChange}
+        onChartKeyDown={handleChartKeyDown}
       />
     ) : isLoadingData ? (
       <LoadingDisplay />

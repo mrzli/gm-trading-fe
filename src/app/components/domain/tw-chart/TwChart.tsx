@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
 import { TickerDataRow } from '../../../types';
@@ -13,15 +14,17 @@ import { TwOhlcLabel } from './components/composite/TwOhlcLabel';
 export interface TwChartProps {
   readonly precision: number;
   readonly data: readonly TickerDataRow[];
-  readonly timeRange: TwRange | undefined;
+  readonly logicalRange: TwRange | undefined;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
+  readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export function TwChart({
   precision,
   data,
-  timeRange,
+  logicalRange,
   onChartTimeRangeChange,
+  onChartKeyDown,
 }: TwChartProps): React.ReactElement {
   const chartElementRef = useRef<HTMLDivElement>(null);
 
@@ -55,17 +58,21 @@ export function TwChart({
   }, [input]);
 
   useEffect(() => {
-    if (!timeRange || !chartApi) {
+    if (!logicalRange || !chartApi) {
       return;
     }
 
-    chartApi.setTimeRange(timeRange);
-  }, [timeRange, chartApi]);
+    chartApi.setTimeRange(logicalRange);
+  }, [logicalRange, chartApi]);
 
   return (
     <div className='h-full overflow-hidden relative'>
       <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
-      <div ref={chartElementRef} className='h-full overflow-hidden' />
+      <div
+        ref={chartElementRef}
+        className='h-full overflow-hidden'
+        onKeyDown={onChartKeyDown}
+      />
     </div>
   );
 }
