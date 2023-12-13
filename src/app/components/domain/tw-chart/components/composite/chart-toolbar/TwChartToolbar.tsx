@@ -17,7 +17,7 @@ import { TwChartToolbarReplay } from './components/TwChartToolbarReplay';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
-  readonly nonAggregatedDataLength: number;
+  readonly nonAggregatedData: readonly TickerDataRow[];
   readonly data: readonly TickerDataRow[];
   readonly settings: TwChartSettings;
   readonly onSettingsChange: (settings: TwChartSettings) => void;
@@ -25,7 +25,7 @@ export interface TwChartToolbarProps {
 
 export function TwChartToolbar({
   instrumentNames,
-  nonAggregatedDataLength,
+  nonAggregatedData,
   data,
   settings,
   onSettingsChange,
@@ -106,7 +106,7 @@ export function TwChartToolbar({
             onGoTo={updateLogicalRange}
           />
           <TwChartToolbarReplay
-            nonAggregatedDataLength={nonAggregatedDataLength}
+            nonAggregatedData={nonAggregatedData}
             data={data}
             replaySettings={settings.replaySettings}
             onReplaySettingsChange={handleReplaySettingsChange}

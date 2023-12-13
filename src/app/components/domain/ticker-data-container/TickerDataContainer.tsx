@@ -116,7 +116,7 @@ export function TickerDataContainer({
     <div className='h-screen flex flex-col gap-4 p-4'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
-        nonAggregatedDataLength={tickerData.nonAggregatedRows.length}
+        nonAggregatedData={tickerData.nonAggregatedRows}
         data={tickerData.rows}
         settings={settings}
         onSettingsChange={setSettings}

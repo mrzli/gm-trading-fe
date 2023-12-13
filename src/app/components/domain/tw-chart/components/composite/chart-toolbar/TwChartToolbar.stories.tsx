@@ -31,7 +31,7 @@ const STORY_META: Meta<TwChartToolbarProps> = {
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
-    nonAggregatedDataLength: TEST_TICKER_ROWS_MINUTE.length,
+    nonAggregatedData: TEST_TICKER_ROWS_MINUTE,
     data: TEST_TICKER_ROWS_MINUTE,
   },
 };

@@ -13,16 +13,17 @@ import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { TwButton } from '../../../form/TwButton';
+import { timeToLogical } from '../../../../util';
 
 export interface TwChartToolbarReplayProps {
-  readonly nonAggregatedDataLength: number;
+  readonly nonAggregatedData: readonly TickerDataRow[];
   readonly data: readonly TickerDataRow[];
   readonly replaySettings: TwBarReplaySettings;
   readonly onReplaySettingsChange: (settings: TwBarReplaySettings) => void;
 }
 
 export function TwChartToolbarReplay({
-  nonAggregatedDataLength,
+  nonAggregatedData,
   data,
   replaySettings,
   onReplaySettingsChange,
@@ -31,23 +32,23 @@ export function TwChartToolbarReplay({
   const [replayNavigationStepSize, setReplayNavigationStepSize] =
     useState<string>('1');
 
+  const replayDataLength = useMemo(() => {
+    return replaySettings.replaySubBars
+      ? nonAggregatedData.length
+      : data.length;
+  }, [data.length, nonAggregatedData.length, replaySettings.replaySubBars]);
+
   const isReplayInputValid = useMemo(() => {
-    const maxBar = replaySettings.replaySubBars
-      ? nonAggregatedDataLength - 1
-      : data.length - 1;
-    return createSchemaReplayInput(0, maxBar).safeParse(replayInput).success;
-  }, [data, nonAggregatedDataLength, replayInput, replaySettings]);
+    return createSchemaReplayInput(0, replayDataLength - 1).safeParse(
+      replayInput,
+    ).success;
+  }, [replayDataLength, replayInput]);
 
   const isReplayValueValid = useMemo(() => {
-    const maxBar = replaySettings.replaySubBars
-      ? nonAggregatedDataLength - 1
-      : data.length - 1;
-    return createSchemaIntegerInRange(0, maxBar).safeParse(replayInput).success;
-  }, [data, nonAggregatedDataLength, replayInput, replaySettings]);
-
-  const maxBar = replaySettings.replaySubBars
-    ? nonAggregatedDataLength - 1
-    : data.length - 1;
+    return createSchemaIntegerInRange(0, replayDataLength - 1).safeParse(
+      replayInput,
+    ).success;
+  }, [replayDataLength, replayInput]);
 
   const isReplayNavigationStepSizeInputValid = useMemo(() => {
     return SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT.safeParse(
@@ -101,7 +102,11 @@ export function TwChartToolbarReplay({
       const stepSize = parseIntegerOrThrow(replayNavigationStepSize);
       const amount = isForward ? stepSize : -stepSize;
 
-      const newBar = clampNumber(replaySettings.lastBar! + amount, 0, maxBar);
+      const newBar = clampNumber(
+        replaySettings.lastBar! + amount,
+        0,
+        replayDataLength - 1,
+      );
 
       setReplayInput(newBar.toString());
 
@@ -114,7 +119,7 @@ export function TwChartToolbarReplay({
       isReplayNavigationEnabled,
       replayNavigationStepSize,
       replaySettings,
-      maxBar,
+      replayDataLength,
       onReplaySettingsChange,
     ],
   );
@@ -130,11 +135,14 @@ export function TwChartToolbarReplay({
   const handleSubBarToggleClick = useCallback(
     (value: boolean) => {
       const sourceIndex = replaySettings.lastBar;
-      const targetLength = value ? data.length : nonAggregatedDataLength;
-      const targetIndex = toRelativeTargetIndexOrUndefined(
+      const sourceData = replaySettings.replaySubBars
+        ? nonAggregatedData
+        : data;
+      const targetData = value ? nonAggregatedData : data;
+      const targetIndex = toSimilarTimeTargetIndexOrUndefined(
         sourceIndex,
-        maxBar,
-        targetLength,
+        sourceData,
+        targetData,
       );
 
       setReplayInput(targetIndex === undefined ? '' : targetIndex.toString());
@@ -145,23 +153,13 @@ export function TwChartToolbarReplay({
         replaySubBars: value,
       });
     },
-    [
-      data.length,
-      maxBar,
-      nonAggregatedDataLength,
-      onReplaySettingsChange,
-      replaySettings,
-    ],
+    [data, nonAggregatedData, onReplaySettingsChange, replaySettings],
   );
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <TwTextInput
-        placeholder={getReplayBarInputPlaceholder(
-          nonAggregatedDataLength,
-          data.length,
-          replaySettings.replaySubBars,
-        )}
+        placeholder={`Replay 0-${replayDataLength - 1}`}
         value={replayInput}
         onValueChange={setReplayInput}
         onKeyDown={handleReplayInputKeyDown}
@@ -194,33 +192,21 @@ export function TwChartToolbarReplay({
   );
 }
 
-function getReplayBarInputPlaceholder(
-  nonAggregatedDataLength: number,
-  dataLength: number,
-  replaySubBars: boolean,
-): string {
-  const lastBar = replaySubBars ? nonAggregatedDataLength - 1 : dataLength - 1;
-  return `Replay 0-${lastBar}`;
-}
-
-function toRelativeTargetIndexOrUndefined(
+function toSimilarTimeTargetIndexOrUndefined(
   sourceIndex: number | undefined,
-  sourceLength: number,
-  targetLength: number,
+  sourceData: readonly TickerDataRow[],
+  targetData: readonly TickerDataRow[],
 ): number | undefined {
   return sourceIndex === undefined
     ? undefined
-    : toRelativeTargetIndex(sourceIndex, sourceLength, targetLength);
+    : toSimilarTimeTargetIndex(sourceIndex, sourceData, targetData);
 }
 
-function toRelativeTargetIndex(
+function toSimilarTimeTargetIndex(
   sourceIndex: number,
-  sourceLength: number,
-  targetLength: number,
+  sourceData: readonly TickerDataRow[],
+  targetData: readonly TickerDataRow[],
 ): number {
-  return clampNumber(
-    Math.round((sourceIndex / sourceLength) * targetLength),
-    0,
-    targetLength - 1,
-  );
+  const sourceTime = sourceData[sourceIndex].time;
+  return timeToLogical(sourceTime, targetData);
 }
