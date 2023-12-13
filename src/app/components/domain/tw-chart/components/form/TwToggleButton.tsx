@@ -17,7 +17,7 @@ export function TwToggleButton({
   const checked = value && !disabled;
   const unchecked = !value && !disabled;
 
-  const classes = cls('px-1 text-sm border rounded', {
+  const classes = cls('px-1 text-sm border rounded select-none', {
     'border-slate-400 bg-slate-300': checked,
     'border-slate-400 bg-slate-100': unchecked,
     'border-slate-200 bg-slate-100 text-gray-400 cursor-not-allowed': disabled,

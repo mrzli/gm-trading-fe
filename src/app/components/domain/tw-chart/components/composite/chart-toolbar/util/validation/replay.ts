@@ -9,3 +9,6 @@ export function createSchemaReplayInput(
 > {
   return z.union([SCHEMA_EMPTY_STRING, createSchemaIntegerInRange(min, max)]);
 }
+
+export const SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT =
+  createSchemaIntegerInRange(0, 10_000);
