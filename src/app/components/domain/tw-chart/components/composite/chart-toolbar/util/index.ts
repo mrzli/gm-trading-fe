@@ -1,3 +1,3 @@
 export * from './time';
 export * from './util';
-export * from './validation/go-to';
+export * from './validation';

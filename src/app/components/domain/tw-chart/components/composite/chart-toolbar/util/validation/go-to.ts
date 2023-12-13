@@ -7,13 +7,14 @@ import {
 import { toSimpleTwSelectOption } from '../../../../../util';
 import { TwSelectOption } from '../../../../form/select-button/types';
 import { getDateInputParts } from '../util';
+import { SCHEMA_EMPTY_STRING } from './base';
 
 export const RESOLUTION_OPTIONS: readonly TwSelectOption<TwChartResolution>[] =
   TYPES_OF_TW_CHART_RESOLUTION.map((resolution) =>
     toSimpleTwSelectOption(resolution),
   );
 
-export const SCHEME_DATE = z.string().refine((value) => {
+export const SCHEMA_GO_TO_DATE = z.string().refine((value) => {
   const parts = getDateInputParts(value);
 
   if (parts.length === 1) {
@@ -25,7 +26,10 @@ export const SCHEME_DATE = z.string().refine((value) => {
   }
 });
 
-export const SCHEME_GO_TO_INPUT = z.union([z.literal(''), SCHEME_DATE]);
+export const SCHEMA_GO_TO_INPUT = z.union([
+  SCHEMA_EMPTY_STRING,
+  SCHEMA_GO_TO_DATE,
+]);
 
 function validateDate(value: string): boolean {
   return validator.isDate(value, {

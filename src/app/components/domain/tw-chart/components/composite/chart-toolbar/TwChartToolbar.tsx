@@ -1,15 +1,19 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { TwChartResolution, TwChartSettings, TwRange } from '../../../types';
+import React, { useCallback, useMemo } from 'react';
+import {
+  TwBarReplaySettings,
+  TwChartResolution,
+  TwChartSettings,
+  TwRange,
+} from '../../../types';
 import { TwSelectButton } from '../../form/select-button/TwSelectButton';
 import { toSimpleTwSelectOption } from '../../../util';
 import { TwSelectOption } from '../../form/select-button/types';
 import { TwSelectButtonCentered } from '../../form/select-button/TwSelectButtonCentered';
-import { TwTextInput } from '../../form/TwITextnput';
 import { TickerDataRow } from '../../../../../../types';
-import { SCHEME_GO_TO_INPUT, RESOLUTION_OPTIONS } from './util';
-import { TwToggleButton } from '../../form/TwToggleButton';
+import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
+import { TwChartToolbarReplay } from './components/TwChartToolbarReplay';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -31,12 +35,6 @@ export function TwChartToolbar({
       toSimpleTwSelectOption(instrumentName),
     );
   }, [instrumentNames]);
-
-  const [goToInput, setGoToInput] = useState('');
-  const isGoToInputValid = useMemo(
-    () => SCHEME_GO_TO_INPUT.safeParse(goToInput).success,
-    [goToInput],
-  );
 
   const handleInstrumentChange = useCallback(
     (instrumentName: string) => {
@@ -70,14 +68,11 @@ export function TwChartToolbar({
     [settings, onSettingsChange],
   );
 
-  const handleSubBarToggleClick = useCallback(
-    (value: boolean) => {
+  const handleReplaySettingsChange = useCallback(
+    (replaySettings: TwBarReplaySettings) => {
       onSettingsChange({
         ...settings,
-        replaySettings: {
-          ...settings.replaySettings,
-          replaySubBars: value,
-        },
+        replaySettings,
       });
     },
     [settings, onSettingsChange],
@@ -110,34 +105,14 @@ export function TwChartToolbar({
             logicalRange={settings.logicalRange}
             onGoTo={updateLogicalRange}
           />
-          <TwTextInput
-            placeholder={getReplayBarInputPlaceholder(
-              nonAggregatedDataLength,
-              data.length,
-              settings.replaySettings.replaySubBars,
-            )}
-            value={goToInput}
-            onValueChange={setGoToInput}
-            onKeyDown={() => {}}
-            error={!isGoToInputValid}
-            width={160}
-          />
-          <TwToggleButton
-            label={'Sub'}
-            value={settings.replaySettings.replaySubBars}
-            onValueChange={handleSubBarToggleClick}
+          <TwChartToolbarReplay
+            nonAggregatedDataLength={nonAggregatedDataLength}
+            data={data}
+            replaySettings={settings.replaySettings}
+            onReplaySettingsChange={handleReplaySettingsChange}
           />
         </>
       )}
     </div>
   );
-}
-
-function getReplayBarInputPlaceholder(
-  nonAggregatedDataLength: number,
-  dataLength: number,
-  replaySubBars: boolean,
-): string {
-  const lastBar = replaySubBars ? nonAggregatedDataLength - 1 : dataLength - 1;
-  return `Replay 0-${lastBar}`;
 }
