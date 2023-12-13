@@ -2,21 +2,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import {
-  FloatingFocusManager,
-  FloatingPortal,
-  flip,
-  offset,
-  useClick,
-  useDismiss,
-  useFloating,
-  useInteractions,
-} from '@floating-ui/react';
-import {
   TwSelectItemRenderer,
   TwSelectOption,
   TwSelectValue,
   TwSelectionRenderer,
 } from './types';
+import { Popover } from './Popover';
 
 export interface TwSelectButtonProps<
   TValue extends string,
@@ -48,21 +39,6 @@ export function TwSelectButton<
   selectItemWidth,
 }: TwSelectButtonProps<TValue, TAllowUndefined>): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
-
-  const { refs, floatingStyles, context } = useFloating({
-    placement: 'bottom-start',
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    middleware: [offset(2), flip({ padding: 10 })],
-  });
-
-  const click = useClick(context, { event: 'mousedown' });
-  const dismiss = useDismiss(context);
-
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    dismiss,
-    click,
-  ]);
 
   const handleSelect = useCallback(
     (v: TValue, _index: number) => {
@@ -98,39 +74,34 @@ export function TwSelectButton<
     );
   }, [selectItemRenderer, selectItemWidth]);
 
-  return (
-    <div className='inline-flex'>
-      <div ref={refs.setReference} {...getReferenceProps()}>
-        <div className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'>
-          {finalSelectionRenderer(selectedOption)}
-        </div>
-      </div>
-      {isOpen && (
-        <FloatingPortal>
-          <FloatingFocusManager context={context} modal={false}>
-            <div
-              ref={refs.setFloating}
-              style={floatingStyles}
-              {...getFloatingProps()}
-              className='outline-none'
-            >
-              <div className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none z-20'>
-                {options.map((o, i) => (
-                  <div
-                    key={o.value}
-                    className={'cursor-pointer hover:bg-slate-200'}
-                    onClick={() => {
-                      handleSelect(o.value, i);
-                    }}
-                  >
-                    {finalSelectItemRenderer(o)}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FloatingFocusManager>
-        </FloatingPortal>
-      )}
+  const trigger = (
+    <div className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'>
+      {finalSelectionRenderer(selectedOption)}
     </div>
+  );
+
+  const content = (
+    <div className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none z-20'>
+      {options.map((o, i) => (
+        <div
+          key={o.value}
+          className={'cursor-pointer hover:bg-slate-200'}
+          onClick={() => {
+            handleSelect(o.value, i);
+          }}
+        >
+          {finalSelectItemRenderer(o)}
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <Popover
+      trigger={trigger}
+      content={content}
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    />
   );
 }

@@ -84,6 +84,7 @@ export const Primary: StoryObj<Props> = {
           width={width}
         />
         <br />
+        <br />
         <PrettyDisplay content={value} />
       </div>
     );
