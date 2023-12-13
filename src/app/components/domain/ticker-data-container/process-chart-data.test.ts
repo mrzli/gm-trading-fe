@@ -7,12 +7,16 @@ import {
   TwChartResolution,
 } from '../tw-chart/types';
 import { TickerDataRow } from '../../../types';
-import { toTickerDataRows } from './process-chart-data';
+import { toTickerDataRows, aggregateDataRows } from './process-chart-data';
 
 describe('process-chart-data', () => {
   let INPUT_MINUTE: readonly string[] = [];
   let INPUT_QUARTER: readonly string[] = [];
   let INPUT_DAY: readonly string[] = [];
+
+  let INPUT_MINUTE_ROWS: readonly TickerDataRow[] = [];
+  let INPUT_QUARTER_ROWS: readonly TickerDataRow[] = [];
+  let INPUT_DAY_ROWS: readonly TickerDataRow[] = [];
 
   const RESULTS_MAP = new Map<TwChartResolution, readonly TickerDataRow[]>();
 
@@ -20,10 +24,13 @@ describe('process-chart-data', () => {
     INPUT_MINUTE = await readInputFile(
       join(__dirname, 'data/inputs/minute.csv'),
     );
+    INPUT_MINUTE_ROWS = toTickerDataRows(INPUT_MINUTE);
     INPUT_QUARTER = await readInputFile(
       join(__dirname, 'data/inputs/quarter.csv'),
     );
+    INPUT_QUARTER_ROWS = toTickerDataRows(INPUT_QUARTER);
     INPUT_DAY = await readInputFile(join(__dirname, 'data/inputs/day.csv'));
+    INPUT_DAY_ROWS = toTickerDataRows(INPUT_DAY);
 
     for (const resolution of TYPES_OF_TW_CHART_RESOLUTION) {
       const path = join(__dirname, `data/results/${resolution}.json`);
@@ -32,30 +39,30 @@ describe('process-chart-data', () => {
     }
   });
 
-  function getInput(resolution: TwChartResolution): readonly string[] {
+  function getInput(resolution: TwChartResolution): readonly TickerDataRow[] {
     switch (resolution) {
       case '1m':
       case '2m':
       case '5m':
       case '10m': {
-        return INPUT_MINUTE;
+        return INPUT_MINUTE_ROWS;
       }
       case '15m':
       case '30m':
       case '1h':
       case '2h':
       case '4h': {
-        return INPUT_QUARTER;
+        return INPUT_QUARTER_ROWS;
       }
       case 'D':
       case 'W':
       case 'M': {
-        return INPUT_DAY;
+        return INPUT_DAY_ROWS;
       }
     }
   }
 
-  describe('toTickerDataRows()', () => {
+  describe('aggregateDataRows()', () => {
     type Example = TwChartResolution;
 
     const EXAMPLES: readonly Example[] = [
@@ -77,7 +84,7 @@ describe('process-chart-data', () => {
       it(JSON.stringify(example), () => {
         const input = getInput(example);
         const expected = mapGetOrThrow(RESULTS_MAP, example);
-        const actual = toTickerDataRows(input, example);
+        const actual = aggregateDataRows(input, example);
         // console.log('actual', actual);
         // console.log('expected', expected);
         expect(actual).toEqual(expected);

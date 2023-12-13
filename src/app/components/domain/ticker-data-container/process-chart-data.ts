@@ -12,14 +12,23 @@ import {
 
 export function toTickerDataRows(
   lines: readonly string[],
-  resolution: TwChartResolution,
 ): readonly TickerDataRow[] {
-  const rows = lines.map((element) => toTickerDataRow(element));
-
-  return aggregateDataRows(rows, resolution);
+  return lines.map((element) => toTickerDataRow(element));
 }
 
-function aggregateDataRows(
+function toTickerDataRow(line: string): TickerDataRow {
+  const [timestamp, _date, open, high, low, close] = line.split(',');
+
+  return {
+    time: parseIntegerOrThrow(timestamp) as UTCTimestamp,
+    open: parseFloatOrThrow(open),
+    high: parseFloatOrThrow(high),
+    low: parseFloatOrThrow(low),
+    close: parseFloatOrThrow(close),
+  };
+}
+
+export function aggregateDataRows(
   rows: readonly TickerDataRow[],
   resolution: TwChartResolution,
 ): readonly TickerDataRow[] {
@@ -49,18 +58,6 @@ function aggregateDataRows(
       return aggregateDataByMonth(rows);
     }
   }
-}
-
-function toTickerDataRow(line: string): TickerDataRow {
-  const [timestamp, _date, open, high, low, close] = line.split(',');
-
-  return {
-    time: parseIntegerOrThrow(timestamp) as UTCTimestamp,
-    open: parseFloatOrThrow(open),
-    high: parseFloatOrThrow(high),
-    low: parseFloatOrThrow(low),
-    close: parseFloatOrThrow(close),
-  };
 }
 
 function aggregateDataByFixedInterval(

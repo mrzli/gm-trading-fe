@@ -9,11 +9,12 @@ import {
   TwChartSettings,
 } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
-import { toTickerDataRows } from './process-chart-data';
+import { toTickerDataRows, aggregateDataRows } from './process-chart-data';
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { invariant } from '@gmjs/assert';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
+import { TickerDataRow } from '../../../types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -36,6 +37,10 @@ export function TickerDataContainer({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
     logicalRange: undefined,
+    replaySettings: {
+      lastBar: undefined,
+      replaySubBars: false,
+    },
   });
 
   const { instrumentName, resolution, logicalRange } = settings;
@@ -50,8 +55,8 @@ export function TickerDataContainer({
     );
   }, [allInstruments, instrumentName]);
 
-  const finalData = useMemo(
-    () => toTickerDataRows(rawData ?? [], resolution),
+  const tickerData = useMemo(
+    () => rawDataToTickerData(rawData ?? [], resolution),
     [rawData, resolution],
   );
 
@@ -78,14 +83,14 @@ export function TickerDataContainer({
           setSettings((s) => ({
             ...s,
             logicalRange: s.logicalRange
-              ? moveLogicalRange(s.logicalRange, timeStep, finalData)
+              ? moveLogicalRange(s.logicalRange, timeStep, tickerData.rows)
               : undefined,
           }));
           break;
         }
       }
     },
-    [finalData],
+    [tickerData],
   );
 
   if (!instrument) {
@@ -93,10 +98,10 @@ export function TickerDataContainer({
   }
 
   const dataChartElement =
-    !isLoadingData && finalData.length > 0 ? (
+    !isLoadingData && tickerData.rows.length > 0 ? (
       <TwChart
         precision={instrument.precision}
-        data={finalData}
+        data={tickerData.rows}
         logicalRange={logicalRange}
         onChartTimeRangeChange={handleChartTimeRangeChange}
         onChartKeyDown={handleChartKeyDown}
@@ -111,7 +116,8 @@ export function TickerDataContainer({
     <div className='h-screen flex flex-col gap-4 p-4'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
-        data={finalData}
+        nonAggregatedDataLength={tickerData.rows.length}
+        data={tickerData.aggregatedRows}
         settings={settings}
         onSettingsChange={setSettings}
       />
@@ -119,6 +125,23 @@ export function TickerDataContainer({
       <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );
+}
+
+interface TickerData {
+  readonly rows: readonly TickerDataRow[];
+  readonly aggregatedRows: readonly TickerDataRow[];
+}
+
+function rawDataToTickerData(
+  rawData: readonly string[] | undefined,
+  resolution: TwChartResolution,
+): TickerData {
+  const rows = toTickerDataRows(rawData ?? []);
+  const aggregatedRows = aggregateDataRows(rows, resolution);
+  return {
+    rows,
+    aggregatedRows,
+  };
 }
 
 function toLogicalOffset(event: React.KeyboardEvent<HTMLDivElement>): number {

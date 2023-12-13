@@ -6,31 +6,30 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
 } from '@mdi/js';
-import { TwChartResolution, TwChartSettings } from '../../../types';
+import { TwChartResolution, TwChartSettings, TwRange } from '../../../types';
 import { TwSelectButton } from '../../form/select-button/TwSelectButton';
 import {
   logicalToLogicalRange,
   moveLogicalRange,
-  timeToLogical,
   toSimpleTwSelectOption,
 } from '../../../util';
 import { TwSelectOption } from '../../form/select-button/types';
 import { TwSelectButtonCentered } from '../../form/select-button/TwSelectButtonCentered';
 import { TwTextInput } from '../../form/TwITextnput';
 import { TwButton } from '../../form/TwButton';
-import { dateIsoUtcToUnixSeconds } from '../../../../../../util';
 import { TickerDataRow } from '../../../../../../types';
 import {
   SCHEME_GO_TO_INPUT,
-  dateInputToIso,
   RESOLUTION_OPTIONS,
-  SCHEME_DATE,
   twTimeStepSelectionToTimeStep,
 } from './util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from './types';
+import { TwToggleButton } from '../../form/TwToggleButton';
+import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
+  readonly nonAggregatedDataLength: number;
   readonly data: readonly TickerDataRow[];
   readonly settings: TwChartSettings;
   readonly onSettingsChange: (settings: TwChartSettings) => void;
@@ -38,6 +37,7 @@ export interface TwChartToolbarProps {
 
 export function TwChartToolbar({
   instrumentNames,
+  nonAggregatedDataLength,
   data,
   settings,
   onSettingsChange,
@@ -55,10 +55,6 @@ export function TwChartToolbar({
   const isGoToInputValid = useMemo(
     () => SCHEME_GO_TO_INPUT.safeParse(goToInput).success,
     [goToInput],
-  );
-  const isGoToEnabled = useMemo(
-    () => SCHEME_DATE.safeParse(goToInput).success && data.length > 0,
-    [goToInput, data],
   );
 
   const handleInstrumentChange = useCallback(
@@ -78,6 +74,16 @@ export function TwChartToolbar({
         ...settings,
         resolution,
         logicalRange: undefined,
+      });
+    },
+    [settings, onSettingsChange],
+  );
+
+  const updateLogicalRange = useCallback(
+    (logicalRange: TwRange | undefined) => {
+      onSettingsChange({
+        ...settings,
+        logicalRange,
       });
     },
     [settings, onSettingsChange],
@@ -137,24 +143,24 @@ export function TwChartToolbar({
     [navigateBackOrForward],
   );
 
-  const handleGoToClick = useCallback(() => {
-    if (!isGoToEnabled) {
-      return;
-    }
-
-    const time = dateIsoUtcToUnixSeconds(dateInputToIso(goToInput));
-    const logical = timeToLogical(time, data);
-
-    navigateTo(logical);
-  }, [isGoToEnabled, data, goToInput, navigateTo]);
-
-  const handleGoToKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter') {
-        handleGoToClick();
-      }
+  const handleGoTo = useCallback(
+    (logicalRange: TwRange) => {
+      updateLogicalRange(logicalRange);
     },
-    [handleGoToClick],
+    [updateLogicalRange],
+  );
+
+  const handleSubBarToggleClick = useCallback(
+    (value: boolean) => {
+      onSettingsChange({
+        ...settings,
+        replaySettings: {
+          ...settings.replaySettings,
+          replaySubBars: value,
+        },
+      });
+    },
+    [settings, onSettingsChange],
   );
 
   return (
@@ -172,47 +178,65 @@ export function TwChartToolbar({
         onValueChange={handleResolutionChange}
         width={32}
       />
-      <TwButton
-        content={<Icon path={mdiChevronDoubleLeft} size={ICON_SIZE} />}
-        onClick={navigateToStart}
-      />
-      <TwButton
-        content={<Icon path={mdiChevronLeft} size={ICON_SIZE} />}
-        onClick={navigateBack}
-      />
-      <TwSelectButtonCentered<TwTimeStepSelection, false>
-        options={TIME_STEP_OPTIONS}
-        value={timeStepSelection}
-        onValueChange={setTimeStepSelection}
-        width={48}
-      />
-      <TwButton
-        content={<Icon path={mdiChevronRight} size={ICON_SIZE} />}
-        onClick={navigateForward}
-      />
-      <TwButton
-        content={<Icon path={mdiChevronDoubleRight} size={ICON_SIZE} />}
-        onClick={navigateToEnd}
-      />
       {data.length > 0 && (
         <>
+          <TwButton
+            content={<Icon path={mdiChevronDoubleLeft} size={ICON_SIZE} />}
+            onClick={navigateToStart}
+          />
+          <TwButton
+            content={<Icon path={mdiChevronLeft} size={ICON_SIZE} />}
+            onClick={navigateBack}
+          />
+          <TwSelectButtonCentered<TwTimeStepSelection, false>
+            options={TIME_STEP_OPTIONS}
+            value={timeStepSelection}
+            onValueChange={setTimeStepSelection}
+            width={48}
+          />
+          <TwButton
+            content={<Icon path={mdiChevronRight} size={ICON_SIZE} />}
+            onClick={navigateForward}
+          />
+          <TwButton
+            content={<Icon path={mdiChevronDoubleRight} size={ICON_SIZE} />}
+            onClick={navigateToEnd}
+          />
+          <TwChartToolbarGoTo
+            data={data}
+            logicalRange={settings.logicalRange}
+            onGoTo={handleGoTo}
+          />
           <TwTextInput
-            placeholder='YYYY-MM-DD [HH:mm]'
+            placeholder={getReplayBarInputPlaceholder(
+              nonAggregatedDataLength,
+              data.length,
+              settings.replaySettings.replaySubBars,
+            )}
             value={goToInput}
             onValueChange={setGoToInput}
-            onKeyDown={handleGoToKeyDown}
+            onKeyDown={() => {}}
             error={!isGoToInputValid}
             width={160}
           />
-          <TwButton
-            content={'Go to'}
-            onClick={handleGoToClick}
-            disabled={!isGoToEnabled}
+          <TwToggleButton
+            label={'Sub'}
+            value={settings.replaySettings.replaySubBars}
+            onValueChange={handleSubBarToggleClick}
           />
         </>
       )}
     </div>
   );
+}
+
+function getReplayBarInputPlaceholder(
+  nonAggregatedDataLength: number,
+  dataLength: number,
+  replaySubBars: boolean,
+): string {
+  const lastBar = replaySubBars ? nonAggregatedDataLength - 1 : dataLength - 1;
+  return `Replay 0-${lastBar}`;
 }
 
 const ICON_SIZE = 0.875 / 1.5;

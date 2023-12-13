@@ -31,6 +31,7 @@ const STORY_META: Meta<TwChartToolbarProps> = {
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
+    nonAggregatedDataLength: TEST_TICKER_ROWS_MINUTE.length,
     data: TEST_TICKER_ROWS_MINUTE,
   },
 };
@@ -44,6 +45,10 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
       logicalRange: undefined,
+      replaySettings: {
+        lastBar: undefined,
+        replaySubBars: false,
+      },
     });
 
     return (

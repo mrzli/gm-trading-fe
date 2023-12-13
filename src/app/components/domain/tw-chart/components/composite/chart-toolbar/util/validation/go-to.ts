@@ -3,10 +3,10 @@ import validator from 'validator';
 import {
   TYPES_OF_TW_CHART_RESOLUTION,
   TwChartResolution,
-} from '../../../../types';
-import { toSimpleTwSelectOption } from '../../../../util';
-import { TwSelectOption } from '../../../form/select-button/types';
-import { getDateInputParts } from './util';
+} from '../../../../../types';
+import { toSimpleTwSelectOption } from '../../../../../util';
+import { TwSelectOption } from '../../../../form/select-button/types';
+import { getDateInputParts } from '../util';
 
 export const RESOLUTION_OPTIONS: readonly TwSelectOption<TwChartResolution>[] =
   TYPES_OF_TW_CHART_RESOLUTION.map((resolution) =>
