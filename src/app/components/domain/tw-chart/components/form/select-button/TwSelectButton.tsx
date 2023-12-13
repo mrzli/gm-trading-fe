@@ -59,9 +59,10 @@ export function TwSelectButton<
   const click = useClick(context, { event: 'mousedown' });
   const dismiss = useDismiss(context);
 
-  const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
-    [dismiss, click],
-  );
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    dismiss,
+    click,
+  ]);
 
   const handleSelect = useCallback(
     (v: TValue, _index: number) => {
@@ -99,12 +100,10 @@ export function TwSelectButton<
 
   return (
     <div className='inline-flex'>
-      <div
-        ref={refs.setReference}
-        className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'
-        {...getReferenceProps()}
-      >
-        {finalSelectionRenderer(selectedOption)}
+      <div ref={refs.setReference} {...getReferenceProps()}>
+        <div className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'>
+          {finalSelectionRenderer(selectedOption)}
+        </div>
       </div>
       {isOpen && (
         <FloatingPortal>
@@ -112,21 +111,22 @@ export function TwSelectButton<
             <div
               ref={refs.setFloating}
               style={floatingStyles}
-              className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none z-20'
               {...getFloatingProps()}
+              className='outline-none'
             >
-              {options.map((o, i) => (
-                <div
-                  key={o.value}
-                  className={'cursor-pointer hover:bg-slate-200'}
-                  onClick={() => {
-                    handleSelect(o.value, i);
-                  }}
-                  {...getItemProps()}
-                >
-                  {finalSelectItemRenderer(o)}
-                </div>
-              ))}
+              <div className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none z-20'>
+                {options.map((o, i) => (
+                  <div
+                    key={o.value}
+                    className={'cursor-pointer hover:bg-slate-200'}
+                    onClick={() => {
+                      handleSelect(o.value, i);
+                    }}
+                  >
+                    {finalSelectItemRenderer(o)}
+                  </div>
+                ))}
+              </div>
             </div>
           </FloatingFocusManager>
         </FloatingPortal>
