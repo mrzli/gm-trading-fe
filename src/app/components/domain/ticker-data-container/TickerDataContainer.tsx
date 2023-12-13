@@ -116,8 +116,8 @@ export function TickerDataContainer({
     <div className='h-screen flex flex-col gap-4 p-4'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
-        nonAggregatedDataLength={tickerData.rows.length}
-        data={tickerData.aggregatedRows}
+        nonAggregatedDataLength={tickerData.nonAggregatedRows.length}
+        data={tickerData.rows}
         settings={settings}
         onSettingsChange={setSettings}
       />
@@ -128,19 +128,19 @@ export function TickerDataContainer({
 }
 
 interface TickerData {
+  readonly nonAggregatedRows: readonly TickerDataRow[];
   readonly rows: readonly TickerDataRow[];
-  readonly aggregatedRows: readonly TickerDataRow[];
 }
 
 function rawDataToTickerData(
   rawData: readonly string[] | undefined,
   resolution: TwChartResolution,
 ): TickerData {
-  const rows = toTickerDataRows(rawData ?? []);
-  const aggregatedRows = aggregateDataRows(rows, resolution);
+  const nonAggregatedRows = toTickerDataRows(rawData ?? []);
+  const rows = aggregateDataRows(nonAggregatedRows, resolution);
   return {
+    nonAggregatedRows,
     rows,
-    aggregatedRows,
   };
 }
 
