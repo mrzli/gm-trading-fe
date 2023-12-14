@@ -4,15 +4,15 @@ import {
   GroupedTickerDataRows,
   TickerDataRow,
   TickerDataRows,
-} from '../../../types';
-import { TwChartResolution } from '../tw-chart/types';
+} from '../../../../types';
+import { TwChartResolution } from '../../tw-chart/types';
 import { invariant } from '@gmjs/assert';
 import {
   DAY_TO_SECONDS,
   HOUR_TO_SECONDS,
   MINUTE_TO_SECONDS,
   WEEK_TO_SECONDS,
-} from '../../../util';
+} from '../../../../util';
 
 export function toTickerDataRows(lines: readonly string[]): TickerDataRows {
   return lines.map((element) => toTickerDataRow(element));

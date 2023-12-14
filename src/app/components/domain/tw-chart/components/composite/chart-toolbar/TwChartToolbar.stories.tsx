@@ -11,7 +11,7 @@ import { TEST_TICKER_ROWS_MINUTE } from '../../../data';
 import {
   aggregateGroupedDataRows,
   groupDataRows,
-} from '../../../../ticker-data-container/process-chart-data';
+} from '../../../../ticker-data-container/util/process-chart-data';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',

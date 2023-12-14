@@ -9,16 +9,10 @@ import {
   TwChartSettings,
 } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
-import {
-  toTickerDataRows,
-  groupDataRows,
-  aggregateGroupedDataRows,
-} from './process-chart-data';
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
-import { invariant } from '@gmjs/assert';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
-import { GroupedTickerDataRows, TickerDataRows } from '../../../types';
+import { rawDataToTickerData, toLogicalOffset } from './util';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -47,9 +41,16 @@ export function TickerDataContainer({
     },
   });
 
-  const { instrumentName, resolution, logicalRange } = settings;
+  const { instrumentName, resolution, logicalRange, replaySettings } = settings;
 
   useEffect(() => {
+    setSettings((s) => ({
+      ...s,
+      replaySettings: {
+        barIndex: undefined,
+        subBarIndex: 0,
+      },
+    }));
     onRequestData(instrumentName, resolution);
   }, [onRequestData, instrumentName, resolution]);
 
@@ -59,10 +60,16 @@ export function TickerDataContainer({
     );
   }, [allInstruments, instrumentName]);
 
-  const tickerData = useMemo(
+  const fullData = useMemo(
     () => rawDataToTickerData(rawData ?? [], resolution),
     [rawData, resolution],
   );
+
+  // const chartData = useMemo(() => {
+  //   return replaySettings.barIndex !== undefined
+  //     ? fullData.subRows[replaySettings.barIndex]
+  //     : fullData.rows;
+  // }, [fullData, replaySettings]);
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
@@ -87,14 +94,14 @@ export function TickerDataContainer({
           setSettings((s) => ({
             ...s,
             logicalRange: s.logicalRange
-              ? moveLogicalRange(s.logicalRange, timeStep, tickerData.rows)
+              ? moveLogicalRange(s.logicalRange, timeStep, fullData.rows)
               : undefined,
           }));
           break;
         }
       }
     },
-    [tickerData],
+    [fullData],
   );
 
   if (!instrument) {
@@ -102,10 +109,10 @@ export function TickerDataContainer({
   }
 
   const dataChartElement =
-    !isLoadingData && tickerData.rows.length > 0 ? (
+    !isLoadingData && fullData.rows.length > 0 ? (
       <TwChart
         precision={instrument.precision}
-        data={tickerData.rows}
+        data={fullData.rows}
         logicalRange={logicalRange}
         onChartTimeRangeChange={handleChartTimeRangeChange}
         onChartKeyDown={handleChartKeyDown}
@@ -120,8 +127,8 @@ export function TickerDataContainer({
     <div className='h-screen flex flex-col gap-4 p-4'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
-        subRows={tickerData.subRows}
-        rows={tickerData.rows}
+        subRows={fullData.subRows}
+        rows={fullData.rows}
         settings={settings}
         onSettingsChange={setSettings}
       />
@@ -129,49 +136,4 @@ export function TickerDataContainer({
       <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );
-}
-
-interface TickerData {
-  readonly subRows: GroupedTickerDataRows;
-  readonly rows: TickerDataRows;
-}
-
-function rawDataToTickerData(
-  rawData: readonly string[] | undefined,
-  resolution: TwChartResolution,
-): TickerData {
-  const nonAggregatedRows = toTickerDataRows(rawData ?? []);
-  const subRows = groupDataRows(nonAggregatedRows, resolution);
-  const rows = aggregateGroupedDataRows(subRows);
-  return {
-    subRows,
-    rows,
-  };
-}
-
-function toLogicalOffset(event: React.KeyboardEvent<HTMLDivElement>): number {
-  const base = toBaseLogicalOffset(event);
-  const multiplier = toLogicalOffsetMultiplier(event);
-  return base * multiplier;
-}
-
-function toBaseLogicalOffset(
-  event: React.KeyboardEvent<HTMLDivElement>,
-): number {
-  switch (event.key) {
-    case Key.ArrowLeft: {
-      return -1;
-    }
-    case Key.ArrowRight: {
-      return 1;
-    }
-  }
-
-  invariant(false, `Unexpected key: ${event.key}`);
-}
-
-function toLogicalOffsetMultiplier(
-  event: React.KeyboardEvent<HTMLDivElement>,
-): number {
-  return event.shiftKey ? 10 : 1;
 }

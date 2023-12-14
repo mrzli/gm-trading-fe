@@ -5,8 +5,8 @@ import { mapGetOrThrow } from '@gmjs/data-container-util';
 import {
   TYPES_OF_TW_CHART_RESOLUTION,
   TwChartResolution,
-} from '../tw-chart/types';
-import { TickerDataRows } from '../../../types';
+} from '../../tw-chart/types';
+import { TickerDataRows } from '../../../../types';
 import {
   toTickerDataRows,
   groupDataRows,
