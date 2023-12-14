@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import {
+  TYPES_OF_TW_CHART_TIMEZONES,
   TwBarReplaySettings,
   TwChartResolution,
   TwChartSettings,
+  TwChartTimezone,
   TwRange,
 } from '../../../types';
 import { TwSelectButton } from '../../form/select-button/TwSelectButton';
@@ -58,6 +60,16 @@ export function TwChartToolbar({
     [settings, onSettingsChange],
   );
 
+  const handleTimezoneChange = useCallback(
+    (timezone: TwChartTimezone) => {
+      onSettingsChange({
+        ...settings,
+        timezone,
+      });
+    },
+    [settings, onSettingsChange],
+  );
+
   const updateLogicalRange = useCallback(
     (logicalRange: TwRange | undefined) => {
       onSettingsChange({
@@ -93,6 +105,13 @@ export function TwChartToolbar({
         onValueChange={handleResolutionChange}
         width={32}
       />
+      <TwSelectButton<TwChartTimezone, false>
+        options={TIMEZONE_OPTIONS}
+        value={settings.timezone}
+        onValueChange={handleTimezoneChange}
+        selectionWidth={128}
+        selectItemWidth={128}
+      />
       {rows.length > 0 && (
         <>
           <TwChartToolbarNavigate
@@ -115,3 +134,8 @@ export function TwChartToolbar({
     </div>
   );
 }
+
+const TIMEZONE_OPTIONS: readonly TwSelectOption<TwChartTimezone>[] =
+  TYPES_OF_TW_CHART_TIMEZONES.map((timezone) =>
+    toSimpleTwSelectOption(timezone),
+  );

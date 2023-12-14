@@ -51,6 +51,7 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
     const [settings, setSettings] = useState<TwChartSettings>({
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
+      timezone: 'UTC',
       logicalRange: undefined,
       replaySettings: {
         barIndex: undefined,

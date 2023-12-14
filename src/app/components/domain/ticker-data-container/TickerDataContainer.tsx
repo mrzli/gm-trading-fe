@@ -34,6 +34,7 @@ export function TickerDataContainer({
   const [settings, setSettings] = useState<TwChartSettings>({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
+    timezone: 'UTC',
     logicalRange: undefined,
     replaySettings: {
       barIndex: undefined,
@@ -41,7 +42,8 @@ export function TickerDataContainer({
     },
   });
 
-  const { instrumentName, resolution, logicalRange, replaySettings } = settings;
+  const { instrumentName, resolution, timezone, logicalRange, replaySettings } =
+    settings;
 
   useEffect(() => {
     setSettings((s) => ({
@@ -111,7 +113,7 @@ export function TickerDataContainer({
       <TwChart
         precision={instrument.precision}
         data={chartData}
-        timezone={'UTC'}
+        timezone={timezone}
         logicalRange={logicalRange}
         onChartTimeRangeChange={handleChartTimeRangeChange}
         onChartKeyDown={handleChartKeyDown}
