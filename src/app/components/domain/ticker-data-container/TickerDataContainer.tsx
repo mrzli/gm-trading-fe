@@ -14,7 +14,7 @@ import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { invariant } from '@gmjs/assert';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
-import { TickerDataRow } from '../../../types';
+import { TickerDataRows } from '../../../types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -128,8 +128,8 @@ export function TickerDataContainer({
 }
 
 interface TickerData {
-  readonly nonAggregatedRows: readonly TickerDataRow[];
-  readonly rows: readonly TickerDataRow[];
+  readonly nonAggregatedRows: TickerDataRows;
+  readonly rows: TickerDataRows;
 }
 
 function rawDataToTickerData(

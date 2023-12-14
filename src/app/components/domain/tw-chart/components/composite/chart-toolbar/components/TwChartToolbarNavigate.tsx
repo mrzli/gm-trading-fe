@@ -14,12 +14,12 @@ import {
 } from '../../../../util';
 import { TwSelectButtonCentered } from '../../../form/select-button/TwSelectButtonCentered';
 import { TwButton } from '../../../form/TwButton';
-import { TickerDataRow } from '../../../../../../../types';
+import { TickerDataRows } from '../../../../../../../types';
 import { TOOLBAR_ICON_SIZE, twTimeStepSelectionToTimeStep } from '../util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
 
 export interface TwChartToolbarNavigateProps {
-  readonly data: readonly TickerDataRow[];
+  readonly data: TickerDataRows;
   readonly logicalRange: TwRange | undefined;
   readonly onNavigate: (logicalRange: TwRange) => void;
 }

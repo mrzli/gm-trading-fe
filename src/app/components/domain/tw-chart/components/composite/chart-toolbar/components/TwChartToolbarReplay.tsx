@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { TwBarReplaySettings } from '../../../../types';
 import { TwTextInput } from '../../../form/TwITextnput';
-import { TickerDataRow } from '../../../../../../../types';
+import { TickerDataRows } from '../../../../../../../types';
 import {
   SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT,
   TOOLBAR_ICON_SIZE,
@@ -16,8 +16,8 @@ import { TwButton } from '../../../form/TwButton';
 import { timeToLogical } from '../../../../util';
 
 export interface TwChartToolbarReplayProps {
-  readonly nonAggregatedData: readonly TickerDataRow[];
-  readonly data: readonly TickerDataRow[];
+  readonly nonAggregatedData: TickerDataRows;
+  readonly data: TickerDataRows;
   readonly replaySettings: TwBarReplaySettings;
   readonly onReplaySettingsChange: (settings: TwBarReplaySettings) => void;
 }
@@ -194,8 +194,8 @@ export function TwChartToolbarReplay({
 
 function toSimilarTimeTargetIndexOrUndefined(
   sourceIndex: number | undefined,
-  sourceData: readonly TickerDataRow[],
-  targetData: readonly TickerDataRow[],
+  sourceData: TickerDataRows,
+  targetData: TickerDataRows,
 ): number | undefined {
   return sourceIndex === undefined
     ? undefined
@@ -204,8 +204,8 @@ function toSimilarTimeTargetIndexOrUndefined(
 
 function toSimilarTimeTargetIndex(
   sourceIndex: number,
-  sourceData: readonly TickerDataRow[],
-  targetData: readonly TickerDataRow[],
+  sourceData: TickerDataRows,
+  targetData: TickerDataRows,
 ): number {
   const sourceTime = sourceData[sourceIndex].time;
   return timeToLogical(sourceTime, targetData);

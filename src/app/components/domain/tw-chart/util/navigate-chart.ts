@@ -3,7 +3,7 @@ import { invariant } from '@gmjs/assert';
 import { clampNumber } from '@gmjs/number-util';
 import { TwRange } from '../types';
 import { TwTimeStep } from '../types/tw-time-step';
-import { TickerDataRow } from '../../../../types';
+import { TickerDataRows } from '../../../../types';
 import {
   HOUR_TO_SECONDS,
   DAY_TO_SECONDS,
@@ -16,7 +16,7 @@ const DEFAULT_SPAN = 60;
 export function moveLogicalRange(
   currLogicalRange: TwRange,
   timeStep: TwTimeStep,
-  data: readonly TickerDataRow[],
+  data: TickerDataRows,
 ): TwRange {
   const currLogical = logicalRangeToLogical(currLogicalRange);
   const newLogical = moveLogical(currLogical, timeStep, data);
@@ -25,14 +25,14 @@ export function moveLogicalRange(
 
 export function timeToLogical(
   time: number,
-  data: readonly TickerDataRow[],
+  data: TickerDataRows,
 ): number {
   return binarySearch(data, time, (row) => row.time);
 }
 
 export function logicalToTime(
   logical: number,
-  data: readonly TickerDataRow[],
+  data: TickerDataRows,
 ): number {
   if (logical < 0) {
     return data[0].time;
@@ -46,7 +46,7 @@ export function logicalToTime(
 function moveLogical(
   currLogical: number,
   timeStep: TwTimeStep,
-  data: readonly TickerDataRow[],
+  data: TickerDataRows,
 ): number {
   const currBar = getCurrentBar(currLogical, data.length);
   const newLogical = moveLogicalInternal(currBar, timeStep, data);
@@ -64,7 +64,7 @@ function getCurrentBar(logical: number, length: number): number {
 function moveLogicalInternal(
   currBar: number,
   timeStep: TwTimeStep,
-  data: readonly TickerDataRow[],
+  data: TickerDataRows,
 ): number {
   const { unit, value } = timeStep;
 

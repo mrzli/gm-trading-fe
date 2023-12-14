@@ -3,11 +3,11 @@ import { TwRange } from '../../../../types';
 import { logicalToLogicalRange, timeToLogical } from '../../../../util';
 import { TwTextInput } from '../../../form/TwITextnput';
 import { dateIsoUtcToUnixSeconds } from '../../../../../../../util';
-import { TickerDataRow } from '../../../../../../../types';
+import { TickerDataRows } from '../../../../../../../types';
 import { SCHEMA_GO_TO_INPUT, dateInputToIso, SCHEMA_GO_TO_DATE } from '../util';
 
 export interface TwChartToolbarGoToProps {
-  readonly data: readonly TickerDataRow[];
+  readonly data: TickerDataRows;
   readonly logicalRange: TwRange | undefined;
   readonly onGoTo: (logicalRange: TwRange) => void;
 }

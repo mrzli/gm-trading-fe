@@ -1,6 +1,6 @@
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
-import { TickerDataRow } from '../../../types';
+import { TickerDataRow, TickerDataRows } from '../../../types';
 import { TwChartResolution } from '../tw-chart/types';
 import { invariant } from '@gmjs/assert';
 import {
@@ -10,9 +10,7 @@ import {
   WEEK_TO_SECONDS,
 } from '../../../util';
 
-export function toTickerDataRows(
-  lines: readonly string[],
-): readonly TickerDataRow[] {
+export function toTickerDataRows(lines: readonly string[]): TickerDataRows {
   return lines.map((element) => toTickerDataRow(element));
 }
 
@@ -29,9 +27,9 @@ function toTickerDataRow(line: string): TickerDataRow {
 }
 
 export function aggregateDataRows(
-  rows: readonly TickerDataRow[],
+  rows: TickerDataRows,
   resolution: TwChartResolution,
-): readonly TickerDataRow[] {
+): TickerDataRows {
   switch (resolution) {
     case '1m':
     case '15m':
@@ -61,10 +59,10 @@ export function aggregateDataRows(
 }
 
 function aggregateDataByFixedInterval(
-  rows: readonly TickerDataRow[],
+  rows: TickerDataRows,
   intervalSeconds: number,
   timeAdjustmentSeconds: number,
-): readonly TickerDataRow[] {
+): TickerDataRows {
   const aggregatedData: TickerDataRow[] = [];
   let bucket: TickerDataRow[] = [];
 
@@ -123,9 +121,7 @@ function resolutionToSeconds(resolution: TwChartResolution): number {
   }
 }
 
-function aggregateDataByMonth(
-  rows: readonly TickerDataRow[],
-): readonly TickerDataRow[] {
+function aggregateDataByMonth(rows: TickerDataRows): TickerDataRows {
   const aggregatedData: TickerDataRow[] = [];
   let bucket: TickerDataRow[] = [];
 

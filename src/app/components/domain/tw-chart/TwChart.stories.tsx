@@ -6,7 +6,7 @@ import {
   decoratorContainer,
   disableControl,
 } from '../../../../storybook';
-import { TickerDataRow } from '../../../types';
+import { TickerDataRows } from '../../../types';
 import {
   TEST_TICKER_ROWS_DAY,
   TEST_TICKER_ROWS_MINUTE,
@@ -40,7 +40,7 @@ export const Primary: StoryObj<TwChartProps> = {
   },
 };
 
-function getData(resolution: TickerDataResolution): readonly TickerDataRow[] {
+function getData(resolution: TickerDataResolution): TickerDataRows {
   switch (resolution) {
     case 'day': {
       return TEST_TICKER_ROWS_DAY;

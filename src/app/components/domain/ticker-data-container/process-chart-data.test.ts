@@ -6,7 +6,7 @@ import {
   TYPES_OF_TW_CHART_RESOLUTION,
   TwChartResolution,
 } from '../tw-chart/types';
-import { TickerDataRow } from '../../../types';
+import { TickerDataRows } from '../../../types';
 import { toTickerDataRows, aggregateDataRows } from './process-chart-data';
 
 describe('process-chart-data', () => {
@@ -14,11 +14,11 @@ describe('process-chart-data', () => {
   let INPUT_QUARTER: readonly string[] = [];
   let INPUT_DAY: readonly string[] = [];
 
-  let INPUT_MINUTE_ROWS: readonly TickerDataRow[] = [];
-  let INPUT_QUARTER_ROWS: readonly TickerDataRow[] = [];
-  let INPUT_DAY_ROWS: readonly TickerDataRow[] = [];
+  let INPUT_MINUTE_ROWS: TickerDataRows = [];
+  let INPUT_QUARTER_ROWS: TickerDataRows = [];
+  let INPUT_DAY_ROWS: TickerDataRows = [];
 
-  const RESULTS_MAP = new Map<TwChartResolution, readonly TickerDataRow[]>();
+  const RESULTS_MAP = new Map<TwChartResolution, TickerDataRows>();
 
   beforeAll(async () => {
     INPUT_MINUTE = await readInputFile(
@@ -39,7 +39,7 @@ describe('process-chart-data', () => {
     }
   });
 
-  function getInput(resolution: TwChartResolution): readonly TickerDataRow[] {
+  function getInput(resolution: TwChartResolution): TickerDataRows {
     switch (resolution) {
       case '1m':
       case '2m':
@@ -99,9 +99,7 @@ async function readInputFile(path: string): Promise<readonly string[]> {
   return lines.length > 0 ? lines.slice(1) : [];
 }
 
-async function readResultsFile(
-  path: string,
-): Promise<readonly TickerDataRow[]> {
+async function readResultsFile(path: string): Promise<TickerDataRows> {
   const content = await readTextAsync(path);
   return JSON.parse(content);
 }

@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
-import { TickerDataRow } from '../../../types';
+import { TickerDataRow, TickerDataRows } from '../../../types';
 import {
   ChartTimeRangeChangeFn,
   TwChartApi,
@@ -14,7 +14,7 @@ import { TwOhlcLabel } from './components/composite/TwOhlcLabel';
 
 export interface TwChartProps {
   readonly precision: number;
-  readonly data: readonly TickerDataRow[];
+  readonly data: TickerDataRows;
   readonly logicalRange: TwRange | undefined;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;

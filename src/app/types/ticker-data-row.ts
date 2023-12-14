@@ -7,3 +7,7 @@ export interface TickerDataRow {
   readonly low: number;
   readonly close: number;
 }
+
+export type TickerDataRows = readonly TickerDataRow[];
+
+export type GroupedTickerDataRows = readonly TickerDataRows[];

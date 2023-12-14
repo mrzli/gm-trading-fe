@@ -9,7 +9,7 @@ import { TwSelectButton } from '../../form/select-button/TwSelectButton';
 import { toSimpleTwSelectOption } from '../../../util';
 import { TwSelectOption } from '../../form/select-button/types';
 import { TwSelectButtonCentered } from '../../form/select-button/TwSelectButtonCentered';
-import { TickerDataRow } from '../../../../../../types';
+import { TickerDataRows } from '../../../../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
@@ -17,8 +17,8 @@ import { TwChartToolbarReplay } from './components/TwChartToolbarReplay';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
-  readonly nonAggregatedData: readonly TickerDataRow[];
-  readonly data: readonly TickerDataRow[];
+  readonly nonAggregatedData: TickerDataRows;
+  readonly data: TickerDataRows;
   readonly settings: TwChartSettings;
   readonly onSettingsChange: (settings: TwChartSettings) => void;
 }
