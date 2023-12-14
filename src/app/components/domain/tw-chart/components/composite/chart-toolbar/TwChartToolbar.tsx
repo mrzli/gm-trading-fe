@@ -107,7 +107,6 @@ export function TwChartToolbar({
           />
           <TwChartToolbarReplay
             subRows={subRows}
-            rows={rows}
             replaySettings={settings.replaySettings}
             onReplaySettingsChange={handleReplaySettingsChange}
           />

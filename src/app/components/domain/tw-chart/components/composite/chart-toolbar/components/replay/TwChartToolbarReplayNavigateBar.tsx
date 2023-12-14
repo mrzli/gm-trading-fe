@@ -23,27 +23,27 @@ export function TwChartToolbarReplayNavigateBar({
   const [replayNavigationStepSizeInput, setReplayNavigationStepSizeInput] =
     useState<string>('1');
 
-  const isReplayNavigationStepSizeInputValid = useMemo(() => {
+  const isNavigationStepSizeInputValid = useMemo(() => {
     return SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT.safeParse(
       replayNavigationStepSizeInput,
     ).success;
   }, [replayNavigationStepSizeInput]);
 
-  const isReplayNavigateEnabled = useMemo(() => {
-    return barIndex !== undefined && isReplayNavigationStepSizeInputValid;
-  }, [isReplayNavigationStepSizeInputValid, barIndex]);
+  const isNavigateEnabled = useMemo(() => {
+    return barIndex !== undefined && isNavigationStepSizeInputValid;
+  }, [isNavigationStepSizeInputValid, barIndex]);
 
-  const isReplayNavigateBackEnabled = useMemo(() => {
-    return isReplayNavigateEnabled && barIndex! > 1;
-  }, [barIndex, isReplayNavigateEnabled]);
+  const isNavigateBackEnabled = useMemo(() => {
+    return isNavigateEnabled && barIndex! > 1;
+  }, [barIndex, isNavigateEnabled]);
 
-  const isReplayNavigateForwardEnabled = useMemo(() => {
-    return isReplayNavigateEnabled && barIndex! < dataLength;
-  }, [barIndex, dataLength, isReplayNavigateEnabled]);
+  const isNavigateForwardEnabled = useMemo(() => {
+    return isNavigateEnabled && barIndex! < dataLength;
+  }, [barIndex, dataLength, isNavigateEnabled]);
 
-  const navigateBar = useCallback(
+  const navigate = useCallback(
     (amount: number) => {
-      if (!isReplayNavigateEnabled) {
+      if (!isNavigateEnabled) {
         return;
       }
 
@@ -53,50 +53,46 @@ export function TwChartToolbarReplayNavigateBar({
 
       onBarIndexChange(newBarIndex);
     },
-    [isReplayNavigateEnabled, barIndex, dataLength, onBarIndexChange],
+    [isNavigateEnabled, barIndex, dataLength, onBarIndexChange],
   );
 
-  const navigateBarBack = useCallback(() => {
-    if (!isReplayNavigateBackEnabled) {
+  const navigateBack = useCallback(() => {
+    if (!isNavigateBackEnabled) {
       return;
     }
 
     const amount = -parseIntegerOrThrow(replayNavigationStepSizeInput);
 
-    navigateBar(amount);
-  }, [isReplayNavigateBackEnabled, navigateBar, replayNavigationStepSizeInput]);
+    navigate(amount);
+  }, [isNavigateBackEnabled, navigate, replayNavigationStepSizeInput]);
 
-  const navigateBarForward = useCallback(() => {
-    if (!isReplayNavigateForwardEnabled) {
+  const navigateForward = useCallback(() => {
+    if (!isNavigateForwardEnabled) {
       return;
     }
 
     const amount = parseIntegerOrThrow(replayNavigationStepSizeInput);
 
-    navigateBar(amount);
-  }, [
-    isReplayNavigateForwardEnabled,
-    navigateBar,
-    replayNavigationStepSizeInput,
-  ]);
+    navigate(amount);
+  }, [isNavigateForwardEnabled, navigate, replayNavigationStepSizeInput]);
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <TwButton
         content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateBarBack}
-        disabled={!isReplayNavigateBackEnabled}
+        onClick={navigateBack}
+        disabled={!isNavigateBackEnabled}
       />
       <TwTextInput
         value={replayNavigationStepSizeInput}
         onValueChange={setReplayNavigationStepSizeInput}
-        error={!isReplayNavigationStepSizeInputValid}
+        error={!isNavigationStepSizeInputValid}
         width={48}
       />
       <TwButton
         content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateBarForward}
-        disabled={!isReplayNavigateForwardEnabled}
+        onClick={navigateForward}
+        disabled={!isNavigateForwardEnabled}
       />
     </div>
   );
