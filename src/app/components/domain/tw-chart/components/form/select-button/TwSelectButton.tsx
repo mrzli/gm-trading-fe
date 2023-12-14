@@ -81,7 +81,7 @@ export function TwSelectButton<
   );
 
   const content = (
-    <div className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none z-20'>
+    <div className='text-sm border rounded border-slate-400 bg-slate-100 overflow-y-auto bg-white outline-none'>
       {options.map((o, i) => (
         <div
           key={o.value}

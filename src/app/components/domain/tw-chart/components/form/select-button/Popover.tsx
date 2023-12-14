@@ -50,7 +50,7 @@ export function Popover({
               ref={refs.setFloating}
               style={floatingStyles}
               {...getFloatingProps()}
-              className='outline-none'
+              className='outline-none z-20'
             >
               {content}
             </div>
