@@ -12,7 +12,7 @@ import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/T
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
-import { rawDataToTickerData, toLogicalOffset } from './util';
+import { rawDataToFullTickerData, toLogicalOffset } from './util';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -61,7 +61,7 @@ export function TickerDataContainer({
   }, [allInstruments, instrumentName]);
 
   const fullData = useMemo(
-    () => rawDataToTickerData(rawData ?? [], resolution),
+    () => rawDataToFullTickerData(rawData ?? [], resolution),
     [rawData, resolution],
   );
 
