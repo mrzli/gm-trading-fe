@@ -9,10 +9,12 @@ export interface TwInitInput {
 
 export interface TwChartApi {
   readonly setData: SetDataFn;
+  readonly getTimeRange: GetTimeRangeFn;
   readonly setTimeRange: SetTimeRangeFn;
 }
 
 export type SetDataFn = (data: TickerDataRows) => void;
+export type GetTimeRangeFn = () => TwRange | undefined;
 export type SetTimeRangeFn = (range: TwRange) => void;
 
 export interface TwRange {

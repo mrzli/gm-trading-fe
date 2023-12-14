@@ -8,6 +8,7 @@ import {
   TwRange,
   SetTimeRangeFn,
   SetDataFn,
+  GetTimeRangeFn,
 } from '../types';
 import {
   getChartOptions,
@@ -73,6 +74,7 @@ export function initChart(
 
   return {
     setData: createSetDataFn(candlestickSeries),
+    getTimeRange: createGetTimeRangeFn(timeScale),
     setTimeRange: createSetTimeRangeFn(timeScale),
   };
 }
@@ -82,6 +84,20 @@ function createSetDataFn(
 ): SetDataFn {
   return (data: TickerDataRows) => {
     candlestickSeries.setData(data as TickerDataRow[]);
+  };
+}
+
+function createGetTimeRangeFn(timeScale: ITimeScaleApi<Time>): GetTimeRangeFn {
+  return () => {
+    const logicalRange = timeScale.getVisibleLogicalRange() ?? undefined;
+    if (!logicalRange) {
+      return undefined;
+    }
+
+    return {
+      from: logicalRange.from,
+      to: logicalRange.to,
+    };
   };
 }
 

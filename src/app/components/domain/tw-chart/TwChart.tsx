@@ -58,7 +58,10 @@ export function TwChart({
       return;
     }
 
-    chartApi.setTimeRange(logicalRange);
+    const currentLogicalRange = chartApi.getTimeRange();
+    if (!isLogicalRangeEqual(currentLogicalRange, logicalRange)) {
+      chartApi.setTimeRange(logicalRange);
+    }
   }, [logicalRange, chartApi]);
 
   useEffect(() => {
@@ -97,4 +100,23 @@ function getOhlcLabelElement(
       <TwOhlcLabel o={open} h={high} l={low} c={close} precision={precision} />
     </div>
   );
+}
+
+function isLogicalRangeEqual(
+  lr1: TwRange | undefined,
+  lr2: TwRange | undefined,
+): boolean {
+  if (!lr1 && !lr2) {
+    return true;
+  }
+  if (!lr1 || !lr2) {
+    return false;
+  }
+  return equalEpsilon(lr1.from, lr2.from) && equalEpsilon(lr1.to, lr2.to);
+}
+
+const EPSILON = 0.001;
+
+function equalEpsilon(a: number, b: number): boolean {
+  return Math.abs(a - b) < EPSILON;
 }

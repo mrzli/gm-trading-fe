@@ -130,7 +130,7 @@ export function TickerDataContainer({
         settings={settings}
         onSettingsChange={setSettings}
       />
-      <PrettyDisplay content={settings} />
+      {false && <PrettyDisplay content={settings} />}
       <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
     </div>
   );
