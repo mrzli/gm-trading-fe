@@ -1,6 +1,10 @@
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
-import { TickerDataRow, TickerDataRows } from '../../../types';
+import {
+  GroupedTickerDataRows,
+  TickerDataRow,
+  TickerDataRows,
+} from '../../../types';
 import { TwChartResolution } from '../tw-chart/types';
 import { invariant } from '@gmjs/assert';
 import {
@@ -26,15 +30,15 @@ function toTickerDataRow(line: string): TickerDataRow {
   };
 }
 
-export function aggregateDataRows(
+export function groupDataRows(
   rows: TickerDataRows,
   resolution: TwChartResolution,
-): TickerDataRows {
+): GroupedTickerDataRows {
   switch (resolution) {
     case '1m':
     case '15m':
     case 'D': {
-      return rows;
+      return rows.map((row) => [row]);
     }
     case '2m':
     case '5m':
@@ -44,7 +48,7 @@ export function aggregateDataRows(
     case '2h':
     case '4h':
     case 'W': {
-      return aggregateDataByFixedInterval(
+      return groupDataByFixedInterval(
         rows,
         resolutionToSeconds(resolution),
         // UNIX time starts at 1970-01-01 00:00:00 UTC, which is a Thursday
@@ -53,17 +57,23 @@ export function aggregateDataRows(
       );
     }
     case 'M': {
-      return aggregateDataByMonth(rows);
+      return groupDataByMonth(rows);
     }
   }
 }
 
-function aggregateDataByFixedInterval(
+export function aggregateGroupedDataRows(
+  rows: GroupedTickerDataRows,
+): TickerDataRows {
+  return rows.map((row) => aggregateRows(row));
+}
+
+function groupDataByFixedInterval(
   rows: TickerDataRows,
   intervalSeconds: number,
   timeAdjustmentSeconds: number,
-): TickerDataRows {
-  const aggregatedData: TickerDataRow[] = [];
+): GroupedTickerDataRows {
+  const groupedData: TickerDataRows[] = [];
   let bucket: TickerDataRow[] = [];
 
   for (const row of rows) {
@@ -80,17 +90,17 @@ function aggregateDataByFixedInterval(
     ) {
       bucket.push(row);
     } else {
-      aggregatedData.push(aggregateInterval(bucket));
+      groupedData.push(bucket);
       bucket = [row];
     }
   }
 
   if (bucket.length > 0) {
-    aggregatedData.push(aggregateInterval(bucket));
+    groupedData.push(bucket);
     bucket = [];
   }
 
-  return aggregatedData;
+  return groupedData;
 }
 
 function getTimeBucketIndex(time: number, interval: number): number {
@@ -121,8 +131,8 @@ function resolutionToSeconds(resolution: TwChartResolution): number {
   }
 }
 
-function aggregateDataByMonth(rows: TickerDataRows): TickerDataRows {
-  const aggregatedData: TickerDataRow[] = [];
+function groupDataByMonth(rows: TickerDataRows): GroupedTickerDataRows {
+  const groupedData: TickerDataRows[] = [];
   let bucket: TickerDataRow[] = [];
 
   for (const row of rows) {
@@ -133,17 +143,17 @@ function aggregateDataByMonth(rows: TickerDataRows): TickerDataRows {
     ) {
       bucket.push(row);
     } else {
-      aggregatedData.push(aggregateInterval(bucket));
+      groupedData.push(bucket);
       bucket = [row];
     }
   }
 
   if (bucket.length > 0) {
-    aggregatedData.push(aggregateInterval(bucket));
+    groupedData.push(bucket);
     bucket = [];
   }
 
-  return aggregatedData;
+  return groupedData;
 }
 
 function getMonthTimeBucketIndex(time: number): number {
@@ -151,7 +161,7 @@ function getMonthTimeBucketIndex(time: number): number {
   return date.getUTCFullYear() * 12 + date.getUTCMonth();
 }
 
-function aggregateInterval(input: Iterable<TickerDataRow>): TickerDataRow {
+function aggregateRows(input: Iterable<TickerDataRow>): TickerDataRow {
   let time: UTCTimestamp | undefined;
   let open: number | undefined;
   let high: number | undefined;

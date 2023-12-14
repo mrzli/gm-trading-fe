@@ -9,6 +9,6 @@ export interface TwChartSettings {
 }
 
 export interface TwBarReplaySettings {
-  readonly lastBar: number | undefined;
-  readonly replaySubBars: boolean;
+  readonly barIndex: number | undefined;
+  readonly subBarIndex: number;
 }

@@ -8,6 +8,10 @@ import { useState } from 'react';
 import { TwChartSettings } from '../../../types';
 import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
 import { TEST_TICKER_ROWS_MINUTE } from '../../../data';
+import {
+  aggregateGroupedDataRows,
+  groupDataRows,
+} from '../../../../ticker-data-container/process-chart-data';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -26,13 +30,16 @@ const STORY_META: Meta<TwChartToolbarProps> = {
   decorators: [decoratorPadding()],
   argTypes: {
     settings: disableControl(),
-    data: disableControl(),
+    subRows: disableControl(),
+    rows: disableControl(),
     onSettingsChange: disableControl(),
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
-    nonAggregatedData: TEST_TICKER_ROWS_MINUTE,
-    data: TEST_TICKER_ROWS_MINUTE,
+    subRows: groupDataRows(TEST_TICKER_ROWS_MINUTE, '5m'),
+    rows: aggregateGroupedDataRows(
+      groupDataRows(TEST_TICKER_ROWS_MINUTE, '5m'),
+    ),
   },
 };
 export default STORY_META;
@@ -46,8 +53,8 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
       resolution: '5m',
       logicalRange: undefined,
       replaySettings: {
-        lastBar: undefined,
-        replaySubBars: false,
+        barIndex: undefined,
+        subBarIndex: 0,
       },
     });
 

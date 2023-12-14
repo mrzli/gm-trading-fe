@@ -9,24 +9,24 @@ import { TwSelectButton } from '../../form/select-button/TwSelectButton';
 import { toSimpleTwSelectOption } from '../../../util';
 import { TwSelectOption } from '../../form/select-button/types';
 import { TwSelectButtonCentered } from '../../form/select-button/TwSelectButtonCentered';
-import { TickerDataRows } from '../../../../../../types';
+import { GroupedTickerDataRows, TickerDataRows } from '../../../../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
-import { TwChartToolbarReplay } from './components/TwChartToolbarReplay';
+import { TwChartToolbarReplay } from './components/replay/TwChartToolbarReplay';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
-  readonly nonAggregatedData: TickerDataRows;
-  readonly data: TickerDataRows;
+  readonly subRows: GroupedTickerDataRows;
+  readonly rows: TickerDataRows;
   readonly settings: TwChartSettings;
   readonly onSettingsChange: (settings: TwChartSettings) => void;
 }
 
 export function TwChartToolbar({
   instrumentNames,
-  nonAggregatedData,
-  data,
+  subRows,
+  rows,
   settings,
   onSettingsChange,
 }: TwChartToolbarProps): React.ReactElement {
@@ -93,21 +93,21 @@ export function TwChartToolbar({
         onValueChange={handleResolutionChange}
         width={32}
       />
-      {data.length > 0 && (
+      {rows.length > 0 && (
         <>
           <TwChartToolbarNavigate
-            data={data}
+            data={rows}
             logicalRange={settings.logicalRange}
             onNavigate={updateLogicalRange}
           />
           <TwChartToolbarGoTo
-            data={data}
+            data={rows}
             logicalRange={settings.logicalRange}
             onGoTo={updateLogicalRange}
           />
           <TwChartToolbarReplay
-            nonAggregatedData={nonAggregatedData}
-            data={data}
+            subRows={subRows}
+            rows={rows}
             replaySettings={settings.replaySettings}
             onReplaySettingsChange={handleReplaySettingsChange}
           />

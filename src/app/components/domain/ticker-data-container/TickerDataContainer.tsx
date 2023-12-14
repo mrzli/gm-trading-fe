@@ -9,12 +9,16 @@ import {
   TwChartSettings,
 } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
-import { toTickerDataRows, aggregateDataRows } from './process-chart-data';
+import {
+  toTickerDataRows,
+  groupDataRows,
+  aggregateGroupedDataRows,
+} from './process-chart-data';
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { invariant } from '@gmjs/assert';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
-import { TickerDataRows } from '../../../types';
+import { GroupedTickerDataRows, TickerDataRows } from '../../../types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -38,8 +42,8 @@ export function TickerDataContainer({
     resolution: '5m',
     logicalRange: undefined,
     replaySettings: {
-      lastBar: undefined,
-      replaySubBars: false,
+      barIndex: undefined,
+      subBarIndex: 0,
     },
   });
 
@@ -116,8 +120,8 @@ export function TickerDataContainer({
     <div className='h-screen flex flex-col gap-4 p-4'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
-        nonAggregatedData={tickerData.nonAggregatedRows}
-        data={tickerData.rows}
+        subRows={tickerData.subRows}
+        rows={tickerData.rows}
         settings={settings}
         onSettingsChange={setSettings}
       />
@@ -128,7 +132,7 @@ export function TickerDataContainer({
 }
 
 interface TickerData {
-  readonly nonAggregatedRows: TickerDataRows;
+  readonly subRows: GroupedTickerDataRows;
   readonly rows: TickerDataRows;
 }
 
@@ -137,9 +141,10 @@ function rawDataToTickerData(
   resolution: TwChartResolution,
 ): TickerData {
   const nonAggregatedRows = toTickerDataRows(rawData ?? []);
-  const rows = aggregateDataRows(nonAggregatedRows, resolution);
+  const subRows = groupDataRows(nonAggregatedRows, resolution);
+  const rows = aggregateGroupedDataRows(subRows);
   return {
-    nonAggregatedRows,
+    subRows,
     rows,
   };
 }

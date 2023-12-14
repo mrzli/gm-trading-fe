@@ -7,7 +7,11 @@ import {
   TwChartResolution,
 } from '../tw-chart/types';
 import { TickerDataRows } from '../../../types';
-import { toTickerDataRows, aggregateDataRows } from './process-chart-data';
+import {
+  toTickerDataRows,
+  groupDataRows,
+  aggregateGroupedDataRows,
+} from './process-chart-data';
 
 describe('process-chart-data', () => {
   let INPUT_MINUTE: readonly string[] = [];
@@ -62,7 +66,7 @@ describe('process-chart-data', () => {
     }
   }
 
-  describe('aggregateDataRows()', () => {
+  describe('aggregateDataRows', () => {
     type Example = TwChartResolution;
 
     const EXAMPLES: readonly Example[] = [
@@ -84,7 +88,7 @@ describe('process-chart-data', () => {
       it(JSON.stringify(example), () => {
         const input = getInput(example);
         const expected = mapGetOrThrow(RESULTS_MAP, example);
-        const actual = aggregateDataRows(input, example);
+        const actual = aggregateGroupedDataRows(groupDataRows(input, example));
         // console.log('actual', actual);
         // console.log('expected', expected);
         expect(actual).toEqual(expected);
