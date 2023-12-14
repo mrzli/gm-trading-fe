@@ -37,13 +37,8 @@ export function TwChart({
 
   const input = useMemo<TwInitInput>(
     () =>
-      getTwInitInput(
-        precision,
-        data,
-        setCurrCrosshairItem,
-        onChartTimeRangeChange,
-      ),
-    [precision, data, setCurrCrosshairItem, onChartTimeRangeChange],
+      getTwInitInput(precision, setCurrCrosshairItem, onChartTimeRangeChange),
+    [precision, onChartTimeRangeChange],
   );
 
   useEffect(() => {
@@ -65,6 +60,14 @@ export function TwChart({
 
     chartApi.setTimeRange(logicalRange);
   }, [logicalRange, chartApi]);
+
+  useEffect(() => {
+    if (!chartApi) {
+      return;
+    }
+
+    chartApi.setData(data);
+  }, [data, chartApi]);
 
   return (
     <div className='h-full overflow-hidden relative'>

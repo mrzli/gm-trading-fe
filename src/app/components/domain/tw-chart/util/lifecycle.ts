@@ -1,4 +1,4 @@
-import { IChartApi, ITimeScaleApi, Time } from 'lightweight-charts';
+import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
 import { TickerDataRow } from '../../../../types';
 import {
   CrosshairMoveFn,
@@ -7,6 +7,7 @@ import {
   TwChartApi,
   TwRange,
   SetTimeRangeFn,
+  SetDataFn,
 } from '../types';
 import {
   getChartOptions,
@@ -16,13 +17,13 @@ import {
 
 export function getTwInitInput(
   precision: number,
-  data: readonly TickerDataRow[],
+  // data: readonly TickerDataRow[],
   onCrosshairMove: CrosshairMoveFn,
   onChartTimeRangeChange: ChartTimeRangeChangeFn,
 ): TwInitInput {
   return {
     precision,
-    data,
+    // data,
     onCrosshairMove,
     onChartTimeRangeChange,
   };
@@ -36,14 +37,13 @@ export function initChart(
     return undefined;
   }
 
-  const { precision, data, onCrosshairMove, onChartTimeRangeChange } = input;
+  const { precision, onCrosshairMove, onChartTimeRangeChange } = input;
 
   const chartOptions = getChartOptions();
   chart.applyOptions(chartOptions);
 
   const seriesOptions = getDataSeriesOptions(precision);
   const candlestickSeries = chart.addCandlestickSeries(seriesOptions);
-  candlestickSeries.setData([...data]);
 
   const timeScaleOptions = getTimeScaleOptions();
   const timeScale = chart.timeScale();
@@ -72,7 +72,16 @@ export function initChart(
   });
 
   return {
+    setData: createSetDataFn(candlestickSeries),
     setTimeRange: createSetTimeRangeFn(timeScale),
+  };
+}
+
+function createSetDataFn(
+  candlestickSeries: ISeriesApi<'Candlestick'>,
+): SetDataFn {
+  return (data: readonly TickerDataRow[]) => {
+    candlestickSeries.setData(data as TickerDataRow[]);
   };
 }
 

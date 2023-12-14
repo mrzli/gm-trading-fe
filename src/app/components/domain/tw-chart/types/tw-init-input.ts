@@ -2,15 +2,17 @@ import { TickerDataRow } from '../../../../types';
 
 export interface TwInitInput {
   readonly precision: number;
-  readonly data: readonly TickerDataRow[];
+  // readonly data: readonly TickerDataRow[];
   readonly onCrosshairMove: CrosshairMoveFn;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
 }
 
 export interface TwChartApi {
+  readonly setData: SetDataFn;
   readonly setTimeRange: SetTimeRangeFn;
 }
 
+export type SetDataFn = (data: readonly TickerDataRow[]) => void;
 export type SetTimeRangeFn = (range: TwRange) => void;
 
 export interface TwRange {
