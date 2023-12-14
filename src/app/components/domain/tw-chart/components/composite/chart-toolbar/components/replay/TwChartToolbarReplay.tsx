@@ -14,6 +14,7 @@ import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { TwButton } from '../../../../form/TwButton';
 import { TwChartToolbarReplaySetBarIndex } from './TwChartToolbarReplaySetBarIndex';
+import { TwChartToolbarReplayNavigateBar } from './TwChartToolbarReplayNavigateBar';
 
 export interface TwChartToolbarReplayProps {
   readonly subRows: GroupedTickerDataRows;
@@ -55,64 +56,6 @@ export function TwChartToolbarReplay({
     );
   }, [isReplayNavigationStepSizeInputValid, replaySettings]);
 
-  const isReplayNavigateBackEnabled = useMemo(() => {
-    return isReplayNavigateEnabled && replaySettings.barIndex! > 1;
-  }, [isReplayNavigateEnabled, replaySettings]);
-
-  const isReplayNavigateForwardEnabled = useMemo(() => {
-    return isReplayNavigateEnabled && replaySettings.barIndex! < rows.length;
-  }, [isReplayNavigateEnabled, replaySettings, rows.length]);
-
-  const navigateBar = useCallback(
-    (amount: number) => {
-      if (!isReplayNavigateEnabled) {
-        return;
-      }
-
-      const newBar = clampNumber(
-        replaySettings.barIndex! + amount,
-        1,
-        rows.length,
-      );
-
-      onReplaySettingsChange({
-        ...replaySettings,
-        barIndex: newBar,
-        subBarIndex: 0,
-      });
-    },
-    [
-      isReplayNavigateEnabled,
-      replaySettings,
-      rows.length,
-      onReplaySettingsChange,
-    ],
-  );
-
-  const navigateBarBack = useCallback(() => {
-    if (!isReplayNavigateBackEnabled) {
-      return;
-    }
-
-    const amount = -parseIntegerOrThrow(replayNavigationStepSizeInput);
-
-    navigateBar(amount);
-  }, [isReplayNavigateBackEnabled, navigateBar, replayNavigationStepSizeInput]);
-
-  const navigateBarForward = useCallback(() => {
-    if (!isReplayNavigateForwardEnabled) {
-      return;
-    }
-
-    const amount = parseIntegerOrThrow(replayNavigationStepSizeInput);
-
-    navigateBar(amount);
-  }, [
-    isReplayNavigateForwardEnabled,
-    navigateBar,
-    replayNavigationStepSizeInput,
-  ]);
-
   const navigateSubBar = useCallback(
     (amount: number) => {
       if (!isReplayNavigateEnabled) {
@@ -147,22 +90,10 @@ export function TwChartToolbarReplay({
         barIndex={replaySettings.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
-      <TwButton
-        content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateBarBack}
-        disabled={!isReplayNavigateBackEnabled}
-      />
-      <TwTextInput
-        placeholder={''}
-        value={replayNavigationStepSizeInput}
-        onValueChange={setReplayNavigationStepSizeInput}
-        error={!isReplayNavigationStepSizeInputValid}
-        width={48}
-      />
-      <TwButton
-        content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateBarForward}
-        disabled={!isReplayNavigateForwardEnabled}
+      <TwChartToolbarReplayNavigateBar
+        dataLength={rows.length}
+        barIndex={replaySettings.barIndex}
+        onBarIndexChange={handleBarIndexChange}
       />
     </div>
   );

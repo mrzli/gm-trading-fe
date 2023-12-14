@@ -4,7 +4,7 @@ import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,
 } from '../../util';
-import { parseIntegerOrThrow } from '@gmjs/number-util';
+import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
 
 export interface TwChartToolbarReplaySetBarIndexProps {
   readonly dataLength: number;
@@ -43,10 +43,11 @@ export function TwChartToolbarReplaySetBarIndex({
       return;
     }
 
-    const barIndex = parseIntegerOrThrow(barIndexInput);
+    const barIndexNum = parseIntegerOrThrow(barIndexInput);
+    const newBarIndex = clampNumber(barIndexNum, 1, dataLength);
 
-    onBarIndexChange(barIndex);
-  }, [barIndexInput, isReplayValueValid, onBarIndexChange]);
+    onBarIndexChange(newBarIndex);
+  }, [barIndexInput, dataLength, isReplayValueValid, onBarIndexChange]);
 
   const handleReplayInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
