@@ -13,6 +13,7 @@ import {
   TEST_TICKER_ROWS_QUARTER,
 } from './data';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { TYPES_OF_TW_CHART_TIMEZONES } from './types';
 
 const STORY_META: Meta<TwChartProps> = {
   component: TwChart,
@@ -21,11 +22,16 @@ const STORY_META: Meta<TwChartProps> = {
   argTypes: {
     precision: argTypeInteger(0, 10),
     data: disableControl(),
+    timezone: {
+      control: 'inline-radio',
+      options: TYPES_OF_TW_CHART_TIMEZONES,
+    },
     onChartTimeRangeChange: disableControl(),
     onChartKeyDown: disableControl(),
   },
   args: {
     precision: 2,
+    timezone: 'UTC',
   },
 };
 export default STORY_META;

@@ -1,20 +1,27 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { createChart } from 'lightweight-charts';
+import { UTCTimestamp, createChart } from 'lightweight-charts';
 import { TickerDataRow, TickerDataRows } from '../../../types';
 import {
   ChartTimeRangeChangeFn,
   TwChartApi,
+  TwChartTimezone,
   TwInitInput,
   TwRange,
 } from './types';
-import { destroyChart, getTwInitInput, initChart } from './util';
+import {
+  destroyChart,
+  getTwInitInput,
+  initChart,
+  utcToTzTimestamp,
+} from './util';
 import { TwOhlcLabel } from './components/composite/TwOhlcLabel';
 
 export interface TwChartProps {
   readonly precision: number;
   readonly data: TickerDataRows;
+  readonly timezone: TwChartTimezone;
   readonly logicalRange: TwRange | undefined;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -23,6 +30,7 @@ export interface TwChartProps {
 export function TwChart({
   precision,
   data,
+  timezone,
   logicalRange,
   onChartTimeRangeChange,
   onChartKeyDown,
@@ -69,8 +77,12 @@ export function TwChart({
       return;
     }
 
-    chartApi.setData(data);
-  }, [data, chartApi]);
+    const adjustedData = data.map((row) => adjustRowForTimezone(row, timezone));
+
+    console.log(adjustedData.at(-1)?.time);
+
+    chartApi.setData(adjustedData);
+  }, [data, timezone, chartApi]);
 
   return (
     <div className='h-full overflow-hidden relative'>
@@ -100,6 +112,14 @@ function getOhlcLabelElement(
       <TwOhlcLabel o={open} h={high} l={low} c={close} precision={precision} />
     </div>
   );
+}
+
+function adjustRowForTimezone(
+  row: TickerDataRow,
+  timezone: TwChartTimezone,
+): TickerDataRow {
+  const adjustedTimestamp = utcToTzTimestamp(row.time, timezone);
+  return { ...row, time: adjustedTimestamp as UTCTimestamp };
 }
 
 function isLogicalRangeEqual(

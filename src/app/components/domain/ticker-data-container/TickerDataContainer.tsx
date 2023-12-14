@@ -111,6 +111,7 @@ export function TickerDataContainer({
       <TwChart
         precision={instrument.precision}
         data={chartData}
+        timezone={'UTC'}
         logicalRange={logicalRange}
         onChartTimeRangeChange={handleChartTimeRangeChange}
         onChartKeyDown={handleChartKeyDown}
