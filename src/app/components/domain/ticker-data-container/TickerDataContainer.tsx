@@ -12,7 +12,7 @@ import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/T
 import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
-import { rawDataToFullTickerData, toLogicalOffset } from './util';
+import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -65,11 +65,9 @@ export function TickerDataContainer({
     [rawData, resolution],
   );
 
-  // const chartData = useMemo(() => {
-  //   return replaySettings.barIndex !== undefined
-  //     ? fullData.subRows[replaySettings.barIndex]
-  //     : fullData.rows;
-  // }, [fullData, replaySettings]);
+  const chartData = useMemo(() => {
+    return getChartData(fullData, replaySettings);
+  }, [fullData, replaySettings]);
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
@@ -109,10 +107,10 @@ export function TickerDataContainer({
   }
 
   const dataChartElement =
-    !isLoadingData && fullData.rows.length > 0 ? (
+    !isLoadingData && chartData.length > 0 ? (
       <TwChart
         precision={instrument.precision}
-        data={fullData.rows}
+        data={chartData}
         logicalRange={logicalRange}
         onChartTimeRangeChange={handleChartTimeRangeChange}
         onChartKeyDown={handleChartKeyDown}

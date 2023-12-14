@@ -161,7 +161,7 @@ function getMonthTimeBucketIndex(time: number): number {
   return date.getUTCFullYear() * 12 + date.getUTCMonth();
 }
 
-function aggregateRows(input: Iterable<TickerDataRow>): TickerDataRow {
+export function aggregateRows(input: Iterable<TickerDataRow>): TickerDataRow {
   let time: UTCTimestamp | undefined;
   let open: number | undefined;
   let high: number | undefined;
