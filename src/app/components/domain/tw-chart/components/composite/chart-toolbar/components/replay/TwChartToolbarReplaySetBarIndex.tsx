@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { TwTextInput } from '../../../../form/TwITextnput';
+import { TwTextInput } from '../../../../form/TwITextInput';
 import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,

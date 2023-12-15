@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { TwRange } from '../../../../types';
 import { logicalToLogicalRange, timeToLogical } from '../../../../util';
-import { TwTextInput } from '../../../form/TwITextnput';
+import { TwTextInput } from '../../../form/TwITextInput';
 import { dateIsoUtcToUnixSeconds } from '../../../../../../../util';
 import { TickerDataRows } from '../../../../../../../types';
 import { SCHEMA_GO_TO_INPUT, dateInputToIso, SCHEMA_GO_TO_DATE } from '../util';

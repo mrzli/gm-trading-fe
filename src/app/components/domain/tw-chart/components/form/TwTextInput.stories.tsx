@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { TwTextInput, TwTextInputProps } from './TwITextnput';
+import { TwTextInput, TwTextInputProps } from './TwITextInput';
 import { decoratorPadding, disableControl } from '../../../../../../storybook';
 import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
 
