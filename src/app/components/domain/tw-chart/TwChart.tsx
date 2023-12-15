@@ -43,6 +43,11 @@ export function TwChart({
 
   const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
 
+  const adjustedData = useMemo<TickerDataRows>(
+    () => data.map((row) => adjustRowForTimezone(row, timezone)),
+    [data, timezone],
+  );
+
   const input = useMemo<TwInitInput>(
     () =>
       getTwInitInput(precision, setCurrCrosshairItem, onChartTimeRangeChange),
@@ -77,16 +82,17 @@ export function TwChart({
       return;
     }
 
-    const adjustedData = data.map((row) => adjustRowForTimezone(row, timezone));
-
-    console.log(adjustedData.at(-1)?.time);
-
     chartApi.setData(adjustedData);
-  }, [data, timezone, chartApi]);
+  }, [adjustedData, chartApi]);
 
   return (
     <div className='h-full overflow-hidden relative'>
-      <div>{getOhlcLabelElement(currCrosshairItem, precision)}</div>
+      <div>
+        {getOhlcLabelElement(
+          currCrosshairItem ?? adjustedData.at(-1),
+          precision,
+        )}
+      </div>
       <div
         ref={chartElementRef}
         tabIndex={0}
