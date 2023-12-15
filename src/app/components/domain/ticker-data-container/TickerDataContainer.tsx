@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import Icon from '@mdi/react';
+import { mdiCurrencyUsd } from '@mdi/js';
 import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { LoadingDisplay } from '../../shared/display/LoadingDisplay';
@@ -13,6 +15,8 @@ import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
+import { TwButton } from '../tw-chart/components/form/TwButton';
+import { RightToolbarState } from './types/right-toolbar-state';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -27,6 +31,9 @@ export function TickerDataContainer({
   rawData,
   onRequestData,
 }: TickerDataContainerProps): React.ReactElement {
+  const [rightToolbarState, setRightToolbarState] =
+    useState<RightToolbarState>('none');
+
   const instrumentNames = useMemo(() => {
     return allInstruments?.map((instrument) => instrument.name) ?? [];
   }, [allInstruments]);
@@ -104,6 +111,10 @@ export function TickerDataContainer({
     [fullData],
   );
 
+  const handleToggleRightToolbarStateTrade = useCallback(() => {
+    setRightToolbarState((s) => (s === 'trade' ? 'none' : 'trade'));
+  }, []);
+
   if (!instrument) {
     return <div>Instrument not found.</div>;
   }
@@ -125,7 +136,7 @@ export function TickerDataContainer({
     );
 
   return (
-    <div className='h-screen flex flex-col gap-4 p-4'>
+    <div className='h-screen flex flex-col gap-4 p-4 overflow-hidden'>
       <TwChartToolbar
         instrumentNames={instrumentNames}
         subRows={fullData.subRows}
@@ -134,7 +145,22 @@ export function TickerDataContainer({
         onSettingsChange={setSettings}
       />
       {false && <PrettyDisplay content={settings} />}
-      <div className='flex-1 overflow-hidden'>{dataChartElement}</div>
+      <div className='flex-1 overflow-hidden flex flex-row gap-2'>
+        <div className='h-full flex-1 overflow-hidden'>{dataChartElement}</div>
+        <div className='flex flex-row gap-2'>
+          <div>
+            <TwButton
+              content={<Icon path={mdiCurrencyUsd} size={ICON_SIZE} />}
+              onClick={handleToggleRightToolbarStateTrade}
+              width={24}
+              height={24}
+            />
+          </div>
+          {rightToolbarState !== 'none' && <div>aaa</div>}
+        </div>
+      </div>
     </div>
   );
 }
+
+const ICON_SIZE = 0.875 / 1.5;
