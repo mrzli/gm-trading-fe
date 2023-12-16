@@ -2,6 +2,7 @@ import React, { CSSProperties, useCallback } from 'react';
 import cls from 'classnames';
 
 export interface TwTextInputProps {
+  readonly id?: string;
   readonly placeholder?: string;
   readonly value: string;
   readonly onValueChange: (value: string) => void;
@@ -12,6 +13,7 @@ export interface TwTextInputProps {
 }
 
 export function TwTextInput({
+  id,
   placeholder,
   value,
   onValueChange,
@@ -35,6 +37,7 @@ export function TwTextInput({
 
   return (
     <input
+      id={id}
       placeholder={placeholder}
       className={classes}
       style={{ width: width }}
