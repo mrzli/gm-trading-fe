@@ -3,9 +3,9 @@ import {
   TradeSequenceInputsDisplay,
   TradeSequenceInputsDisplayProps,
 } from './TradeSequenceInputsDisplay';
-import { decoratorPadding, disableControl } from '../../../../storybook';
-import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
-import { TradeSequenceInput } from './types';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
+import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
+import { TradeSequenceInput } from '../types';
 import { useState } from 'react';
 
 const STORY_META: Meta<TradeSequenceInputsDisplayProps> = {
@@ -27,6 +27,7 @@ export const Primary: StoryObj<TradeSequenceInputsDisplayProps> = {
     const [value, setValue] = useState<TradeSequenceInput>({
       initialBalance: 100_000,
       spread: 0.5,
+      marginPercent: 0.5,
       avgSlippage: 0,
     });
 
