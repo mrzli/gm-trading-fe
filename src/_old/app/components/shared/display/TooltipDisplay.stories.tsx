@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TooltipDisplay, TooltipDisplayProps } from './TooltipDisplay';
-import { decoratorPadding, disableControl } from '../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 
 const STORY_META: Meta<TooltipDisplayProps> = {
   component: TooltipDisplay,

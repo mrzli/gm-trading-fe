@@ -4,11 +4,8 @@ import {
   TickerDataResolution,
 } from '@gmjs/gm-trading-shared';
 import { TickerFilterData } from '../../../app/types';
-import {
-  SelectInput,
-  SelectInputOption,
-} from '../../../../app/components/shared/inputs/SelectInput';
-import { TextInput } from '../../../../app/components/shared/inputs/TextInput';
+import { SelectInput, SelectInputOption } from '../shared/inputs/SelectInput';
+import { TextInput } from '../shared/inputs/TextInput';
 
 export interface TickerDataFilterProps {
   readonly tickerNames: readonly string[];

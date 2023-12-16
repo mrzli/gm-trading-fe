@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TextInput, TextInputProps } from './TextInput';
-import { decoratorPadding, disableControl } from '../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
 
 const STORY_META: Meta<TextInputProps> = {

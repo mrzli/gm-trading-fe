@@ -5,7 +5,7 @@ import {
   SelectInputOption,
   SelectInputProps,
 } from './SelectInput';
-import { decoratorPadding, disableControl } from '../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
 
 type MySelectInputProps = SelectInputProps<string>;

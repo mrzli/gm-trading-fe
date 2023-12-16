@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Button, ButtonProps } from './Button';
-import { decoratorPadding, disableControl } from '../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 
 const STORY_META: Meta<ButtonProps> = {
   component: Button,
