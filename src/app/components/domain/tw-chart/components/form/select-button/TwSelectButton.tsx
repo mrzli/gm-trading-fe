@@ -7,7 +7,7 @@ import {
   TwSelectValue,
   TwSelectionRenderer,
 } from './types';
-import { Popover } from './Popover';
+import { Popover } from '../../../../../shared/layout/Popover';
 
 export interface TwSelectButtonProps<
   TValue extends string,
