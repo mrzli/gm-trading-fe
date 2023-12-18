@@ -1,19 +1,19 @@
 import React, { useCallback } from 'react';
 import cls from 'classnames';
 
-export interface TwToggleButtonProps {
+export interface ToggleButtonProps {
   readonly label: string;
   readonly value: boolean;
   readonly onValueChange: (value: boolean) => void;
   readonly disabled?: boolean;
 }
 
-export function TwToggleButton({
+export function ToggleButton({
   label,
   value,
   onValueChange,
   disabled,
-}: TwToggleButtonProps): React.ReactElement {
+}: ToggleButtonProps): React.ReactElement {
   const checked = value && !disabled;
   const unchecked = !value && !disabled;
 
