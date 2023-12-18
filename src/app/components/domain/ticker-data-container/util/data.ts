@@ -6,7 +6,10 @@ import {
   aggregateRows,
 } from './process-chart-data';
 import { FullTickerData } from '../types';
-import { TickerDataRows } from '../../../../types';
+import { TickerDataRow, TickerDataRows } from '../../../../types';
+import { applyFn } from '@gmjs/apply-function';
+import { compose } from '@gmjs/compose-function';
+import { flatten, toArray } from '@gmjs/value-transformers';
 
 export function rawDataToFullTickerData(
   rawData: readonly string[] | undefined,
@@ -39,4 +42,8 @@ export function getChartData(
     const lastBar = aggregateRows(subRows[barIndex].slice(0, subBarIndex));
     return [...fullBars, lastBar];
   }
+}
+
+export function getTradeData(data: FullTickerData): TickerDataRows {
+  return applyFn(data.subRows, compose(flatten<TickerDataRow>(), toArray()))
 }

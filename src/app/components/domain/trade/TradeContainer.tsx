@@ -4,16 +4,17 @@ import { TradeTabValue } from './types';
 import { TradeInputsTab } from './tabs/TradingInputsTab';
 import { TradingDisplayTab } from './tabs/TradingDisplayTab';
 import { TradingResultsTab } from './tabs/TradingResultsTab';
-import { TickerDataRows } from '../../../types';
+import { GroupedTickerDataRows } from '../../../types';
+import { TwBarReplaySettings } from '../tw-chart/types';
 
 export interface TradeContainerProps {
-  readonly data: TickerDataRows;
-  readonly barIndex: number;
+  readonly data: GroupedTickerDataRows;
+  readonly replaySettings: TwBarReplaySettings;
 }
 
 export function TradeContainer({
   data,
-  barIndex,
+  replaySettings,
 }: TradeContainerProps): React.ReactElement {
   const tabEntries = useMemo(() => getTabEntries(), []);
 

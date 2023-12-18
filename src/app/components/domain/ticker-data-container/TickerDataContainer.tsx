@@ -14,7 +14,8 @@ import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
 import { Button, LoadingDisplay, PrettyDisplay } from '../../shared';
-import { RightToolbarState } from './types/right-toolbar-state';
+import { RightToolbarState } from './types';
+import { TickerDataRightToolbar } from './TickerDataRightToolbar';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -154,7 +155,13 @@ export function TickerDataContainer({
               height={24}
             />
           </div>
-          {rightToolbarState !== 'none' && <div>aaa</div>}
+          {rightToolbarState !== 'none' && (
+            <TickerDataRightToolbar
+              state={rightToolbarState}
+              data={fullData.subRows}
+              replaySettings={replaySettings}
+            />
+          )}
         </div>
       </div>
     </div>
