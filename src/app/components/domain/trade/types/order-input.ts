@@ -1,4 +1,4 @@
 export interface OrderInput {
-  readonly price: number;
+  readonly price: number | undefined;
   readonly amount: number;
 }

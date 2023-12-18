@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import {
-  TradeSequenceInputsDisplay,
-  TradeSequenceInputsDisplayProps,
-} from './TradeSequenceInputsDisplay';
+  TradeSequenceSetup,
+  TradeSequenceSetupProps,
+} from './TradeSequenceSetup';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
 import { TradeSequenceInput } from '../types';
 import { useState } from 'react';
 
-const STORY_META: Meta<TradeSequenceInputsDisplayProps> = {
-  component: TradeSequenceInputsDisplay,
+const STORY_META: Meta<TradeSequenceSetupProps> = {
+  component: TradeSequenceSetup,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
@@ -20,8 +20,8 @@ const STORY_META: Meta<TradeSequenceInputsDisplayProps> = {
 };
 export default STORY_META;
 
-export const Primary: StoryObj<TradeSequenceInputsDisplayProps> = {
-  render: (args: TradeSequenceInputsDisplayProps) => {
+export const Primary: StoryObj<TradeSequenceSetupProps> = {
+  render: (args: TradeSequenceSetupProps) => {
     const { value: _ignore1, onValueChange: _ignore2, ...rest } = args;
 
     const [value, setValue] = useState<TradeSequenceInput>({
@@ -33,11 +33,7 @@ export const Primary: StoryObj<TradeSequenceInputsDisplayProps> = {
 
     return (
       <div>
-        <TradeSequenceInputsDisplay
-          {...rest}
-          value={value}
-          onValueChange={setValue}
-        />
+        <TradeSequenceSetup {...rest} value={value} onValueChange={setValue} />
         <br />
         <br />
         <PrettyDisplay content={value} />

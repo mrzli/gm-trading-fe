@@ -3,17 +3,16 @@ import { TradeSequenceInput } from '../types';
 import { TwTextInput } from '../../tw-chart/components/form/TwITextInput';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TwButton } from '../../tw-chart/components/form/TwButton';
-import { TwLabel } from '../../tw-chart/components/display/TwLabel';
 
-export interface TradeSequenceInputsDisplayProps {
+export interface TradeSequenceSetupProps {
   readonly value: TradeSequenceInput;
   readonly onValueChange: (value: TradeSequenceInput) => void;
 }
 
-export function TradeSequenceInputsDisplay({
+export function TradeSequenceSetup({
   value,
   onValueChange,
-}: TradeSequenceInputsDisplayProps): React.ReactElement {
+}: TradeSequenceSetupProps): React.ReactElement {
   const { initialBalance, spread, marginPercent, avgSlippage } = value;
 
   const [initialBalanceInput, setInitialBalanceInput] = useState(
@@ -46,28 +45,28 @@ export function TradeSequenceInputsDisplay({
   ]);
 
   return (
-    <div className='grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0.5'>
-      <TwLabel htmlFor='initial-balance' content={'Initial Balance:'} />
+    <div className='flex flex-col gap-1'>
       <TwTextInput
         id='initial-balance'
+        label='Initial Balance'
         value={initialBalanceInput}
         onValueChange={setInitialBalanceInput}
       />
-      <TwLabel htmlFor='spread' content={'Spread:'} />
       <TwTextInput
         id='spread'
+        label='Spread'
         value={spreadInput}
         onValueChange={setSpreadInput}
       />
-      <TwLabel htmlFor='margin-percent' content={'Margin (%):'} />
       <TwTextInput
         id='margin-percent'
+        label='Margin (%)'
         value={marginPercentInput}
         onValueChange={setMarginPercentInput}
       />
-      <TwLabel htmlFor='avg-slippage' content={'Avg Slippage:'} />
       <TwTextInput
         id='avg-slippage'
+        label='Avg. Slippage'
         value={avgSlippageInput}
         onValueChange={setAvgSlippageInput}
       />
