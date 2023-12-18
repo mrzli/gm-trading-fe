@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TradeContainer, TradeContainerProps } from './TradeContainer';
+import { decoratorPadding } from '../../../../storybook';
 
 const STORY_META: Meta<TradeContainerProps> = {
   component: TradeContainer,
   tags: ['autodocs'],
-  decorators: [],
+  decorators: [decoratorPadding()],
   argTypes: {},
   args: {},
 };
