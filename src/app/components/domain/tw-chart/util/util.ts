@@ -1,8 +1,8 @@
-import { TwSelectOption } from '../components/form/select-button/TwSelectButton';
+import { SelectOption } from "../../../shared/input/select-button/types";
 
-export function toSimpleTwSelectOption<TValue extends string>(
+export function toSimpleSelectOption<TValue extends string>(
   value: TValue,
-): TwSelectOption<TValue> {
+): SelectOption<TValue> {
   return {
     label: value,
     value,

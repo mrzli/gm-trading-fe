@@ -3,18 +3,18 @@
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import {
   TwSelectItemRenderer,
-  TwSelectOption,
+  SelectOption,
   TwSelectValue,
   TwSelectionRenderer,
 } from './types';
-import { Popover } from '../../../../../shared/layout/Popover';
+import { Popover } from '../../layout/Popover';
 
-export interface TwSelectButtonProps<
+export interface SelectButtonProps<
   TValue extends string,
   TAllowUndefined extends boolean,
 > {
   readonly placeholder?: string;
-  readonly options: readonly TwSelectOption<TValue>[];
+  readonly options: readonly SelectOption<TValue>[];
   readonly value: TwSelectValue<TValue, TAllowUndefined>;
   readonly onValueChange: (
     value: TwSelectValue<TValue, TAllowUndefined>,
@@ -25,7 +25,7 @@ export interface TwSelectButtonProps<
   readonly selectItemWidth?: CSSProperties['width'];
 }
 
-export function TwSelectButton<
+export function SelectButton<
   TValue extends string = string,
   TAllowUndefined extends boolean = false,
 >({
@@ -37,7 +37,7 @@ export function TwSelectButton<
   selectItemRenderer,
   selectionWidth,
   selectItemWidth,
-}: TwSelectButtonProps<TValue, TAllowUndefined>): React.ReactElement {
+}: SelectButtonProps<TValue, TAllowUndefined>): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = useCallback(

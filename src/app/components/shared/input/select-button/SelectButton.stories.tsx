@@ -1,19 +1,16 @@
 import { CSSProperties, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { TwSelectButton, TwSelectButtonProps } from './TwSelectButton';
+import { SelectButton, SelectButtonProps } from './SelectButton';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
-import {
-  decoratorPadding,
-  disableControl,
-} from '../../../../../../../storybook';
-import { TwSelectOption } from './types';
+import { PrettyDisplay } from '../../display/PrettyDisplay';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
+import { SelectOption } from './types';
 
 type BaseSelectValue = string;
 type AllowUndefined = true;
 // type SelectValue = TwSelectValue<BaseSelectValue, AllowUndefined>;
-type SelectOption = TwSelectOption<string>;
-type Props = TwSelectButtonProps<BaseSelectValue, AllowUndefined> & {
+type StringSelectOption = SelectOption<string>;
+type Props = SelectButtonProps<BaseSelectValue, AllowUndefined> & {
   readonly selectionWidthOption: 'number' | 'string';
   readonly selectionWidthNumber: number;
   readonly selectionWidthString: NonNullable<CSSProperties['width']>;
@@ -22,22 +19,22 @@ type Props = TwSelectButtonProps<BaseSelectValue, AllowUndefined> & {
   readonly selectItemWidthString: NonNullable<CSSProperties['width']>;
 };
 
-function createOption(id: number): SelectOption {
+function createOption(id: number): StringSelectOption {
   return {
     label: `Option ${id}`,
     value: `option-${id}`,
   };
 }
 
-function createOptions(count: number): readonly SelectOption[] {
+function createOptions(count: number): readonly StringSelectOption[] {
   return range(1, count + 1).map((id) => createOption(id));
 }
 
-const OPTIONS: readonly SelectOption[] = createOptions(5);
+const OPTIONS: readonly StringSelectOption[] = createOptions(5);
 
 const STORY_META: Meta<Props> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: TwSelectButton as any,
+  component: SelectButton as any,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
@@ -97,7 +94,7 @@ export const Primary: StoryObj<Props> = {
 
     return (
       <div>
-        <TwSelectButton<BaseSelectValue, AllowUndefined>
+        <SelectButton<BaseSelectValue, AllowUndefined>
           {...rest}
           value={value}
           onValueChange={setValue}

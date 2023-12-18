@@ -1,4 +1,4 @@
-export interface TwSelectOption<TValue extends string> {
+export interface SelectOption<TValue extends string> {
   readonly label: string;
   readonly value: TValue;
 }
@@ -9,9 +9,9 @@ export type TwSelectValue<
 > = TAllowUndefined extends true ? TValue | undefined : TValue;
 
 export type TwSelectionRenderer<TValue extends string> = (
-  option?: TwSelectOption<TValue>,
+  option?: SelectOption<TValue>,
 ) => React.ReactNode;
 
 export type TwSelectItemRenderer<TValue extends string> = (
-  option: TwSelectOption<TValue>,
+  option: SelectOption<TValue>,
 ) => React.ReactNode;

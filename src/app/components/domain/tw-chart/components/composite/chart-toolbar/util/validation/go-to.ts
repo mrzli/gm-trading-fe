@@ -4,14 +4,14 @@ import {
   TYPES_OF_TW_CHART_RESOLUTION,
   TwChartResolution,
 } from '../../../../../types';
-import { toSimpleTwSelectOption } from '../../../../../util';
-import { TwSelectOption } from '../../../../form/select-button/types';
+import { toSimpleSelectOption } from '../../../../../util';
+import { SelectOption } from '../../../../../../../shared/input/select-button/types';
 import { getDateInputParts } from '../util';
 import { SCHEMA_EMPTY_STRING } from './base';
 
-export const RESOLUTION_OPTIONS: readonly TwSelectOption<TwChartResolution>[] =
+export const RESOLUTION_OPTIONS: readonly SelectOption<TwChartResolution>[] =
   TYPES_OF_TW_CHART_RESOLUTION.map((resolution) =>
-    toSimpleTwSelectOption(resolution),
+    toSimpleSelectOption(resolution),
   );
 
 export const SCHEMA_GO_TO_DATE = z.string().refine((value) => {

@@ -1,43 +1,40 @@
 import { CSSProperties, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
-  TwSelectButtonCentered,
-  TwSelectButtonCenteredProps,
-} from './TwSelectButtonCentered';
-import { TwSelectOption } from './types';
-import {
-  decoratorPadding,
-  disableControl,
-} from '../../../../../../../storybook';
+  SelectButtonCentered,
+  SelectButtonCenteredProps,
+} from './SelectButtonCentered';
+import { SelectOption } from './types';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
+import { PrettyDisplay } from '../../display/PrettyDisplay';
 
 type BaseSelectValue = string;
 type AllowUndefined = true;
 // type SelectValue = TwSelectValue<BaseSelectValue, AllowUndefined>;
-type SelectOption = TwSelectOption<string>;
-type Props = TwSelectButtonCenteredProps<BaseSelectValue, AllowUndefined> & {
+type StringSelectOption = SelectOption<string>;
+type Props = SelectButtonCenteredProps<BaseSelectValue, AllowUndefined> & {
   readonly widthOption: 'number' | 'string';
   readonly widthNumber: number;
   readonly widthString: NonNullable<CSSProperties['width']>;
 };
 
-function createOption(id: number): SelectOption {
+function createOption(id: number): StringSelectOption {
   return {
     label: `Option ${id}`,
     value: `option-${id}`,
   };
 }
 
-function createOptions(count: number): readonly SelectOption[] {
+function createOptions(count: number): readonly StringSelectOption[] {
   return range(1, count + 1).map((id) => createOption(id));
 }
 
-const OPTIONS: readonly SelectOption[] = createOptions(5);
+const OPTIONS: readonly StringSelectOption[] = createOptions(5);
 
 const STORY_META: Meta<Props> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: TwSelectButtonCentered as any,
+  component: SelectButtonCentered as any,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
@@ -77,7 +74,7 @@ export const Primary: StoryObj<Props> = {
 
     return (
       <div>
-        <TwSelectButtonCentered<BaseSelectValue, AllowUndefined>
+        <SelectButtonCentered<BaseSelectValue, AllowUndefined>
           {...rest}
           value={value}
           onValueChange={setValue}

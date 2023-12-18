@@ -10,9 +10,9 @@ import { TwRange } from '../../../../types';
 import {
   logicalToLogicalRange,
   moveLogicalRange,
-  toSimpleTwSelectOption,
+  toSimpleSelectOption,
 } from '../../../../util';
-import { TwSelectButtonCentered } from '../../../form/select-button/TwSelectButtonCentered';
+import { SelectButtonCentered } from '../../../../../../shared/input/select-button/SelectButtonCentered';
 import { Button } from '../../../../../../shared/input/Button';
 import { TickerDataRows } from '../../../../../../../types';
 import { TOOLBAR_ICON_SIZE, twTimeStepSelectionToTimeStep } from '../util';
@@ -82,7 +82,7 @@ export function TwChartToolbarNavigate({
         content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateBack}
       />
-      <TwSelectButtonCentered<TwTimeStepSelection, false>
+      <SelectButtonCentered<TwTimeStepSelection, false>
         options={TIME_STEP_OPTIONS}
         value={timeStepSelection}
         onValueChange={setTimeStepSelection}
@@ -101,5 +101,5 @@ export function TwChartToolbarNavigate({
 }
 
 const TIME_STEP_OPTIONS = TYPES_OF_TIME_STEP_SELECTIONS.map((timeStep) =>
-  toSimpleTwSelectOption(timeStep),
+  toSimpleSelectOption(timeStep),
 );

@@ -1,18 +1,18 @@
 import React, { CSSProperties, useMemo } from 'react';
-import { TwSelectButton } from './TwSelectButton';
+import { SelectButton } from './SelectButton';
 import {
-  TwSelectOption,
+  SelectOption,
   TwSelectValue,
   TwSelectionRenderer,
   TwSelectItemRenderer,
 } from './types';
 
-export interface TwSelectButtonCenteredProps<
+export interface SelectButtonCenteredProps<
   TValue extends string,
   TAllowUndefined extends boolean,
 > {
   readonly placeholder?: string;
-  readonly options: readonly TwSelectOption<TValue>[];
+  readonly options: readonly SelectOption<TValue>[];
   readonly value: TwSelectValue<TValue, TAllowUndefined>;
   readonly onValueChange: (
     value: TwSelectValue<TValue, TAllowUndefined>,
@@ -20,7 +20,7 @@ export interface TwSelectButtonCenteredProps<
   readonly width?: CSSProperties['width'];
 }
 
-export function TwSelectButtonCentered<
+export function SelectButtonCentered<
   TValue extends string = string,
   TAllowUndefined extends boolean = false,
 >({
@@ -29,7 +29,7 @@ export function TwSelectButtonCentered<
   value,
   onValueChange,
   width,
-}: TwSelectButtonCenteredProps<TValue, TAllowUndefined>): React.ReactElement {
+}: SelectButtonCenteredProps<TValue, TAllowUndefined>): React.ReactElement {
   const selectionRenderer = useMemo<TwSelectionRenderer<TValue>>(
     // eslint-disable-next-line react/display-name
     () => (option) => (
@@ -51,7 +51,7 @@ export function TwSelectButtonCentered<
   );
 
   return (
-    <TwSelectButton<TValue, TAllowUndefined>
+    <SelectButton<TValue, TAllowUndefined>
       options={options}
       value={value}
       onValueChange={onValueChange}

@@ -7,10 +7,10 @@ import {
   TwChartTimezone,
   TwRange,
 } from '../../../types';
-import { TwSelectButton } from '../../form/select-button/TwSelectButton';
-import { toSimpleTwSelectOption } from '../../../util';
-import { TwSelectOption } from '../../form/select-button/types';
-import { TwSelectButtonCentered } from '../../form/select-button/TwSelectButtonCentered';
+import { SelectButton } from '../../../../../shared/input/select-button/SelectButton';
+import { toSimpleSelectOption } from '../../../util';
+import { SelectOption } from '../../../../../shared/input/select-button/types';
+import { SelectButtonCentered } from '../../../../../shared/input/select-button/SelectButtonCentered';
 import { GroupedTickerDataRows, TickerDataRows } from '../../../../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
@@ -32,9 +32,9 @@ export function TwChartToolbar({
   settings,
   onSettingsChange,
 }: TwChartToolbarProps): React.ReactElement {
-  const instrumentOptions = useMemo<readonly TwSelectOption<string>[]>(() => {
+  const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
-      toSimpleTwSelectOption(instrumentName),
+      toSimpleSelectOption(instrumentName),
     );
   }, [instrumentNames]);
 
@@ -92,20 +92,20 @@ export function TwChartToolbar({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwSelectButton<string, false>
+      <SelectButton<string, false>
         options={instrumentOptions}
         value={settings.instrumentName}
         onValueChange={handleInstrumentChange}
         selectionWidth={80}
         selectItemWidth={80}
       />
-      <TwSelectButtonCentered<TwChartResolution, false>
+      <SelectButtonCentered<TwChartResolution, false>
         options={RESOLUTION_OPTIONS}
         value={settings.resolution}
         onValueChange={handleResolutionChange}
         width={32}
       />
-      <TwSelectButton<TwChartTimezone, false>
+      <SelectButton<TwChartTimezone, false>
         options={TIMEZONE_OPTIONS}
         value={settings.timezone}
         onValueChange={handleTimezoneChange}
@@ -135,7 +135,5 @@ export function TwChartToolbar({
   );
 }
 
-const TIMEZONE_OPTIONS: readonly TwSelectOption<TwChartTimezone>[] =
-  TYPES_OF_TW_CHART_TIMEZONES.map((timezone) =>
-    toSimpleTwSelectOption(timezone),
-  );
+const TIMEZONE_OPTIONS: readonly SelectOption<TwChartTimezone>[] =
+  TYPES_OF_TW_CHART_TIMEZONES.map((timezone) => toSimpleSelectOption(timezone));
