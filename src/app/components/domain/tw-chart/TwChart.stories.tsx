@@ -11,7 +11,7 @@ import {
   TEST_TICKER_ROWS_DAY,
   TEST_TICKER_ROWS_MINUTE,
   TEST_TICKER_ROWS_QUARTER,
-} from './data';
+} from '../data';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { TYPES_OF_TW_CHART_TIMEZONES } from './types';
 
