@@ -1,6 +1,6 @@
 import React, { CSSProperties, useCallback } from 'react';
 import cls from 'classnames';
-import { TwLabel } from '../display/TwLabel';
+import { Label } from '../../../../shared/display/Label';
 
 export interface TwTextInputProps {
   readonly id?: string;
@@ -53,7 +53,7 @@ export function TwTextInput({
 
   return label ? (
     <div className='flex flex-col'>
-      <TwLabel htmlFor={id} content={label} />
+      <Label htmlFor={id} content={label} />
       {inputElement}
     </div>
   ) : (
