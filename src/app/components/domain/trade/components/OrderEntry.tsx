@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { OrderInput } from '../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TwTextInput } from '../../tw-chart/components/form/TwITextInput';
-import { TwButton } from '../../tw-chart/components/form/TwButton';
+import { Button } from '../../../shared/input/Button';
 
 export interface OrderEntryProps {
   readonly value: OrderInput;
@@ -40,7 +40,7 @@ export function OrderEntry({
         value={amountInput}
         onValueChange={setAmountInput}
       />
-      <TwButton onClick={handleOrderClick} content={'Order'} />
+      <Button onClick={handleOrderClick} content={'Order'} />
     </div>
   );
 }

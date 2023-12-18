@@ -7,7 +7,7 @@ import {
 import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { TwButton } from '../../../../form/TwButton';
+import { Button } from '../../../../../../../shared/input/Button';
 
 export interface TwChartToolbarReplayNavigateBarProps {
   readonly dataLength: number;
@@ -78,7 +78,7 @@ export function TwChartToolbarReplayNavigateBar({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateBack}
         disabled={!isNavigateBackEnabled}
@@ -89,7 +89,7 @@ export function TwChartToolbarReplayNavigateBar({
         error={!isNavigationStepSizeInputValid}
         width={48}
       />
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateForward}
         disabled={!isNavigateForwardEnabled}

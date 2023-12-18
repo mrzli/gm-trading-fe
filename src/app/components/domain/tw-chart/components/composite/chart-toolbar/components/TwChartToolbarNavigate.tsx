@@ -13,7 +13,7 @@ import {
   toSimpleTwSelectOption,
 } from '../../../../util';
 import { TwSelectButtonCentered } from '../../../form/select-button/TwSelectButtonCentered';
-import { TwButton } from '../../../form/TwButton';
+import { Button } from '../../../../../../shared/input/Button';
 import { TickerDataRows } from '../../../../../../../types';
 import { TOOLBAR_ICON_SIZE, twTimeStepSelectionToTimeStep } from '../util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
@@ -74,11 +74,11 @@ export function TwChartToolbarNavigate({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronDoubleLeft} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateToStart}
       />
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateBack}
       />
@@ -88,11 +88,11 @@ export function TwChartToolbarNavigate({
         onValueChange={setTimeStepSelection}
         width={48}
       />
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateForward}
       />
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronDoubleRight} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateToEnd}
       />

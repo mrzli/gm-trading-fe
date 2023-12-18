@@ -15,7 +15,7 @@ import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
-import { TwButton } from '../tw-chart/components/form/TwButton';
+import { Button } from '../../shared/input/Button';
 import { RightToolbarState } from './types/right-toolbar-state';
 
 export interface TickerDataContainerProps {
@@ -149,7 +149,7 @@ export function TickerDataContainer({
         <div className='h-full flex-1 overflow-hidden'>{dataChartElement}</div>
         <div className='flex flex-row gap-2'>
           <div>
-            <TwButton
+            <Button
               content={<Icon path={mdiCurrencyUsd} size={ICON_SIZE} />}
               onClick={handleToggleRightToolbarStateTrade}
               width={24}

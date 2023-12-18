@@ -58,7 +58,7 @@ export function TwChartToolbarGoTo({
         error={!isGoToInputValid}
         width={160}
       />
-      {/* <TwButton
+      {/* <Button
         content={'Go to'}
         onClick={handleGoToClick}
         disabled={!isGoToEnabled}

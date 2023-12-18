@@ -3,7 +3,7 @@ import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clampNumber } from '@gmjs/number-util';
 import { TOOLBAR_ICON_SIZE } from '../../util';
-import { TwButton } from '../../../../form/TwButton';
+import { Button } from '../../../../../../../shared/input/Button';
 import { GroupedTickerDataRows } from '../../../../../../../../types';
 
 export interface TwChartToolbarReplayNavigateSubBarProps {
@@ -76,12 +76,12 @@ export function TwChartToolbarReplayNavigateSubBar({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateBack}
         disabled={!isNavigateBackEnabled}
       />
-      <TwButton
+      <Button
         content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
         onClick={navigateForward}
         disabled={!isNavigateForwardEnabled}

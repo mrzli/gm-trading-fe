@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { TradeSequenceInput } from '../types';
 import { TwTextInput } from '../../tw-chart/components/form/TwITextInput';
 import { parseFloatOrThrow } from '@gmjs/number-util';
-import { TwButton } from '../../tw-chart/components/form/TwButton';
+import { Button } from '../../../shared/input/Button';
 
 export interface TradeSequenceSetupProps {
   readonly value: TradeSequenceInput;
@@ -71,7 +71,7 @@ export function TradeSequenceSetup({
         onValueChange={setAvgSlippageInput}
       />
       <div className='col-span-2'>
-        <TwButton onClick={handleApplyClick} content={'Apply'} width={'100%'} />
+        <Button onClick={handleApplyClick} content={'Apply'} width={'100%'} />
       </div>
     </div>
   );
