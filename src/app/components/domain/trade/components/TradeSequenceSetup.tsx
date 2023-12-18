@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { TradeSequenceInput } from '../types';
-import { TextInput } from '../../../shared/input/TextInput';
 import { parseFloatOrThrow } from '@gmjs/number-util';
-import { Button } from '../../../shared/input/Button';
+import { TextInput, Button } from '../../../shared';
 
 export interface TradeSequenceSetupProps {
   readonly value: TradeSequenceInput;

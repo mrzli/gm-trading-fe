@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { OrderInput } from '../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
-import { TextInput } from '../../../shared/input/TextInput';
-import { Button } from '../../../shared/input/Button';
+import { TextInput, Button } from '../../../shared';
 
 export interface OrderEntryProps {
   readonly value: OrderInput;

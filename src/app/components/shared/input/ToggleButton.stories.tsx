@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ToggleButton, ToggleButtonProps } from './ToggleButton';
 import { decoratorPadding, disableControl } from '../../../../storybook';
-import { PrettyDisplay } from '../display/PrettyDisplay';
+import { PrettyDisplay } from '../display';
 
 const STORY_META: Meta<ToggleButtonProps> = {
   component: ToggleButton,

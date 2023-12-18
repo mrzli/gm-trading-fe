@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { TextInput } from '../../../../../../../shared/input/TextInput';
+import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
+import { TextInput } from '../../../../../../../shared';
 import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,
 } from '../../util';
-import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
 
 export interface TwChartToolbarReplaySetBarIndexProps {
   readonly dataLength: number;

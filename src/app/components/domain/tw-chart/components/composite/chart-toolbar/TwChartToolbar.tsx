@@ -7,15 +7,17 @@ import {
   TwChartTimezone,
   TwRange,
 } from '../../../types';
-import { SelectButton } from '../../../../../shared/input/select-button/SelectButton';
 import { toSimpleSelectOption } from '../../../util';
-import { SelectOption } from '../../../../../shared/input/select-button/types';
-import { SelectButtonCentered } from '../../../../../shared/input/select-button/SelectButtonCentered';
 import { GroupedTickerDataRows, TickerDataRows } from '../../../../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
 import { TwChartToolbarReplay } from './components/replay/TwChartToolbarReplay';
+import {
+  SelectOption,
+  SelectButton,
+  SelectButtonCentered,
+} from '../../../../../shared';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];

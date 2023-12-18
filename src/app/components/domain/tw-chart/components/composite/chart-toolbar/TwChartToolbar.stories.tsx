@@ -6,7 +6,7 @@ import {
 } from '../../../../../../../storybook';
 import { useState } from 'react';
 import { TwChartSettings } from '../../../types';
-import { PrettyDisplay } from '../../../../../shared/display/PrettyDisplay';
+import { PrettyDisplay } from '../../../../../shared';
 import { TEST_TICKER_ROWS_MINUTE } from '../../../data';
 import {
   aggregateGroupedDataRows,

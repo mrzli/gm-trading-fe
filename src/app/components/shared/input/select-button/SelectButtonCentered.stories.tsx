@@ -7,7 +7,7 @@ import {
 import { SelectOption } from './types';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../display/PrettyDisplay';
+import { PrettyDisplay } from '../../display';
 
 type BaseSelectValue = string;
 type AllowUndefined = true;

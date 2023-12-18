@@ -5,7 +5,7 @@ import {
   TwChartResolution,
 } from '../../../../../types';
 import { toSimpleSelectOption } from '../../../../../util';
-import { SelectOption } from '../../../../../../../shared/input/select-button/types';
+import { SelectOption } from '../../../../../../../shared';
 import { getDateInputParts } from '../util';
 import { SCHEMA_EMPTY_STRING } from './base';
 

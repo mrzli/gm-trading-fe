@@ -3,7 +3,6 @@ import Icon from '@mdi/react';
 import { mdiCurrencyUsd } from '@mdi/js';
 import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
-import { LoadingDisplay } from '../../shared/display/LoadingDisplay';
 import { TwChart } from '../tw-chart/TwChart';
 import {
   ChartTimeRangeChangeFn,
@@ -11,11 +10,10 @@ import {
   TwChartSettings,
 } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
-import { PrettyDisplay } from '../../shared/display/PrettyDisplay';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
-import { Button } from '../../shared/input/Button';
+import { Button, LoadingDisplay, PrettyDisplay } from '../../shared';
 import { RightToolbarState } from './types/right-toolbar-state';
 
 export interface TickerDataContainerProps {

@@ -1,13 +1,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TextInput } from '../../../../../../../shared/input/TextInput';
+import Icon from '@mdi/react';
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
+import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
 import {
   SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT,
   TOOLBAR_ICON_SIZE,
 } from '../../util';
-import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
-import Icon from '@mdi/react';
-import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { Button } from '../../../../../../../shared/input/Button';
+import { Button, TextInput } from '../../../../../../../shared';
 
 export interface TwChartToolbarReplayNavigateBarProps {
   readonly dataLength: number;

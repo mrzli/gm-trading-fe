@@ -3,7 +3,7 @@ import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clampNumber } from '@gmjs/number-util';
 import { TOOLBAR_ICON_SIZE } from '../../util';
-import { Button } from '../../../../../../../shared/input/Button';
+import { Button } from '../../../../../../../shared';
 import { GroupedTickerDataRows } from '../../../../../../../../types';
 
 export interface TwChartToolbarReplayNavigateSubBarProps {

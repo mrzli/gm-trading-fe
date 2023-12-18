@@ -4,9 +4,9 @@ import {
   TradeSequenceSetupProps,
 } from './TradeSequenceSetup';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
-import { PrettyDisplay } from '../../../shared/display/PrettyDisplay';
 import { TradeSequenceInput } from '../types';
 import { useState } from 'react';
+import { PrettyDisplay } from '../../../shared';
 
 const STORY_META: Meta<TradeSequenceSetupProps> = {
   component: TradeSequenceSetup,

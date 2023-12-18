@@ -12,11 +12,10 @@ import {
   moveLogicalRange,
   toSimpleSelectOption,
 } from '../../../../util';
-import { SelectButtonCentered } from '../../../../../../shared/input/select-button/SelectButtonCentered';
-import { Button } from '../../../../../../shared/input/Button';
 import { TickerDataRows } from '../../../../../../../types';
 import { TOOLBAR_ICON_SIZE, twTimeStepSelectionToTimeStep } from '../util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
+import { Button, SelectButtonCentered } from '../../../../../../shared';
 
 export interface TwChartToolbarNavigateProps {
   readonly data: TickerDataRows;

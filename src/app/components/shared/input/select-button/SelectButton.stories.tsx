@@ -2,7 +2,7 @@ import { CSSProperties, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SelectButton, SelectButtonProps } from './SelectButton';
 import { range } from '@gmjs/array-create';
-import { PrettyDisplay } from '../../display/PrettyDisplay';
+import { PrettyDisplay } from '../../display';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { SelectOption } from './types';
 

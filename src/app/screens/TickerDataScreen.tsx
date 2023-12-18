@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { TickerDataContainer } from '../components/domain/ticker-data-container/TickerDataContainer';
 import { useStoreInstrument, useStoreTickerData } from '../../store';
-import { LoadingDisplay } from '../components/shared/display/LoadingDisplay';
+import { LoadingDisplay } from '../components/shared';
 import { TwChartResolution } from '../components/domain/tw-chart/types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 

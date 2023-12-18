@@ -1,6 +1,6 @@
 import React, { CSSProperties, useCallback } from 'react';
 import cls from 'classnames';
-import { Label } from '../display/Label';
+import { Label } from '../display';
 
 export interface TextInputProps {
   readonly id?: string;
