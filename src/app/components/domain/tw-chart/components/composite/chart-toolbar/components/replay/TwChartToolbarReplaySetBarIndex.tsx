@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { TwTextInput } from '../../../../form/TwITextInput';
+import { TextInput } from '../../../../../../../shared/input/TextInput';
 import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,
@@ -60,7 +60,7 @@ export function TwChartToolbarReplaySetBarIndex({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwTextInput
+      <TextInput
         placeholder={`Replay 1-${dataLength}`}
         value={barIndexInput}
         onValueChange={setBarIndexInput}

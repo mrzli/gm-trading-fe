@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { OrderInput } from '../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
-import { TwTextInput } from '../../tw-chart/components/form/TwITextInput';
+import { TextInput } from '../../../shared/input/TextInput';
 import { Button } from '../../../shared/input/Button';
 
 export interface OrderEntryProps {
@@ -28,13 +28,13 @@ export function OrderEntry({
 
   return (
     <div className='flex flex-col gap-1'>
-      <TwTextInput
+      <TextInput
         id='price'
         label='Price'
         value={priceInput}
         onValueChange={setPriceInput}
       />
-      <TwTextInput
+      <TextInput
         id='amount'
         label='Amount'
         value={amountInput}

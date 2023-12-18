@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { TwTextInput, TwTextInputProps } from './TwITextInput';
-import { decoratorPadding, disableControl } from '../../../../../../storybook';
-import { PrettyDisplay } from '../../../../shared/display/PrettyDisplay';
+import { TextInput, TextInputProps } from './TextInput';
+import { decoratorPadding, disableControl } from '../../../../storybook';
+import { PrettyDisplay } from '../display/PrettyDisplay';
 
-const STORY_META: Meta<TwTextInputProps> = {
-  component: TwTextInput,
+const STORY_META: Meta<TextInputProps> = {
+  component: TextInput,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
@@ -22,15 +22,15 @@ const STORY_META: Meta<TwTextInputProps> = {
 };
 export default STORY_META;
 
-export const Primary: StoryObj<TwTextInputProps> = {
-  render: (args: TwTextInputProps) => {
+export const Primary: StoryObj<TextInputProps> = {
+  render: (args: TextInputProps) => {
     const { value: _ignore1, onValueChange: _ignore2, ...rest } = args;
 
     const [value, setValue] = useState('');
 
     return (
       <div>
-        <TwTextInput {...rest} value={value} onValueChange={setValue} />
+        <TextInput {...rest} value={value} onValueChange={setValue} />
         <br />
         <br />
         <PrettyDisplay content={value} />

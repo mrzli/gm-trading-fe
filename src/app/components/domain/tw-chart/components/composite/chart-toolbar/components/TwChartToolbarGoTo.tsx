@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { TwRange } from '../../../../types';
 import { logicalToLogicalRange, timeToLogical } from '../../../../util';
-import { TwTextInput } from '../../../form/TwITextInput';
+import { TextInput } from '../../../../../../shared/input/TextInput';
 import { dateIsoUtcToUnixSeconds } from '../../../../../../../util';
 import { TickerDataRows } from '../../../../../../../types';
 import { SCHEMA_GO_TO_INPUT, dateInputToIso, SCHEMA_GO_TO_DATE } from '../util';
@@ -50,7 +50,7 @@ export function TwChartToolbarGoTo({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwTextInput
+      <TextInput
         placeholder='YYYY-MM-DD [HH:mm]'
         value={goToInput}
         onValueChange={setGoToInput}

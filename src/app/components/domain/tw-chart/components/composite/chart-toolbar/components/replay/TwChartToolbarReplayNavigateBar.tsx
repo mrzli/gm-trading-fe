@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TwTextInput } from '../../../../form/TwITextInput';
+import { TextInput } from '../../../../../../../shared/input/TextInput';
 import {
   SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT,
   TOOLBAR_ICON_SIZE,
@@ -83,7 +83,7 @@ export function TwChartToolbarReplayNavigateBar({
         onClick={navigateBack}
         disabled={!isNavigateBackEnabled}
       />
-      <TwTextInput
+      <TextInput
         value={replayNavigationStepSizeInput}
         onValueChange={setReplayNavigationStepSizeInput}
         error={!isNavigationStepSizeInputValid}

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { TradeSequenceInput } from '../types';
-import { TwTextInput } from '../../tw-chart/components/form/TwITextInput';
+import { TextInput } from '../../../shared/input/TextInput';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { Button } from '../../../shared/input/Button';
 
@@ -46,25 +46,25 @@ export function TradeSequenceSetup({
 
   return (
     <div className='flex flex-col gap-1'>
-      <TwTextInput
+      <TextInput
         id='initial-balance'
         label='Initial Balance'
         value={initialBalanceInput}
         onValueChange={setInitialBalanceInput}
       />
-      <TwTextInput
+      <TextInput
         id='spread'
         label='Spread'
         value={spreadInput}
         onValueChange={setSpreadInput}
       />
-      <TwTextInput
+      <TextInput
         id='margin-percent'
         label='Margin (%)'
         value={marginPercentInput}
         onValueChange={setMarginPercentInput}
       />
-      <TwTextInput
+      <TextInput
         id='avg-slippage'
         label='Avg. Slippage'
         value={avgSlippageInput}
