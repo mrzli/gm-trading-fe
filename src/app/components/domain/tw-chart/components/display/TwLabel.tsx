@@ -9,5 +9,9 @@ export function TwLabel({
   htmlFor,
   content,
 }: TwLabelProps): React.ReactElement {
-  return (<label htmlFor={htmlFor} className='text-sm'>{content}</label>)
+  return (
+    <label htmlFor={htmlFor} className='text-[10px] leading-none'>
+      {content}
+    </label>
+  );
 }
