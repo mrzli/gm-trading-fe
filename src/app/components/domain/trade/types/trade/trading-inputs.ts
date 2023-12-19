@@ -1,7 +1,7 @@
-import { TradeActionManual } from './trade-action';
+import { ManualTradeActionAny } from './manual-trade-action';
 import { TradingParameters } from './trading-parameters';
 
 export interface TradingInputs {
   readonly params: TradingParameters;
-  readonly manualTradeActions: readonly TradeActionManual[];
+  readonly manualTradeActions: readonly ManualTradeActionAny[];
 }

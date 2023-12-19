@@ -14,6 +14,7 @@ export function TradingParametersForm({
 }: TradingParametersFormProps): React.ReactElement {
   const {
     initialBalance,
+    priceDecimals,
     spread,
     marginPercent,
     avgSlippage,
@@ -23,6 +24,10 @@ export function TradingParametersForm({
 
   const [initialBalanceInput, setInitialBalanceInput] = useState(
     initialBalance.toFixed(2),
+  );
+
+  const [priceDecimalsInput, setPriceDecimalsInput] = useState(
+    priceDecimals.toFixed(0),
   );
 
   const [spreadInput, setSpreadInput] = useState(spread.toFixed(2));
@@ -44,6 +49,7 @@ export function TradingParametersForm({
   const handleApplyClick = useCallback(() => {
     onValueChange({
       initialBalance: parseFloatOrThrow(initialBalanceInput),
+      priceDecimals: parseFloatOrThrow(priceDecimalsInput),
       spread: parseFloatOrThrow(spreadInput),
       marginPercent: parseFloatOrThrow(marginPercentInput),
       avgSlippage: parseFloatOrThrow(avgSlippageInput),
@@ -53,6 +59,7 @@ export function TradingParametersForm({
   }, [
     onValueChange,
     initialBalanceInput,
+    priceDecimalsInput,
     spreadInput,
     marginPercentInput,
     avgSlippageInput,
@@ -67,6 +74,12 @@ export function TradingParametersForm({
         label='Initial Balance'
         value={initialBalanceInput}
         onValueChange={setInitialBalanceInput}
+      />
+      <TextInput
+        id='price-decimals'
+        label='Price Decimals'
+        value={priceDecimalsInput}
+        onValueChange={setPriceDecimalsInput}
       />
       <TextInput
         id='spread'

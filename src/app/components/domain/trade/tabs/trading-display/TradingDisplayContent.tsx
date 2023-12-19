@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { TradingParametersForm } from './TradingParametersForm';
 import { TradingInputs, TradingParameters } from '../../types';
+import { ManualTradeActionList } from './ManualTradeActionList';
 
 export interface TradingDisplayContentProps {
   readonly value: TradingInputs;
@@ -11,7 +12,7 @@ export function TradingDisplayContent({
   value,
   onValueChange,
 }: TradingDisplayContentProps): React.ReactElement {
-  const { params, manualTradeActions } = value;
+  const { params } = value;
 
   const handleTradingParametersChange = useCallback(
     (params: TradingParameters): void => {
@@ -29,6 +30,7 @@ export function TradingDisplayContent({
         value={params}
         onValueChange={handleTradingParametersChange}
       />
+      <ManualTradeActionList tradingInputs={value} />
     </div>
   );
 }
