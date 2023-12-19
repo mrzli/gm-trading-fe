@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Icon from '@mdi/react';
 import { mdiCurrencyUsd } from '@mdi/js';
 import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
@@ -13,9 +12,10 @@ import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/T
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
-import { Button, LoadingDisplay, PrettyDisplay } from '../../shared';
+import { LoadingDisplay, PrettyDisplay } from '../../shared';
 import { RightToolbarState } from './types';
 import { TickerDataRightToolbar } from './TickerDataRightToolbar';
+import { IconButton } from '../shared/IconButton';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -148,11 +148,9 @@ export function TickerDataContainer({
         <div className='h-full flex-1 overflow-hidden'>{dataChartElement}</div>
         <div className='flex flex-row gap-2'>
           <div>
-            <Button
-              content={<Icon path={mdiCurrencyUsd} size={ICON_SIZE} />}
+            <IconButton
+              icon={mdiCurrencyUsd}
               onClick={handleToggleRightToolbarStateTrade}
-              width={24}
-              height={24}
             />
           </div>
           {rightToolbarState !== 'none' && (
@@ -167,5 +165,3 @@ export function TickerDataContainer({
     </div>
   );
 }
-
-const ICON_SIZE = 0.875 / 1.5;

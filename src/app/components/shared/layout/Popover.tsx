@@ -40,7 +40,7 @@ export function Popover({
 
   return (
     <div className='inline-flex'>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div ref={refs.setReference} {...getReferenceProps()} className='inline-flex'>
         {trigger}
       </div>
       {open && (

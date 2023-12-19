@@ -34,8 +34,8 @@ export const Primary: StoryObj<NoProps> = {
   render: (_args: NoProps) => {
     return (
       <div className='grid grid-cols-12'>
-        {ICONS.map((path, index) => (
-          <IconButton key={index} path={path} onClick={printArgs} />
+        {ICONS.map((icon, index) => (
+          <IconButton key={index} icon={icon} onClick={printArgs} />
         ))}
       </div>
     );

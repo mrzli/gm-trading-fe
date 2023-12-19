@@ -1,12 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
-import {
-  SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT,
-  TOOLBAR_ICON_SIZE,
-} from '../../util';
-import { Button, TextInput } from '../../../../../../../shared';
+import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../util';
+import { TextInput } from '../../../../../../../shared';
+import { IconButton } from '../../../../../../shared/IconButton';
 
 export interface TwChartToolbarReplayNavigateBarProps {
   readonly dataLength: number;
@@ -77,8 +74,8 @@ export function TwChartToolbarReplayNavigateBar({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <Button
-        content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
+      <IconButton
+        icon={mdiChevronLeft}
         onClick={navigateBack}
         disabled={!isNavigateBackEnabled}
       />
@@ -88,8 +85,8 @@ export function TwChartToolbarReplayNavigateBar({
         error={!isNavigationStepSizeInputValid}
         width={48}
       />
-      <Button
-        content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
+      <IconButton
+        icon={mdiChevronRight}
         onClick={navigateForward}
         disabled={!isNavigateForwardEnabled}
       />

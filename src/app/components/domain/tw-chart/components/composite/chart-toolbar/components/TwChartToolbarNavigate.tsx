@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import Icon from '@mdi/react';
 import {
   mdiChevronDoubleLeft,
   mdiChevronDoubleRight,
@@ -13,9 +12,10 @@ import {
   toSimpleSelectOption,
 } from '../../../../util';
 import { TickerDataRows } from '../../../../../../../types';
-import { TOOLBAR_ICON_SIZE, twTimeStepSelectionToTimeStep } from '../util';
+import { twTimeStepSelectionToTimeStep } from '../util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
-import { Button, SelectButtonCentered } from '../../../../../../shared';
+import { SelectButtonCentered } from '../../../../../../shared';
+import { IconButton } from '../../../../../shared/IconButton';
 
 export interface TwChartToolbarNavigateProps {
   readonly data: TickerDataRows;
@@ -73,28 +73,16 @@ export function TwChartToolbarNavigate({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <Button
-        content={<Icon path={mdiChevronDoubleLeft} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateToStart}
-      />
-      <Button
-        content={<Icon path={mdiChevronLeft} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateBack}
-      />
+      <IconButton icon={mdiChevronDoubleLeft} onClick={navigateToStart} />
+      <IconButton icon={mdiChevronLeft} onClick={navigateBack} />
       <SelectButtonCentered<TwTimeStepSelection, false>
         options={TIME_STEP_OPTIONS}
         value={timeStepSelection}
         onValueChange={setTimeStepSelection}
         width={48}
       />
-      <Button
-        content={<Icon path={mdiChevronRight} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateForward}
-      />
-      <Button
-        content={<Icon path={mdiChevronDoubleRight} size={TOOLBAR_ICON_SIZE} />}
-        onClick={navigateToEnd}
-      />
+      <IconButton icon={mdiChevronRight} onClick={navigateForward} />
+      <IconButton icon={mdiChevronDoubleRight} onClick={navigateToEnd} />
     </div>
   );
 }
