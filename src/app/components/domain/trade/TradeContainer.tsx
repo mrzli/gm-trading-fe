@@ -1,20 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import { TradeTabValue } from './types';
-import { TradeInputsTab } from './tabs/TradingInputsTab';
-import { TradingDisplayTab } from './tabs/TradingDisplayTab';
-import { TradingResultsTab } from './tabs/TradingResultsTab';
-import { GroupedTickerDataRows } from '../../../types';
-import { TwBarReplaySettings } from '../tw-chart/types';
+import { TradeInputsContent } from './tabs/trading-inputs/TradingInputsContent';
+import { TradingDisplayContent } from './tabs/trading-display/TradingDisplayContent';
+import { TradingResultsContent } from './tabs/trading-results/TradingResultsContent';
+import { TickerDataRows } from '../../../types';
 
 export interface TradeContainerProps {
-  readonly data: GroupedTickerDataRows;
-  readonly replaySettings: TwBarReplaySettings;
+  readonly barData: TickerDataRows;
+  readonly barIndex: number;
 }
 
 export function TradeContainer({
-  data,
-  replaySettings,
+  barData,
+  barIndex,
 }: TradeContainerProps): React.ReactElement {
   const tabEntries = useMemo(() => getTabEntries(), []);
 
@@ -34,17 +33,17 @@ function getTabEntries(): readonly TabLayoutEntry<TradeTabValue>[] {
     {
       value: 'trade-inputs',
       tab: 'Inputs',
-      content: <TradeInputsTab />,
+      content: <TradeInputsContent />,
     },
     {
       value: 'trading-display',
       tab: 'Trading',
-      content: <TradingDisplayTab />,
+      content: <TradingDisplayContent />,
     },
     {
       value: 'results',
       tab: 'Results',
-      content: <TradingResultsTab />,
+      content: <TradingResultsContent />,
     },
   ];
 }

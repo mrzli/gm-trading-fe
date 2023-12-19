@@ -1,18 +1,25 @@
 import React, { useCallback, useState } from 'react';
-import { TradeSequenceInput } from '../types';
+import { TradingParameters } from '../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
-import { TextInput, Button } from '../../../shared';
+import { TextInput, Button } from '../../../../shared';
 
-export interface TradeSequenceSetupProps {
-  readonly value: TradeSequenceInput;
-  readonly onValueChange: (value: TradeSequenceInput) => void;
+export interface TradingParametersFormProps {
+  readonly value: TradingParameters;
+  readonly onValueChange: (value: TradingParameters) => void;
 }
 
-export function TradeSequenceSetup({
+export function TradingParametersForm({
   value,
   onValueChange,
-}: TradeSequenceSetupProps): React.ReactElement {
-  const { initialBalance, spread, marginPercent, avgSlippage } = value;
+}: TradingParametersFormProps): React.ReactElement {
+  const {
+    initialBalance,
+    spread,
+    marginPercent,
+    avgSlippage,
+    pipDigit,
+    minStopLossDistance,
+  } = value;
 
   const [initialBalanceInput, setInitialBalanceInput] = useState(
     initialBalance.toFixed(2),
@@ -28,12 +35,20 @@ export function TradeSequenceSetup({
     avgSlippage.toFixed(2),
   );
 
+  const [pipDigitInput, setPipDigitInput] = useState(pipDigit.toFixed(0));
+
+  const [minStopLossDistanceInput, setMinStopLossDistanceInput] = useState(
+    minStopLossDistance.toFixed(2),
+  );
+
   const handleApplyClick = useCallback(() => {
     onValueChange({
       initialBalance: parseFloatOrThrow(initialBalanceInput),
       spread: parseFloatOrThrow(spreadInput),
       marginPercent: parseFloatOrThrow(marginPercentInput),
       avgSlippage: parseFloatOrThrow(avgSlippageInput),
+      pipDigit: parseFloatOrThrow(pipDigitInput),
+      minStopLossDistance: parseFloatOrThrow(minStopLossDistanceInput),
     });
   }, [
     onValueChange,
@@ -41,6 +56,8 @@ export function TradeSequenceSetup({
     spreadInput,
     marginPercentInput,
     avgSlippageInput,
+    pipDigitInput,
+    minStopLossDistanceInput,
   ]);
 
   return (
@@ -68,6 +85,18 @@ export function TradeSequenceSetup({
         label='Avg. Slippage'
         value={avgSlippageInput}
         onValueChange={setAvgSlippageInput}
+      />
+      <TextInput
+        id='pip-digit'
+        label='Pip Digit'
+        value={pipDigitInput}
+        onValueChange={setPipDigitInput}
+      />
+      <TextInput
+        id='min-stop-loss-distance'
+        label='Min. Stop Loss Distance'
+        value={minStopLossDistanceInput}
+        onValueChange={setMinStopLossDistanceInput}
       />
       <div className='col-span-2'>
         <Button onClick={handleApplyClick} content={'Apply'} width={'100%'} />
