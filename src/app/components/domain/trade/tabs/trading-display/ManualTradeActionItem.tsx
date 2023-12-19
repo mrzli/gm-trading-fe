@@ -29,7 +29,7 @@ export function ManualTradeActionItem({
   }, [tradingInputs, tradeAction]);
 
   return (
-    <div className='flex flex-row gap-2'>
+    <div className='flex flex-row items-center gap-2'>
       {displayProps.map((props, index) => {
         return (
           <div key={index} className='flex-1'>

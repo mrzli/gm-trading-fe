@@ -20,3 +20,7 @@ export function argTypeInteger(
     },
   };
 }
+
+export function printArgs(...args: unknown[]): void {
+  console.log('args:', args);
+}
