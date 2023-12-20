@@ -8,13 +8,12 @@ import {
   TradingInputs,
 } from '../../types';
 import { invariant } from '@gmjs/assert';
-import {
-  DecimalValueDisplay,
-  DecimalValueDisplayProps,
-} from '../../../shared/DecimalValueDisplay';
-import { arrayOfUndefined } from '@gmjs/array-create';
+import { arrayOfConstant } from '@gmjs/array-create';
 import { IconButton } from '../../../shared/IconButton';
 import { mdiClose } from '@mdi/js';
+import { ValueDisplayDataAnyList } from '../../../types';
+import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
+import { VALUE_DISPLAY_DATA_NONE } from '../../../util';
 
 export interface ManualTradeActionItemProps {
   readonly tradingInputs: TradingInputs;
@@ -27,9 +26,12 @@ export function ManualTradeActionItem({
   tradeAction,
   onRemoveClick,
 }: ManualTradeActionItemProps): React.ReactElement {
-  const displayProps = useMemo<DisplayProps>(() => {
-    const items = getDisplayProps(tradingInputs, tradeAction);
-    return [...items, ...arrayOfUndefined(NUM_COLUMNS - items.length)];
+  const displayDataList = useMemo<ValueDisplayDataAnyList>(() => {
+    const items = getValueDisplayDataList(tradingInputs, tradeAction);
+    return [
+      ...items,
+      ...arrayOfConstant(NUM_COLUMNS - items.length, VALUE_DISPLAY_DATA_NONE),
+    ];
   }, [tradingInputs, tradeAction]);
 
   const handleRemove = useCallback(() => {
@@ -38,10 +40,10 @@ export function ManualTradeActionItem({
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      {displayProps.map((props, index) => {
+      {displayDataList.map((item, index) => {
         return (
           <div key={index} className='flex-1'>
-            {props && <DecimalValueDisplay {...props} />}
+            {item && <ValueDisplayItem item={item} />}
           </div>
         );
       })}
@@ -52,12 +54,10 @@ export function ManualTradeActionItem({
 
 const NUM_COLUMNS = 6;
 
-type DisplayProps = readonly (DecimalValueDisplayProps | undefined)[];
-
-function getDisplayProps(
+function getValueDisplayDataList(
   tradingInputs: TradingInputs,
   tradeAction: ManualTradeActionAny,
-): DisplayProps {
+): ValueDisplayDataAnyList {
   const { kind } = tradeAction;
 
   const priceDecimals = tradingInputs.params.priceDecimals;
@@ -84,31 +84,36 @@ function getDisplayProps(
 function getDisplayPropsOpen(
   tradeAction: ManualTradeActionOpen,
   priceDecimals: number,
-): DisplayProps {
+): ValueDisplayDataAnyList {
   const { id, price, amount, stopLossDistance, limitDistance } = tradeAction;
 
   return [
     {
+      kind: 'decimal',
       label: 'ID',
       value: id,
       precision: 0,
     },
     {
+      kind: 'decimal',
       label: 'Price',
       value: price,
       precision: priceDecimals,
     },
     {
+      kind: 'decimal',
       label: 'Amount',
       value: amount,
       precision: 1,
     },
     {
+      kind: 'decimal',
       label: 'Stop Loss Distance',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
+      kind: 'decimal',
       label: 'Limit Distance',
       value: limitDistance,
       precision: priceDecimals,
@@ -119,16 +124,18 @@ function getDisplayPropsOpen(
 function getDisplayPropsClose(
   tradeAction: ManualTradeActionClose,
   _priceDecimals: number,
-): DisplayProps {
+): ValueDisplayDataAnyList {
   const { id, targetId } = tradeAction;
 
   return [
     {
+      kind: 'decimal',
       label: 'ID',
       value: id,
       precision: 0,
     },
     {
+      kind: 'decimal',
       label: 'Target ID',
       value: targetId,
       precision: 0,
@@ -139,37 +146,43 @@ function getDisplayPropsClose(
 function getDisplayPropsAmendOrder(
   tradeAction: ManualTradeActionAmendOrder,
   priceDecimals: number,
-): DisplayProps {
+): ValueDisplayDataAnyList {
   const { id, targetId, price, amount, stopLossDistance, limitDistance } =
     tradeAction;
 
   return [
     {
+      kind: 'decimal',
       label: 'ID',
       value: id,
       precision: 0,
     },
     {
+      kind: 'decimal',
       label: 'Target ID',
       value: targetId,
       precision: 0,
     },
     {
+      kind: 'decimal',
       label: 'Price',
       value: price,
       precision: priceDecimals,
     },
     {
+      kind: 'decimal',
       label: 'Amount',
       value: amount,
       precision: 1,
     },
     {
+      kind: 'decimal',
       label: 'Stop Loss Distance',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
+      kind: 'decimal',
       label: 'Limit Distance',
       value: limitDistance,
       precision: priceDecimals,
@@ -180,30 +193,33 @@ function getDisplayPropsAmendOrder(
 function getDisplayPropsAmendTrade(
   tradeAction: ManualTradeActionAmendTrade,
   priceDecimals: number,
-): DisplayProps {
+): ValueDisplayDataAnyList {
   const { id, targetId, stopLoss, limit } = tradeAction;
 
   return [
     {
+      kind: 'decimal',
       label: 'ID',
       value: id,
       precision: 0,
     },
     {
+      kind: 'decimal',
       label: 'Target ID',
       value: targetId,
       precision: 0,
     },
     {
+      kind: 'decimal',
       label: 'Stop Loss',
       value: stopLoss,
       precision: priceDecimals,
     },
     {
+      kind: 'decimal',
       label: 'Limit',
       value: limit,
       precision: priceDecimals,
     },
-    undefined,
   ];
 }
