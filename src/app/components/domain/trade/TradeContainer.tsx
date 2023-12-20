@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
-import { TradeTabValue } from './types';
-import { TradeInputsContent } from './tabs/trading-inputs/TradingInputsContent';
+import { TradeTabValue, TradingDataAndInputs, TradingInputs } from './types';
 import { TradingDisplayContent } from './tabs/trading-display/TradingDisplayContent';
+import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
 import { TradingResultsContent } from './tabs/trading-results/TradingResultsContent';
 import { TickerDataRows } from '../../../types';
+import { TradingLog } from './tabs/trading-log/TradingLog';
 
 export interface TradeContainerProps {
   readonly barData: TickerDataRows;
@@ -15,9 +16,24 @@ export function TradeContainer({
   barData,
   barIndex,
 }: TradeContainerProps): React.ReactElement {
-  const tabEntries = useMemo(() => getTabEntries(), []);
+  const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
 
-  const [activeTab, setActiveTab] = useState<TradeTabValue>('trade-inputs');
+  const [tradingDataAndInputs, setTradingDataAndInputs] =
+    useState<TradingDataAndInputs>(
+      getInitialTradingDataAndInputs(barData, barIndex),
+    );
+
+  const handleTradingInputsChage = useCallback(
+    (inputs: TradingInputs) => {
+      setTradingDataAndInputs((prev) => ({ ...prev, inputs }));
+    },
+    [setTradingDataAndInputs],
+  );
+
+  const tabEntries = useMemo(
+    () => getTabEntries(tradingDataAndInputs, handleTradingInputsChage),
+    [handleTradingInputsChage, tradingDataAndInputs],
+  );
 
   return (
     <TabLayout
@@ -28,12 +44,42 @@ export function TradeContainer({
   );
 }
 
-function getTabEntries(): readonly TabLayoutEntry<TradeTabValue>[] {
+function getInitialTradingDataAndInputs(
+  barData: TickerDataRows,
+  barIndex: number,
+): TradingDataAndInputs {
+  return {
+    barData,
+    barIndex,
+    inputs: {
+      params: {
+        initialBalance: 10_000,
+        priceDecimals: 0,
+        spread: 0.5,
+        marginPercent: 0.5,
+        avgSlippage: 0,
+        pipDigit: 0,
+        minStopLossDistance: 6,
+      },
+      manualTradeActions: [],
+    },
+  };
+}
+
+function getTabEntries(
+  tradingDataAndInputs: TradingDataAndInputs,
+  handleTradingInputsChange: (value: TradingInputs) => void,
+): readonly TabLayoutEntry<TradeTabValue>[] {
   return [
     {
-      value: 'trade-inputs',
+      value: 'trading-inputs',
       tab: 'Inputs',
-      content: <TradeInputsContent />,
+      content: (
+        <TradingInputsContent
+          value={tradingDataAndInputs.inputs}
+          onValueChange={handleTradingInputsChange}
+        />
+      ),
     },
     {
       value: 'trading-display',
@@ -41,7 +87,12 @@ function getTabEntries(): readonly TabLayoutEntry<TradeTabValue>[] {
       content: <TradingDisplayContent />,
     },
     {
-      value: 'results',
+      value: 'trading-log',
+      tab: 'Log',
+      content: <TradingLog />,
+    },
+    {
+      value: 'trading-results',
       tab: 'Results',
       content: <TradingResultsContent />,
     },
