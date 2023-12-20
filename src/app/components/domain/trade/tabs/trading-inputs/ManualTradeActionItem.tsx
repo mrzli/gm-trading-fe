@@ -14,7 +14,6 @@ import {
 import { IconButton } from '../../../shared/IconButton';
 import { ValueDisplayDataAnyList } from '../../../types';
 import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
-import { VALUE_DISPLAY_DATA_NONE } from '../../../util';
 import { TwChartTimezone } from '../../../tw-chart/types';
 
 export interface ManualTradeActionItemProps {
@@ -31,12 +30,7 @@ export function ManualTradeActionItem({
   onRemoveClick,
 }: ManualTradeActionItemProps): React.ReactElement {
   const displayDataList = useMemo<ValueDisplayDataAnyList>(() => {
-    const items = getValueDisplayDataList(timezone, tradingInputs, tradeAction);
-    const totalSpan = items.reduce((sum, item) => sum + (item.span ?? 1), 0);
-    return [
-      ...items,
-      ...arrayOfConstant(NUM_COLUMNS - totalSpan, VALUE_DISPLAY_DATA_NONE),
-    ];
+    return getValueDisplayDataList(timezone, tradingInputs, tradeAction);
   }, [timezone, tradingInputs, tradeAction]);
 
   const handleRemove = useCallback(() => {
@@ -45,26 +39,26 @@ export function ManualTradeActionItem({
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      {displayDataList.map((item, index) => {
-        const span = item.span ?? 1;
-        const itemClasses = cls({
-          'flex-1': span === 1,
-          'flex-[2_2_0%]': span === 2,
-          'flex-[3_3_0%]': span === 3,
-          'flex-[4_4_0%]': span === 4,
-        });
-        return (
-          <div key={index} className={itemClasses}>
-            <ValueDisplayItem item={item} />
-          </div>
-        );
-      })}
+      <div className='flex-1 grid grid-cols-12 items-center gap-2'>
+        {displayDataList.map((item, index) => {
+          const span = item.span ?? 1;
+          const itemClasses = cls({
+            'col-span-1': span === 1,
+            'col-span-2': span === 2,
+            'col-span-3': span === 3,
+            'col-span-4': span === 4,
+          });
+          return (
+            <div key={index} className={itemClasses}>
+              <ValueDisplayItem item={item} />
+            </div>
+          );
+        })}
+      </div>
       <IconButton icon={mdiClose} onClick={handleRemove} />
     </div>
   );
 }
-
-const NUM_COLUMNS = 10;
 
 function getValueDisplayDataList(
   timezone: TwChartTimezone,
@@ -117,6 +111,7 @@ function getDisplayPropsOpen(
       value: time,
       timezone,
     },
+    { kind: 'none' },
     {
       kind: 'decimal',
       span: 2,
@@ -126,19 +121,21 @@ function getDisplayPropsOpen(
     },
     {
       kind: 'decimal',
-      label: 'Amount',
+      label: 'Amt',
       value: amount,
       precision: 1,
     },
     {
       kind: 'decimal',
-      label: 'SL Dist',
+      span: 2,
+      label: 'SL Dst',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      label: 'Lmt Dist',
+      span: 2,
+      label: 'L Dst',
       value: limitDistance,
       precision: priceDecimals,
     },
@@ -169,7 +166,7 @@ function getDisplayPropsClose(
     },
     {
       kind: 'decimal',
-      label: 'Target ID',
+      label: 'Tgt ID',
       value: targetId,
       precision: 0,
     },
@@ -201,7 +198,7 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
-      label: 'Target ID',
+      label: 'Tgt ID',
       value: targetId,
       precision: 0,
     },
@@ -214,19 +211,21 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
-      label: 'Amount',
+      label: 'Amt',
       value: amount,
       precision: 1,
     },
     {
       kind: 'decimal',
-      label: 'SL Dist',
+      span: 2,
+      label: 'SL Dst',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      label: 'Lmt Dist',
+      span: 2,
+      label: 'L Dst',
       value: limitDistance,
       precision: priceDecimals,
     },
@@ -257,9 +256,13 @@ function getDisplayPropsAmendTrade(
     },
     {
       kind: 'decimal',
-      label: 'Target ID',
+      label: 'Tgt ID',
       value: targetId,
       precision: 0,
+    },
+    {
+      kind: 'none',
+      span: 3,
     },
     {
       kind: 'decimal',
@@ -271,7 +274,7 @@ function getDisplayPropsAmendTrade(
     {
       kind: 'decimal',
       span: 2,
-      label: 'Limit',
+      label: 'L',
       value: limit,
       precision: priceDecimals,
     },
