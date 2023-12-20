@@ -2,14 +2,17 @@ import React from 'react';
 import { TradingInputs } from '../../types';
 import { ManualTradeActionItem } from './ManualTradeActionItem';
 import { Button } from '../../../../shared';
+import { TwChartTimezone } from '../../../tw-chart/types';
 
 export interface ManualTradeActionListProps {
+  readonly timezone: TwChartTimezone;
   readonly tradingInputs: TradingInputs;
   readonly onRemoveItemClick: (id: number) => void;
   readonly onRemoveAllItemsClick: () => void;
 }
 
 export function ManualTradeActionList({
+  timezone,
   tradingInputs,
   onRemoveItemClick,
   onRemoveAllItemsClick,
@@ -27,6 +30,7 @@ export function ManualTradeActionList({
           return (
             <ManualTradeActionItem
               key={index}
+              timezone={timezone}
               tradingInputs={tradingInputs}
               tradeAction={manualTradeAction}
               onRemoveClick={onRemoveItemClick}

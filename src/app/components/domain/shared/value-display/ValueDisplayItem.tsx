@@ -12,21 +12,22 @@ export interface ValueDisplayItemProps {
 export function ValueDisplayItem({
   item,
 }: ValueDisplayItemProps): React.ReactElement {
-  const { kind, label } = item;
+  const { kind, label, fontSize } = item;
 
   switch (kind) {
     case 'none': {
-      return <></>;
+      return <>&nbsp;</>;
     }
     case 'string': {
       const { value } = item;
-      return <ValueDisplay label={label} value={value} />;
+      return <ValueDisplay label={label} fontSize={fontSize} value={value} />;
     }
     case 'decimal': {
       const { value, precision } = item;
       return (
         <DecimalValueDisplay
           label={label}
+          fontSize={fontSize}
           value={value}
           precision={precision}
         />
@@ -35,7 +36,12 @@ export function ValueDisplayItem({
     case 'date': {
       const { value, timezone } = item;
       return (
-        <DateValueDisplay label={label} value={value} timezone={timezone} />
+        <DateValueDisplay
+          label={label}
+          fontSize={fontSize}
+          value={value}
+          timezone={timezone}
+        />
       );
     }
     default: {

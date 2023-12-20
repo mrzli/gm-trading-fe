@@ -1,4 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
+import cls from 'classnames';
+import { invariant } from '@gmjs/assert';
+import { arrayOfConstant } from '@gmjs/array-create';
+import { mdiClose } from '@mdi/js';
 import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
@@ -7,32 +11,33 @@ import {
   ManualTradeActionOpen,
   TradingInputs,
 } from '../../types';
-import { invariant } from '@gmjs/assert';
-import { arrayOfConstant } from '@gmjs/array-create';
 import { IconButton } from '../../../shared/IconButton';
-import { mdiClose } from '@mdi/js';
 import { ValueDisplayDataAnyList } from '../../../types';
 import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
 import { VALUE_DISPLAY_DATA_NONE } from '../../../util';
+import { TwChartTimezone } from '../../../tw-chart/types';
 
 export interface ManualTradeActionItemProps {
+  readonly timezone: TwChartTimezone;
   readonly tradingInputs: TradingInputs;
   readonly tradeAction: ManualTradeActionAny;
   readonly onRemoveClick: (id: number) => void;
 }
 
 export function ManualTradeActionItem({
+  timezone,
   tradingInputs,
   tradeAction,
   onRemoveClick,
 }: ManualTradeActionItemProps): React.ReactElement {
   const displayDataList = useMemo<ValueDisplayDataAnyList>(() => {
-    const items = getValueDisplayDataList(tradingInputs, tradeAction);
+    const items = getValueDisplayDataList(timezone, tradingInputs, tradeAction);
+    const totalSpan = items.reduce((sum, item) => sum + (item.span ?? 1), 0);
     return [
       ...items,
-      ...arrayOfConstant(NUM_COLUMNS - items.length, VALUE_DISPLAY_DATA_NONE),
+      ...arrayOfConstant(NUM_COLUMNS - totalSpan, VALUE_DISPLAY_DATA_NONE),
     ];
-  }, [tradingInputs, tradeAction]);
+  }, [timezone, tradingInputs, tradeAction]);
 
   const handleRemove = useCallback(() => {
     onRemoveClick(tradeAction.id);
@@ -41,9 +46,16 @@ export function ManualTradeActionItem({
   return (
     <div className='flex flex-row items-center gap-2'>
       {displayDataList.map((item, index) => {
+        const span = item.span ?? 1;
+        const itemClasses = cls({
+          'flex-1': span === 1,
+          'flex-[2_2_0%]': span === 2,
+          'flex-[3_3_0%]': span === 3,
+          'flex-[4_4_0%]': span === 4,
+        });
         return (
-          <div key={index} className='flex-1'>
-            {item && <ValueDisplayItem item={item} />}
+          <div key={index} className={itemClasses}>
+            <ValueDisplayItem item={item} />
           </div>
         );
       })}
@@ -52,9 +64,10 @@ export function ManualTradeActionItem({
   );
 }
 
-const NUM_COLUMNS = 6;
+const NUM_COLUMNS = 10;
 
 function getValueDisplayDataList(
+  timezone: TwChartTimezone,
   tradingInputs: TradingInputs,
   tradeAction: ManualTradeActionAny,
 ): ValueDisplayDataAnyList {
@@ -64,16 +77,16 @@ function getValueDisplayDataList(
 
   switch (kind) {
     case 'open': {
-      return getDisplayPropsOpen(tradeAction, priceDecimals);
+      return getDisplayPropsOpen(tradeAction, timezone, priceDecimals);
     }
     case 'close': {
-      return getDisplayPropsClose(tradeAction, priceDecimals);
+      return getDisplayPropsClose(tradeAction, timezone, priceDecimals);
     }
     case 'amend-order': {
-      return getDisplayPropsAmendOrder(tradeAction, priceDecimals);
+      return getDisplayPropsAmendOrder(tradeAction, timezone, priceDecimals);
     }
     case 'amend-trade': {
-      return getDisplayPropsAmendTrade(tradeAction, priceDecimals);
+      return getDisplayPropsAmendTrade(tradeAction, timezone, priceDecimals);
     }
     default: {
       invariant(false, `Invalid manual trade action kind: '${kind}'.`);
@@ -83,9 +96,11 @@ function getValueDisplayDataList(
 
 function getDisplayPropsOpen(
   tradeAction: ManualTradeActionOpen,
+  timezone: TwChartTimezone,
   priceDecimals: number,
 ): ValueDisplayDataAnyList {
-  const { id, price, amount, stopLossDistance, limitDistance } = tradeAction;
+  const { id, time, price, amount, stopLossDistance, limitDistance } =
+    tradeAction;
 
   return [
     {
@@ -95,7 +110,16 @@ function getDisplayPropsOpen(
       precision: 0,
     },
     {
+      kind: 'date',
+      span: 3,
+      label: 'Time',
+      fontSize: 10,
+      value: time,
+      timezone,
+    },
+    {
       kind: 'decimal',
+      span: 2,
       label: 'Price',
       value: price,
       precision: priceDecimals,
@@ -108,13 +132,13 @@ function getDisplayPropsOpen(
     },
     {
       kind: 'decimal',
-      label: 'Stop Loss Distance',
+      label: 'SL Dist',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      label: 'Limit Distance',
+      label: 'Lmt Dist',
       value: limitDistance,
       precision: priceDecimals,
     },
@@ -123,9 +147,10 @@ function getDisplayPropsOpen(
 
 function getDisplayPropsClose(
   tradeAction: ManualTradeActionClose,
+  timezone: TwChartTimezone,
   _priceDecimals: number,
 ): ValueDisplayDataAnyList {
-  const { id, targetId } = tradeAction;
+  const { id, time, targetId } = tradeAction;
 
   return [
     {
@@ -133,6 +158,14 @@ function getDisplayPropsClose(
       label: 'ID',
       value: id,
       precision: 0,
+    },
+    {
+      kind: 'date',
+      span: 3,
+      label: 'Time',
+      fontSize: 10,
+      value: time,
+      timezone,
     },
     {
       kind: 'decimal',
@@ -145,9 +178,10 @@ function getDisplayPropsClose(
 
 function getDisplayPropsAmendOrder(
   tradeAction: ManualTradeActionAmendOrder,
+  timezone: TwChartTimezone,
   priceDecimals: number,
 ): ValueDisplayDataAnyList {
-  const { id, targetId, price, amount, stopLossDistance, limitDistance } =
+  const { id, time, targetId, price, amount, stopLossDistance, limitDistance } =
     tradeAction;
 
   return [
@@ -158,6 +192,14 @@ function getDisplayPropsAmendOrder(
       precision: 0,
     },
     {
+      kind: 'date',
+      span: 3,
+      label: 'Time',
+      fontSize: 10,
+      value: time,
+      timezone,
+    },
+    {
       kind: 'decimal',
       label: 'Target ID',
       value: targetId,
@@ -165,6 +207,7 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
+      span: 2,
       label: 'Price',
       value: price,
       precision: priceDecimals,
@@ -177,13 +220,13 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
-      label: 'Stop Loss Distance',
+      label: 'SL Dist',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      label: 'Limit Distance',
+      label: 'Lmt Dist',
       value: limitDistance,
       precision: priceDecimals,
     },
@@ -192,9 +235,10 @@ function getDisplayPropsAmendOrder(
 
 function getDisplayPropsAmendTrade(
   tradeAction: ManualTradeActionAmendTrade,
+  timezone: TwChartTimezone,
   priceDecimals: number,
 ): ValueDisplayDataAnyList {
-  const { id, targetId, stopLoss, limit } = tradeAction;
+  const { id, time, targetId, stopLoss, limit } = tradeAction;
 
   return [
     {
@@ -204,6 +248,14 @@ function getDisplayPropsAmendTrade(
       precision: 0,
     },
     {
+      kind: 'date',
+      span: 3,
+      label: 'Time',
+      fontSize: 10,
+      value: time,
+      timezone,
+    },
+    {
       kind: 'decimal',
       label: 'Target ID',
       value: targetId,
@@ -211,12 +263,14 @@ function getDisplayPropsAmendTrade(
     },
     {
       kind: 'decimal',
-      label: 'Stop Loss',
+      span: 2,
+      label: 'SL',
       value: stopLoss,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
+      span: 2,
       label: 'Limit',
       value: limit,
       precision: priceDecimals,

@@ -2,32 +2,29 @@ import React from 'react';
 import { RightToolbarState } from './types';
 import { invariant } from '@gmjs/assert';
 import { TradeContainer } from '../trade/TradeContainer';
-import { TickerDataRows } from '../../../types';
+import { TradingChartData } from '../trade/types';
 
 export interface TickerDataRightToolbarProps {
   readonly state: RightToolbarState;
-  readonly barData: TickerDataRows;
-  readonly barIndex: number;
+  readonly chartData: TradingChartData;
 }
 
 export function TickerDataRightToolbar({
   state,
-  barData,
-  barIndex,
+  chartData,
 }: TickerDataRightToolbarProps): React.ReactElement {
-  const content = getContent(state, barData, barIndex);
+  const content = getContent(state, chartData);
 
   return <div className='min-w-[480px] h-full'>{content}</div>;
 }
 
 function getContent(
   state: RightToolbarState,
-  barData: TickerDataRows,
-  barIndex: number,
+  chartData: TradingChartData,
 ): React.ReactElement {
   switch (state) {
     case 'trade': {
-      return <TradeContainer barData={barData} barIndex={barIndex} />;
+      return <TradeContainer chartData={chartData} />;
     }
     default: {
       invariant(false, `Invalid right toolbar state: ${state}`);

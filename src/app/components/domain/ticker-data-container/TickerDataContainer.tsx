@@ -22,6 +22,7 @@ import { LoadingDisplay, PrettyDisplay } from '../../shared';
 import { RightToolbarState } from './types';
 import { TickerDataRightToolbar } from './TickerDataRightToolbar';
 import { IconButton } from '../shared/IconButton';
+import { TradingChartData } from '../trade/types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -120,11 +121,13 @@ export function TickerDataContainer({
     setRightToolbarState((s) => (s === 'trade' ? 'none' : 'trade'));
   }, []);
 
-  const tradeData = useMemo(() => getTradeData(fullData), [fullData]);
-  const tradeDataBarIndex = useMemo(
-    () => getTradeDataBarIndex(fullData, replaySettings),
-    [fullData, replaySettings],
-  );
+  const tradingChartData = useMemo<TradingChartData>(() => {
+    return {
+      timezone,
+      barData: getTradeData(fullData),
+      barIndex: getTradeDataBarIndex(fullData, replaySettings),
+    };
+  }, [timezone, fullData, replaySettings]);
 
   if (!instrument) {
     return <div>Instrument not found.</div>;
@@ -168,8 +171,7 @@ export function TickerDataContainer({
           {rightToolbarState !== 'none' && (
             <TickerDataRightToolbar
               state={rightToolbarState}
-              barData={tradeData}
-              barIndex={tradeDataBarIndex}
+              chartData={tradingChartData}
             />
           )}
         </div>

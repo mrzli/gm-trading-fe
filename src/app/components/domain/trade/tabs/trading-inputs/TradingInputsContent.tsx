@@ -6,8 +6,10 @@ import {
   TradingParameters,
 } from '../../types';
 import { ManualTradeActionList } from './ManualTradeActionList';
+import { TwChartTimezone } from '../../../tw-chart/types';
 
 export interface TradingInputsContentProps {
+  readonly timezone: TwChartTimezone;
   readonly value: TradingInputs;
   readonly onValueChange: (value: TradingInputs) => void;
 }
@@ -15,6 +17,7 @@ export interface TradingInputsContentProps {
 export function TradingInputsContent({
   value,
   onValueChange,
+  timezone
 }: TradingInputsContentProps): React.ReactElement {
   const handleTradingParametersChange = useCallback(
     (params: TradingParameters): void => {
@@ -57,6 +60,7 @@ export function TradingInputsContent({
       />
       <hr />
       <ManualTradeActionList
+        timezone={timezone}
         tradingInputs={value}
         onRemoveItemClick={handleRemoveManualActionItem}
         onRemoveAllItemsClick={handleRemoveAllManualActions}

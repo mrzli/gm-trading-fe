@@ -1,36 +1,35 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
-import { TradeTabValue, TradingDataAndInputs, TradingInputs } from './types';
+import {
+  TradeTabValue,
+  TradingChartData,
+  TradingDataAndInputs,
+  TradingInputs,
+} from './types';
 import { TradingOperationsContent } from './tabs/trading-operations/TradingOperationsContent';
 import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
 import { TradingResultsContent } from './tabs/trading-results/TradingResultsContent';
-import { TickerDataRows } from '../../../types';
 import { TradingLog } from './tabs/trading-log/TradingLog';
 import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
 
 export interface TradeContainerProps {
-  readonly barData: TickerDataRows;
-  readonly barIndex: number;
+  readonly chartData: TradingChartData;
 }
 
 export function TradeContainer({
-  barData,
-  barIndex,
+  chartData,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
 
   const [tradingDataAndInputs, setTradingDataAndInputs] =
-    useState<TradingDataAndInputs>(
-      getInitialTradingDataAndInputs(barData, barIndex),
-    );
+    useState<TradingDataAndInputs>(getInitialTradingDataAndInputs(chartData));
 
   useEffect(() => {
     setTradingDataAndInputs((prev) => ({
       ...prev,
-      barData,
-      barIndex,
+      chartData,
     }));
-  }, [barData, barIndex]);
+  }, [chartData]);
 
   const handleTradingInputsChage = useCallback(
     (inputs: TradingInputs) => {
@@ -54,12 +53,10 @@ export function TradeContainer({
 }
 
 function getInitialTradingDataAndInputs(
-  barData: TickerDataRows,
-  barIndex: number,
+  chartData: TradingChartData,
 ): TradingDataAndInputs {
   return {
-    barData,
-    barIndex,
+    chartData,
     inputs: {
       params: {
         initialBalance: 10_000,
@@ -85,6 +82,7 @@ function getTabEntries(
       tab: 'Inputs',
       content: (
         <TradingInputsContent
+          timezone={tradingDataAndInputs.chartData.timezone}
           value={tradingDataAndInputs.inputs}
           onValueChange={handleTradingInputsChange}
         />

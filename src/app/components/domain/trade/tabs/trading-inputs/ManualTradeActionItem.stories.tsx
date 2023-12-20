@@ -5,6 +5,7 @@ import {
 } from './ManualTradeActionItem';
 import { decoratorPadding } from '../../../../../../storybook';
 import { TradingInputs } from '../../types';
+import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../tw-chart/types';
 
 const TRADING_INPUTS: TradingInputs = {
   params: {
@@ -23,8 +24,14 @@ const STORY_META: Meta<ManualTradeActionItemProps> = {
   component: ManualTradeActionItem,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
-  argTypes: {},
+  argTypes: {
+    timezone: {
+      control: 'inline-radio',
+      options: TYPES_OF_TW_CHART_TIMEZONES,
+    },
+  },
   args: {
+    timezone: 'UTC',
     tradingInputs: TRADING_INPUTS,
   },
 };
