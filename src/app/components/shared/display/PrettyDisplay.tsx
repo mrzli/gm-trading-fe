@@ -10,6 +10,8 @@ const STYLE: CSSProperties = {
   padding: 10,
   backgroundColor: '#EEEEEE',
   fontSize: 14,
+  maxHeight: 400,
+  overflow: 'auto',
 };
 
 export function PrettyDisplay({
