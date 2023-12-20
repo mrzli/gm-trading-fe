@@ -76,16 +76,12 @@ export interface TradeActionLimit extends TradeActionBase {
   readonly price: number;
 }
 
-export type TradeActionManual =
+export type TradeActionAny =
   | TradeActionCreateOrder
   | TradeActionCancelOrder
   | TradeActionCloseTrade
   | TradeActionAdjustOrder
-  | TradeActionAdjustTrade;
-
-export type TradeActionAutomatic =
+  | TradeActionAdjustTrade
   | TradeActionFillOrder
   | TradeActionStopLoss
   | TradeActionLimit;
-
-export type TradeActionAny = TradeActionManual | TradeActionAutomatic;

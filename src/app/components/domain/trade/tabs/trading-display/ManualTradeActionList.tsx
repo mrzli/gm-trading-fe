@@ -4,10 +4,12 @@ import { ManualTradeActionItem } from './ManualTradeActionItem';
 
 export interface ManualTradeActionListProps {
   readonly tradingInputs: TradingInputs;
+  readonly onRemoveItemClick: (id: number) => void;
 }
 
 export function ManualTradeActionList({
   tradingInputs,
+  onRemoveItemClick,
 }: ManualTradeActionListProps): React.ReactElement {
   const { manualTradeActions } = tradingInputs;
 
@@ -19,6 +21,7 @@ export function ManualTradeActionList({
             key={index}
             tradingInputs={tradingInputs}
             tradeAction={manualTradeAction}
+            onRemoveClick={onRemoveItemClick}
           />
         );
       })}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
@@ -13,20 +13,28 @@ import {
   DecimalValueDisplayProps,
 } from '../../../shared/DecimalValueDisplay';
 import { arrayOfUndefined } from '@gmjs/array-create';
+import { IconButton } from '../../../shared/IconButton';
+import { mdiClose } from '@mdi/js';
 
 export interface ManualTradeActionItemProps {
   readonly tradingInputs: TradingInputs;
   readonly tradeAction: ManualTradeActionAny;
+  readonly onRemoveClick: (id: number) => void;
 }
 
 export function ManualTradeActionItem({
   tradingInputs,
   tradeAction,
+  onRemoveClick,
 }: ManualTradeActionItemProps): React.ReactElement {
   const displayProps = useMemo<DisplayProps>(() => {
     const items = getDisplayProps(tradingInputs, tradeAction);
     return [...items, ...arrayOfUndefined(NUM_COLUMNS - items.length)];
   }, [tradingInputs, tradeAction]);
+
+  const handleRemove = useCallback(() => {
+    onRemoveClick(tradeAction.id);
+  }, [onRemoveClick, tradeAction.id]);
 
   return (
     <div className='flex flex-row items-center gap-2'>
@@ -37,6 +45,7 @@ export function ManualTradeActionItem({
           </div>
         );
       })}
+      <IconButton icon={mdiClose} onClick={handleRemove} />
     </div>
   );
 }
