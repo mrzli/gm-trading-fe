@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import { TradeTabValue, TradingDataAndInputs, TradingInputs } from './types';
-import { TradingDisplayContent } from './tabs/trading-display/TradingDisplayContent';
+import { TradingOperationsContent } from './tabs/trading-operations/TradingOperationsContent';
 import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
 import { TradingResultsContent } from './tabs/trading-results/TradingResultsContent';
 import { TickerDataRows } from '../../../types';
@@ -91,9 +91,9 @@ function getTabEntries(
       ),
     },
     {
-      value: 'trading-display',
+      value: 'trading-operations',
       tab: 'Trading',
-      content: <TradingDisplayContent />,
+      content: <TradingOperationsContent />,
     },
     {
       value: 'trading-log',

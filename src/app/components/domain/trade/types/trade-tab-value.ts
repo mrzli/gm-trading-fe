@@ -1,6 +1,6 @@
 export const TYPES_OF_TRADE_TAB_VALUES = [
   'trading-inputs',
-  'trading-display',
+  'trading-operations',
   'trading-log',
   'trading-results',
   'trading-debug',

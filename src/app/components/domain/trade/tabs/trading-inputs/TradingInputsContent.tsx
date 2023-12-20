@@ -42,15 +42,24 @@ export function TradingInputsContent({
     [onValueChange, value],
   );
 
+  const handleRemoveAllManualActions = useCallback(() => {
+    onValueChange({
+      ...value,
+      manualTradeActions: [],
+    });
+  }, [onValueChange, value]);
+
   return (
-    <div className='flex flex-col gap-1 overflow-y-auto'>
+    <div className='flex flex-col gap-2 overflow-y-auto'>
       <TradingParametersForm
         value={value.params}
         onValueChange={handleTradingParametersChange}
       />
+      <hr />
       <ManualTradeActionList
         tradingInputs={value}
         onRemoveItemClick={handleRemoveManualActionItem}
+        onRemoveAllItemsClick={handleRemoveAllManualActions}
       />
     </div>
   );
