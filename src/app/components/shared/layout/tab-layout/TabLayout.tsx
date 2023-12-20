@@ -53,15 +53,11 @@ export function TabLayout<TValue extends string = string>({
     });
   }, [entries, selectedEntry.value, tabClickHandlerMap]);
 
-  const contentElement = useMemo(() => {
-    return <div className='px-2 py-1'>{selectedEntry.content}</div>;
-  }, [selectedEntry.content]);
-
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col max-h-full'>
       <div className='flex flex-row'>{tabElements}</div>
       <hr />
-      <div>{contentElement}</div>
+      <div className='overflow-y-auto'>{selectedEntry.content}</div>
     </div>
   );
 }

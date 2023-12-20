@@ -45,5 +45,23 @@ export function getChartData(
 }
 
 export function getTradeData(data: FullTickerData): TickerDataRows {
-  return applyFn(data.subRows, compose(flatten<TickerDataRow>(), toArray()))
+  return applyFn(data.subRows, compose(flatten<TickerDataRow>(), toArray()));
+}
+
+export function getTradeDataBarIndex(
+  data: FullTickerData,
+  replaySettings: TwBarReplaySettings,
+): number {
+  const { barIndex, subBarIndex } = replaySettings;
+  if (barIndex === undefined) {
+    return 0;
+  }
+
+  let tradeDataBarIndex = 0;
+  for (let i = 0; i < barIndex; i++) {
+    tradeDataBarIndex += data.subRows[i].length;
+  }
+  tradeDataBarIndex += subBarIndex;
+
+  return tradeDataBarIndex;
 }

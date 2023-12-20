@@ -11,7 +11,13 @@ import {
 import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
-import { getChartData, rawDataToFullTickerData, toLogicalOffset } from './util';
+import {
+  getChartData,
+  getTradeData,
+  getTradeDataBarIndex,
+  rawDataToFullTickerData,
+  toLogicalOffset,
+} from './util';
 import { LoadingDisplay, PrettyDisplay } from '../../shared';
 import { RightToolbarState } from './types';
 import { TickerDataRightToolbar } from './TickerDataRightToolbar';
@@ -114,6 +120,12 @@ export function TickerDataContainer({
     setRightToolbarState((s) => (s === 'trade' ? 'none' : 'trade'));
   }, []);
 
+  const tradeData = useMemo(() => getTradeData(fullData), [fullData]);
+  const tradeDataBarIndex = useMemo(
+    () => getTradeDataBarIndex(fullData, replaySettings),
+    [fullData, replaySettings],
+  );
+
   if (!instrument) {
     return <div>Instrument not found.</div>;
   }
@@ -156,8 +168,8 @@ export function TickerDataContainer({
           {rightToolbarState !== 'none' && (
             <TickerDataRightToolbar
               state={rightToolbarState}
-              data={fullData.subRows}
-              replaySettings={replaySettings}
+              barData={tradeData}
+              barIndex={tradeDataBarIndex}
             />
           )}
         </div>

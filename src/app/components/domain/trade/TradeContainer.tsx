@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import { TradeTabValue, TradingDataAndInputs, TradingInputs } from './types';
 import { TradingDisplayContent } from './tabs/trading-display/TradingDisplayContent';
@@ -6,6 +6,7 @@ import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent
 import { TradingResultsContent } from './tabs/trading-results/TradingResultsContent';
 import { TickerDataRows } from '../../../types';
 import { TradingLog } from './tabs/trading-log/TradingLog';
+import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
 
 export interface TradeContainerProps {
   readonly barData: TickerDataRows;
@@ -22,6 +23,14 @@ export function TradeContainer({
     useState<TradingDataAndInputs>(
       getInitialTradingDataAndInputs(barData, barIndex),
     );
+
+  useEffect(() => {
+    setTradingDataAndInputs((prev) => ({
+      ...prev,
+      barData,
+      barIndex,
+    }));
+  }, [barData, barIndex]);
 
   const handleTradingInputsChage = useCallback(
     (inputs: TradingInputs) => {
@@ -95,6 +104,11 @@ function getTabEntries(
       value: 'trading-results',
       tab: 'Results',
       content: <TradingResultsContent />,
+    },
+    {
+      value: 'trading-debug',
+      tab: 'Debug',
+      content: <TradingDebugDisplay value={tradingDataAndInputs} />,
     },
   ];
 }
