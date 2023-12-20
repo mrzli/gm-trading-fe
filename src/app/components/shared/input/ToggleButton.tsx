@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { CSSProperties, useCallback } from 'react';
 import cls from 'classnames';
 
 export interface ToggleButtonProps {
@@ -6,6 +6,7 @@ export interface ToggleButtonProps {
   readonly value: boolean;
   readonly onValueChange: (value: boolean) => void;
   readonly disabled?: boolean;
+  readonly width?: CSSProperties['width'];
 }
 
 export function ToggleButton({
@@ -13,6 +14,7 @@ export function ToggleButton({
   value,
   onValueChange,
   disabled,
+  width,
 }: ToggleButtonProps): React.ReactElement {
   const checked = value && !disabled;
   const unchecked = !value && !disabled;
@@ -28,7 +30,12 @@ export function ToggleButton({
   }, [value, onValueChange]);
 
   return (
-    <button className={classes} onClick={handleClick} disabled={disabled}>
+    <button
+      className={classes}
+      style={{ width }}
+      onClick={handleClick}
+      disabled={disabled}
+    >
       {label}
     </button>
   );

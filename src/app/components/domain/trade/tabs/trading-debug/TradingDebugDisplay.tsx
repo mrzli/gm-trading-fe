@@ -12,9 +12,16 @@ export function TradingDebugDisplay({
   const content = useMemo<TradingDataAndInputs>(() => {
     return {
       ...value,
-      barData: value.barData.slice(0, 2),
+      chartData: {
+        ...value.chartData,
+        barData: value.chartData.barData.slice(0, 2),
+      },
     };
   }, [value]);
 
-  return <PrettyDisplay content={content} />;
+  return (
+    <div className='mt-1'>
+      <PrettyDisplay content={content} />
+    </div>
+  );
 }

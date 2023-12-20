@@ -1,5 +1,5 @@
-import { TickerDataRows } from '../../../../../types';
-import { TwChartTimezone } from '../../../tw-chart/types';
+import { TickerDataRows } from '../../../../../../types';
+import { TwChartTimezone } from '../../../../tw-chart/types';
 
 export interface TradingChartData {
   readonly timezone: TwChartTimezone;

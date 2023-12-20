@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import {
+  OrderInputs,
   TradeTabValue,
   TradingChartData,
   TradingDataAndInputs,
@@ -31,16 +32,28 @@ export function TradeContainer({
     }));
   }, [chartData]);
 
-  const handleTradingInputsChage = useCallback(
+  const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {
       setTradingDataAndInputs((prev) => ({ ...prev, inputs }));
     },
     [setTradingDataAndInputs],
   );
 
+  const handleCreateOrder = useCallback(
+    (order: OrderInputs) => {
+      console.log('order', order);
+    },
+    [],
+  );
+
   const tabEntries = useMemo(
-    () => getTabEntries(tradingDataAndInputs, handleTradingInputsChage),
-    [handleTradingInputsChage, tradingDataAndInputs],
+    () =>
+      getTabEntries(
+        tradingDataAndInputs,
+        handleTradingInputsChange,
+        handleCreateOrder,
+      ),
+    [handleCreateOrder, handleTradingInputsChange, tradingDataAndInputs],
   );
 
   return (
@@ -75,6 +88,7 @@ function getInitialTradingDataAndInputs(
 function getTabEntries(
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
+  handleCreateOrder: (order: OrderInputs) => void,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   return [
     {
@@ -91,7 +105,7 @@ function getTabEntries(
     {
       value: 'trading-operations',
       tab: 'Trading',
-      content: <TradingOperationsContent />,
+      content: <TradingOperationsContent onCreateOrder={handleCreateOrder} />,
     },
     {
       value: 'trading-log',

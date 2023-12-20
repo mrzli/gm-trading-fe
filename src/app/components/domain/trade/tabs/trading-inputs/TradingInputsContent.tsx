@@ -53,7 +53,7 @@ export function TradingInputsContent({
   }, [onValueChange, value]);
 
   return (
-    <div className='flex flex-col gap-2 overflow-y-auto'>
+    <div className='flex flex-col gap-2 overflow-y-auto mt-1'>
       <TradingParametersForm
         value={value.params}
         onValueChange={handleTradingParametersChange}
