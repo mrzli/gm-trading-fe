@@ -12,7 +12,6 @@ import {
   TradingInputs,
 } from '../../types';
 import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../tw-chart/types';
-import { EmptyObject } from '@gmjs/generic-types';
 
 const TRADING_INPUTS: TradingInputs = {
   params: {

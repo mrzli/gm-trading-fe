@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import cls from 'classnames';
 import { invariant } from '@gmjs/assert';
-import { arrayOfConstant } from '@gmjs/array-create';
 import { mdiClose } from '@mdi/js';
 import {
   ManualTradeActionAmendOrder,
