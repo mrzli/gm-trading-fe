@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import {
   OrderInputs,
+  TradeResult,
   TradeTabValue,
   TradingChartData,
   TradingDataAndInputs,
@@ -12,6 +13,11 @@ import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent
 import { TradingResultsContent } from './tabs/trading-results/TradingResultsContent';
 import { TradingLog } from './tabs/trading-log/TradingLog';
 import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
+import {
+  getNextManualActionId,
+  orderInputsToManualTradeActionOpen,
+  processTradeSequence,
+} from './util';
 
 export interface TradeContainerProps {
   readonly chartData: TradingChartData;
@@ -24,6 +30,13 @@ export function TradeContainer({
 
   const [tradingDataAndInputs, setTradingDataAndInputs] =
     useState<TradingDataAndInputs>(getInitialTradingDataAndInputs(chartData));
+
+  const [tradeResult, setTradeResult] = useState<TradeResult>({});
+
+  useEffect(() => {
+    const result = processTradeSequence(tradingDataAndInputs);
+    setTradeResult(result);
+  }, [tradingDataAndInputs]);
 
   useEffect(() => {
     setTradingDataAndInputs((prev) => ({
@@ -41,9 +54,25 @@ export function TradeContainer({
 
   const handleCreateOrder = useCallback(
     (order: OrderInputs) => {
-      console.log('order', order);
+      const { manualTradeActions } = tradingDataAndInputs.inputs;
+
+      const id = getNextManualActionId(manualTradeActions);
+
+      const newAction = orderInputsToManualTradeActionOpen(
+        order,
+        id,
+        chartData,
+      );
+
+      setTradingDataAndInputs({
+        ...tradingDataAndInputs,
+        inputs: {
+          ...tradingDataAndInputs.inputs,
+          manualTradeActions: [...manualTradeActions, newAction],
+        },
+      });
     },
-    [],
+    [chartData, tradingDataAndInputs],
   );
 
   const tabEntries = useMemo(
@@ -52,8 +81,14 @@ export function TradeContainer({
         tradingDataAndInputs,
         handleTradingInputsChange,
         handleCreateOrder,
+        tradeResult,
       ),
-    [handleCreateOrder, handleTradingInputsChange, tradingDataAndInputs],
+    [
+      handleCreateOrder,
+      handleTradingInputsChange,
+      tradeResult,
+      tradingDataAndInputs,
+    ],
   );
 
   return (
@@ -89,6 +124,7 @@ function getTabEntries(
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
   handleCreateOrder: (order: OrderInputs) => void,
+  tradeResult: TradeResult,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   return [
     {
@@ -120,7 +156,12 @@ function getTabEntries(
     {
       value: 'trading-debug',
       tab: 'Debug',
-      content: <TradingDebugDisplay value={tradingDataAndInputs} />,
+      content: (
+        <TradingDebugDisplay
+          inputs={tradingDataAndInputs}
+          result={tradeResult}
+        />
+      ),
     },
   ];
 }

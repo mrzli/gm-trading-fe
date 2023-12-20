@@ -38,7 +38,7 @@ export function ManualTradeActionItem({
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      <div className='flex-1 grid grid-cols-12 items-center gap-2'>
+      <div className='flex-1 grid grid-cols-11 items-center gap-2'>
         {displayDataList.map((item, index) => {
           const span = item.span ?? 1;
           const itemClasses = cls({
@@ -87,6 +87,8 @@ function getValueDisplayDataList(
   }
 }
 
+const DATE_DISPLAY_VALUE_SPAN = 2;
+
 function getDisplayPropsOpen(
   tradeAction: ManualTradeActionOpen,
   timezone: TwChartTimezone,
@@ -104,7 +106,7 @@ function getDisplayPropsOpen(
     },
     {
       kind: 'date',
-      span: 3,
+      span: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -157,7 +159,7 @@ function getDisplayPropsClose(
     },
     {
       kind: 'date',
-      span: 3,
+      span: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -189,7 +191,7 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'date',
-      span: 3,
+      span: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -247,7 +249,7 @@ function getDisplayPropsAmendTrade(
     },
     {
       kind: 'date',
-      span: 3,
+      span: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,

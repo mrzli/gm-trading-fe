@@ -18,8 +18,8 @@ export interface ManualTradeActionOpen extends ManualTradeActionBase {
   readonly kind: 'open';
   readonly price: number | undefined;
   readonly amount: number;
-  readonly stopLossDistance: number;
-  readonly limitDistance: number;
+  readonly stopLossDistance: number | undefined;
+  readonly limitDistance: number | undefined;
 }
 
 export interface ManualTradeActionClose extends ManualTradeActionBase {
@@ -32,15 +32,15 @@ export interface ManualTradeActionAmendOrder extends ManualTradeActionBase {
   readonly targetId: number;
   readonly price: number | undefined;
   readonly amount: number;
-  readonly stopLossDistance: number;
-  readonly limitDistance: number;
+  readonly stopLossDistance: number | undefined;
+  readonly limitDistance: number | undefined;
 }
 
 export interface ManualTradeActionAmendTrade extends ManualTradeActionBase {
   readonly kind: 'amend-trade';
   readonly targetId: number;
-  readonly stopLoss: number;
-  readonly limit: number;
+  readonly stopLoss: number | undefined;
+  readonly limit: number | undefined;
 }
 
 export type ManualTradeActionAny =

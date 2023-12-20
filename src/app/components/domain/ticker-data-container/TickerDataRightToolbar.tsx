@@ -15,7 +15,7 @@ export function TickerDataRightToolbar({
 }: TickerDataRightToolbarProps): React.ReactElement {
   const content = getContent(state, chartData);
 
-  return <div className='min-w-[560px] h-full'>{content}</div>;
+  return <div className='min-w-[600px] h-full'>{content}</div>;
 }
 
 function getContent(

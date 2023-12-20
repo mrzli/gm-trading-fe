@@ -1,27 +1,30 @@
 import React, { useMemo } from 'react';
-import { TradingDataAndInputs } from '../../types';
+import { TradeResult, TradingDataAndInputs } from '../../types';
 import { PrettyDisplay } from '../../../../shared';
 
 export interface TradingDebugDisplayProps {
-  readonly value: TradingDataAndInputs;
+  readonly inputs: TradingDataAndInputs;
+  readonly result: TradeResult;
 }
 
 export function TradingDebugDisplay({
-  value,
+  inputs,
+  result
 }: TradingDebugDisplayProps): React.ReactElement {
-  const content = useMemo<TradingDataAndInputs>(() => {
+  const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
-      ...value,
+      ...inputs,
       chartData: {
-        ...value.chartData,
-        barData: value.chartData.barData.slice(0, 2),
+        ...inputs.chartData,
+        barData: inputs.chartData.barData.slice(0, 2),
       },
     };
-  }, [value]);
+  }, [inputs]);
 
   return (
-    <div className='mt-1'>
-      <PrettyDisplay content={content} />
+    <div className='mt-1 flex flex-col gap-2'>
+      <PrettyDisplay content={inputsContent} />
+      <PrettyDisplay content={result} />
     </div>
   );
 }
