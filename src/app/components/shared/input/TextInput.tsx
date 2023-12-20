@@ -52,7 +52,7 @@ export function TextInput({
   );
 
   return label ? (
-    <div className='flex flex-col'>
+    <div className='flex flex-col gap-0.5'>
       <Label htmlFor={id} content={label} />
       {inputElement}
     </div>
