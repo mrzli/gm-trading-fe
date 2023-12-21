@@ -1,10 +1,18 @@
 import { TickerDataRows } from '../../../../../../types';
 import { ManualTradeActionAny } from '../inputs';
-import { TradeResult } from '../result';
+import {
+  ActiveOrder,
+  ActiveTrade,
+  CompletedTrade,
+  TradeLogEntryAny,
+} from '../trade';
 
 export interface TradeProcessState {
   readonly barData: TickerDataRows;
   readonly barIndex: number;
-  readonly remainingTradeActions: readonly ManualTradeActionAny[];
-  readonly tradeResult: TradeResult;
+  readonly remainingManualActions: readonly ManualTradeActionAny[];
+  readonly activeOrders: readonly ActiveOrder[];
+  readonly activeTrades: readonly ActiveTrade[];
+  readonly completedTrades: readonly CompletedTrade[];
+  readonly tradeLog: readonly TradeLogEntryAny[];
 }

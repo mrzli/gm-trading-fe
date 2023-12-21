@@ -1,16 +1,13 @@
 import { TradeProcessState, TradingDataAndInputs } from '../../types';
 import { sortManualTradeActions } from './sort-manual-trade-actions';
 import { processManualTradeActions } from './process-manual-trade-actions';
+import { processOrders } from './process-orders';
+import { processTrades } from './process-trades';
 
 export function processTradeSequence(
   input: TradingDataAndInputs,
 ): TradeProcessState {
   const barIndex = input.chartData.barIndex;
-
-  // const actionsMap = applyFn(
-  //   manualTradeActions,
-  //   toMapBy((item) => item.id),
-  // );
 
   let tradeProcessState = getInitialTradeProcessState(input);
 
@@ -28,13 +25,16 @@ function getInitialTradeProcessState(
   const { barData, barIndex } = chartData;
   const { manualTradeActions } = inputs;
 
-  const remainingTradeActions = sortManualTradeActions(manualTradeActions);
+  const remainingManualActions = sortManualTradeActions(manualTradeActions);
 
   return {
     barData,
     barIndex,
-    remainingTradeActions,
-    tradeResult: {},
+    remainingManualActions,
+    activeOrders: [],
+    activeTrades: [],
+    completedTrades: [],
+    tradeLog: [],
   };
 }
 
@@ -45,6 +45,8 @@ function processBar(
   let currentState = state;
 
   currentState = processManualTradeActions(currentState, index);
+  currentState = processOrders(currentState, index);
+  currentState = processTrades(currentState, index);
 
   return currentState;
 }

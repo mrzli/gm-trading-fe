@@ -1,4 +1,4 @@
-export const KINDS_OF_TRADE_ACTIONS = [
+export const KINDS_OF_TRADE_LOG_ENTRIES = [
   'create-order',
   'cancel-order',
   'close-trade',
@@ -9,14 +9,14 @@ export const KINDS_OF_TRADE_ACTIONS = [
   'limit',
 ] as const;
 
-export type TradeActionKind = (typeof KINDS_OF_TRADE_ACTIONS)[number];
+export type TradeLogEntryKind = (typeof KINDS_OF_TRADE_LOG_ENTRIES)[number];
 
-export interface TradeActionBase {
-  readonly kind: TradeActionKind;
+export interface TradeLogEntryBase {
+  readonly kind: TradeLogEntryKind;
   readonly time: number;
 }
 
-export interface TradeActionCreateOrder extends TradeActionBase {
+export interface TradeLogEntryCreateOrder extends TradeLogEntryBase {
   readonly kind: 'create-order';
   readonly orderId: number;
   readonly price: number | undefined;
@@ -25,18 +25,18 @@ export interface TradeActionCreateOrder extends TradeActionBase {
   readonly limitDistance: number;
 }
 
-export interface TradeActionCancelOrder extends TradeActionBase {
+export interface TradeLogEntryCancelOrder extends TradeLogEntryBase {
   readonly kind: 'cancel-order';
   readonly orderId: number;
 }
 
-export interface TradeActionCloseTrade extends TradeActionBase {
+export interface TradeLogEntryCloseTrade extends TradeLogEntryBase {
   readonly kind: 'close-trade';
   readonly tradeId: number;
   readonly price: number;
 }
 
-export interface TradeActionAdjustOrder extends TradeActionBase {
+export interface TradeLogEntryAdjustOrder extends TradeLogEntryBase {
   readonly kind: 'adjust-order';
   readonly orderId: number;
   readonly price: number | undefined;
@@ -45,7 +45,7 @@ export interface TradeActionAdjustOrder extends TradeActionBase {
   readonly limitDistance: number;
 }
 
-export interface TradeActionAdjustTrade extends TradeActionBase {
+export interface TradeLogEntryAdjustTrade extends TradeLogEntryBase {
   readonly kind: 'adjust-trade';
   readonly tradeId: number;
   readonly stopLoss: number;
@@ -53,7 +53,7 @@ export interface TradeActionAdjustTrade extends TradeActionBase {
 }
 
 // automatic
-export interface TradeActionFillOrder extends TradeActionBase {
+export interface TradeLogEntryFillOrder extends TradeLogEntryBase {
   readonly kind: 'fill-order';
   readonly orderId: number;
   readonly tradeId: number;
@@ -63,25 +63,25 @@ export interface TradeActionFillOrder extends TradeActionBase {
 }
 
 // automatic
-export interface TradeActionStopLoss extends TradeActionBase {
+export interface TradeLogEntryStopLoss extends TradeLogEntryBase {
   readonly kind: 'stop-loss';
   readonly tradeId: number;
   readonly price: number;
 }
 
 // automatic
-export interface TradeActionLimit extends TradeActionBase {
+export interface TradeLogEntryLimit extends TradeLogEntryBase {
   readonly kind: 'limit';
   readonly tradeId: number;
   readonly price: number;
 }
 
-export type TradeActionAny =
-  | TradeActionCreateOrder
-  | TradeActionCancelOrder
-  | TradeActionCloseTrade
-  | TradeActionAdjustOrder
-  | TradeActionAdjustTrade
-  | TradeActionFillOrder
-  | TradeActionStopLoss
-  | TradeActionLimit;
+export type TradeLogEntryAny =
+  | TradeLogEntryCreateOrder
+  | TradeLogEntryCancelOrder
+  | TradeLogEntryCloseTrade
+  | TradeLogEntryAdjustOrder
+  | TradeLogEntryAdjustTrade
+  | TradeLogEntryFillOrder
+  | TradeLogEntryStopLoss
+  | TradeLogEntryLimit;
