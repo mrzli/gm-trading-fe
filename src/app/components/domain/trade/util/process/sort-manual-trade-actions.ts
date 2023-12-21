@@ -1,42 +1,15 @@
-import { applyFn } from '@gmjs/apply-function';
-import { compose } from '@gmjs/compose-function';
-import { TickerDataRows } from '../../../../types';
-import {
-  ManualTradeActionAny,
-  ManualTradeActionKind,
-  TradeResult,
-  TradingDataAndInputs,
-} from '../types';
-import { sort, toArray } from '@gmjs/value-transformers';
 import { invariant } from '@gmjs/assert';
+import { applyFn } from '@gmjs/apply-function';
+import { sort, toArray } from '@gmjs/value-transformers';
+import { ManualTradeActionAny, ManualTradeActionKind } from '../../types';
 
-export function processTradeSequence(input: TradingDataAndInputs): TradeResult {
-  const { chartData, inputs } = input;
-  const { barData, barIndex } = chartData;
-  const { params, manualTradeActions } = inputs;
-  const {
-    initialBalance,
-    spread,
-    marginPercent,
-    avgSlippage,
-    pipDigit,
-    minStopLossDistance,
-  } = params;
-
-  // const actionsMap = applyFn(value, compose(transformer))
-
-  return {};
-}
-
-function sortManualTradeActions(
+export function sortManualTradeActions(
   actions: readonly ManualTradeActionAny[],
 ): readonly ManualTradeActionAny[] {
   return applyFn(
     actions,
-    compose(
-      sort((a, b) => manualActionComparer(a, b)),
-      toArray(),
-    ),
+    sort((a, b) => manualActionComparer(a, b)),
+    toArray(),
   );
 }
 
@@ -73,5 +46,3 @@ function getManualActionKindOrder(kind: ManualTradeActionKind): number {
     }
   }
 }
-
-// function processBar(index: number, remainingActions: readonly ManualTradeActionAny[]
