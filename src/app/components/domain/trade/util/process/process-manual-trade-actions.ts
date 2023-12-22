@@ -73,6 +73,7 @@ function processManualTradeActionOpen(
   index: number,
   action: ManualTradeActionOpen,
 ): TradeProcessState {
+  // TODO
   // create active order
   // add log entry
 
@@ -84,6 +85,7 @@ function processManualTradeActionClose(
   index: number,
   action: ManualTradeActionClose,
 ): TradeProcessState {
+  // TODO
   // find active order or trade, throw if not found
   // if found order, cancel order, add log entry
   // if found trade, close trade, add log entry
@@ -96,6 +98,7 @@ function processManualTradeActionAmendOrder(
   index: number,
   action: ManualTradeActionAmendOrder,
 ): TradeProcessState {
+  // TODO
   // find active order, throw if not found
   // amend order, add log entry
 
@@ -107,6 +110,7 @@ function processManualTradeActionAmendTrade(
   index: number,
   action: ManualTradeActionAmendTrade,
 ): TradeProcessState {
+  // TODO
   // find active trade, throw if not found
   // check if the amend is valid, throw if not
   //  - stop loss cannot be less than x distance from entry, and needs to be in the proper direction

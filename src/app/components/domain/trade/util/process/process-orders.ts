@@ -23,6 +23,7 @@ function processOrder(
   order: ActiveOrder,
   ordersToRemove: Set<number>,
 ): TradeProcessState {
+  // TODO
   // if order has no price, fill immediately with the open price of the current bar
   // if order has a price
   //   - if the order time is less than the current bar time

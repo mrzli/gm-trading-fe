@@ -23,6 +23,7 @@ function processTrade(
   order: ActiveTrade,
   tradesToRemove: Set<number>,
 ): TradeProcessState {
+  // TODO
   // check if stop loss or limit is hit
   //   - if open is outside of stop loss or limit
   //     - close at open price
