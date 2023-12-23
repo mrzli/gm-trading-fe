@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import {
   OrderInputs,
+  TradeProcessState,
   TradeResult,
   TradeTabValue,
   TradingChartData,
@@ -14,6 +15,7 @@ import { TradingResultsContent } from './tabs/trading-results/TradingResultsCont
 import { TradingLog } from './tabs/trading-log/TradingLog';
 import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
 import {
+  EMPTY_TRADE_RESULTS,
   getNextManualActionId,
   orderInputsToManualTradeActionOpen,
   processTradeSequence,
@@ -30,13 +32,6 @@ export function TradeContainer({
 
   const [tradingDataAndInputs, setTradingDataAndInputs] =
     useState<TradingDataAndInputs>(getInitialTradingDataAndInputs(chartData));
-
-  const [tradeResult, setTradeResult] = useState<TradeResult>({});
-
-  useEffect(() => {
-    const result = processTradeSequence(tradingDataAndInputs);
-    setTradeResult(result);
-  }, [tradingDataAndInputs]);
 
   useEffect(() => {
     setTradingDataAndInputs((prev) => ({
@@ -74,6 +69,20 @@ export function TradeContainer({
     },
     [chartData, tradingDataAndInputs],
   );
+
+  const [tradeState, setTradeState] = useState<TradeProcessState | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    const state = processTradeSequence(tradingDataAndInputs);
+    setTradeState(state);
+  }, [tradingDataAndInputs]);
+
+  // TODO: calculate based on trade state
+  const tradeResult = useMemo(() => {
+    return EMPTY_TRADE_RESULTS;
+  }, []);
 
   const tabEntries = useMemo(
     () =>

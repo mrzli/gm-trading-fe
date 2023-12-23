@@ -23,13 +23,14 @@ function getInitialTradeProcessState(
 ): TradeProcessState {
   const { chartData, inputs } = input;
   const { barData, barIndex } = chartData;
-  const { manualTradeActions } = inputs;
+  const { manualTradeActions, params } = inputs;
 
   const remainingManualActions = sortManualTradeActions(manualTradeActions);
 
   return {
     barData,
     barIndex,
+    tradingParams: params,
     remainingManualActions,
     activeOrders: [],
     activeTrades: [],
