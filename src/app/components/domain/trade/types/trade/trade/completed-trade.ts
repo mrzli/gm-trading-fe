@@ -8,6 +8,4 @@ export interface CompletedTrade {
   readonly closePrice: number;
   readonly amount: number;
   readonly closeReason: TradeCloseReason;
-  readonly pnlPoints: number;
-  readonly pnl: number;
 }

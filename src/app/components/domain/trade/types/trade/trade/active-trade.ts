@@ -5,6 +5,4 @@ export interface ActiveTrade {
   readonly amount: number;
   readonly stopLoss: number | undefined;
   readonly limit: number | undefined;
-  readonly pnlPoints: number;
-  readonly pnl: number;
 }

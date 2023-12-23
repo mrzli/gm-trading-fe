@@ -1,11 +1,15 @@
 import { TickerDataRow } from '../../../../../types';
 import { Ohlc } from '../../types';
 
-export function toOhlcBuy(row: TickerDataRow, spread: number): Ohlc {
+export function getOhlc(bar: TickerDataRow, isBuy: boolean, spread: number): Ohlc {
+  return isBuy ? toOhlcBuy(bar, spread) : toOhlcSell(bar, spread);
+}
+
+function toOhlcBuy(row: TickerDataRow, spread: number): Ohlc {
   return toOhlc(row, spread / 2);
 }
 
-export function toOhlcSell(row: TickerDataRow, spread: number): Ohlc {
+function toOhlcSell(row: TickerDataRow, spread: number): Ohlc {
   return toOhlc(row, -spread / 2);
 }
 

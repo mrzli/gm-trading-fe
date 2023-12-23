@@ -1,5 +1,5 @@
 import { ActiveOrder, ActiveTrade, TradeProcessState } from '../../types';
-import { toOhlcBuy, toOhlcSell } from './ohlc';
+import { getOhlc } from './ohlc';
 
 export function processOrders(
   state: TradeProcessState,
@@ -20,7 +20,7 @@ export function processOrders(
   );
 
   return {
-    ...state,
+    ...currentState,
     activeOrders: remainingOrders,
   };
 }
@@ -71,37 +71,26 @@ function checkFillOrder(
   const { barData, tradingParams } = state;
   const { spread } = tradingParams;
 
-  const { id, time, price, amount } = order;
+  const { time, price, amount } = order;
   const isBuy = amount > 0;
 
   const previousBar = barData[index - 1];
   const currentBar = barData[index];
 
-  const prevOhlcBuy = toOhlcBuy(previousBar, spread);
-  const prevOhlcSell = toOhlcSell(previousBar, spread);
-  const ohlcBuy = toOhlcBuy(currentBar, spread);
-  const ohlcSell = toOhlcSell(currentBar, spread);
-
-  const prevClose = isBuy ? prevOhlcBuy.c : prevOhlcSell.c;
-  const currOpen = isBuy ? ohlcBuy.o : ohlcSell.o;
-  const currLow = isBuy ? ohlcBuy.l : ohlcSell.l;
-  const currHigh = isBuy ? ohlcBuy.h : ohlcSell.h;
+  const prevOhlc = getOhlc(previousBar, isBuy, spread);
+  const ohlc = getOhlc(currentBar, isBuy, spread);
 
   if (price === undefined) {
     return {
       shouldFill: true,
-      fillPrice: currOpen,
+      fillPrice: ohlc.o,
     };
-  } else if (
-    time < currentBar.time &&
-    price >= prevClose &&
-    price <= currOpen
-  ) {
+  } else if (time < currentBar.time && price >= prevOhlc.c && price <= ohlc.o) {
     return {
       shouldFill: true,
-      fillPrice: currOpen,
+      fillPrice: ohlc.o,
     };
-  } else if (price >= currLow && price <= currHigh) {
+  } else if (price >= ohlc.l && price <= ohlc.h) {
     return {
       shouldFill: true,
       fillPrice: price,
@@ -130,8 +119,6 @@ function orderToTrade(
     amount,
     stopLoss: getStopLossPrice(isBuy, openPrice, stopLossDistance, spread),
     limit: getLimitPrice(isBuy, openPrice, limitDistance, spread),
-    pnlPoints: 0, // will not be 0 at start due to spread, but will be calculated when processing trades
-    pnl: 0, // as above
   };
 }
 

@@ -39,7 +39,7 @@ export function processManualTradeActions(
   );
 
   return {
-    ...state,
+    ...currentState,
     remainingManualActions: remainingActions,
   };
 }
