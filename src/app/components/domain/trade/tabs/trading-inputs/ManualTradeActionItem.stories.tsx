@@ -35,7 +35,7 @@ const STORY_META: Meta<ManualTradeActionItemProps> = {
   },
   args: {
     timezone: 'UTC',
-    tradingParameters: TRADING_PARAMETERS,
+    tradingParams: TRADING_PARAMETERS,
   },
 };
 export default STORY_META;

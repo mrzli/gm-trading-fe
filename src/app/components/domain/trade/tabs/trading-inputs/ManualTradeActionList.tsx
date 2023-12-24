@@ -31,7 +31,7 @@ export function ManualTradeActionList({
             <ManualTradeActionItem
               key={index}
               timezone={timezone}
-              tradingParameters={params}
+              tradingParams={params}
               tradeAction={manualTradeAction}
               onRemoveClick={onRemoveItemClick}
             />

@@ -16,20 +16,20 @@ import { TwChartTimezone } from '../../../tw-chart/types';
 
 export interface ManualTradeActionItemProps {
   readonly timezone: TwChartTimezone;
-  readonly tradingParameters: TradingParameters;
+  readonly tradingParams: TradingParameters;
   readonly tradeAction: ManualTradeActionAny;
   readonly onRemoveClick: (id: number) => void;
 }
 
 export function ManualTradeActionItem({
   timezone,
-  tradingParameters,
+  tradingParams,
   tradeAction,
   onRemoveClick,
 }: ManualTradeActionItemProps): React.ReactElement {
   const displayDataList = useMemo<ValueDisplayDataAnyList>(() => {
-    return getValueDisplayDataList(timezone, tradingParameters, tradeAction);
-  }, [timezone, tradingParameters, tradeAction]);
+    return getValueDisplayDataList(timezone, tradingParams, tradeAction);
+  }, [timezone, tradingParams, tradeAction]);
 
   const handleRemove = useCallback(() => {
     onRemoveClick(tradeAction.id);
