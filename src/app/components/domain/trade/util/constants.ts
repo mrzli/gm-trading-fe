@@ -1,4 +1,14 @@
-import { TradeResult } from '../types';
+import { TradeResult, TradingParameters } from '../types';
+
+export const DEFAULT_TRADING_PARAMS: TradingParameters = {
+  initialBalance: 10_000,
+  priceDecimals: 0,
+  spread: 1,
+  marginPercent: 0.5,
+  avgSlippage: 0,
+  pipDigit: 0,
+  minStopLossDistance: 6,
+};
 
 export const EMPTY_TRADE_RESULTS: TradeResult = {
   pnl: 0,

@@ -16,6 +16,7 @@ import { TradingResultsContent } from './tabs/trading-results/TradingResultsCont
 import { TradingLog } from './tabs/trading-log/TradingLog';
 import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
 import {
+  DEFAULT_TRADING_PARAMS,
   EMPTY_TRADE_RESULTS,
   getNextManualActionId,
   orderInputsToManualTradeActionOpen,
@@ -197,13 +198,3 @@ function getInitialTradingDataAndInputs(
     },
   };
 }
-
-const DEFAULT_TRADING_PARAMS: TradingParameters = {
-  initialBalance: 10_000,
-  priceDecimals: 0,
-  spread: 0.5,
-  marginPercent: 0.5,
-  avgSlippage: 0,
-  pipDigit: 0,
-  minStopLossDistance: 6,
-};
