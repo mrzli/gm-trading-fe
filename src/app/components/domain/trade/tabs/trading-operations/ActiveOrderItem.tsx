@@ -28,7 +28,7 @@ export function ActiveOrderItem({
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      <div className='grid grid-cols-10 items-center gap-2'>
+      <div className='flex-1 grid grid-cols-12 items-center gap-2'>
         {displayItems.map((item, index) => {
           return <ValueDisplayItem key={index} item={item} />;
         })}
@@ -53,6 +53,11 @@ function getDisplayItems(
       label: 'ID',
       value: id,
       precision: 0,
+    },
+    {
+      kind: 'string',
+      label: 'Dir',
+      value: amount > 0 ? 'B' : 'S',
     },
     {
       kind: 'date',

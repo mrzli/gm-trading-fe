@@ -2,7 +2,7 @@ import { TradeResult, TradingParameters } from '../types';
 
 export const DEFAULT_TRADING_PARAMS: TradingParameters = {
   initialBalance: 10_000,
-  priceDecimals: 0,
+  priceDecimals: 1,
   spread: 1,
   marginPercent: 0.5,
   avgSlippage: 0,
