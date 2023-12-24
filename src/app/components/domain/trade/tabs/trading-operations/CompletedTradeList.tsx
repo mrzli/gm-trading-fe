@@ -1,6 +1,7 @@
 import React from 'react';
 import { TwChartTimezone } from '../../../tw-chart/types';
 import { CompletedTrade, TradingParameters } from '../../types';
+import { CompletedTradeItem } from './CompletedTradeItem';
 
 export interface CompletedTradeListProps {
   readonly timezone: TwChartTimezone;
@@ -16,7 +17,18 @@ export function CompletedTradeList({
   return (
     <div className='flex flex-col gap-1'>
       <div>Completed Trades</div>
-      <div>List</div>
+      <div className='flex flex-col'>
+        {items.map((item, index) => {
+          return (
+            <CompletedTradeItem
+              key={index}
+              timezone={timezone}
+              tradingParams={tradingParams}
+              item={item}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
