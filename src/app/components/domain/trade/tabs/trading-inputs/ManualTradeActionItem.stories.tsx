@@ -9,21 +9,18 @@ import {
   ManualTradeActionAmendTrade,
   ManualTradeActionClose,
   ManualTradeActionOpen,
-  TradingInputs,
+  TradingParameters,
 } from '../../types';
 import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../tw-chart/types';
 
-const TRADING_INPUTS: TradingInputs = {
-  params: {
-    initialBalance: 10_000,
-    priceDecimals: 1,
-    spread: 0.1,
-    marginPercent: 0.5,
-    avgSlippage: 0,
-    pipDigit: 0,
-    minStopLossDistance: 6,
-  },
-  manualTradeActions: [],
+const TRADING_PARAMETERS: TradingParameters = {
+  initialBalance: 10_000,
+  priceDecimals: 1,
+  spread: 0.1,
+  marginPercent: 0.5,
+  avgSlippage: 0,
+  pipDigit: 0,
+  minStopLossDistance: 6,
 };
 
 const STORY_META: Meta<ManualTradeActionItemProps> = {
@@ -38,7 +35,7 @@ const STORY_META: Meta<ManualTradeActionItemProps> = {
   },
   args: {
     timezone: 'UTC',
-    tradingInputs: TRADING_INPUTS,
+    tradingParameters: TRADING_PARAMETERS,
   },
 };
 export default STORY_META;

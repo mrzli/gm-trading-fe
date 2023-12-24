@@ -7,7 +7,7 @@ import {
   ManualTradeActionAny,
   ManualTradeActionClose,
   ManualTradeActionOpen,
-  TradingInputs,
+  TradingParameters,
 } from '../../types';
 import { IconButton } from '../../../shared/IconButton';
 import { ValueDisplayDataAnyList } from '../../../types';
@@ -16,20 +16,20 @@ import { TwChartTimezone } from '../../../tw-chart/types';
 
 export interface ManualTradeActionItemProps {
   readonly timezone: TwChartTimezone;
-  readonly tradingInputs: TradingInputs;
+  readonly tradingParameters: TradingParameters;
   readonly tradeAction: ManualTradeActionAny;
   readonly onRemoveClick: (id: number) => void;
 }
 
 export function ManualTradeActionItem({
   timezone,
-  tradingInputs,
+  tradingParameters,
   tradeAction,
   onRemoveClick,
 }: ManualTradeActionItemProps): React.ReactElement {
   const displayDataList = useMemo<ValueDisplayDataAnyList>(() => {
-    return getValueDisplayDataList(timezone, tradingInputs, tradeAction);
-  }, [timezone, tradingInputs, tradeAction]);
+    return getValueDisplayDataList(timezone, tradingParameters, tradeAction);
+  }, [timezone, tradingParameters, tradeAction]);
 
   const handleRemove = useCallback(() => {
     onRemoveClick(tradeAction.id);
@@ -49,12 +49,12 @@ export function ManualTradeActionItem({
 
 function getValueDisplayDataList(
   timezone: TwChartTimezone,
-  tradingInputs: TradingInputs,
+  tradingParameters: TradingParameters,
   tradeAction: ManualTradeActionAny,
 ): ValueDisplayDataAnyList {
   const { kind } = tradeAction;
 
-  const priceDecimals = tradingInputs.params.priceDecimals;
+  const priceDecimals = tradingParameters.priceDecimals;
 
   switch (kind) {
     case 'open': {

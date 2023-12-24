@@ -17,7 +17,7 @@ export function ManualTradeActionList({
   onRemoveItemClick,
   onRemoveAllItemsClick,
 }: ManualTradeActionListProps): React.ReactElement {
-  const { manualTradeActions } = tradingInputs;
+  const { params, manualTradeActions } = tradingInputs;
 
   return (
     <div className='flex flex-col gap-1'>
@@ -31,7 +31,7 @@ export function ManualTradeActionList({
             <ManualTradeActionItem
               key={index}
               timezone={timezone}
-              tradingInputs={tradingInputs}
+              tradingParameters={params}
               tradeAction={manualTradeAction}
               onRemoveClick={onRemoveItemClick}
             />
