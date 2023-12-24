@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import cls from 'classnames';
 import { invariant } from '@gmjs/assert';
 import { mdiClose } from '@mdi/js';
 import {
@@ -40,18 +39,7 @@ export function ManualTradeActionItem({
     <div className='flex flex-row items-center gap-2'>
       <div className='flex-1 grid grid-cols-11 items-center gap-2'>
         {displayDataList.map((item, index) => {
-          const span = item.span ?? 1;
-          const itemClasses = cls({
-            'col-span-1': span === 1,
-            'col-span-2': span === 2,
-            'col-span-3': span === 3,
-            'col-span-4': span === 4,
-          });
-          return (
-            <div key={index} className={itemClasses}>
-              <ValueDisplayItem item={item} />
-            </div>
-          );
+          return <ValueDisplayItem key={index} item={item} />;
         })}
       </div>
       <IconButton icon={mdiClose} onClick={handleRemove} />
@@ -106,7 +94,7 @@ function getDisplayPropsOpen(
     },
     {
       kind: 'date',
-      span: DATE_DISPLAY_VALUE_SPAN,
+      colSpan: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -115,7 +103,7 @@ function getDisplayPropsOpen(
     { kind: 'none' },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'Price',
       value: price,
       precision: priceDecimals,
@@ -128,14 +116,14 @@ function getDisplayPropsOpen(
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'SL Dst',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'L Dst',
       value: limitDistance,
       precision: priceDecimals,
@@ -159,7 +147,7 @@ function getDisplayPropsClose(
     },
     {
       kind: 'date',
-      span: DATE_DISPLAY_VALUE_SPAN,
+      colSpan: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -191,7 +179,7 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'date',
-      span: DATE_DISPLAY_VALUE_SPAN,
+      colSpan: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -205,7 +193,7 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'Price',
       value: price,
       precision: priceDecimals,
@@ -218,14 +206,14 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'SL Dst',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'L Dst',
       value: limitDistance,
       precision: priceDecimals,
@@ -249,7 +237,7 @@ function getDisplayPropsAmendTrade(
     },
     {
       kind: 'date',
-      span: DATE_DISPLAY_VALUE_SPAN,
+      colSpan: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
       fontSize: 10,
       value: time,
@@ -263,18 +251,18 @@ function getDisplayPropsAmendTrade(
     },
     {
       kind: 'none',
-      span: 3,
+      colSpan: 3,
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'SL',
       value: stopLoss,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
-      span: 2,
+      colSpan: 2,
       label: 'L',
       value: limit,
       precision: priceDecimals,

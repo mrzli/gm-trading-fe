@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ValueDisplayDataAny } from '../../types';
 import { invariant } from '@gmjs/assert';
 import { DecimalValueDisplay } from './DecimalValueDisplay';
@@ -12,6 +12,22 @@ export interface ValueDisplayItemProps {
 export function ValueDisplayItem({
   item,
 }: ValueDisplayItemProps): React.ReactElement {
+  const { colIndex, colSpan, rowIndex, rowSpan } = item;
+
+  const styles = useMemo(() => ({
+    gridColumnStart: colIndex,
+    gridColumnEnd: colSpan ? `span ${colSpan}` : undefined,
+    gridRowStart: rowIndex,
+    gridRowEnd: rowSpan ? `span ${rowSpan}` : undefined,
+  }), [colIndex, colSpan, rowIndex, rowSpan]);
+  const content = getValueDisplayItemContent(item);
+
+  return <div style={styles}>{content}</div>;
+}
+
+function getValueDisplayItemContent(
+  item: ValueDisplayDataAny,
+): React.ReactElement {
   const { kind, label, fontSize } = item;
 
   switch (kind) {

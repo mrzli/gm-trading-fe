@@ -10,7 +10,10 @@ export type KindOfValueDisplayData =
 
 export interface ValueDisplayDataBase {
   readonly kind: KindOfValueDisplayData;
-  readonly span?: number;
+  readonly colIndex?: number;
+  readonly colSpan?: number;
+  readonly rowIndex?: number;
+  readonly rowSpan?: number;
   readonly label?: string;
   readonly fontSize?: number;
 }
