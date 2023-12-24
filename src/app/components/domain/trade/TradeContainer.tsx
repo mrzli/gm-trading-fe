@@ -8,6 +8,7 @@ import {
   TradingChartData,
   TradingDataAndInputs,
   TradingInputs,
+  TradingParameters,
 } from './types';
 import { TradingOperationsContent } from './tabs/trading-operations/TradingOperationsContent';
 import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
@@ -70,8 +71,8 @@ export function TradeContainer({
     [chartData, tradingDataAndInputs],
   );
 
-  const [tradeState, setTradeState] = useState<TradeProcessState | undefined>(
-    undefined,
+  const [tradeState, setTradeState] = useState<TradeProcessState>(
+    getInitialTradeProcessState(tradingDataAndInputs),
   );
 
   useEffect(() => {
@@ -89,6 +90,7 @@ export function TradeContainer({
       getTabEntries(
         tradingDataAndInputs,
         handleTradingInputsChange,
+        tradeState,
         handleCreateOrder,
         tradeResult,
       ),
@@ -96,6 +98,7 @@ export function TradeContainer({
       handleCreateOrder,
       handleTradingInputsChange,
       tradeResult,
+      tradeState,
       tradingDataAndInputs,
     ],
   );
@@ -109,39 +112,22 @@ export function TradeContainer({
   );
 }
 
-function getInitialTradingDataAndInputs(
-  chartData: TradingChartData,
-): TradingDataAndInputs {
-  return {
-    chartData,
-    inputs: {
-      params: {
-        initialBalance: 10_000,
-        priceDecimals: 0,
-        spread: 0.5,
-        marginPercent: 0.5,
-        avgSlippage: 0,
-        pipDigit: 0,
-        minStopLossDistance: 6,
-      },
-      manualTradeActions: [],
-    },
-  };
-}
-
 function getTabEntries(
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
+  tradingState: TradeProcessState,
   handleCreateOrder: (order: OrderInputs) => void,
   tradeResult: TradeResult,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
+  const timezone = tradingDataAndInputs.chartData.timezone;
+
   return [
     {
       value: 'trading-inputs',
       tab: 'Inputs',
       content: (
         <TradingInputsContent
-          timezone={tradingDataAndInputs.chartData.timezone}
+          timezone={timezone}
           value={tradingDataAndInputs.inputs}
           onValueChange={handleTradingInputsChange}
         />
@@ -150,7 +136,13 @@ function getTabEntries(
     {
       value: 'trading-operations',
       tab: 'Trading',
-      content: <TradingOperationsContent onCreateOrder={handleCreateOrder} />,
+      content: (
+        <TradingOperationsContent
+          timezone={timezone}
+          state={tradingState}
+          onCreateOrder={handleCreateOrder}
+        />
+      ),
     },
     {
       value: 'trading-log',
@@ -174,3 +166,44 @@ function getTabEntries(
     },
   ];
 }
+
+function getInitialTradeProcessState(
+  dataAndInputs: TradingDataAndInputs,
+): TradeProcessState {
+  const { chartData, inputs } = dataAndInputs;
+  const { barData, barIndex } = chartData;
+  const { params } = inputs;
+
+  return {
+    barData,
+    barIndex,
+    tradingParams: params,
+    remainingManualActions: [],
+    activeOrders: [],
+    activeTrades: [],
+    completedTrades: [],
+    tradeLog: [],
+  };
+}
+
+function getInitialTradingDataAndInputs(
+  chartData: TradingChartData,
+): TradingDataAndInputs {
+  return {
+    chartData,
+    inputs: {
+      params: DEFAULT_TRADING_PARAMS,
+      manualTradeActions: [],
+    },
+  };
+}
+
+const DEFAULT_TRADING_PARAMS: TradingParameters = {
+  initialBalance: 10_000,
+  priceDecimals: 0,
+  spread: 0.5,
+  marginPercent: 0.5,
+  avgSlippage: 0,
+  pipDigit: 0,
+  minStopLossDistance: 6,
+};

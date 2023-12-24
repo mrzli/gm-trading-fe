@@ -31,6 +31,7 @@
     "@gmjs/assert": "^0.0.2",
     "@gmjs/compose-function": "^0.0.2",
     "@gmjs/data-container-util": "^0.0.1",
+    "@gmjs/generic-functions": "^0.0.1",
     "@gmjs/gm-trading-shared": "^0.0.17",
     "@gmjs/number-util": "^0.0.1",
     "@gmjs/value-generators": "^0.0.1",

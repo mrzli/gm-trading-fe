@@ -23,6 +23,9 @@ dependencies:
   '@gmjs/data-container-util':
     specifier: ^0.0.1
     version: 0.0.1
+  '@gmjs/generic-functions':
+    specifier: ^0.0.1
+    version: 0.0.1
   '@gmjs/gm-trading-shared':
     specifier: ^0.0.17
     version: 0.0.17
