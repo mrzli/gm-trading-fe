@@ -1,14 +1,16 @@
 import React from 'react';
 import { TwChartTimezone } from '../../../tw-chart/types';
-import { ActiveOrder } from '../../types';
+import { ActiveOrder, TradingParameters } from '../../types';
 
 export interface ActiveOrderListProps {
   readonly timezone: TwChartTimezone;
+  readonly tradingParams: TradingParameters;
   readonly items: readonly ActiveOrder[];
 }
 
 export function ActiveOrderList({
   timezone,
+  tradingParams,
   items,
 }: ActiveOrderListProps): React.ReactElement {
   return (
