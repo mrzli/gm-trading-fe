@@ -17,6 +17,9 @@ dependencies:
   '@gmjs/assert':
     specifier: ^0.0.2
     version: 0.0.2
+  '@gmjs/browser-storage':
+    specifier: ^0.0.1
+    version: 0.0.1
   '@gmjs/compose-function':
     specifier: ^0.0.2
     version: 0.0.2
@@ -2341,6 +2344,15 @@ packages:
     resolution: {integrity: sha512-ZqwGmv72n4NXH2RFOwJqLHUiLhpvqzvSi5Rmke+M4RKoCnchWaNzAmrq/y6OBJIzhA0OOLAfSdF/sLWuJtGcgQ==}
     engines: {node: '>=16.0.0'}
     dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /@gmjs/browser-storage@0.0.1:
+    resolution: {integrity: sha512-3l3d54joTFJKHaos3k+3X9Wyfbqplq9tIq3ghbjVjZPzOfxgRgpioduz/BIPlsd/tTR5vFwanC3kXYSBlB352w==}
+    engines: {node: '>=20.10.0'}
+    dependencies:
+      '@types/js-cookie': 3.0.6
+      js-cookie: 3.0.5
       tslib: 2.6.2
     dev: false
 
@@ -4684,6 +4696,10 @@ packages:
     dependencies:
       '@types/istanbul-lib-report': 3.0.3
     dev: true
+
+  /@types/js-cookie@3.0.6:
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
+    dev: false
 
   /@types/json-schema@7.0.13:
     resolution: {integrity: sha512-RbSSoHliUbnXj3ny0CNFOoxrIDV6SUGyStHsvDqosw6CkdPV8TtWGlfecuK4ToyMEAql6pzNxgCFKanovUzlgQ==}
@@ -8891,6 +8907,11 @@ packages:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
     dev: true
+
+  /js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
+    dev: false
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
