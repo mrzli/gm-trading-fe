@@ -25,7 +25,7 @@ export function ManualTradeActionList({
         <div>Manual Trade Actions</div>
         <Button content={'Remove All'} onClick={onRemoveAllItemsClick} />
       </div>
-      <div className='flex flex-col'>
+      <div className='flex flex-col gap-2'>
         {manualTradeActions.map((manualTradeAction, index) => {
           return (
             <ManualTradeActionItem

@@ -17,7 +17,7 @@ export function ActiveTradeList({
   return (
     <div className='flex flex-col gap-1'>
       <div>Active Trades</div>
-      <div className='flex flex-col'>
+      <div className='flex flex-col gap-2'>
         {items.map((item, index) => {
           return (
             <ActiveTradeItem

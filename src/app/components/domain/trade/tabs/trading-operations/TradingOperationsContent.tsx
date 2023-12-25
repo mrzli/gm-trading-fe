@@ -30,16 +30,19 @@ export function TradingOperationsContent({
   return (
     <div className='mt-1 flex flex-col gap-2'>
       <CreateOrderForm onSubmit={handleSubmit} />
+      <hr />
       <ActiveOrderList
         timezone={timezone}
         tradingParams={tradingParams}
         items={activeOrders}
       />
+      <hr />
       <ActiveTradeList
         timezone={timezone}
         tradingParams={tradingParams}
         items={activeTrades}
       />
+      <hr />
       <CompletedTradeList
         timezone={timezone}
         tradingParams={tradingParams}
