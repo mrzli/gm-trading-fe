@@ -8,6 +8,7 @@ import {
 import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
 import { ValueDisplayDataAnyList } from '../../../types';
 import { mapGetOrThrow } from '@gmjs/data-container-util';
+import { getCompletedTradePnl, getCompletedTradePnlPoints } from '../../util';
 
 export interface CompletedTradeItemProps {
   readonly timezone: TwChartTimezone;
@@ -50,9 +51,6 @@ function getDisplayItems(
     amount,
     closeReason,
   } = item;
-
-  const pnlPoints = (closePrice - openPrice) * Math.sign(amount);
-  const pnl = pnlPoints * Math.abs(amount);
 
   return [
     {
@@ -114,14 +112,14 @@ function getDisplayItems(
       kind: 'decimal',
       colSpan: 2,
       label: 'P&L Pts',
-      value: pnlPoints,
+      value: getCompletedTradePnlPoints(item),
       precision: 1,
     },
     {
       kind: 'decimal',
       colSpan: 2,
       label: 'P&L',
-      value: pnl,
+      value: getCompletedTradePnl(item),
       precision: priceDecimals,
     },
   ];

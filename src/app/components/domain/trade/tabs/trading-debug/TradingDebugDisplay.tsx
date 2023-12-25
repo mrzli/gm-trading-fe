@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react';
-import { TradeResult, TradingDataAndInputs } from '../../types';
+import { TradeProcessState, TradingDataAndInputs } from '../../types';
 import { PrettyDisplay } from '../../../../shared';
+import { calculateTradeResults } from '../../util';
 
 export interface TradingDebugDisplayProps {
   readonly inputs: TradingDataAndInputs;
-  readonly result: TradeResult;
+  readonly state: TradeProcessState;
 }
 
 export function TradingDebugDisplay({
   inputs,
-  result
+  state,
 }: TradingDebugDisplayProps): React.ReactElement {
   const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
@@ -20,6 +21,10 @@ export function TradingDebugDisplay({
       },
     };
   }, [inputs]);
+
+  const result = useMemo(() => {
+    return calculateTradeResults(state);
+  }, [state]);
 
   return (
     <div className='mt-1 flex flex-col gap-2'>

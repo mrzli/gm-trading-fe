@@ -3,12 +3,10 @@ import { TabLayout, TabLayoutEntry } from '../../shared';
 import {
   OrderInputs,
   TradeProcessState,
-  TradeResult,
   TradeTabValue,
   TradingChartData,
   TradingDataAndInputs,
   TradingInputs,
-  TradingParameters,
 } from './types';
 import { TradingOperationsContent } from './tabs/trading-operations/TradingOperationsContent';
 import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
@@ -17,7 +15,6 @@ import { TradingLog } from './tabs/trading-log/TradingLog';
 import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
 import {
   DEFAULT_TRADING_PARAMS,
-  EMPTY_TRADE_RESULTS,
   getNextManualActionId,
   orderInputsToManualTradeActionOpen,
   processTradeSequence,
@@ -81,11 +78,6 @@ export function TradeContainer({
     setTradeState(state);
   }, [tradingDataAndInputs]);
 
-  // TODO: calculate based on trade state
-  const tradeResult = useMemo(() => {
-    return EMPTY_TRADE_RESULTS;
-  }, []);
-
   const tabEntries = useMemo(
     () =>
       getTabEntries(
@@ -93,12 +85,10 @@ export function TradeContainer({
         handleTradingInputsChange,
         tradeState,
         handleCreateOrder,
-        tradeResult,
       ),
     [
       handleCreateOrder,
       handleTradingInputsChange,
-      tradeResult,
       tradeState,
       tradingDataAndInputs,
     ],
@@ -118,7 +108,6 @@ function getTabEntries(
   handleTradingInputsChange: (value: TradingInputs) => void,
   tradingState: TradeProcessState,
   handleCreateOrder: (order: OrderInputs) => void,
-  tradeResult: TradeResult,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   const timezone = tradingDataAndInputs.chartData.timezone;
 
@@ -153,7 +142,7 @@ function getTabEntries(
     {
       value: 'trading-results',
       tab: 'Results',
-      content: <TradingResultsContent />,
+      content: <TradingResultsContent state={tradingState} />,
     },
     {
       value: 'trading-debug',
@@ -161,7 +150,7 @@ function getTabEntries(
       content: (
         <TradingDebugDisplay
           inputs={tradingDataAndInputs}
-          result={tradeResult}
+          state={tradingState}
         />
       ),
     },
