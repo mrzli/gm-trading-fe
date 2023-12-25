@@ -3,19 +3,21 @@ import { TwChartTimezone } from '../../../tw-chart/types';
 import { ActiveTrade, TradingParameters } from '../../types';
 import { ValueDisplayDataAnyList } from '../../../types';
 import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
-import { mdiPencil } from '@mdi/js';
+import { mdiClose, mdiPencil } from '@mdi/js';
 import { IconButton } from '../../../shared/IconButton';
 
 export interface ActiveTradeItemProps {
   readonly timezone: TwChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly item: ActiveTrade;
+  readonly onClose: (id: number) => void;
 }
 
 export function ActiveTradeItem({
   timezone,
   tradingParams,
   item,
+  onClose,
 }: ActiveTradeItemProps): React.ReactElement {
   const displayItems = useMemo(
     () => getDisplayItems(timezone, tradingParams, item),
@@ -26,6 +28,10 @@ export function ActiveTradeItem({
     console.log('edit');
   }, []);
 
+  const handleClose = useCallback(() => {
+    onClose(item.id);
+  }, [item.id, onClose]);
+
   return (
     <div className='flex flex-row items-center gap-2'>
       <div className='flex-1 grid grid-cols-11 items-center gap-2'>
@@ -33,7 +39,10 @@ export function ActiveTradeItem({
           return <ValueDisplayItem key={index} item={item} />;
         })}
       </div>
-      <IconButton icon={mdiPencil} onClick={handleEdit} />
+      <div className='flex flex-row gap-2'>
+        <IconButton icon={mdiPencil} onClick={handleEdit} />
+        <IconButton icon={mdiClose} onClick={handleClose} />
+      </div>
     </div>
   );
 }
@@ -45,8 +54,7 @@ function getDisplayItems(
 ): ValueDisplayDataAnyList {
   const { priceDecimals } = tradingParams;
 
-  const { id, openTime, openPrice, amount, stopLoss, limit } =
-    item;
+  const { id, openTime, openPrice, amount, stopLoss, limit } = item;
 
   return [
     {

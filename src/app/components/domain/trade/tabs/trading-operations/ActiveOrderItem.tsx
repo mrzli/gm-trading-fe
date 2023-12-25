@@ -4,18 +4,20 @@ import { ActiveOrder, TradingParameters } from '../../types';
 import { ValueDisplayDataAnyList } from '../../../types';
 import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
 import { IconButton } from '../../../shared/IconButton';
-import { mdiPencil } from '@mdi/js';
+import { mdiClose, mdiPencil } from '@mdi/js';
 
 export interface ActiveOrderItemProps {
   readonly timezone: TwChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly item: ActiveOrder;
+  readonly onCancel: (id: number) => void;
 }
 
 export function ActiveOrderItem({
   timezone,
   tradingParams,
   item,
+  onCancel,
 }: ActiveOrderItemProps): React.ReactElement {
   const displayItems = useMemo(
     () => getDisplayItems(timezone, tradingParams, item),
@@ -26,6 +28,10 @@ export function ActiveOrderItem({
     console.log('edit');
   }, []);
 
+  const handleCancel = useCallback(() => {
+    onCancel(item.id);
+  }, [item.id, onCancel]);
+
   return (
     <div className='flex flex-row items-center gap-2'>
       <div className='flex-1 grid grid-cols-12 items-center gap-2'>
@@ -33,7 +39,10 @@ export function ActiveOrderItem({
           return <ValueDisplayItem key={index} item={item} />;
         })}
       </div>
-      <IconButton icon={mdiPencil} onClick={handleEdit} />
+      <div className='flex flex-row gap-2'>
+        <IconButton icon={mdiPencil} onClick={handleEdit} />
+        <IconButton icon={mdiClose} onClick={handleCancel} />
+      </div>
     </div>
   );
 }

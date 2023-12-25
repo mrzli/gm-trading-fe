@@ -7,12 +7,14 @@ export interface ActiveOrderListProps {
   readonly timezone: TwChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly items: readonly ActiveOrder[];
+  readonly onCancel: (id: number) => void;
 }
 
 export function ActiveOrderList({
   timezone,
   tradingParams,
   items,
+  onCancel,
 }: ActiveOrderListProps): React.ReactElement {
   return (
     <div className='flex flex-col gap-1'>
@@ -25,6 +27,7 @@ export function ActiveOrderList({
               timezone={timezone}
               tradingParams={tradingParams}
               item={item}
+              onCancel={onCancel}
             />
           );
         })}

@@ -11,12 +11,16 @@ export interface TradingOperationsContentProps {
   readonly timezone: TwChartTimezone;
   readonly state: TradeProcessState;
   readonly onCreateOrder: (order: OrderInputs) => void;
+  readonly onCancelOrder: (id: number) => void;
+  readonly onCloseTrade: (id: number) => void;
 }
 
 export function TradingOperationsContent({
   timezone,
   state,
   onCreateOrder,
+  onCancelOrder,
+  onCloseTrade,
 }: TradingOperationsContentProps): React.ReactElement {
   const { tradingParams, activeOrders, activeTrades, completedTrades } = state;
 
@@ -35,12 +39,14 @@ export function TradingOperationsContent({
         timezone={timezone}
         tradingParams={tradingParams}
         items={activeOrders}
+        onCancel={onCancelOrder}
       />
       <hr />
       <ActiveTradeList
         timezone={timezone}
         tradingParams={tradingParams}
         items={activeTrades}
+        onClose={onCloseTrade}
       />
       <hr />
       <CompletedTradeList

@@ -7,12 +7,14 @@ export interface ActiveTradeListProps {
   readonly timezone: TwChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly items: readonly ActiveTrade[];
+  readonly onClose: (id: number) => void;
 }
 
 export function ActiveTradeList({
   timezone,
   tradingParams,
   items,
+  onClose
 }: ActiveTradeListProps): React.ReactElement {
   return (
     <div className='flex flex-col gap-1'>
@@ -25,6 +27,7 @@ export function ActiveTradeList({
               timezone={timezone}
               tradingParams={tradingParams}
               item={item}
+              onClose={onClose}
             />
           );
         })}

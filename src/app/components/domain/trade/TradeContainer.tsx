@@ -69,6 +69,14 @@ export function TradeContainer({
     [chartData, tradingDataAndInputs],
   );
 
+  const handleCancelOrder = useCallback((id: number) => {
+    console.log(id);
+  }, []);
+
+  const handleCloseTrade = useCallback((id: number) => {
+    console.log(id);
+  }, []);
+
   const [tradeState, setTradeState] = useState<TradeProcessState>(
     getInitialTradeProcessState(tradingDataAndInputs),
   );
@@ -85,8 +93,12 @@ export function TradeContainer({
         handleTradingInputsChange,
         tradeState,
         handleCreateOrder,
+        handleCancelOrder,
+        handleCloseTrade,
       ),
     [
+      handleCancelOrder,
+      handleCloseTrade,
       handleCreateOrder,
       handleTradingInputsChange,
       tradeState,
@@ -108,6 +120,8 @@ function getTabEntries(
   handleTradingInputsChange: (value: TradingInputs) => void,
   tradingState: TradeProcessState,
   handleCreateOrder: (order: OrderInputs) => void,
+  handleCancelOrder: (id: number) => void,
+  handleCloseTrade: (id: number) => void,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   const timezone = tradingDataAndInputs.chartData.timezone;
 
@@ -131,6 +145,8 @@ function getTabEntries(
           timezone={timezone}
           state={tradingState}
           onCreateOrder={handleCreateOrder}
+          onCancelOrder={handleCancelOrder}
+          onCloseTrade={handleCloseTrade}
         />
       ),
     },
