@@ -1,4 +1,4 @@
 export * from './constants';
-export * from './input';
+export * from './manual-trade-action';
 export * from './process';
 export * from './result';

@@ -43,8 +43,8 @@ export function calculateTradeResults(state: TradeProcessState): TradeResult {
   const winCount = winPnlList.length;
   const lossCount = lossPnlList.length;
 
-  const winFraction = winCount / totalCount;
-  const lossFraction = lossCount / totalCount;
+  const winFraction = totalCount > 0 ? winCount / totalCount : 0;
+  const lossFraction = totalCount > 0 ? lossCount / totalCount : 0;
 
   const avgWin = applyFn(winPnlList, mean());
   const avgLoss = applyFn(lossPnlList, mean());

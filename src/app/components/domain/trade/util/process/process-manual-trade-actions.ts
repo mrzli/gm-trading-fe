@@ -11,6 +11,7 @@ import {
   ActiveOrder,
   ActiveTrade,
 } from '../../types';
+import { activeTradeToCompletedTrade } from './shared';
 
 export function processManualTradeActions(
   state: TradeProcessState,
@@ -79,8 +80,7 @@ function processManualTradeActionOpen(
     ...action,
   };
 
-  // TODO
-  // add log entry
+  // TODO add log entry
 
   return {
     ...state,
@@ -95,34 +95,41 @@ function processManualTradeActionClose(
 ): TradeProcessState {
   const { targetId } = action;
 
-  const { activeOrders, activeTrades } = state;
+  const { barData, activeOrders, activeTrades, completedTrades } = state;
+  const { time, open } = barData[index];
 
-  const activeOrder = activeOrders.find((item) => item.id !== targetId);
+  const activeOrder = activeOrders.find((item) => item.id === targetId);
   if (activeOrder) {
     const newActiveOrders = activeOrders.filter(
       (item) => item.id !== activeOrder.id,
     );
 
-    // TODO
-    // add log entry
+    // TODO add log entry
     return {
       ...state,
       activeOrders: newActiveOrders,
     };
   }
 
-  const activeTrade = activeTrades.find((item) => item.id !== targetId);
+  const activeTrade = activeTrades.find((item) => item.id === targetId);
   if (activeTrade) {
     const newActiveTrades = activeTrades.filter(
       (item) => item.id !== activeTrade.id,
     );
 
-    // TODO
-    // add entry to completed trades
-    // add log entry
+    const completedTrade = activeTradeToCompletedTrade(
+      activeTrade,
+      time,
+      open,
+      'manual',
+    );
+
+    // TODO add log entry
+
     return {
       ...state,
       activeTrades: newActiveTrades,
+      completedTrades: [...completedTrades, completedTrade],
     };
   }
 
@@ -164,8 +171,7 @@ function processManualTradeActionAmendOrder(
     updatedActiveOrder,
   );
 
-  // TODO
-  // add log entry
+  // TODO add log entry
 
   return {
     ...state,
@@ -192,7 +198,7 @@ function processManualTradeActionAmendTrade(
 
   const activeOrder = activeTrades[activeTradeIndex];
 
-  // TODO
+  // TODO (several things)
   // check if the amend is valid, throw if not
   //  - stop loss cannot be less than x distance from entry, and needs to be in the proper direction
   //  - limit cannot be less than x distance from entry, and needs to be in the proper direction
@@ -208,8 +214,7 @@ function processManualTradeActionAmendTrade(
     updatedActiveTrade,
   );
 
-  // TODO
-  // add log entry
+  // TODO add log entry
 
   return {
     ...state,

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../shared';
 import {
+  ManualTradeActionAny,
   OrderInputs,
   TradeProcessState,
   TradeTabValue,
@@ -16,8 +17,9 @@ import { TradingDebugDisplay } from './tabs/trading-debug/TradingDebugDisplay';
 import {
   DEFAULT_TRADING_PARAMS,
   getNextManualActionId,
-  orderInputsToManualTradeActionOpen,
+  createManualTradeActionOpen,
   processTradeSequence,
+  createManualTradeActionClose,
 } from './util';
 
 export interface TradeContainerProps {
@@ -46,36 +48,56 @@ export function TradeContainer({
     [setTradingDataAndInputs],
   );
 
-  const handleCreateOrder = useCallback(
-    (order: OrderInputs) => {
+  const appendManualTradeAction = useCallback(
+    (action: ManualTradeActionAny) => {
       const { manualTradeActions } = tradingDataAndInputs.inputs;
-
-      const id = getNextManualActionId(manualTradeActions);
-
-      const newAction = orderInputsToManualTradeActionOpen(
-        order,
-        id,
-        chartData,
-      );
 
       setTradingDataAndInputs({
         ...tradingDataAndInputs,
         inputs: {
           ...tradingDataAndInputs.inputs,
-          manualTradeActions: [...manualTradeActions, newAction],
+          manualTradeActions: [...manualTradeActions, action],
         },
       });
     },
-    [chartData, tradingDataAndInputs],
+    [tradingDataAndInputs],
   );
 
-  const handleCancelOrder = useCallback((id: number) => {
-    console.log(id);
-  }, []);
+  const handleCreateOrder = useCallback(
+    (order: OrderInputs) => {
+      const { manualTradeActions } = tradingDataAndInputs.inputs;
 
-  const handleCloseTrade = useCallback((id: number) => {
-    console.log(id);
-  }, []);
+      const id = getNextManualActionId(manualTradeActions);
+      const newAction = createManualTradeActionOpen(order, id, chartData);
+      appendManualTradeAction(newAction);
+    },
+    [appendManualTradeAction, chartData, tradingDataAndInputs.inputs],
+  );
+
+  const handleCancelOrderOrCloseTrade = useCallback(
+    (targetId: number) => {
+      const { manualTradeActions } = tradingDataAndInputs.inputs;
+
+      const id = getNextManualActionId(manualTradeActions);
+      const newAction = createManualTradeActionClose(id, targetId, chartData);
+      appendManualTradeAction(newAction);
+    },
+    [appendManualTradeAction, chartData, tradingDataAndInputs.inputs],
+  );
+
+  const handleCancelOrder = useCallback(
+    (id: number) => {
+      handleCancelOrderOrCloseTrade(id);
+    },
+    [handleCancelOrderOrCloseTrade],
+  );
+
+  const handleCloseTrade = useCallback(
+    (id: number) => {
+      handleCancelOrderOrCloseTrade(id);
+    },
+    [handleCancelOrderOrCloseTrade],
+  );
 
   const [tradeState, setTradeState] = useState<TradeProcessState>(
     getInitialTradeProcessState(tradingDataAndInputs),

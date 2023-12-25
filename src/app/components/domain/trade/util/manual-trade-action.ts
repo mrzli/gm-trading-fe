@@ -22,7 +22,7 @@ export function getNextManualActionId(
   return maxManualActionId + 1;
 }
 
-export function orderInputsToManualTradeActionOpen(
+export function createManualTradeActionOpen(
   orderInputs: OrderInputs,
   id: number,
   chartData: TradingChartData,
@@ -40,5 +40,20 @@ export function orderInputsToManualTradeActionOpen(
     amount: direction === 'buy' ? amount : -amount,
     stopLossDistance,
     limitDistance,
+  };
+}
+
+export function createManualTradeActionClose(
+  id: number,
+  targetId: number,
+  chartData: TradingChartData,
+): ManualTradeActionAny {
+  const time = chartData.barData[chartData.barIndex].time;
+
+  return {
+    kind: 'close',
+    id,
+    time,
+    targetId,
   };
 }

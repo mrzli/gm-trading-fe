@@ -1,6 +1,7 @@
 import { invariant } from '@gmjs/assert';
-import { ActiveTrade, CompletedTrade, TradeProcessState } from '../../types';
+import { ActiveTrade, TradeProcessState } from '../../types';
 import { getOhlc } from './ohlc';
+import { activeTradeToCompletedTrade } from './shared';
 
 export function processTrades(
   state: TradeProcessState,
@@ -41,7 +42,7 @@ function processTrade(
     trade,
     state.barData[index].time,
     price,
-    intesectionType === 'stop-loss',
+    intesectionType,
   );
 
   // TODO add log entry
@@ -151,23 +152,4 @@ function checkLimitIntersections(
     false,
     'Processing limit intersections, this code should not be reachable.',
   );
-}
-
-function activeTradeToCompletedTrade(
-  trade: ActiveTrade,
-  closeTime: number,
-  closePrice: number,
-  isStopLoss: boolean,
-): CompletedTrade {
-  const { id, openTime, openPrice, amount } = trade;
-
-  return {
-    id,
-    openTime,
-    openPrice,
-    closeTime,
-    closePrice,
-    amount,
-    closeReason: isStopLoss ? 'stop-loss' : 'limit',
-  };
 }

@@ -37,7 +37,7 @@ export function ManualTradeActionItem({
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      <div className='flex-1 grid grid-cols-11 items-center gap-2'>
+      <div className='flex-1 grid grid-cols-12 items-center gap-2'>
         {displayDataList.map((item, index) => {
           return <ValueDisplayItem key={index} item={item} />;
         })}
@@ -93,6 +93,11 @@ function getDisplayPropsOpen(
       precision: 0,
     },
     {
+      kind: 'string',
+      label: 'Type',
+      value: 'O',
+    },
+    {
       kind: 'date',
       colSpan: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
@@ -146,6 +151,11 @@ function getDisplayPropsClose(
       precision: 0,
     },
     {
+      kind: 'string',
+      label: 'Type',
+      value: 'C',
+    },
+    {
       kind: 'date',
       colSpan: DATE_DISPLAY_VALUE_SPAN,
       label: 'Time',
@@ -176,6 +186,11 @@ function getDisplayPropsAmendOrder(
       label: 'ID',
       value: id,
       precision: 0,
+    },
+    {
+      kind: 'string',
+      label: 'Type',
+      value: 'AO',
     },
     {
       kind: 'date',
@@ -234,6 +249,11 @@ function getDisplayPropsAmendTrade(
       label: 'ID',
       value: id,
       precision: 0,
+    },
+    {
+      kind: 'string',
+      label: 'Type',
+      value: 'AT',
     },
     {
       kind: 'date',
