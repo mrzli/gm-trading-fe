@@ -2,8 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
 import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../util';
-import { TextInput } from '../../../../../../../shared';
-import { IconButton } from '../../../../../../components/shared';
+import { TextInput } from '../../../../../../shared';
+import { IconButton } from '../../../../../components/shared';
 
 export interface TwChartToolbarReplayNavigateBarProps {
   readonly dataLength: number;

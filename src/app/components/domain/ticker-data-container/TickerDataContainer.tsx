@@ -7,7 +7,7 @@ import {
   TwChartResolution,
   TwChartSettings,
 } from '../tw-chart/types';
-import { TwChartToolbar } from '../tw-chart/components/composite/chart-toolbar/TwChartToolbar';
+import { TwChartToolbar } from '../tw-chart/components/chart-toolbar/TwChartToolbar';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import {

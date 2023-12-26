@@ -3,9 +3,9 @@ import validator from 'validator';
 import {
   TYPES_OF_TW_CHART_RESOLUTION,
   TwChartResolution,
-} from '../../../../../types';
-import { toSimpleSelectOption } from '../../../../../util';
-import { SelectOption } from '../../../../../../../shared';
+} from '../../../../types';
+import { toSimpleSelectOption } from '../../../../util';
+import { SelectOption } from '../../../../../../shared';
 import { getDateInputParts } from '../util';
 import { SCHEMA_EMPTY_STRING } from './base';
 

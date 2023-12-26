@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwOhlcLabel, TwOhlcLabelProps } from './TwOhlcLabel';
-import { decoratorAbsolute, decoratorSize } from '../../../../../../storybook';
+import { decoratorAbsolute, decoratorSize } from '../../../../../storybook';
 
 const STORY_META: Meta<TwOhlcLabelProps> = {
   component: TwOhlcLabel,

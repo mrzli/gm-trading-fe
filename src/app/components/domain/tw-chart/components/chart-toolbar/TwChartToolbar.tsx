@@ -6,9 +6,9 @@ import {
   TwChartSettings,
   TwChartTimezone,
   TwRange,
-} from '../../../types';
-import { toSimpleSelectOption } from '../../../util';
-import { GroupedTickerDataRows, TickerDataRows } from '../../../../types';
+} from '../../types';
+import { toSimpleSelectOption } from '../../util';
+import { GroupedTickerDataRows, TickerDataRows } from '../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
@@ -17,7 +17,7 @@ import {
   SelectOption,
   SelectButton,
   SelectButtonCentered,
-} from '../../../../../shared';
+} from '../../../../shared';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
-import { TextInput } from '../../../../../../../shared';
+import { TextInput } from '../../../../../../shared';
 import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,

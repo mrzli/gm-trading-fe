@@ -16,7 +16,7 @@ import {
   initChart,
   utcToTzTimestamp,
 } from './util';
-import { TwOhlcLabel } from './components/composite/TwOhlcLabel';
+import { TwOhlcLabel } from './components/TwOhlcLabel';
 
 export interface TwChartProps {
   readonly precision: number;

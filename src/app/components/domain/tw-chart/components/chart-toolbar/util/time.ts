@@ -5,7 +5,7 @@ import {
   TYPES_OF_TIME_STEP_UNITS,
   TwTimeStep,
   TwTimeStepUnit,
-} from '../../../../types/tw-time-step';
+} from '../../../types/tw-time-step';
 
 export function twTimeStepSelectionToTimeStep(
   timeStepSelection: TwTimeStepSelection,
