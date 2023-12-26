@@ -8,7 +8,7 @@ import {
   TwRange,
 } from '../../../types';
 import { toSimpleSelectOption } from '../../../util';
-import { GroupedTickerDataRows, TickerDataRows } from '../../../../../../types';
+import { GroupedTickerDataRows, TickerDataRows } from '../../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';

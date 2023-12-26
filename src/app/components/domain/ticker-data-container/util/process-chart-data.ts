@@ -4,7 +4,7 @@ import {
   GroupedTickerDataRows,
   TickerDataRow,
   TickerDataRows,
-} from '../../../../types';
+} from '../../types';
 import { TwChartResolution } from '../../tw-chart/types';
 import { invariant } from '@gmjs/assert';
 import {

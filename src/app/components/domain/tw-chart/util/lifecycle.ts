@@ -1,5 +1,5 @@
 import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
-import { TickerDataRow, TickerDataRows } from '../../../../types';
+import { TickerDataRow, TickerDataRows } from '../../types';
 import {
   CrosshairMoveFn,
   TwInitInput,

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clamp } from '@gmjs/number-util';
-import { GroupedTickerDataRows } from '../../../../../../../../types';
+import { GroupedTickerDataRows } from '../../../../../../types';
 import { IconButton } from '../../../../../../components/shared';
 
 export interface TwChartToolbarReplayNavigateSubBarProps {

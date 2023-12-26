@@ -3,7 +3,7 @@ import { TwRange } from '../../../../types';
 import { logicalToLogicalRange, timeToLogical } from '../../../../util';
 import { TextInput } from '../../../../../../shared';
 import { dateIsoUtcToUnixSeconds } from '../../../../../../../util';
-import { TickerDataRows } from '../../../../../../../types';
+import { TickerDataRows } from '../../../../../types';
 import { SCHEMA_GO_TO_INPUT, dateInputToIso, SCHEMA_GO_TO_DATE } from '../util';
 
 export interface TwChartToolbarGoToProps {

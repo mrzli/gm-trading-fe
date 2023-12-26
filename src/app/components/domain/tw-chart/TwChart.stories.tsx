@@ -7,7 +7,7 @@ import {
   decoratorContainer,
   disableControl,
 } from '../../../../storybook';
-import { TickerDataRows } from '../../../types';
+import { TickerDataRows } from '../types';
 import {
   TEST_TICKER_ROWS_DAY,
   TEST_TICKER_ROWS_MINUTE,

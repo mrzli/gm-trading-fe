@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { TwBarReplaySettings } from '../../../../../types';
-import { GroupedTickerDataRows } from '../../../../../../../../types';
+import { GroupedTickerDataRows } from '../../../../../../types';
 import { TwChartToolbarReplaySetBarIndex } from './TwChartToolbarReplaySetBarIndex';
 import { TwChartToolbarReplayNavigateBar } from './TwChartToolbarReplayNavigateBar';
 import { TwChartToolbarReplayNavigateSubBar } from './TwChartToolbarReplayNavigateSubBar';

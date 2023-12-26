@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UTCTimestamp, createChart } from 'lightweight-charts';
-import { TickerDataRow, TickerDataRows } from '../../../types';
+import { TickerDataRow, TickerDataRows } from '../types';
 import {
   ChartTimeRangeChangeFn,
   TwChartApi,

@@ -3,7 +3,7 @@ import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
 import { TwRange } from '../types';
 import { TwTimeStep } from '../types/tw-time-step';
-import { TickerDataRows } from '../../../../types';
+import { TickerDataRows } from '../../types';
 import {
   HOUR_TO_SECONDS,
   DAY_TO_SECONDS,
@@ -23,17 +23,11 @@ export function moveLogicalRange(
   return logicalToLogicalRange(newLogical, currLogicalRange, data.length);
 }
 
-export function timeToLogical(
-  time: number,
-  data: TickerDataRows,
-): number {
+export function timeToLogical(time: number, data: TickerDataRows): number {
   return binarySearch(data, time, (row) => row.time);
 }
 
-export function logicalToTime(
-  logical: number,
-  data: TickerDataRows,
-): number {
+export function logicalToTime(logical: number, data: TickerDataRows): number {
   if (logical < 0) {
     return data[0].time;
   } else if (logical >= data.length) {

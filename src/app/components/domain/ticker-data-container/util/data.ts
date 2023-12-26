@@ -6,7 +6,7 @@ import {
   aggregateRows,
 } from './process-chart-data';
 import { FullTickerData } from '../types';
-import { TickerDataRow, TickerDataRows } from '../../../../types';
+import { TickerDataRow, TickerDataRows } from '../../types';
 import { applyFn } from '@gmjs/apply-function';
 import { compose } from '@gmjs/compose-function';
 import { flatten, toArray } from '@gmjs/value-transformers';

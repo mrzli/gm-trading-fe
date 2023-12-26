@@ -1,4 +1,4 @@
-import { TickerDataRows } from '../../../../../../types';
+import { TickerDataRows } from '../../../../types';
 import { ManualTradeActionAny, TradingParameters } from '../inputs';
 import {
   ActiveOrder,

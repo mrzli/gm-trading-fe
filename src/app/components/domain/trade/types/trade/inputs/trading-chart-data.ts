@@ -1,4 +1,4 @@
-import { TickerDataRows } from '../../../../../../types';
+import { TickerDataRows } from '../../../../types';
 import { TwChartTimezone } from '../../../../tw-chart/types';
 
 export interface TradingChartData {

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TradeContainer, TradeContainerProps } from './TradeContainer';
 import { decoratorPadding } from '../../../../storybook';
-import { TickerDataRows } from '../../../types';
+import { TickerDataRows } from '../types';
 import { TEST_TICKER_ROWS_MINUTE } from '../data';
 import { TradingChartData } from './types';
 
