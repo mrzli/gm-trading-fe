@@ -1,14 +1,17 @@
 import React, { useCallback, useMemo } from 'react';
 import {
   TYPES_OF_TW_CHART_TIMEZONES,
-  TwBarReplaySettings,
   TwChartResolution,
   TwChartSettings,
   TwChartTimezone,
   TwRange,
 } from '../../types';
 import { toSimpleSelectOption } from '../../util';
-import { GroupedTickerDataRows, TickerDataRows } from '../../../types';
+import {
+  BarReplayPosition,
+  GroupedTickerDataRows,
+  TickerDataRows,
+} from '../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
@@ -82,11 +85,11 @@ export function TwChartToolbar({
     [settings, onSettingsChange],
   );
 
-  const handleReplaySettingsChange = useCallback(
-    (replaySettings: TwBarReplaySettings) => {
+  const handleReplayPositionChange = useCallback(
+    (replayPosition: BarReplayPosition) => {
       onSettingsChange({
         ...settings,
-        replaySettings,
+        replayPosition,
       });
     },
     [settings, onSettingsChange],
@@ -128,8 +131,8 @@ export function TwChartToolbar({
           />
           <TwChartToolbarReplay
             subRows={subRows}
-            replaySettings={settings.replaySettings}
-            onReplaySettingsChange={handleReplaySettingsChange}
+            replayPosition={settings.replayPosition}
+            onReplayPositionChange={handleReplayPositionChange}
           />
         </>
       )}

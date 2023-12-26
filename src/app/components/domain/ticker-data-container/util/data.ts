@@ -1,4 +1,4 @@
-import { TwBarReplaySettings, TwChartResolution } from '../../tw-chart/types';
+import { TwChartResolution } from '../../tw-chart/types';
 import {
   toTickerDataRows,
   groupDataRows,
@@ -6,7 +6,7 @@ import {
   aggregateRows,
 } from './process-chart-data';
 import { FullTickerData } from '../types';
-import { TickerDataRow, TickerDataRows } from '../../types';
+import { BarReplayPosition, TickerDataRow, TickerDataRows } from '../../types';
 import { applyFn } from '@gmjs/apply-function';
 import { compose } from '@gmjs/compose-function';
 import { flatten, toArray } from '@gmjs/value-transformers';
@@ -26,10 +26,10 @@ export function rawDataToFullTickerData(
 
 export function getChartData(
   data: FullTickerData,
-  replaySettings: TwBarReplaySettings,
+  replayPosition: BarReplayPosition,
 ): TickerDataRows {
   const { subRows, rows } = data;
-  const { barIndex, subBarIndex } = replaySettings;
+  const { barIndex, subBarIndex } = replayPosition;
 
   if (barIndex === undefined) {
     return rows;
@@ -50,9 +50,9 @@ export function getTradeData(data: FullTickerData): TickerDataRows {
 
 export function getTradeDataBarIndex(
   data: FullTickerData,
-  replaySettings: TwBarReplaySettings,
+  replayPosition: BarReplayPosition,
 ): number {
-  const { barIndex, subBarIndex } = replaySettings;
+  const { barIndex, subBarIndex } = replayPosition;
   if (barIndex === undefined) {
     return 0;
   }

@@ -50,7 +50,7 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
       resolution: '5m',
       timezone: 'UTC',
       logicalRange: undefined,
-      replaySettings: {
+      replayPosition: {
         barIndex: undefined,
         subBarIndex: 0,
       },

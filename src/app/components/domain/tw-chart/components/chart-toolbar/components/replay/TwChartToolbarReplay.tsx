@@ -1,48 +1,47 @@
 import React, { useCallback } from 'react';
-import { TwBarReplaySettings } from '../../../../types';
-import { GroupedTickerDataRows } from '../../../../../types';
+import { BarReplayPosition, GroupedTickerDataRows } from '../../../../../types';
 import { TwChartToolbarReplaySetBarIndex } from './TwChartToolbarReplaySetBarIndex';
 import { TwChartToolbarReplayNavigateBar } from './TwChartToolbarReplayNavigateBar';
 import { TwChartToolbarReplayNavigateSubBar } from './TwChartToolbarReplayNavigateSubBar';
 
 export interface TwChartToolbarReplayProps {
   readonly subRows: GroupedTickerDataRows;
-  readonly replaySettings: TwBarReplaySettings;
-  readonly onReplaySettingsChange: (settings: TwBarReplaySettings) => void;
+  readonly replayPosition: BarReplayPosition;
+  readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function TwChartToolbarReplay({
   subRows,
-  replaySettings,
-  onReplaySettingsChange,
+  replayPosition,
+  onReplayPositionChange,
 }: TwChartToolbarReplayProps): React.ReactElement {
   const handleBarIndexChange = useCallback(
     (barIndex: number | undefined, subBarIndex: number = 0) => {
-      onReplaySettingsChange({
-        ...replaySettings,
+      onReplayPositionChange({
+        ...replayPosition,
         barIndex,
         subBarIndex,
       });
     },
-    [onReplaySettingsChange, replaySettings],
+    [onReplayPositionChange, replayPosition],
   );
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <TwChartToolbarReplaySetBarIndex
         dataLength={subRows.length}
-        barIndex={replaySettings.barIndex}
+        barIndex={replayPosition.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
       <TwChartToolbarReplayNavigateBar
         dataLength={subRows.length}
-        barIndex={replaySettings.barIndex}
+        barIndex={replayPosition.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
       <TwChartToolbarReplayNavigateSubBar
         subRows={subRows}
-        barIndex={replaySettings.barIndex}
-        subBarIndex={replaySettings.subBarIndex}
+        barIndex={replayPosition.barIndex}
+        subBarIndex={replayPosition.subBarIndex}
         onBarIndexChange={handleBarIndexChange}
       />
     </div>

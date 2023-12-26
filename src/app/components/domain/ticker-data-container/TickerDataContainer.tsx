@@ -54,19 +54,19 @@ export function TickerDataContainer({
     resolution: '5m',
     timezone: 'UTC',
     logicalRange: undefined,
-    replaySettings: {
+    replayPosition: {
       barIndex: undefined,
       subBarIndex: 0,
     },
   });
 
-  const { instrumentName, resolution, timezone, logicalRange, replaySettings } =
+  const { instrumentName, resolution, timezone, logicalRange, replayPosition } =
     settings;
 
   useEffect(() => {
     setSettings((s) => ({
       ...s,
-      replaySettings: {
+      replayPosition: {
         barIndex: undefined,
         subBarIndex: 0,
       },
@@ -86,8 +86,8 @@ export function TickerDataContainer({
   );
 
   const chartData = useMemo(() => {
-    return getChartData(fullData, replaySettings);
-  }, [fullData, replaySettings]);
+    return getChartData(fullData, replayPosition);
+  }, [fullData, replayPosition]);
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
@@ -126,9 +126,9 @@ export function TickerDataContainer({
     return {
       timezone,
       barData: getTradeData(fullData),
-      barIndex: getTradeDataBarIndex(fullData, replaySettings),
+      barIndex: getTradeDataBarIndex(fullData, replayPosition),
     };
-  }, [timezone, fullData, replaySettings]);
+  }, [timezone, fullData, replayPosition]);
 
   if (!instrument) {
     return <div>Instrument not found.</div>;
