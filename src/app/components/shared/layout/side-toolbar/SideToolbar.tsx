@@ -41,6 +41,7 @@ export function SideToolbar<TValue extends string = string>({
       <div className='absolute h-full w-[1px] bg-slate-100' />
     </div>
   );
+  const space = <div className='w-2' />;
   const content = <div className='overflow-y-auto'>{selectedContent}</div>;
 
   const classes = cls('flex h-full max-h-full', {
@@ -51,6 +52,7 @@ export function SideToolbar<TValue extends string = string>({
   return (
     <div className={classes}>
       {content}
+      {space}
       {separator}
       {tabs}
     </div>
