@@ -21,7 +21,7 @@ import {
 import { LoadingDisplay, PrettyDisplay } from '../../shared';
 import { RightToolbarState } from './types';
 import { TickerDataRightToolbar } from './TickerDataRightToolbar';
-import { IconButton } from '../shared';
+import { IconButton } from '../components/shared';
 import { TradingChartData } from '../trade/types';
 
 export interface TickerDataContainerProps {

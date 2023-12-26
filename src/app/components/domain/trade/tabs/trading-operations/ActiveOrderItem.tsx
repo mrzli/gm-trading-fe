@@ -6,7 +6,7 @@ import {
   IconButton,
   ValueDisplayDataAnyList,
   ValueDisplayItem,
-} from '../../../shared';
+} from '../../../components/shared';
 
 export interface ActiveOrderItemProps {
   readonly timezone: TwChartTimezone;

@@ -14,7 +14,7 @@ import {
   ValueDisplayDataAnyList,
   ValueDisplayItem,
   IconButton,
-} from '../../../shared';
+} from '../../../components/shared';
 
 export interface ManualTradeActionItemProps {
   readonly timezone: TwChartTimezone;

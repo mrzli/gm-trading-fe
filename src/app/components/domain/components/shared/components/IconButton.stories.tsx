@@ -7,7 +7,7 @@ import {
   mdiChevronRight,
   mdiCurrencyUsd,
 } from '@mdi/js';
-import { decoratorPadding, printArgs } from '../../../../../storybook';
+import { decoratorPadding, printArgs } from '../../../../../../storybook';
 import { IconButton } from './IconButton';
 
 type NoProps = EmptyObject;

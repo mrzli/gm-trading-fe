@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from '@mdi/react';
-import { Button } from '../../../shared';
+import { Button } from '../../../../shared';
 
 export interface IconButtonProps {
   readonly icon: string;

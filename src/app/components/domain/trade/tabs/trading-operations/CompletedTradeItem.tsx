@@ -7,7 +7,10 @@ import {
   TradingParameters,
 } from '../../types';
 import { getCompletedTradePnl, getCompletedTradePnlPoints } from '../../util';
-import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
+import {
+  ValueDisplayDataAnyList,
+  ValueDisplayItem,
+} from '../../../components/shared';
 
 export interface CompletedTradeItemProps {
   readonly timezone: TwChartTimezone;
