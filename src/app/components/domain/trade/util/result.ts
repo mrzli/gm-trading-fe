@@ -9,7 +9,6 @@ import {
   toArray,
 } from '@gmjs/value-transformers';
 import { CompletedTrade, TradeProcessState, TradeResult } from '../types';
-import { clamp } from '@gmjs/number-util';
 
 export function calculateTradeResults(state: TradeProcessState): TradeResult {
   const { completedTrades } = state;
