@@ -40,8 +40,14 @@ export const Primary: StoryObj<MyTabLayoutProps> = {
   render: (args: MyTabLayoutProps) => {
     const { value: _ignore1, onValueChange: _ignore2, ...rest } = args;
 
-    const [value, setValue] = useState(ENTRIES[0].value);
+    const [value, setValue] = useState<TabLayoutValue>(ENTRIES[0].value);
 
-    return <TabLayout {...rest} value={value} onValueChange={setValue} />;
+    return (
+      <TabLayout<TabLayoutValue>
+        {...rest}
+        value={value}
+        onValueChange={setValue}
+      />
+    );
   },
 };
