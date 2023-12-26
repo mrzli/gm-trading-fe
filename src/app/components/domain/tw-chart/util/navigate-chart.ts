@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { invariant } from '@gmjs/assert';
-import { clampNumber } from '@gmjs/number-util';
+import { clamp } from '@gmjs/number-util';
 import { TwRange } from '../types';
 import { TwTimeStep } from '../types/tw-time-step';
 import { TickerDataRows } from '../../../../types';
@@ -54,11 +54,11 @@ function moveLogical(
   // make sure you move at least one bar
   const adjustedNewBar =
     newBar === currBar ? newBar + Math.sign(timeStep.value) : newBar;
-  return clampNumber(adjustedNewBar, 0, data.length - 1);
+  return clamp(adjustedNewBar, 0, data.length - 1);
 }
 
 function getCurrentBar(logical: number, length: number): number {
-  return Math.floor(clampNumber(logical, 0, length - 1));
+  return Math.floor(clamp(logical, 0, length - 1));
 }
 
 function moveLogicalInternal(
@@ -133,7 +133,7 @@ export function logicalToLogicalRange(
   currLogicalRange: TwRange | undefined,
   dataLength: number,
 ): TwRange {
-  const finalLogical = clampNumber(logical, 0, dataLength - 1);
+  const finalLogical = clamp(logical, 0, dataLength - 1);
 
   const span = currLogicalRange
     ? currLogicalRange.to - currLogicalRange.from

@@ -9,6 +9,7 @@ import {
   toArray,
 } from '@gmjs/value-transformers';
 import { CompletedTrade, TradeProcessState, TradeResult } from '../types';
+import { clamp } from '@gmjs/number-util';
 
 export function calculateTradeResults(state: TradeProcessState): TradeResult {
   const { completedTrades } = state;
@@ -49,7 +50,7 @@ export function calculateTradeResults(state: TradeProcessState): TradeResult {
   const avgWin = applyFn(winPnlList, mean());
   const avgLoss = applyFn(lossPnlList, mean());
 
-  const maxDrawdown = applyFn(pnlList, cumSum(), min());
+  const maxDrawdown = applyFn(pnlList, cumSum(), min(), (v) => Math.min(0, v));
 
   return {
     pnl,

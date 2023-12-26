@@ -187,7 +187,7 @@ function getTabEntries(
       tab: 'Debug',
       content: (
         <TradingDebugDisplay
-          inputs={tradingDataAndInputs}
+          dataAndInputs={tradingDataAndInputs}
           state={tradingState}
         />
       ),

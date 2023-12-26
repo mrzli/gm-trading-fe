@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
+import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
 import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../util';
 import { TextInput } from '../../../../../../../shared';
 import { IconButton } from '../../../../../../shared/IconButton';
@@ -45,7 +45,7 @@ export function TwChartToolbarReplayNavigateBar({
 
       const currBarIndex = barIndex!;
 
-      const newBarIndex = clampNumber(currBarIndex + amount, 1, dataLength);
+      const newBarIndex = clamp(currBarIndex + amount, 1, dataLength);
 
       onBarIndexChange(newBarIndex);
     },

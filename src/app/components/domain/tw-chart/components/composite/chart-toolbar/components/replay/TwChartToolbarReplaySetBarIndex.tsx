@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { clampNumber, parseIntegerOrThrow } from '@gmjs/number-util';
+import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../../shared';
 import {
   createSchemaIntegerInRange,
@@ -44,7 +44,7 @@ export function TwChartToolbarReplaySetBarIndex({
     }
 
     const barIndexNum = parseIntegerOrThrow(barIndexInput);
-    const newBarIndex = clampNumber(barIndexNum, 1, dataLength);
+    const newBarIndex = clamp(barIndexNum, 1, dataLength);
 
     onBarIndexChange(newBarIndex);
   }, [barIndexInput, dataLength, isReplayValueValid, onBarIndexChange]);

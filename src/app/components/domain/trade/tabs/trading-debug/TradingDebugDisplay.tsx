@@ -1,29 +1,34 @@
 import React, { useMemo } from 'react';
-import { TradeProcessState, TradingDataAndInputs } from '../../types';
+import { round } from '@gmjs/number-util';
+import {
+  TradeProcessState,
+  TradeResult,
+  TradingDataAndInputs,
+} from '../../types';
 import { PrettyDisplay } from '../../../../shared';
 import { calculateTradeResults } from '../../util';
 
 export interface TradingDebugDisplayProps {
-  readonly inputs: TradingDataAndInputs;
+  readonly dataAndInputs: TradingDataAndInputs;
   readonly state: TradeProcessState;
 }
 
 export function TradingDebugDisplay({
-  inputs,
+  dataAndInputs,
   state,
 }: TradingDebugDisplayProps): React.ReactElement {
   const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
-      ...inputs,
+      ...dataAndInputs,
       chartData: {
-        ...inputs.chartData,
-        barData: inputs.chartData.barData.slice(0, 2),
+        ...dataAndInputs.chartData,
+        barData: dataAndInputs.chartData.barData.slice(0, 2),
       },
     };
-  }, [inputs]);
+  }, [dataAndInputs]);
 
   const result = useMemo(() => {
-    return calculateTradeResults(state);
+    return cleanUpTradeResult(calculateTradeResults(state));
   }, [state]);
 
   return (
@@ -32,4 +37,32 @@ export function TradingDebugDisplay({
       <PrettyDisplay content={result} />
     </div>
   );
+}
+
+function cleanUpTradeResult(result: TradeResult): TradeResult {
+  const {
+    pnl,
+    pnlPoints,
+    totalCount,
+    winCount,
+    lossCount,
+    winFraction,
+    lossFraction,
+    avgWin,
+    avgLoss,
+    maxDrawdown,
+  } = result;
+
+  return {
+    pnl: round(pnl, 2),
+    pnlPoints: round(pnlPoints, 1),
+    totalCount,
+    winCount,
+    lossCount,
+    winFraction: round(winFraction, 2),
+    lossFraction: round(lossFraction, 2),
+    avgWin: round(avgWin, 2),
+    avgLoss: round(avgLoss, 2),
+    maxDrawdown: round(maxDrawdown, 2),
+  };
 }

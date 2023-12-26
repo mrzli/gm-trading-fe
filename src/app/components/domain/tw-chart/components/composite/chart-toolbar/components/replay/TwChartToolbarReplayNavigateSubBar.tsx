@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { clampNumber } from '@gmjs/number-util';
+import { clamp } from '@gmjs/number-util';
 import { GroupedTickerDataRows } from '../../../../../../../../types';
 import { IconButton } from '../../../../../../shared/IconButton';
 
@@ -115,11 +115,11 @@ function getBarAndSubBarIndex(
     newBarIndex++;
   }
 
-  newBarIndex = clampNumber(newBarIndex, 1, subRows.length);
+  newBarIndex = clamp(newBarIndex, 1, subRows.length);
   newSubBarIndex =
     newBarIndex === subRows.length
       ? 0
-      : clampNumber(newSubBarIndex, 0, subRows[newBarIndex].length - 1);
+      : clamp(newSubBarIndex, 0, subRows[newBarIndex].length - 1);
 
   return { barIndex: newBarIndex, subBarIndex: newSubBarIndex };
 }
