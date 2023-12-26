@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { mdiCurrencyUsd } from '@mdi/js';
 import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
@@ -18,11 +17,16 @@ import {
   rawDataToFullTickerData,
   toLogicalOffset,
 } from './util';
-import { LoadingDisplay, PrettyDisplay } from '../../shared';
+import {
+  LoadingDisplay,
+  PrettyDisplay,
+  SideToolbar,
+  SideToolbarEntry,
+} from '../../shared';
 import { RightToolbarState } from './types';
-import { TickerDataRightToolbar } from './TickerDataRightToolbar';
-import { IconButton } from '../components/shared';
 import { TradingChartData } from '../trade/types';
+import { TickerDataLayout } from '../components/layout';
+import { TradeContainer } from '../trade/TradeContainer';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -37,8 +41,9 @@ export function TickerDataContainer({
   rawData,
   onRequestData,
 }: TickerDataContainerProps): React.ReactElement {
-  const [rightToolbarState, setRightToolbarState] =
-    useState<RightToolbarState>('none');
+  const [rightToolbarState, setRightToolbarState] = useState<
+    RightToolbarState | undefined
+  >(undefined);
 
   const instrumentNames = useMemo(() => {
     return allInstruments?.map((instrument) => instrument.name) ?? [];
@@ -117,10 +122,6 @@ export function TickerDataContainer({
     [fullData],
   );
 
-  const handleToggleRightToolbarStateTrade = useCallback(() => {
-    setRightToolbarState((s) => (s === 'trade' ? 'none' : 'trade'));
-  }, []);
-
   const tradingChartData = useMemo<TradingChartData>(() => {
     return {
       timezone,
@@ -149,8 +150,8 @@ export function TickerDataContainer({
       <div>Please load data...</div>
     );
 
-  return (
-    <div className='h-screen flex flex-col gap-4 p-4 overflow-hidden'>
+  const top = (
+    <>
       <TwChartToolbar
         instrumentNames={instrumentNames}
         subRows={fullData.subRows}
@@ -159,23 +160,33 @@ export function TickerDataContainer({
         onSettingsChange={setSettings}
       />
       {false && <PrettyDisplay content={settings} />}
-      <div className='flex-1 overflow-hidden flex flex-row gap-2'>
-        <div className='h-full flex-1 overflow-hidden'>{dataChartElement}</div>
-        <div className='flex flex-row gap-2'>
-          <div>
-            <IconButton
-              icon={mdiCurrencyUsd}
-              onClick={handleToggleRightToolbarStateTrade}
-            />
-          </div>
-          {rightToolbarState !== 'none' && (
-            <TickerDataRightToolbar
-              state={rightToolbarState}
-              chartData={tradingChartData}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   );
+
+  const right = (
+    <SideToolbar
+      position={'right'}
+      entries={getToolbarEntries(tradingChartData)}
+      value={rightToolbarState}
+      onValueChange={setRightToolbarState}
+    />
+  );
+
+  return <TickerDataLayout main={dataChartElement} top={top} right={right} />;
+}
+
+function getToolbarEntries(
+  chartData: TradingChartData,
+): readonly SideToolbarEntry<RightToolbarState>[] {
+  return [
+    {
+      value: 'trade',
+      tab: 'Trade',
+      content: (
+        <div className='min-w-[600px] h-full'>
+          <TradeContainer chartData={chartData} />
+        </div>
+      ),
+    },
+  ];
 }
