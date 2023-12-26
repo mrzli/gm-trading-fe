@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DateValueDisplay, DateValueDisplayProps } from './DateValueDisplay';
-import { decoratorPadding } from '../../../../../storybook';
-import { TYPES_OF_TW_CHART_TIMEZONES } from '../../tw-chart/types';
+import { decoratorPadding } from '../../../../../../../storybook';
+import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../tw-chart/types';
 
 const STORY_META: Meta<DateValueDisplayProps> = {
   component: DateValueDisplay,

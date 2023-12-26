@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react';
+import { mapGetOrThrow } from '@gmjs/data-container-util';
 import { TwChartTimezone } from '../../../tw-chart/types';
 import {
   CompletedTrade,
   TradeCloseReason,
   TradingParameters,
 } from '../../types';
-import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
-import { ValueDisplayDataAnyList } from '../../../types';
-import { mapGetOrThrow } from '@gmjs/data-container-util';
 import { getCompletedTradePnl, getCompletedTradePnlPoints } from '../../util';
+import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
 
 export interface CompletedTradeItemProps {
   readonly timezone: TwChartTimezone;

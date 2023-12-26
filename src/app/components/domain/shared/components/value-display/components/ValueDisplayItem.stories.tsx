@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ValueDisplayItem, ValueDisplayItemProps } from './ValueDisplayItem';
-import { decoratorBorder, decoratorPadding } from '../../../../../storybook';
-import { VALUE_DISPLAY_DATA_NONE } from '../../util';
+import {
+  decoratorBorder,
+  decoratorPadding,
+} from '../../../../../../../storybook';
+import { VALUE_DISPLAY_DATA_NONE } from '../util';
 
 const STORY_META: Meta<ValueDisplayItemProps> = {
   component: ValueDisplayItem,

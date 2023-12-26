@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react';
-import { ValueDisplay } from '../../../shared';
+import { ValueDisplay } from '../../../../../shared';
 
 export interface DecimalValueDisplayProps {
   readonly label?: string;

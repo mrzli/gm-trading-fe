@@ -3,7 +3,7 @@ import {
   DecimalValueDisplay,
   DecimalValueDisplayProps,
 } from './DecimalValueDisplay';
-import { decoratorPadding } from '../../../../../storybook';
+import { decoratorPadding } from '../../../../../../../storybook';
 
 const STORY_META: Meta<DecimalValueDisplayProps> = {
   component: DecimalValueDisplay,

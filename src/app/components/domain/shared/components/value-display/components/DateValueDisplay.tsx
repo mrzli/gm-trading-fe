@@ -1,5 +1,5 @@
 import React, { CSSProperties, useMemo } from 'react';
-import { ValueDisplay } from '../../../shared';
+import { ValueDisplay } from '../../../../../shared';
 import { DateTime } from 'luxon';
 
 export interface DateValueDisplayProps {

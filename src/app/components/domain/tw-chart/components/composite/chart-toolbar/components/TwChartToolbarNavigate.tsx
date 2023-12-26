@@ -15,7 +15,7 @@ import { TickerDataRows } from '../../../../../../../types';
 import { twTimeStepSelectionToTimeStep } from '../util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
 import { SelectButtonCentered } from '../../../../../../shared';
-import { IconButton } from '../../../../../shared/IconButton';
+import { IconButton } from '../../../../../shared';
 
 export interface TwChartToolbarNavigateProps {
   readonly data: TickerDataRows;

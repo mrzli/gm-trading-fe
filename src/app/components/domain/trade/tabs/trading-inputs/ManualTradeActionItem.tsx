@@ -9,10 +9,12 @@ import {
   ManualTradeActionOpen,
   TradingParameters,
 } from '../../types';
-import { IconButton } from '../../../shared/IconButton';
-import { ValueDisplayDataAnyList } from '../../../types';
-import { ValueDisplayItem } from '../../../shared/value-display/ValueDisplayItem';
 import { TwChartTimezone } from '../../../tw-chart/types';
+import {
+  ValueDisplayDataAnyList,
+  ValueDisplayItem,
+  IconButton,
+} from '../../../shared';
 
 export interface ManualTradeActionItemProps {
   readonly timezone: TwChartTimezone;
