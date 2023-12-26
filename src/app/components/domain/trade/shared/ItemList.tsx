@@ -20,7 +20,11 @@ export function ItemList<TItem>({
         {toolbar}
       </div>
       <div className='flex flex-col gap-2'>
-        {items.map((item, index) => itemRenderer(item, index))}
+        {items.length > 0 ? (
+          items.map((item, index) => itemRenderer(item, index))
+        ) : (
+          <div className='text-gray-400'>No items</div>
+        )}
       </div>
     </div>
   );
