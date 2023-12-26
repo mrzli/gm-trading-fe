@@ -5,8 +5,11 @@ import {
   TradingInputs,
   TradingParameters,
 } from '../../types';
-import { ManualTradeActionList } from './ManualTradeActionList';
 import { TwChartTimezone } from '../../../tw-chart/types';
+import { ItemList } from '../../shared';
+import { Button } from '../../../../shared';
+import { ManualTradeActionItem } from './ManualTradeActionItem';
+import { ComponentStack } from '../../shared/ComponentStack';
 
 export interface TradingInputsContentProps {
   readonly timezone: TwChartTimezone;
@@ -17,7 +20,7 @@ export interface TradingInputsContentProps {
 export function TradingInputsContent({
   value,
   onValueChange,
-  timezone
+  timezone,
 }: TradingInputsContentProps): React.ReactElement {
   const handleTradingParametersChange = useCallback(
     (params: TradingParameters): void => {
@@ -53,19 +56,33 @@ export function TradingInputsContent({
   }, [onValueChange, value]);
 
   return (
-    <div className='flex flex-col gap-2 overflow-y-auto mt-1'>
+    <ComponentStack className='mt-1'>
       <TradingParametersForm
         value={value.params}
         onValueChange={handleTradingParametersChange}
       />
-      <hr />
-      <ManualTradeActionList
-        timezone={timezone}
-        tradingInputs={value}
-        onRemoveItemClick={handleRemoveManualActionItem}
-        onRemoveAllItemsClick={handleRemoveAllManualActions}
+      <ItemList
+        title={'Manual Trade Actions'}
+        toolbar={
+          <Button
+            content={'Remove All'}
+            onClick={handleRemoveAllManualActions}
+          />
+        }
+        items={value.manualTradeActions}
+        itemRenderer={(manualTradeAction, index) => {
+          return (
+            <ManualTradeActionItem
+              key={index}
+              timezone={timezone}
+              tradingParams={value.params}
+              tradeAction={manualTradeAction}
+              onRemoveClick={handleRemoveManualActionItem}
+            />
+          );
+        }}
       />
-    </div>
+    </ComponentStack>
   );
 }
 

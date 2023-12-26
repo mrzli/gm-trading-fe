@@ -7,6 +7,7 @@ import {
 } from '../../types';
 import { PrettyDisplay } from '../../../../shared';
 import { calculateTradeResults } from '../../util';
+import { ComponentStack } from '../../shared/ComponentStack';
 
 export interface TradingDebugDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -32,10 +33,10 @@ export function TradingDebugDisplay({
   }, [state]);
 
   return (
-    <div className='mt-1 flex flex-col gap-2'>
+    <ComponentStack className='mt-1'>
       <PrettyDisplay content={inputsContent} />
       <PrettyDisplay content={result} />
-    </div>
+    </ComponentStack>
   );
 }
 

@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
-import { ActiveOrderList } from './ActiveOrderList';
-import { ActiveTradeList } from './ActiveTradeList';
-import { CompletedTradeList } from './CompletedTradeList';
 import { TradeProcessState } from '../../types';
 import { TwChartTimezone } from '../../../tw-chart/types';
+import { ItemList } from '../../shared';
+import { ActiveOrderItem } from './ActiveOrderItem';
+import { ActiveTradeItem } from './ActiveTradeItem';
+import { CompletedTradeItem } from './CompletedTradeItem';
+import { ComponentStack } from '../../shared/ComponentStack';
 
 export interface TradingOperationsContentProps {
   readonly timezone: TwChartTimezone;
@@ -32,28 +34,52 @@ export function TradingOperationsContent({
   );
 
   return (
-    <div className='mt-1 flex flex-col gap-2'>
+    <ComponentStack className='mt-1'>
       <CreateOrderForm onSubmit={handleSubmit} />
-      <hr />
-      <ActiveOrderList
-        timezone={timezone}
-        tradingParams={tradingParams}
+      <ItemList
+        title={'Active Orders'}
         items={activeOrders}
-        onCancel={onCancelOrder}
+        itemRenderer={(item, index) => {
+          return (
+            <ActiveOrderItem
+              key={index}
+              timezone={timezone}
+              tradingParams={tradingParams}
+              item={item}
+              onCancel={onCancelOrder}
+            />
+          );
+        }}
       />
-      <hr />
-      <ActiveTradeList
-        timezone={timezone}
-        tradingParams={tradingParams}
+      <ItemList
+        title={'Active Trades'}
         items={activeTrades}
-        onClose={onCloseTrade}
+        itemRenderer={(item, index) => {
+          return (
+            <ActiveTradeItem
+              key={index}
+              timezone={timezone}
+              tradingParams={tradingParams}
+              item={item}
+              onClose={onCloseTrade}
+            />
+          );
+        }}
       />
-      <hr />
-      <CompletedTradeList
-        timezone={timezone}
-        tradingParams={tradingParams}
+      <ItemList
+        title={'Completed Trades'}
         items={completedTrades}
+        itemRenderer={(item, index) => {
+          return (
+            <CompletedTradeItem
+              key={index}
+              timezone={timezone}
+              tradingParams={tradingParams}
+              item={item}
+            />
+          );
+        }}
       />
-    </div>
+    </ComponentStack>
   );
 }
