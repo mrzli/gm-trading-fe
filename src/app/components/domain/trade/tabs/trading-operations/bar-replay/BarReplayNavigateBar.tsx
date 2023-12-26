@@ -1,21 +1,21 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
-import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../util';
-import { TextInput } from '../../../../../../shared';
-import { IconButton } from '../../../../../components/shared';
+import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../../../tw-chart/components/chart-toolbar/util';
+import { TextInput } from '../../../../../shared';
+import { IconButton } from '../../../../components/shared';
 
-export interface TwChartToolbarReplayNavigateBarProps {
+export interface BarReplayNavigateBarProps {
   readonly dataLength: number;
   readonly barIndex: number | undefined;
   readonly onBarIndexChange: (barIndex: number | undefined) => void;
 }
 
-export function TwChartToolbarReplayNavigateBar({
+export function BarReplayNavigateBar({
   dataLength,
   barIndex,
   onBarIndexChange,
-}: TwChartToolbarReplayNavigateBarProps): React.ReactElement {
+}: BarReplayNavigateBarProps): React.ReactElement {
   const [replayNavigationStepSizeInput, setReplayNavigationStepSizeInput] =
     useState<string>('1');
 

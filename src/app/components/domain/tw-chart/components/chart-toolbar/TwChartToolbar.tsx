@@ -15,12 +15,12 @@ import {
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
 import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
-import { TwChartToolbarReplay } from './components/replay/TwChartToolbarReplay';
 import {
   SelectOption,
   SelectButton,
   SelectButtonCentered,
 } from '../../../../shared';
+import { BarReplay } from '../../../trade/tabs/trading-operations/bar-replay/BarReplay';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -129,7 +129,7 @@ export function TwChartToolbar({
             logicalRange={settings.logicalRange}
             onGoTo={updateLogicalRange}
           />
-          <TwChartToolbarReplay
+          <BarReplay
             subRows={subRows}
             replayPosition={settings.replayPosition}
             onReplayPositionChange={handleReplayPositionChange}

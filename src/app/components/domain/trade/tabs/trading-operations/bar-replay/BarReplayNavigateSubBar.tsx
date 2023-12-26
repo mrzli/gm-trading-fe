@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clamp } from '@gmjs/number-util';
-import { GroupedTickerDataRows } from '../../../../../types';
-import { IconButton } from '../../../../../components/shared';
+import { GroupedTickerDataRows } from '../../../../types';
+import { IconButton } from '../../../../components/shared';
 
-export interface TwChartToolbarReplayNavigateSubBarProps {
+export interface BarReplayNavigateSubBarProps {
   readonly subRows: GroupedTickerDataRows;
   readonly barIndex: number | undefined;
   readonly subBarIndex: number;
@@ -14,12 +14,12 @@ export interface TwChartToolbarReplayNavigateSubBarProps {
   ) => void;
 }
 
-export function TwChartToolbarReplayNavigateSubBar({
+export function BarReplayNavigateSubBar({
   subRows,
   barIndex,
   subBarIndex,
   onBarIndexChange,
-}: TwChartToolbarReplayNavigateSubBarProps): React.ReactElement {
+}: BarReplayNavigateSubBarProps): React.ReactElement {
   const isNavigateBackEnabled = useMemo(() => {
     return (
       barIndex !== undefined &&

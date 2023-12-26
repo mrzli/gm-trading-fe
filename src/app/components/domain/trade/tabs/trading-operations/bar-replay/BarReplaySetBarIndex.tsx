@@ -1,22 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
-import { TextInput } from '../../../../../../shared';
+import { TextInput } from '../../../../../shared';
 import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,
-} from '../../util';
+} from '../../../../tw-chart/components/chart-toolbar/util';
 
-export interface TwChartToolbarReplaySetBarIndexProps {
+export interface BarReplaySetBarIndexProps {
   readonly dataLength: number;
   readonly barIndex: number | undefined;
   readonly onBarIndexChange: (barIndex: number | undefined) => void;
 }
 
-export function TwChartToolbarReplaySetBarIndex({
+export function BarReplaySetBarIndex({
   dataLength,
   barIndex,
   onBarIndexChange,
-}: TwChartToolbarReplaySetBarIndexProps): React.ReactElement {
+}: BarReplaySetBarIndexProps): React.ReactElement {
   const [barIndexInput, setBarIndexInput] = useState<string>('');
 
   useEffect(() => {

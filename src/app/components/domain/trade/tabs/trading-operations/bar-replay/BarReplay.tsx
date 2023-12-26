@@ -1,20 +1,20 @@
 import React, { useCallback } from 'react';
-import { BarReplayPosition, GroupedTickerDataRows } from '../../../../../types';
-import { TwChartToolbarReplaySetBarIndex } from './TwChartToolbarReplaySetBarIndex';
-import { TwChartToolbarReplayNavigateBar } from './TwChartToolbarReplayNavigateBar';
-import { TwChartToolbarReplayNavigateSubBar } from './TwChartToolbarReplayNavigateSubBar';
+import { BarReplayPosition, GroupedTickerDataRows } from '../../../../types';
+import { BarReplaySetBarIndex } from './BarReplaySetBarIndex';
+import { BarReplayNavigateBar } from './BarReplayNavigateBar';
+import { BarReplayNavigateSubBar } from './BarReplayNavigateSubBar';
 
-export interface TwChartToolbarReplayProps {
+export interface BarReplayProps {
   readonly subRows: GroupedTickerDataRows;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
-export function TwChartToolbarReplay({
+export function BarReplay({
   subRows,
   replayPosition,
   onReplayPositionChange,
-}: TwChartToolbarReplayProps): React.ReactElement {
+}: BarReplayProps): React.ReactElement {
   const handleBarIndexChange = useCallback(
     (barIndex: number | undefined, subBarIndex: number = 0) => {
       onReplayPositionChange({
@@ -28,17 +28,17 @@ export function TwChartToolbarReplay({
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
-      <TwChartToolbarReplaySetBarIndex
+      <BarReplaySetBarIndex
         dataLength={subRows.length}
         barIndex={replayPosition.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
-      <TwChartToolbarReplayNavigateBar
+      <BarReplayNavigateBar
         dataLength={subRows.length}
         barIndex={replayPosition.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
-      <TwChartToolbarReplayNavigateSubBar
+      <BarReplayNavigateSubBar
         subRows={subRows}
         barIndex={replayPosition.barIndex}
         subBarIndex={replayPosition.subBarIndex}
