@@ -4,9 +4,9 @@ import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import { TradeProcessState } from '../../types';
 import { TwChartTimezone } from '../../../tw-chart/types';
 import { ItemList } from '../../shared';
-import { ActiveOrderItem } from './ActiveOrderItem';
-import { ActiveTradeItem } from './ActiveTradeItem';
-import { CompletedTradeItem } from './CompletedTradeItem';
+import { ActiveOrderItem } from './lists/ActiveOrderItem';
+import { ActiveTradeItem } from './lists/ActiveTradeItem';
+import { CompletedTradeItem } from './lists/CompletedTradeItem';
 import { ComponentStack } from '../../shared/ComponentStack';
 
 export interface TradingOperationsContentProps {

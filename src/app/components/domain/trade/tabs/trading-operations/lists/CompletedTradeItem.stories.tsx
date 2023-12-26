@@ -3,13 +3,13 @@ import {
   CompletedTradeItem,
   CompletedTradeItemProps,
 } from './CompletedTradeItem';
-import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../tw-chart/types';
+import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../tw-chart/types';
 import {
   argTypeInlineRadio,
   decoratorPadding,
-} from '../../../../../../storybook';
-import { DEFAULT_TRADING_PARAMS } from '../../util';
-import { CompletedTrade } from '../../types';
+} from '../../../../../../../storybook';
+import { DEFAULT_TRADING_PARAMS } from '../../../util';
+import { CompletedTrade } from '../../../types';
 
 const STORY_META: Meta<CompletedTradeItemProps> = {
   component: CompletedTradeItem,

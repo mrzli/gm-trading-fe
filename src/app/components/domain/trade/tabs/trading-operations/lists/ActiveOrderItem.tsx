@@ -1,12 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import { TwChartTimezone } from '../../../tw-chart/types';
-import { ActiveOrder, TradingParameters } from '../../types';
+import { TwChartTimezone } from '../../../../tw-chart/types';
+import { ActiveOrder, TradingParameters } from '../../../types';
 import { mdiClose, mdiPencil } from '@mdi/js';
 import {
   IconButton,
   ValueDisplayDataAnyList,
   ValueDisplayItem,
-} from '../../../components/shared';
+} from '../../../../components/shared';
 
 export interface ActiveOrderItemProps {
   readonly timezone: TwChartTimezone;
