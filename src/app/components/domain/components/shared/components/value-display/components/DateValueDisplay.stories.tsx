@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DateValueDisplay, DateValueDisplayProps } from './DateValueDisplay';
-import { decoratorPadding } from '../../../../../../../../storybook';
+import {
+  argTypeInlineRadio,
+  decoratorPadding,
+} from '../../../../../../../../storybook';
 import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../../tw-chart/types';
 
 const STORY_META: Meta<DateValueDisplayProps> = {
@@ -8,10 +11,7 @@ const STORY_META: Meta<DateValueDisplayProps> = {
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
-    timezone: {
-      control: 'inline-radio',
-      options: TYPES_OF_TW_CHART_TIMEZONES,
-    },
+    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
   },
   args: {
     label: 'Label',

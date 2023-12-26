@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChart, TwChartProps } from './TwChart';
 import {
+  argTypeInlineRadio,
   argTypeInteger,
   decoratorContainer,
   disableControl,
@@ -22,10 +23,7 @@ const STORY_META: Meta<TwChartProps> = {
   argTypes: {
     precision: argTypeInteger(0, 10),
     data: disableControl(),
-    timezone: {
-      control: 'inline-radio',
-      options: TYPES_OF_TW_CHART_TIMEZONES,
-    },
+    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
     onChartTimeRangeChange: disableControl(),
     onChartKeyDown: disableControl(),
   },

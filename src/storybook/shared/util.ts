@@ -1,10 +1,32 @@
 import { InputType } from '@storybook/types';
 
-export function disableControl(): InputType & { table: { disable: true } } {
+export type InputTypeDisableTable = {
+  readonly table: { readonly disable: true };
+};
+
+export function disableControl(): InputType & InputTypeDisableTable {
   return {
     table: {
       disable: true,
     },
+  };
+}
+
+export type InputTypeInlineRadio<TOption extends string> = {
+  readonly control: {
+    readonly type: 'inline-radio';
+  };
+  readonly options: readonly TOption[];
+};
+
+export function argTypeInlineRadio<TOption extends string>(
+  options: readonly TOption[],
+): InputType & InputTypeInlineRadio<TOption> {
+  return {
+    control: {
+      type: 'inline-radio',
+    },
+    options,
   };
 }
 

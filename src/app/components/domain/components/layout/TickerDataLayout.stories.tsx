@@ -5,6 +5,7 @@ import {
   EXAMPLE_FILL_CONTENT,
   EXAMPLE_TALL_CONTENT,
   EXAMPLE_TALL_WIDE_CONTENT,
+  argTypeInlineRadio,
   decoratorFullHeight,
 } from '../../../../../storybook';
 
@@ -31,24 +32,9 @@ const STORY_META: Meta<Props> = {
   tags: ['autodocs'],
   decorators: [decoratorFullHeight()],
   argTypes: {
-    main: {
-      control: {
-        type: 'inline-radio',
-      },
-      options: TYPES_OF_CONTENT_TYPE,
-    },
-    left: {
-      control: {
-        type: 'inline-radio',
-      },
-      options: TYPES_OF_OPTIONAL_CONTENT_TYPE,
-    },
-    right: {
-      control: {
-        type: 'inline-radio',
-      },
-      options: TYPES_OF_OPTIONAL_CONTENT_TYPE,
-    },
+    main: argTypeInlineRadio(TYPES_OF_CONTENT_TYPE),
+    left: argTypeInlineRadio(TYPES_OF_OPTIONAL_CONTENT_TYPE),
+    right: argTypeInlineRadio(TYPES_OF_OPTIONAL_CONTENT_TYPE),
   },
   args: {
     main: 'regular',

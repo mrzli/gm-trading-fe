@@ -4,7 +4,10 @@ import {
   CompletedTradeItemProps,
 } from './CompletedTradeItem';
 import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../tw-chart/types';
-import { decoratorPadding } from '../../../../../../storybook';
+import {
+  argTypeInlineRadio,
+  decoratorPadding,
+} from '../../../../../../storybook';
 import { DEFAULT_TRADING_PARAMS } from '../../util';
 import { CompletedTrade } from '../../types';
 
@@ -13,10 +16,7 @@ const STORY_META: Meta<CompletedTradeItemProps> = {
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
-    timezone: {
-      control: 'inline-radio',
-      options: TYPES_OF_TW_CHART_TIMEZONES,
-    },
+    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
   },
   args: {
     timezone: 'UTC',
