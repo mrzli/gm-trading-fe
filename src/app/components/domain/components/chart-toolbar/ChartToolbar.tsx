@@ -29,6 +29,8 @@ export interface ChartToolbarProps {
   readonly onResolutionChange: (resolution: ChartResolution) => void;
   readonly onTimezoneChange: (timezone: ChartTimezone) => void;
   readonly onSettingsChange: (settings: ChartSettings) => void;
+  readonly logicalRange: ChartRange | undefined;
+  readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
 }
 
 export function ChartToolbar({
@@ -40,22 +42,14 @@ export function ChartToolbar({
   onResolutionChange,
   onTimezoneChange,
   onSettingsChange,
+  logicalRange,
+  onLogicalRangeChange,
 }: ChartToolbarProps): React.ReactElement {
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
       toSimpleSelectOption(instrumentName),
     );
   }, [instrumentNames]);
-
-  const updateLogicalRange = useCallback(
-    (logicalRange: ChartRange | undefined) => {
-      onSettingsChange({
-        ...settings,
-        logicalRange,
-      });
-    },
-    [settings, onSettingsChange],
-  );
 
   const handleReplayPositionChange = useCallback(
     (replayPosition: BarReplayPosition) => {
@@ -93,13 +87,13 @@ export function ChartToolbar({
         <>
           <ChartToolbarNavigate
             data={rows}
-            logicalRange={settings.logicalRange}
-            onNavigate={updateLogicalRange}
+            logicalRange={logicalRange}
+            onNavigate={onLogicalRangeChange}
           />
           <ChartToolbarGoTo
             data={rows}
-            logicalRange={settings.logicalRange}
-            onGoTo={updateLogicalRange}
+            logicalRange={logicalRange}
+            onGoTo={onLogicalRangeChange}
           />
           <BarReplay
             subRows={subRows}

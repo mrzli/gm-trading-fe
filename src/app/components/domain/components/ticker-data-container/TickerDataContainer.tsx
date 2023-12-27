@@ -22,7 +22,12 @@ import { RightToolbarState } from './types';
 import { TradingChartData } from '../trade/types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
-import { ChartSettings, ChartResolution, ChartTimezone } from '../../types';
+import {
+  ChartSettings,
+  ChartResolution,
+  ChartTimezone,
+  ChartRange,
+} from '../../types';
 import { ChartTimeStep } from '../chart-toolbar/types';
 
 export interface TickerDataContainerProps {
@@ -50,19 +55,25 @@ export function TickerDataContainer({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
     timezone: 'UTC',
-    logicalRange: undefined,
     replayPosition: {
       barIndex: undefined,
       subBarIndex: 0,
     },
   });
 
-  const { instrumentName, resolution, timezone, logicalRange, replayPosition } =
-    settings;
+  const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>(
+    undefined,
+  );
 
-  useEffect(() => {
-    onRequestData(instrumentName, resolution);
-  }, [instrumentName, resolution, onRequestData]);
+  const { instrumentName, resolution, timezone, replayPosition } = settings;
+
+  useEffect(
+    () => {
+      onRequestData(instrumentName, resolution);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onRequestData],
+  );
 
   const instrument = useMemo(() => {
     return allInstruments.find(
@@ -120,10 +131,7 @@ export function TickerDataContainer({
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
-      setSettings((s) => ({
-        ...s,
-        logicalRange: range,
-      }));
+      setLogicalRange(range);
     },
     [],
   );
@@ -138,17 +146,15 @@ export function TickerDataContainer({
             unit: 'B',
             value: offset,
           };
-          setSettings((s) => ({
-            ...s,
-            logicalRange: s.logicalRange
-              ? moveLogicalRange(s.logicalRange, timeStep, fullData.rows)
-              : undefined,
-          }));
+          const newLogicalRange = logicalRange ?
+            moveLogicalRange(logicalRange, timeStep, fullData.rows) :
+            undefined;
+          setLogicalRange(newLogicalRange);
           break;
         }
       }
     },
-    [fullData],
+    [fullData.rows, logicalRange],
   );
 
   const tradingChartData = useMemo<TradingChartData>(() => {
@@ -190,6 +196,8 @@ export function TickerDataContainer({
         onResolutionChange={handleResolutionChange}
         onTimezoneChange={handleTimezoneChange}
         onSettingsChange={setSettings}
+        logicalRange={logicalRange}
+        onLogicalRangeChange={handleChartTimeRangeChange}
       />
       {false && <PrettyDisplay content={settings} />}
     </>

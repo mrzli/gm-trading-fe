@@ -37,6 +37,10 @@ const STORY_META: Meta<ChartToolbarProps> = {
     rows: aggregateGroupedDataRows(
       groupDataRows(TEST_TICKER_ROWS_MINUTE, '5m'),
     ),
+    logicalRange: {
+      from: 5,
+      to: 15,
+    },
   },
 };
 export default STORY_META;
@@ -49,7 +53,6 @@ export const Primary: StoryObj<ChartToolbarProps> = {
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
       timezone: 'UTC',
-      logicalRange: undefined,
       replayPosition: {
         barIndex: undefined,
         subBarIndex: 0,
