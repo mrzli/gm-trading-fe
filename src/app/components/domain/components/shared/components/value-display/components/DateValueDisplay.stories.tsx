@@ -4,7 +4,7 @@ import {
   argTypeInlineRadio,
   decoratorPadding,
 } from '../../../../../../../../storybook';
-import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../../tw-chart/types';
+import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../tw-chart/types';
 
 const STORY_META: Meta<DateValueDisplayProps> = {
   component: DateValueDisplay,
