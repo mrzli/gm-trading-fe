@@ -5,7 +5,6 @@ import { TwChart } from '../tw-chart/TwChart';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/chart-toolbar/TwChartToolbar';
 import { moveLogicalRange } from '../tw-chart/util';
-import { TwTimeStep } from '../tw-chart/types/tw-time-step';
 import {
   getChartData,
   getTradeData,
@@ -24,6 +23,7 @@ import { TradingChartData } from '../trade/types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
 import { ChartSettings, ChartResolution } from '../../types';
+import { ChartTimeStep } from '../tw-chart/components/chart-toolbar/types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -102,7 +102,7 @@ export function TickerDataContainer({
         case Key.ArrowLeft:
         case Key.ArrowRight: {
           const offset = toLogicalOffset(event);
-          const timeStep: TwTimeStep = {
+          const timeStep: ChartTimeStep = {
             unit: 'B',
             value: offset,
           };

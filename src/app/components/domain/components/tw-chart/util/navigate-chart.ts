@@ -2,7 +2,6 @@ import { DateTime } from 'luxon';
 import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
 import { TwRange } from '../types';
-import { TwTimeStep } from '../types/tw-time-step';
 import { TickerDataRows } from '../../../types';
 import {
   HOUR_TO_SECONDS,
@@ -10,12 +9,13 @@ import {
   WEEK_TO_SECONDS,
 } from '../../../../../util';
 import { binarySearch } from './binary-search';
+import { ChartTimeStep } from '../components/chart-toolbar/types';
 
 const DEFAULT_SPAN = 60;
 
 export function moveLogicalRange(
   currLogicalRange: TwRange,
-  timeStep: TwTimeStep,
+  timeStep: ChartTimeStep,
   data: TickerDataRows,
 ): TwRange {
   const currLogical = logicalRangeToLogical(currLogicalRange);
@@ -39,7 +39,7 @@ export function logicalToTime(logical: number, data: TickerDataRows): number {
 
 function moveLogical(
   currLogical: number,
-  timeStep: TwTimeStep,
+  timeStep: ChartTimeStep,
   data: TickerDataRows,
 ): number {
   const currBar = getCurrentBar(currLogical, data.length);
@@ -57,7 +57,7 @@ function getCurrentBar(logical: number, length: number): number {
 
 function moveLogicalInternal(
   currBar: number,
-  timeStep: TwTimeStep,
+  timeStep: ChartTimeStep,
   data: TickerDataRows,
 ): number {
   const { unit, value } = timeStep;
@@ -71,7 +71,7 @@ function moveLogicalInternal(
   }
 }
 
-function moveTime(currTime: number, timeStep: TwTimeStep): number {
+function moveTime(currTime: number, timeStep: ChartTimeStep): number {
   const { unit, value } = timeStep;
 
   switch (unit) {
@@ -90,7 +90,7 @@ function moveTime(currTime: number, timeStep: TwTimeStep): number {
   }
 }
 
-function getTimeDelta(timeStep: TwTimeStep): number {
+function getTimeDelta(timeStep: ChartTimeStep): number {
   const { unit, value } = timeStep;
 
   switch (unit) {
