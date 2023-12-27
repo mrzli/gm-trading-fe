@@ -10,6 +10,7 @@ import { Button } from '../../../../../shared';
 import { ManualTradeActionItem } from './ManualTradeActionItem';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { ChartTimezone } from '../../../../types';
+import { TradingInputsStorage } from './TradingInputsStorage';
 
 export interface TradingInputsContentProps {
   readonly timezone: ChartTimezone;
@@ -57,6 +58,7 @@ export function TradingInputsContent({
 
   return (
     <ComponentStack className='mt-1'>
+      <TradingInputsStorage inputs={value} onInputsLoaded={onValueChange} />
       <TradingParametersForm
         value={value.params}
         onValueChange={handleTradingParametersChange}

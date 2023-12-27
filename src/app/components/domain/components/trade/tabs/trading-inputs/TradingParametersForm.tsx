@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TradingParameters } from '../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput, Button } from '../../../../../shared';
@@ -45,6 +45,24 @@ export function TradingParametersForm({
   const [minStopLossDistanceInput, setMinStopLossDistanceInput] = useState(
     minStopLossDistance.toFixed(2),
   );
+
+  useEffect(() => {
+    setInitialBalanceInput(initialBalance.toFixed(2));
+    setPriceDecimalsInput(priceDecimals.toFixed(0));
+    setSpreadInput(spread.toFixed(2));
+    setMarginPercentInput(marginPercent.toFixed(2));
+    setAvgSlippageInput(avgSlippage.toFixed(2));
+    setPipDigitInput(pipDigit.toFixed(0));
+    setMinStopLossDistanceInput(minStopLossDistance.toFixed(2));
+  }, [
+    avgSlippage,
+    initialBalance,
+    marginPercent,
+    minStopLossDistance,
+    pipDigit,
+    priceDecimals,
+    spread,
+  ]);
 
   const handleApplyClick = useCallback(() => {
     onValueChange({
