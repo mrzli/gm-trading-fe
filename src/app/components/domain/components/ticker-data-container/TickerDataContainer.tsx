@@ -114,6 +114,18 @@ export function TickerDataContainer({
     [],
   );
 
+  const handleRightToolbarStateChange = useCallback(
+    (value: RightToolbarState | undefined) => {
+      const { barIndex } = replayPosition;
+      if (value === 'trade' && barIndex === undefined) {
+        setReplayPosition({ barIndex: 1, subBarIndex: 0 });
+      }
+
+      setRightToolbarState(value);
+    },
+    [replayPosition],
+  );
+
   const handleReplayPositionChange = useCallback(
     (replayPosition: BarReplayPosition) => {
       setReplayPosition(replayPosition);
@@ -167,7 +179,7 @@ export function TickerDataContainer({
         handleReplayPositionChange,
       )}
       value={rightToolbarState}
-      onValueChange={setRightToolbarState}
+      onValueChange={handleRightToolbarStateChange}
     />
   );
 
