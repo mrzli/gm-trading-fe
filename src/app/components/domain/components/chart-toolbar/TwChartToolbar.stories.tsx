@@ -1,17 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChartToolbar, TwChartToolbarProps } from './TwChartToolbar';
-import {
-  decoratorPadding,
-  disableControl,
-} from '../../../../../../../storybook';
+import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
-import { PrettyDisplay } from '../../../../../shared';
-import { TEST_TICKER_ROWS_MINUTE } from '../../../../data';
+import { PrettyDisplay } from '../../../shared';
+import { TEST_TICKER_ROWS_MINUTE } from '../../data';
 import {
   aggregateGroupedDataRows,
   groupDataRows,
-} from '../../../ticker-data-container/util/process-chart-data';
-import { ChartSettings } from '../../../../types';
+} from '../ticker-data-container/util/process-chart-data';
+import { ChartSettings } from '../../types';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',

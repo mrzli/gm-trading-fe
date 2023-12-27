@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
-import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../../../tw-chart/components/chart-toolbar/util';
+import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../../../chart-toolbar/util';
 import { TextInput } from '../../../../../../shared';
 import { IconButton } from '../../../../shared';
 

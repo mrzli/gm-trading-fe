@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TwRange } from '../../../types';
-import { logicalToLogicalRange, timeToLogical } from '../../../util';
-import { TextInput } from '../../../../../../shared';
-import { dateIsoUtcToUnixSeconds } from '../../../../../../../util';
-import { TickerDataRows } from '../../../../../types';
+import { TwRange } from '../../tw-chart/types';
+import { logicalToLogicalRange, timeToLogical } from '../../tw-chart/util';
+import { TextInput } from '../../../../shared';
+import { dateIsoUtcToUnixSeconds } from '../../../../../util';
+import { TickerDataRows } from '../../../types';
 import { SCHEMA_GO_TO_INPUT, dateInputToIso, SCHEMA_GO_TO_DATE } from '../util';
 
 export interface TwChartToolbarGoToProps {

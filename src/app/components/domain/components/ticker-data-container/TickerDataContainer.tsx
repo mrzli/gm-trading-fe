@@ -3,7 +3,7 @@ import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
-import { TwChartToolbar } from '../tw-chart/components/chart-toolbar/TwChartToolbar';
+import { TwChartToolbar } from '../chart-toolbar/TwChartToolbar';
 import { moveLogicalRange } from '../tw-chart/util';
 import {
   getChartData,
@@ -23,7 +23,7 @@ import { TradingChartData } from '../trade/types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
 import { ChartSettings, ChartResolution } from '../../types';
-import { ChartTimeStep } from '../tw-chart/components/chart-toolbar/types';
+import { ChartTimeStep } from '../chart-toolbar/types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];

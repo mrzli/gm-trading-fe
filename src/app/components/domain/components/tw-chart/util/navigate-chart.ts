@@ -9,7 +9,7 @@ import {
   WEEK_TO_SECONDS,
 } from '../../../../../util';
 import { binarySearch } from './binary-search';
-import { ChartTimeStep } from '../components/chart-toolbar/types';
+import { ChartTimeStep } from '../../chart-toolbar/types';
 
 const DEFAULT_SPAN = 60;
 

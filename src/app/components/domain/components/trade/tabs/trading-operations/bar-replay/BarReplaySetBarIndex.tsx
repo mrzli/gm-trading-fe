@@ -4,7 +4,7 @@ import { TextInput } from '../../../../../../shared';
 import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,
-} from '../../../../tw-chart/components/chart-toolbar/util';
+} from '../../../../chart-toolbar/util';
 
 export interface BarReplaySetBarIndexProps {
   readonly dataLength: number;
