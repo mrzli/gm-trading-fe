@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import { TwRange } from '../tw-chart/types';
 import {
   BarReplayPosition,
   GroupedTickerDataRows,
@@ -8,6 +7,7 @@ import {
   ChartResolution,
   ChartTimezone,
   TYPES_OF_CHART_TIMEZONES,
+  ChartRange,
 } from '../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
@@ -74,7 +74,7 @@ export function TwChartToolbar({
   );
 
   const updateLogicalRange = useCallback(
-    (logicalRange: TwRange | undefined) => {
+    (logicalRange: ChartRange | undefined) => {
       onSettingsChange({
         ...settings,
         logicalRange,

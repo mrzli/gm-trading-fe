@@ -1,8 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TwRange } from '../../tw-chart/types';
 import { TextInput } from '../../../../shared';
 import { dateIsoUtcToUnixSeconds } from '../../../../../util';
-import { TickerDataRows } from '../../../types';
+import { ChartRange, TickerDataRows } from '../../../types';
 import {
   SCHEMA_GO_TO_INPUT,
   dateInputToIso,
@@ -13,8 +12,8 @@ import {
 
 export interface TwChartToolbarGoToProps {
   readonly data: TickerDataRows;
-  readonly logicalRange: TwRange | undefined;
-  readonly onGoTo: (logicalRange: TwRange) => void;
+  readonly logicalRange: ChartRange | undefined;
+  readonly onGoTo: (logicalRange: ChartRange) => void;
 }
 
 export function TwChartToolbarGoTo({

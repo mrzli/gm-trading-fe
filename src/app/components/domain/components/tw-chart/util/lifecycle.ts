@@ -1,11 +1,10 @@
 import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
-import { TickerDataRow, TickerDataRows } from '../../../types';
+import { ChartRange, TickerDataRow, TickerDataRows } from '../../../types';
 import {
   CrosshairMoveFn,
   TwInitInput,
   ChartTimeRangeChangeFn,
   TwChartApi,
-  TwRange,
   SetTimeRangeFn,
   SetDataFn,
   GetTimeRangeFn,
@@ -102,7 +101,7 @@ function createGetTimeRangeFn(timeScale: ITimeScaleApi<Time>): GetTimeRangeFn {
 }
 
 function createSetTimeRangeFn(timeScale: ITimeScaleApi<Time>): SetTimeRangeFn {
-  return (logicalRange: TwRange) => {
+  return (logicalRange: ChartRange) => {
     timeScale.setVisibleLogicalRange({
       from: logicalRange.from,
       to: logicalRange.to,

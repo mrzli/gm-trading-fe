@@ -5,8 +5,7 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
 } from '@mdi/js';
-import { TwRange } from '../../tw-chart/types';
-import { TickerDataRows } from '../../../types';
+import { ChartRange, TickerDataRows } from '../../../types';
 import {
   logicalToLogicalRange,
   moveLogicalRange,
@@ -19,8 +18,8 @@ import { toSimpleSelectOption } from '../../../util';
 
 export interface TwChartToolbarNavigateProps {
   readonly data: TickerDataRows;
-  readonly logicalRange: TwRange | undefined;
-  readonly onNavigate: (logicalRange: TwRange) => void;
+  readonly logicalRange: ChartRange | undefined;
+  readonly onNavigate: (logicalRange: ChartRange) => void;
 }
 
 export function TwChartToolbarNavigate({

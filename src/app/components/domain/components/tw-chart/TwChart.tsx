@@ -2,13 +2,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UTCTimestamp, createChart } from 'lightweight-charts';
-import { TickerDataRow, TickerDataRows, ChartTimezone } from '../../types';
 import {
-  ChartTimeRangeChangeFn,
-  TwChartApi,
-  TwInitInput,
-  TwRange,
-} from './types';
+  TickerDataRow,
+  TickerDataRows,
+  ChartTimezone,
+  ChartRange,
+} from '../../types';
+import { ChartTimeRangeChangeFn, TwChartApi, TwInitInput } from './types';
 import {
   destroyChart,
   getTwInitInput,
@@ -21,7 +21,7 @@ export interface TwChartProps {
   readonly precision: number;
   readonly data: TickerDataRows;
   readonly timezone: ChartTimezone;
-  readonly logicalRange: TwRange | undefined;
+  readonly logicalRange: ChartRange | undefined;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
@@ -128,8 +128,8 @@ function adjustRowForTimezone(
 }
 
 function isLogicalRangeEqual(
-  lr1: TwRange | undefined,
-  lr2: TwRange | undefined,
+  lr1: ChartRange | undefined,
+  lr2: ChartRange | undefined,
 ): boolean {
   if (!lr1 && !lr2) {
     return true;

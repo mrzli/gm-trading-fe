@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon';
 import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
-import { TwRange } from '../../tw-chart/types';
-import { TickerDataRows } from '../../../types';
+import { ChartRange, TickerDataRows } from '../../../types';
 import {
   HOUR_TO_SECONDS,
   DAY_TO_SECONDS,
@@ -14,10 +13,10 @@ import { ChartTimeStep } from '../types';
 const DEFAULT_SPAN = 60;
 
 export function moveLogicalRange(
-  currLogicalRange: TwRange,
+  currLogicalRange: ChartRange,
   timeStep: ChartTimeStep,
   data: TickerDataRows,
-): TwRange {
+): ChartRange {
   const currLogical = logicalRangeToLogical(currLogicalRange);
   const newLogical = moveLogical(currLogical, timeStep, data);
   return logicalToLogicalRange(newLogical, currLogicalRange, data.length);
@@ -118,15 +117,15 @@ function addMonth(timestamp: number, months: number): number {
     .toSeconds();
 }
 
-function logicalRangeToLogical(logicalRange: TwRange): number {
+function logicalRangeToLogical(logicalRange: ChartRange): number {
   return (logicalRange.from + logicalRange.to) / 2;
 }
 
 export function logicalToLogicalRange(
   logical: number,
-  currLogicalRange: TwRange | undefined,
+  currLogicalRange: ChartRange | undefined,
   dataLength: number,
-): TwRange {
+): ChartRange {
   const finalLogical = clamp(logical, 0, dataLength - 1);
 
   const span = currLogicalRange

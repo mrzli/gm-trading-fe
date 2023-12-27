@@ -1,4 +1,4 @@
-import { TickerDataRow, TickerDataRows } from '../../../types';
+import { ChartRange, TickerDataRow, TickerDataRows } from '../../../types';
 
 export interface TwInitInput {
   readonly precision: number;
@@ -14,13 +14,8 @@ export interface TwChartApi {
 }
 
 export type SetDataFn = (data: TickerDataRows) => void;
-export type GetTimeRangeFn = () => TwRange | undefined;
-export type SetTimeRangeFn = (range: TwRange) => void;
-
-export interface TwRange {
-  readonly from: number;
-  readonly to: number;
-}
+export type GetTimeRangeFn = () => ChartRange | undefined;
+export type SetTimeRangeFn = (range: ChartRange) => void;
 
 export type CrosshairMoveFn = (item: TickerDataRow | undefined) => void;
-export type ChartTimeRangeChangeFn = (range: TwRange | undefined) => void;
+export type ChartTimeRangeChangeFn = (range: ChartRange | undefined) => void;
