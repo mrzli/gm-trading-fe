@@ -57,17 +57,18 @@ export function TickerDataContainer({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
     timezone: 'UTC',
-    replayPosition: {
-      barIndex: undefined,
-      subBarIndex: 0,
-    },
   });
+
+  const { instrumentName, resolution, timezone } = settings;
 
   const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>(
     undefined,
   );
 
-  const { instrumentName, resolution, timezone, replayPosition } = settings;
+  const [replayPosition, setReplayPosition] = useState<BarReplayPosition>({
+    barIndex: undefined,
+    subBarIndex: 0,
+  });
 
   useEffect(
     () => {
@@ -97,11 +98,6 @@ export function TickerDataContainer({
       setSettings((s) => ({
         ...s,
         instrumentName,
-        logicalRange: undefined,
-        replayPosition: {
-          barIndex: undefined,
-          subBarIndex: 0,
-        },
       }));
       onRequestData(instrumentName, resolution);
     },
@@ -113,11 +109,6 @@ export function TickerDataContainer({
       setSettings((s) => ({
         ...s,
         resolution,
-        logicalRange: undefined,
-        replayPosition: {
-          barIndex: undefined,
-          subBarIndex: 0,
-        },
       }));
       onRequestData(instrumentName, resolution);
     },
@@ -140,10 +131,7 @@ export function TickerDataContainer({
 
   const handleReplayPositionChange = useCallback(
     (replayPosition: BarReplayPosition) => {
-      setSettings((s) => ({
-        ...s,
-        replayPosition,
-      }));
+      setReplayPosition(replayPosition);
     },
     [],
   );

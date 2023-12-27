@@ -8,7 +8,7 @@ import {
   aggregateGroupedDataRows,
   groupDataRows,
 } from '../ticker-data-container/util/process-chart-data';
-import { ChartRange, ChartSettings } from '../../types';
+import { BarReplayPosition, ChartRange, ChartSettings } from '../../types';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -63,15 +63,16 @@ export const Primary: StoryObj<ChartToolbarProps> = {
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
       timezone: 'UTC',
-      replayPosition: {
-        barIndex: undefined,
-        subBarIndex: 0,
-      },
     });
 
     const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>({
       from: 5,
       to: 15,
+    });
+
+    const [replayPosition, setReplayPosition] = useState<BarReplayPosition>({
+      barIndex: undefined,
+      subBarIndex: 0,
     });
 
     return (
@@ -99,13 +100,8 @@ export const Primary: StoryObj<ChartToolbarProps> = {
           }}
           logicalRange={logicalRange}
           onLogicalRangeChange={setLogicalRange}
-          replayPosition={settings.replayPosition}
-          onReplayPositionChange={(replayPosition) => {
-            setSettings((s) => ({
-              ...s,
-              replayPosition,
-            }));
-          }}
+          replayPosition={replayPosition}
+          onReplayPositionChange={setReplayPosition}
         />
         <div style={{ marginTop: 20 }}>
           <PrettyDisplay content={settings} />
