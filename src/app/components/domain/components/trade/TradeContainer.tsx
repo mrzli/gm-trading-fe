@@ -19,6 +19,8 @@ import {
   createManualTradeActionOpen,
   processTradeSequence,
   createManualTradeActionClose,
+  flattenGroupedBars,
+  getTradeDataBarIndex,
 } from './util';
 import { BarReplayPosition, Bars, ChartSettings } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
@@ -28,8 +30,6 @@ export interface TradeContainerProps {
   readonly fullData: FullBarData;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
-  readonly barData: Bars;
-  readonly barIndex: number;
 }
 
 export function TradeContainer({
@@ -37,10 +37,18 @@ export function TradeContainer({
   fullData,
   replayPosition,
   onReplayPositionChange,
-  barData,
-  barIndex,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
+
+  const barData = useMemo<Bars>(
+    () => flattenGroupedBars(fullData.subBars),
+    [fullData],
+  );
+
+  const barIndex = useMemo<number>(
+    () => getTradeDataBarIndex(fullData, replayPosition),
+    [fullData, replayPosition],
+  );
 
   const [tradingDataAndInputs, setTradingDataAndInputs] =
     useState<TradingDataAndInputs>(

@@ -2,11 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
-import {
-  flattenGroupedBars,
-  getTradeDataBarIndex,
-  rawDataToFullBarData,
-} from './util';
+import { rawDataToFullBarData } from './util';
 import {
   LoadingDisplay,
   PrettyDisplay,
@@ -22,7 +18,6 @@ import {
   ChartTimezone,
   ChartRange,
   BarReplayPosition,
-  Bars,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 
@@ -126,16 +121,6 @@ export function TickerDataContainer({
     [],
   );
 
-  const barData = useMemo<Bars>(
-    () => flattenGroupedBars(fullData.subBars),
-    [fullData],
-  );
-
-  const barIndex = useMemo<number>(
-    () => getTradeDataBarIndex(fullData, replayPosition),
-    [fullData, replayPosition],
-  );
-
   if (!instrument) {
     return <div>Instrument not found.</div>;
   }
@@ -180,8 +165,6 @@ export function TickerDataContainer({
         fullData,
         replayPosition,
         handleReplayPositionChange,
-        barData,
-        barIndex,
       )}
       value={rightToolbarState}
       onValueChange={setRightToolbarState}
@@ -196,8 +179,6 @@ function getToolbarEntries(
   fullData: FullBarData,
   replayPosition: BarReplayPosition,
   handleReplayPositionChange: (value: BarReplayPosition) => void,
-  barData: Bars,
-  barIndex: number,
 ): readonly SideToolbarEntry<RightToolbarState>[] {
   return [
     {
@@ -210,8 +191,6 @@ function getToolbarEntries(
             fullData={fullData}
             replayPosition={replayPosition}
             onReplayPositionChange={handleReplayPositionChange}
-            barData={barData}
-            barIndex={barIndex}
           />
         </div>
       ),
