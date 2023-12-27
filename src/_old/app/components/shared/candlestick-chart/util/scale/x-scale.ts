@@ -13,10 +13,10 @@ const ALIGN = 0.5;
 export function getXScale(
   data: readonly TickerDataRow[],
   interval: TickerDataResolution,
-  position: CandlestickChartPosition,
+  _position: CandlestickChartPosition,
   size: number,
 ): CandlestickChartXScale {
-  const domain = toXDomain(data, interval, position);
+  const domain = toXDomain(data, interval);
 
   return d3
     .scaleBand<number>()

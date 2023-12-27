@@ -5,7 +5,7 @@ import {
   decoratorPadding,
   decoratorSvg,
   disableControl,
-} from '../../../../../../storybook';
+} from '../../../../../../../storybook';
 
 const STORY_META: Meta<CandleElementProps> = {
   component: CandleElement,

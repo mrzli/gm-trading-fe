@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { YAxis, YAxisProps } from './YAxis';
-import { decoratorPadding, decoratorSvg } from '../../../../../../storybook';
+import { decoratorPadding, decoratorSvg } from '../../../../../../../storybook';
 import { AxisTickItem, TYPES_OF_Y_AXIS_LOCATIONS } from '../../types';
 
 const TICKS: readonly AxisTickItem[] = [

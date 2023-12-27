@@ -3,7 +3,7 @@ import {
   CandlestickChartArea,
   CandlestickChartAreaProps,
 } from './CandlestickChartArea';
-import { decoratorPadding, decoratorSvg } from '../../../../../../storybook';
+import { decoratorPadding, decoratorSvg } from '../../../../../../../storybook';
 import { CandleVisualData } from '../../types';
 
 const ITEMS: readonly CandleVisualData[] = [

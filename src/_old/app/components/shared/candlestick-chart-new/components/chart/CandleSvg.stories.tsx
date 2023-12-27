@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CandleSvg, CandleSvgProps } from './CandleSvg';
-import { decoratorSvg, decoratorPadding } from '../../../../../../storybook';
+import { decoratorSvg, decoratorPadding } from '../../../../../../../storybook';
 
 const STORY_META: Meta<CandleSvgProps> = {
   component: CandleSvg,

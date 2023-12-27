@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Grid, GridProps } from './Grid';
-import { decoratorPadding, decoratorSvg } from '../../../../../../storybook';
+import { decoratorPadding, decoratorSvg } from '../../../../../../../storybook';
 
 const STORY_META: Meta<GridProps> = {
   component: Grid,

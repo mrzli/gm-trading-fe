@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { XAxis, XAxisProps } from './XAxis';
-import { decoratorPadding, decoratorSvg } from '../../../../../../storybook';
+import { decoratorPadding, decoratorSvg } from '../../../../../../../storybook';
 import { AxisTickItem, TYPES_OF_X_AXIS_LOCATIONS } from '../../types';
 
 const TICKS: readonly AxisTickItem[] = [
