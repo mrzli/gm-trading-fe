@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   BarReplayPosition,
   GroupedTickerDataRows,
@@ -28,9 +28,10 @@ export interface ChartToolbarProps {
   readonly onInstrumentChange: (instrumentName: string) => void;
   readonly onResolutionChange: (resolution: ChartResolution) => void;
   readonly onTimezoneChange: (timezone: ChartTimezone) => void;
-  readonly onSettingsChange: (settings: ChartSettings) => void;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
+  readonly replayPosition: BarReplayPosition;
+  readonly onReplayPositionChange: (replayPosition: BarReplayPosition) => void;
 }
 
 export function ChartToolbar({
@@ -41,25 +42,16 @@ export function ChartToolbar({
   onInstrumentChange,
   onResolutionChange,
   onTimezoneChange,
-  onSettingsChange,
   logicalRange,
   onLogicalRangeChange,
+  replayPosition,
+  onReplayPositionChange,
 }: ChartToolbarProps): React.ReactElement {
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
       toSimpleSelectOption(instrumentName),
     );
   }, [instrumentNames]);
-
-  const handleReplayPositionChange = useCallback(
-    (replayPosition: BarReplayPosition) => {
-      onSettingsChange({
-        ...settings,
-        replayPosition,
-      });
-    },
-    [settings, onSettingsChange],
-  );
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
@@ -97,8 +89,8 @@ export function ChartToolbar({
           />
           <BarReplay
             subRows={subRows}
-            replayPosition={settings.replayPosition}
-            onReplayPositionChange={handleReplayPositionChange}
+            replayPosition={replayPosition}
+            onReplayPositionChange={onReplayPositionChange}
           />
         </>
       )}

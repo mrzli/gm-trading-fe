@@ -8,7 +8,7 @@ import {
   aggregateGroupedDataRows,
   groupDataRows,
 } from '../ticker-data-container/util/process-chart-data';
-import { ChartSettings } from '../../types';
+import { ChartRange, ChartSettings } from '../../types';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -29,7 +29,11 @@ const STORY_META: Meta<ChartToolbarProps> = {
     settings: disableControl(),
     subRows: disableControl(),
     rows: disableControl(),
-    onSettingsChange: disableControl(),
+    onInstrumentChange: disableControl(),
+    onResolutionChange: disableControl(),
+    onTimezoneChange: disableControl(),
+    onLogicalRangeChange: disableControl(),
+    onReplayPositionChange: disableControl(),
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
@@ -37,17 +41,23 @@ const STORY_META: Meta<ChartToolbarProps> = {
     rows: aggregateGroupedDataRows(
       groupDataRows(TEST_TICKER_ROWS_MINUTE, '5m'),
     ),
-    logicalRange: {
-      from: 5,
-      to: 15,
-    },
   },
 };
 export default STORY_META;
 
 export const Primary: StoryObj<ChartToolbarProps> = {
   render: (args: ChartToolbarProps) => {
-    const { settings: _ignore1, onSettingsChange: _ignore2, ...rest } = args;
+    const {
+      settings: _ignore1,
+      onInstrumentChange: _ignore2,
+      onResolutionChange: _ignore3,
+      onTimezoneChange: _ignore4,
+      logicalRange: _ignore5,
+      onLogicalRangeChange: _ignore6,
+      replayPosition: _ignore7,
+      onReplayPositionChange: _ignore8,
+      ...rest
+    } = args;
 
     const [settings, setSettings] = useState<ChartSettings>({
       instrumentName: INSTRUMENT_NAMES[0],
@@ -59,12 +69,43 @@ export const Primary: StoryObj<ChartToolbarProps> = {
       },
     });
 
+    const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>({
+      from: 5,
+      to: 15,
+    });
+
     return (
       <div>
         <ChartToolbar
           {...rest}
           settings={settings}
-          onSettingsChange={setSettings}
+          onInstrumentChange={(instrumentName) => {
+            setSettings((s) => ({
+              ...s,
+              instrumentName,
+            }));
+          }}
+          onResolutionChange={(resolution) => {
+            setSettings((s) => ({
+              ...s,
+              resolution,
+            }));
+          }}
+          onTimezoneChange={(timezone) => {
+            setSettings((s) => ({
+              ...s,
+              timezone,
+            }));
+          }}
+          logicalRange={logicalRange}
+          onLogicalRangeChange={setLogicalRange}
+          replayPosition={settings.replayPosition}
+          onReplayPositionChange={(replayPosition) => {
+            setSettings((s) => ({
+              ...s,
+              replayPosition,
+            }));
+          }}
         />
         <div style={{ marginTop: 20 }}>
           <PrettyDisplay content={settings} />

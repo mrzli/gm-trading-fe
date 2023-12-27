@@ -9,6 +9,7 @@ import {
   timeToLogical,
   logicalToLogicalRange,
 } from '../util';
+import { isChartRangeEqual } from '../../../util';
 
 export interface ChartToolbarGoToProps {
   readonly data: TickerDataRows;
@@ -39,6 +40,9 @@ export function ChartToolbarGoTo({
     const time = dateIsoUtcToUnixSeconds(dateInputToIso(goToInput));
     const logical = timeToLogical(time, data);
     const newRange = logicalToLogicalRange(logical, logicalRange, data.length);
+    if (isChartRangeEqual(newRange, logicalRange)) {
+      return;
+    }
 
     onGoTo(newRange);
   }, [isGoToValid, goToInput, data, logicalRange, onGoTo]);

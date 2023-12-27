@@ -3,6 +3,7 @@ import { BarReplayPosition, GroupedTickerDataRows } from '../../../../../types';
 import { BarReplaySetBarIndex } from './BarReplaySetBarIndex';
 import { BarReplayNavigateBar } from './BarReplayNavigateBar';
 import { BarReplayNavigateSubBar } from './BarReplayNavigateSubBar';
+import { isBarReplayPositionEqual } from '../../../../../util';
 
 export interface BarReplayProps {
   readonly subRows: GroupedTickerDataRows;
@@ -17,11 +18,16 @@ export function BarReplay({
 }: BarReplayProps): React.ReactElement {
   const handleBarIndexChange = useCallback(
     (barIndex: number | undefined, subBarIndex: number = 0) => {
-      onReplayPositionChange({
-        ...replayPosition,
+      const newBarReplayPosition: BarReplayPosition = {
         barIndex,
         subBarIndex,
-      });
+      };
+
+      if (isBarReplayPositionEqual(replayPosition, newBarReplayPosition)) {
+        return;
+      }
+
+      onReplayPositionChange(newBarReplayPosition);
     },
     [onReplayPositionChange, replayPosition],
   );

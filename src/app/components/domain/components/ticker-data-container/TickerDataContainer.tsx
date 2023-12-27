@@ -27,8 +27,10 @@ import {
   ChartResolution,
   ChartTimezone,
   ChartRange,
+  BarReplayPosition,
 } from '../../types';
 import { ChartTimeStep } from '../chart-toolbar/types';
+import { isChartRangeEqual } from '../../util';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -136,6 +138,16 @@ export function TickerDataContainer({
     [],
   );
 
+  const handleReplayPositionChange = useCallback(
+    (replayPosition: BarReplayPosition) => {
+      setSettings((s) => ({
+        ...s,
+        replayPosition,
+      }));
+    },
+    [],
+  );
+
   const handleChartKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
       switch (event.key) {
@@ -146,9 +158,13 @@ export function TickerDataContainer({
             unit: 'B',
             value: offset,
           };
-          const newLogicalRange = logicalRange ?
-            moveLogicalRange(logicalRange, timeStep, fullData.rows) :
-            undefined;
+          const newLogicalRange = logicalRange
+            ? moveLogicalRange(logicalRange, timeStep, fullData.rows)
+            : undefined;
+          if (isChartRangeEqual(logicalRange, newLogicalRange)) {
+            return;
+          }
+
           setLogicalRange(newLogicalRange);
           break;
         }
@@ -176,7 +192,7 @@ export function TickerDataContainer({
         data={chartData}
         timezone={timezone}
         logicalRange={logicalRange}
-        onChartTimeRangeChange={handleChartTimeRangeChange}
+        onLogicalRangeChange={handleChartTimeRangeChange}
         onChartKeyDown={handleChartKeyDown}
       />
     ) : isLoadingData ? (
@@ -195,9 +211,10 @@ export function TickerDataContainer({
         onInstrumentChange={handleInstrumentChange}
         onResolutionChange={handleResolutionChange}
         onTimezoneChange={handleTimezoneChange}
-        onSettingsChange={setSettings}
         logicalRange={logicalRange}
         onLogicalRangeChange={handleChartTimeRangeChange}
+        replayPosition={replayPosition}
+        onReplayPositionChange={handleReplayPositionChange}
       />
       {false && <PrettyDisplay content={settings} />}
     </>

@@ -8,7 +8,7 @@ import {
   ChartTimezone,
   ChartRange,
 } from '../../types';
-import { ChartTimeRangeChangeFn, TwChartApi, TwInitInput } from './types';
+import { TwChartApi, TwInitInput } from './types';
 import {
   destroyChart,
   getTwInitInput,
@@ -16,13 +16,14 @@ import {
   utcToTzTimestamp,
 } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
+import { isChartRangeEqual } from '../../util';
 
 export interface TwChartProps {
   readonly precision: number;
   readonly data: TickerDataRows;
   readonly timezone: ChartTimezone;
   readonly logicalRange: ChartRange | undefined;
-  readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
+  readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
@@ -31,7 +32,7 @@ export function TwChart({
   data,
   timezone,
   logicalRange,
-  onChartTimeRangeChange,
+  onLogicalRangeChange,
   onChartKeyDown,
 }: TwChartProps): React.ReactElement {
   const chartElementRef = useRef<HTMLDivElement>(null);
@@ -49,8 +50,8 @@ export function TwChart({
 
   const input = useMemo<TwInitInput>(
     () =>
-      getTwInitInput(precision, setCurrCrosshairItem, onChartTimeRangeChange),
-    [precision, onChartTimeRangeChange],
+      getTwInitInput(precision, setCurrCrosshairItem, onLogicalRangeChange),
+    [precision, onLogicalRangeChange],
   );
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export function TwChart({
     }
 
     const currentLogicalRange = chartApi.getTimeRange();
-    if (!isLogicalRangeEqual(currentLogicalRange, logicalRange)) {
+    if (!isChartRangeEqual(currentLogicalRange, logicalRange)) {
       chartApi.setTimeRange(logicalRange);
     }
   }, [logicalRange, chartApi]);
@@ -125,23 +126,4 @@ function adjustRowForTimezone(
 ): TickerDataRow {
   const adjustedTimestamp = utcToTzTimestamp(row.time, timezone);
   return { ...row, time: adjustedTimestamp as UTCTimestamp };
-}
-
-function isLogicalRangeEqual(
-  lr1: ChartRange | undefined,
-  lr2: ChartRange | undefined,
-): boolean {
-  if (!lr1 && !lr2) {
-    return true;
-  }
-  if (!lr1 || !lr2) {
-    return false;
-  }
-  return equalEpsilon(lr1.from, lr2.from) && equalEpsilon(lr1.to, lr2.to);
-}
-
-const EPSILON = 0.001;
-
-function equalEpsilon(a: number, b: number): boolean {
-  return Math.abs(a - b) < EPSILON;
 }
