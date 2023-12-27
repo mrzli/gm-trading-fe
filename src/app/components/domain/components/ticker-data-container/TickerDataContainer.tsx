@@ -3,7 +3,7 @@ import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
-import { TwChartToolbar } from '../chart-toolbar/TwChartToolbar';
+import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import { moveLogicalRange } from '../chart-toolbar/util';
 import {
   getChartData,
@@ -149,7 +149,7 @@ export function TickerDataContainer({
 
   const top = (
     <>
-      <TwChartToolbar
+      <ChartToolbar
         instrumentNames={instrumentNames}
         subRows={fullData.subRows}
         rows={fullData.rows}

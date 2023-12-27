@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { TwChartToolbar, TwChartToolbarProps } from './TwChartToolbar';
+import { ChartToolbar, ChartToolbarProps } from './ChartToolbar';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
 import { PrettyDisplay } from '../../../shared';
@@ -21,8 +21,8 @@ const INSTRUMENT_NAMES: readonly string[] = [
   'USD_JPY',
 ];
 
-const STORY_META: Meta<TwChartToolbarProps> = {
-  component: TwChartToolbar,
+const STORY_META: Meta<ChartToolbarProps> = {
+  component: ChartToolbar,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
@@ -41,8 +41,8 @@ const STORY_META: Meta<TwChartToolbarProps> = {
 };
 export default STORY_META;
 
-export const Primary: StoryObj<TwChartToolbarProps> = {
-  render: (args: TwChartToolbarProps) => {
+export const Primary: StoryObj<ChartToolbarProps> = {
+  render: (args: ChartToolbarProps) => {
     const { settings: _ignore1, onSettingsChange: _ignore2, ...rest } = args;
 
     const [settings, setSettings] = useState<ChartSettings>({
@@ -58,7 +58,7 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
 
     return (
       <div>
-        <TwChartToolbar
+        <ChartToolbar
           {...rest}
           settings={settings}
           onSettingsChange={setSettings}

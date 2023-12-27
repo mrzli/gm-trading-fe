@@ -16,17 +16,17 @@ import { SelectButtonCentered } from '../../../../shared';
 import { IconButton } from '../../shared';
 import { toSimpleSelectOption } from '../../../util';
 
-export interface TwChartToolbarNavigateProps {
+export interface ChartToolbarNavigateProps {
   readonly data: TickerDataRows;
   readonly logicalRange: ChartRange | undefined;
   readonly onNavigate: (logicalRange: ChartRange) => void;
 }
 
-export function TwChartToolbarNavigate({
+export function ChartToolbarNavigate({
   data,
   logicalRange,
   onNavigate,
-}: TwChartToolbarNavigateProps): React.ReactElement {
+}: ChartToolbarNavigateProps): React.ReactElement {
   const [timeStepSelection, setTimeStepSelection] =
     useState<TwTimeStepSelection>('100B');
 

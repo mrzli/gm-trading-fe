@@ -10,8 +10,8 @@ import {
   ChartRange,
 } from '../../types';
 import { RESOLUTION_OPTIONS } from './util';
-import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
-import { TwChartToolbarNavigate } from './components/TwChartToolbarNavigate';
+import { ChartToolbarGoTo } from './components/ChartToolbarGoTo';
+import { ChartToolbarNavigate } from './components/ChartToolbarNavigate';
 import {
   SelectOption,
   SelectButton,
@@ -20,7 +20,7 @@ import {
 import { BarReplay } from '../trade/tabs/trading-operations/bar-replay/BarReplay';
 import { toSimpleSelectOption } from '../../util';
 
-export interface TwChartToolbarProps {
+export interface ChartToolbarProps {
   readonly instrumentNames: readonly string[];
   readonly subRows: GroupedTickerDataRows;
   readonly rows: TickerDataRows;
@@ -28,13 +28,13 @@ export interface TwChartToolbarProps {
   readonly onSettingsChange: (settings: ChartSettings) => void;
 }
 
-export function TwChartToolbar({
+export function ChartToolbar({
   instrumentNames,
   subRows,
   rows,
   settings,
   onSettingsChange,
-}: TwChartToolbarProps): React.ReactElement {
+}: ChartToolbarProps): React.ReactElement {
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
       toSimpleSelectOption(instrumentName),
@@ -117,12 +117,12 @@ export function TwChartToolbar({
       />
       {rows.length > 0 && (
         <>
-          <TwChartToolbarNavigate
+          <ChartToolbarNavigate
             data={rows}
             logicalRange={settings.logicalRange}
             onNavigate={updateLogicalRange}
           />
-          <TwChartToolbarGoTo
+          <ChartToolbarGoTo
             data={rows}
             logicalRange={settings.logicalRange}
             onGoTo={updateLogicalRange}

@@ -10,17 +10,17 @@ import {
   logicalToLogicalRange,
 } from '../util';
 
-export interface TwChartToolbarGoToProps {
+export interface ChartToolbarGoToProps {
   readonly data: TickerDataRows;
   readonly logicalRange: ChartRange | undefined;
   readonly onGoTo: (logicalRange: ChartRange) => void;
 }
 
-export function TwChartToolbarGoTo({
+export function ChartToolbarGoTo({
   data,
   logicalRange,
   onGoTo,
-}: TwChartToolbarGoToProps): React.ReactElement {
+}: ChartToolbarGoToProps): React.ReactElement {
   const [goToInput, setGoToInput] = useState('');
   const isGoToInputValid = useMemo(
     () => SCHEMA_GO_TO_INPUT.safeParse(goToInput).success,
