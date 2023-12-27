@@ -1,16 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
-import { TwChart } from '../tw-chart/TwChart';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
-import { moveLogicalRange } from '../chart-toolbar/util';
 import {
-  getChartData,
   getTradeData,
   getTradeDataBarIndex,
   rawDataToFullTickerData,
-  toLogicalOffset,
 } from './util';
 import {
   LoadingDisplay,
@@ -29,8 +24,7 @@ import {
   ChartRange,
   BarReplayPosition,
 } from '../../types';
-import { ChartTimeStep } from '../chart-toolbar/types';
-import { isChartRangeEqual } from '../../util';
+import { ChartContainer } from './ChartContainer';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -89,10 +83,6 @@ export function TickerDataContainer({
     [rawData, resolution],
   );
 
-  const chartData = useMemo(() => {
-    return getChartData(fullData, replayPosition);
-  }, [fullData, replayPosition]);
-
   const handleInstrumentChange = useCallback(
     (instrumentName: string) => {
       setSettings((s) => ({
@@ -136,31 +126,6 @@ export function TickerDataContainer({
     [],
   );
 
-  const handleChartKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      switch (event.key) {
-        case Key.ArrowLeft:
-        case Key.ArrowRight: {
-          const offset = toLogicalOffset(event);
-          const timeStep: ChartTimeStep = {
-            unit: 'B',
-            value: offset,
-          };
-          const newLogicalRange = logicalRange
-            ? moveLogicalRange(logicalRange, timeStep, fullData.rows)
-            : undefined;
-          if (isChartRangeEqual(logicalRange, newLogicalRange)) {
-            return;
-          }
-
-          setLogicalRange(newLogicalRange);
-          break;
-        }
-      }
-    },
-    [fullData.rows, logicalRange],
-  );
-
   const tradingChartData = useMemo<TradingChartData>(() => {
     return {
       timezone,
@@ -174,14 +139,14 @@ export function TickerDataContainer({
   }
 
   const dataChartElement =
-    !isLoadingData && chartData.length > 0 ? (
-      <TwChart
-        precision={instrument.precision}
-        data={chartData}
-        timezone={timezone}
+    !isLoadingData && rawData && rawData.length > 0 ? (
+      <ChartContainer
+        instrument={instrument}
+        settings={settings}
+        fullData={fullData}
         logicalRange={logicalRange}
         onLogicalRangeChange={handleChartTimeRangeChange}
-        onChartKeyDown={handleChartKeyDown}
+        replayPosition={replayPosition}
       />
     ) : isLoadingData ? (
       <LoadingDisplay />
