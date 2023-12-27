@@ -1,7 +1,9 @@
 import { TradingInputs } from './trading-inputs';
-import { TradingChartData } from '..';
+import { Bars, ChartSettings } from '../../../../../types';
 
 export interface TradingDataAndInputs {
-  readonly chartData: TradingChartData;
+  readonly settings: ChartSettings;
+  readonly barData: Bars;
+  readonly barIndex: number;
   readonly inputs: TradingInputs;
 }

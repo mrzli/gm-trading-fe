@@ -3,7 +3,7 @@ import { Instrument } from '@gmjs/gm-trading-shared';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import {
-  getTradeData,
+  flattenGroupedBars,
   getTradeDataBarIndex,
   rawDataToFullBarData,
 } from './util';
@@ -14,7 +14,6 @@ import {
   SideToolbarEntry,
 } from '../../../shared';
 import { RightToolbarState } from './types';
-import { TradingChartData } from '../trade/types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
 import {
@@ -23,6 +22,7 @@ import {
   ChartTimezone,
   ChartRange,
   BarReplayPosition,
+  Bars,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 
@@ -53,7 +53,7 @@ export function TickerDataContainer({
     timezone: 'UTC',
   });
 
-  const { instrumentName, resolution, timezone } = settings;
+  const { instrumentName, resolution } = settings;
 
   const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>(
     undefined,
@@ -126,13 +126,15 @@ export function TickerDataContainer({
     [],
   );
 
-  const tradingChartData = useMemo<TradingChartData>(() => {
-    return {
-      timezone,
-      barData: getTradeData(fullData),
-      barIndex: getTradeDataBarIndex(fullData, replayPosition),
-    };
-  }, [timezone, fullData, replayPosition]);
+  const barData = useMemo<Bars>(
+    () => flattenGroupedBars(fullData.subBars),
+    [fullData],
+  );
+
+  const barIndex = useMemo<number>(
+    () => getTradeDataBarIndex(fullData, replayPosition),
+    [fullData, replayPosition],
+  );
 
   if (!instrument) {
     return <div>Instrument not found.</div>;
@@ -176,7 +178,7 @@ export function TickerDataContainer({
   const right = (
     <SideToolbar
       position={'right'}
-      entries={getToolbarEntries(tradingChartData)}
+      entries={getToolbarEntries(settings, barData, barIndex)}
       value={rightToolbarState}
       onValueChange={setRightToolbarState}
     />
@@ -186,7 +188,9 @@ export function TickerDataContainer({
 }
 
 function getToolbarEntries(
-  chartData: TradingChartData,
+  settings: ChartSettings,
+  barData: Bars,
+  barIndex: number,
 ): readonly SideToolbarEntry<RightToolbarState>[] {
   return [
     {
@@ -194,7 +198,11 @@ function getToolbarEntries(
       tab: 'Trade',
       content: (
         <div className='min-w-[600px] h-full'>
-          <TradeContainer chartData={chartData} />
+          <TradeContainer
+            settings={settings}
+            barData={barData}
+            barIndex={barIndex}
+          />
         </div>
       ),
     },

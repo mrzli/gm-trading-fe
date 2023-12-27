@@ -5,7 +5,6 @@ import {
   OrderInputs,
   TradeProcessState,
   TradeTabValue,
-  TradingChartData,
   TradingDataAndInputs,
   TradingInputs,
 } from './types';
@@ -21,25 +20,34 @@ import {
   processTradeSequence,
   createManualTradeActionClose,
 } from './util';
+import { Bars, ChartSettings } from '../../types';
 
 export interface TradeContainerProps {
-  readonly chartData: TradingChartData;
+  readonly settings: ChartSettings;
+  readonly barData: Bars;
+  readonly barIndex: number;
 }
 
 export function TradeContainer({
-  chartData,
+  settings,
+  barData,
+  barIndex,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
 
   const [tradingDataAndInputs, setTradingDataAndInputs] =
-    useState<TradingDataAndInputs>(getInitialTradingDataAndInputs(chartData));
+    useState<TradingDataAndInputs>(
+      getInitialTradingDataAndInputs(settings, barData, barIndex),
+    );
 
   useEffect(() => {
     setTradingDataAndInputs((prev) => ({
       ...prev,
-      chartData,
+      settings,
+      barData,
+      barIndex,
     }));
-  }, [chartData]);
+  }, [settings, barData, barIndex]);
 
   const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {
@@ -68,10 +76,15 @@ export function TradeContainer({
       const { manualTradeActions } = tradingDataAndInputs.inputs;
 
       const id = getNextManualActionId(manualTradeActions);
-      const newAction = createManualTradeActionOpen(order, id, chartData);
+      const newAction = createManualTradeActionOpen(
+        order,
+        id,
+        barData,
+        barIndex,
+      );
       appendManualTradeAction(newAction);
     },
-    [appendManualTradeAction, chartData, tradingDataAndInputs.inputs],
+    [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
   );
 
   const handleCancelOrderOrCloseTrade = useCallback(
@@ -79,10 +92,15 @@ export function TradeContainer({
       const { manualTradeActions } = tradingDataAndInputs.inputs;
 
       const id = getNextManualActionId(manualTradeActions);
-      const newAction = createManualTradeActionClose(id, targetId, chartData);
+      const newAction = createManualTradeActionClose(
+        id,
+        targetId,
+        barData,
+        barIndex,
+      );
       appendManualTradeAction(newAction);
     },
-    [appendManualTradeAction, chartData, tradingDataAndInputs.inputs],
+    [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
   );
 
   const handleCancelOrder = useCallback(
@@ -145,7 +163,7 @@ function getTabEntries(
   handleCancelOrder: (id: number) => void,
   handleCloseTrade: (id: number) => void,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
-  const timezone = tradingDataAndInputs.chartData.timezone;
+  const timezone = tradingDataAndInputs.settings.timezone;
 
   return [
     {
@@ -198,8 +216,7 @@ function getTabEntries(
 function getInitialTradeProcessState(
   dataAndInputs: TradingDataAndInputs,
 ): TradeProcessState {
-  const { chartData, inputs } = dataAndInputs;
-  const { barData, barIndex } = chartData;
+  const { barData, barIndex, inputs } = dataAndInputs;
   const { params } = inputs;
 
   return {
@@ -215,10 +232,14 @@ function getInitialTradeProcessState(
 }
 
 function getInitialTradingDataAndInputs(
-  chartData: TradingChartData,
+  settings: ChartSettings,
+  barData: Bars,
+  barIndex: number,
 ): TradingDataAndInputs {
   return {
-    chartData,
+    settings,
+    barData,
+    barIndex,
     inputs: {
       params: DEFAULT_TRADING_PARAMS,
       manualTradeActions: [],

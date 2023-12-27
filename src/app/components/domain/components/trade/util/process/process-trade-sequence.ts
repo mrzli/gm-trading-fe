@@ -7,7 +7,7 @@ import { processTrades } from './process-trades';
 export function processTradeSequence(
   input: TradingDataAndInputs,
 ): TradeProcessState {
-  const barIndex = input.chartData.barIndex;
+  const barIndex = input.barIndex;
 
   let tradeProcessState = getInitialTradeProcessState(input);
 
@@ -21,8 +21,7 @@ export function processTradeSequence(
 function getInitialTradeProcessState(
   input: TradingDataAndInputs,
 ): TradeProcessState {
-  const { chartData, inputs } = input;
-  const { barData, barIndex } = chartData;
+  const { barData, barIndex, inputs } = input;
   const { manualTradeActions, params } = inputs;
 
   const remainingManualActions = sortManualTradeActions(manualTradeActions);

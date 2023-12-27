@@ -3,9 +3,9 @@ import {
   ManualTradeActionAny,
   ManualTradeActionOpen,
   OrderInputs,
-  TradingChartData,
 } from '../types';
 import { maxBy } from '@gmjs/value-transformers';
+import { Bars } from '../../../types';
 
 export function getNextManualActionId(
   tradeActions: readonly ManualTradeActionAny[],
@@ -25,12 +25,13 @@ export function getNextManualActionId(
 export function createManualTradeActionOpen(
   orderInputs: OrderInputs,
   id: number,
-  chartData: TradingChartData,
+  barData: Bars,
+  barIndex: number,
 ): ManualTradeActionOpen {
   const { direction, price, amount, stopLossDistance, limitDistance } =
     orderInputs;
 
-  const time = chartData.barData[chartData.barIndex].time;
+  const time = barData[barIndex].time;
 
   return {
     kind: 'open',
@@ -46,9 +47,10 @@ export function createManualTradeActionOpen(
 export function createManualTradeActionClose(
   id: number,
   targetId: number,
-  chartData: TradingChartData,
+  barData: Bars,
+  barIndex: number,
 ): ManualTradeActionAny {
-  const time = chartData.barData[chartData.barIndex].time;
+  const time = barData[barIndex].time;
 
   return {
     kind: 'close',

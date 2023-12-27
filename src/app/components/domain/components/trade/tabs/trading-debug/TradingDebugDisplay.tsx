@@ -21,10 +21,7 @@ export function TradingDebugDisplay({
   const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
       ...dataAndInputs,
-      chartData: {
-        ...dataAndInputs.chartData,
-        barData: dataAndInputs.chartData.barData.slice(0, 2),
-      },
+      barData: dataAndInputs.barData.slice(0, 2),
     };
   }, [dataAndInputs]);
 

@@ -5,7 +5,7 @@ import {
   aggregateBars,
 } from './process-chart-data';
 import { FullBarData } from '../types';
-import { BarReplayPosition, Bar, Bars, ChartResolution } from '../../../types';
+import { BarReplayPosition, Bar, Bars, ChartResolution, GroupedBars } from '../../../types';
 import { applyFn } from '@gmjs/apply-function';
 import { flatten, toArray } from '@gmjs/value-transformers';
 
@@ -42,8 +42,8 @@ export function getChartData(
   }
 }
 
-export function getTradeData(data: FullBarData): Bars {
-  return applyFn(data.subBars, flatten<Bar>(), toArray());
+export function flattenGroupedBars(data: GroupedBars): Bars {
+  return applyFn(data, flatten<Bar>(), toArray());
 }
 
 export function getTradeDataBarIndex(
