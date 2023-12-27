@@ -25,6 +25,9 @@ export interface ChartToolbarProps {
   readonly subRows: GroupedTickerDataRows;
   readonly rows: TickerDataRows;
   readonly settings: ChartSettings;
+  readonly onInstrumentChange: (instrumentName: string) => void;
+  readonly onResolutionChange: (resolution: ChartResolution) => void;
+  readonly onTimezoneChange: (timezone: ChartTimezone) => void;
   readonly onSettingsChange: (settings: ChartSettings) => void;
 }
 
@@ -33,6 +36,9 @@ export function ChartToolbar({
   subRows,
   rows,
   settings,
+  onInstrumentChange,
+  onResolutionChange,
+  onTimezoneChange,
   onSettingsChange,
 }: ChartToolbarProps): React.ReactElement {
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
@@ -40,38 +46,6 @@ export function ChartToolbar({
       toSimpleSelectOption(instrumentName),
     );
   }, [instrumentNames]);
-
-  const handleInstrumentChange = useCallback(
-    (instrumentName: string) => {
-      onSettingsChange({
-        ...settings,
-        instrumentName,
-        logicalRange: undefined,
-      });
-    },
-    [settings, onSettingsChange],
-  );
-
-  const handleResolutionChange = useCallback(
-    (resolution: ChartResolution) => {
-      onSettingsChange({
-        ...settings,
-        resolution,
-        logicalRange: undefined,
-      });
-    },
-    [settings, onSettingsChange],
-  );
-
-  const handleTimezoneChange = useCallback(
-    (timezone: ChartTimezone) => {
-      onSettingsChange({
-        ...settings,
-        timezone,
-      });
-    },
-    [settings, onSettingsChange],
-  );
 
   const updateLogicalRange = useCallback(
     (logicalRange: ChartRange | undefined) => {
@@ -98,20 +72,20 @@ export function ChartToolbar({
       <SelectButton<string, false>
         options={instrumentOptions}
         value={settings.instrumentName}
-        onValueChange={handleInstrumentChange}
+        onValueChange={onInstrumentChange}
         selectionWidth={80}
         selectItemWidth={80}
       />
       <SelectButtonCentered<ChartResolution, false>
         options={RESOLUTION_OPTIONS}
         value={settings.resolution}
-        onValueChange={handleResolutionChange}
+        onValueChange={onResolutionChange}
         width={32}
       />
       <SelectButton<ChartTimezone, false>
         options={TIMEZONE_OPTIONS}
         value={settings.timezone}
-        onValueChange={handleTimezoneChange}
+        onValueChange={onTimezoneChange}
         selectionWidth={128}
         selectItemWidth={128}
       />

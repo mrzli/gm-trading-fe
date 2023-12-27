@@ -22,7 +22,7 @@ import { RightToolbarState } from './types';
 import { TradingChartData } from '../trade/types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
-import { ChartSettings, ChartResolution } from '../../types';
+import { ChartSettings, ChartResolution, ChartTimezone } from '../../types';
 import { ChartTimeStep } from '../chart-toolbar/types';
 
 export interface TickerDataContainerProps {
@@ -61,15 +61,8 @@ export function TickerDataContainer({
     settings;
 
   useEffect(() => {
-    setSettings((s) => ({
-      ...s,
-      replayPosition: {
-        barIndex: undefined,
-        subBarIndex: 0,
-      },
-    }));
     onRequestData(instrumentName, resolution);
-  }, [onRequestData, instrumentName, resolution]);
+  }, [instrumentName, resolution, onRequestData]);
 
   const instrument = useMemo(() => {
     return allInstruments.find(
@@ -85,6 +78,45 @@ export function TickerDataContainer({
   const chartData = useMemo(() => {
     return getChartData(fullData, replayPosition);
   }, [fullData, replayPosition]);
+
+  const handleInstrumentChange = useCallback(
+    (instrumentName: string) => {
+      setSettings((s) => ({
+        ...s,
+        instrumentName,
+        logicalRange: undefined,
+        replayPosition: {
+          barIndex: undefined,
+          subBarIndex: 0,
+        },
+      }));
+      onRequestData(instrumentName, resolution);
+    },
+    [onRequestData, resolution],
+  );
+
+  const handleResolutionChange = useCallback(
+    (resolution: ChartResolution) => {
+      setSettings((s) => ({
+        ...s,
+        resolution,
+        logicalRange: undefined,
+        replayPosition: {
+          barIndex: undefined,
+          subBarIndex: 0,
+        },
+      }));
+      onRequestData(instrumentName, resolution);
+    },
+    [instrumentName, onRequestData],
+  );
+
+  const handleTimezoneChange = useCallback((timezone: ChartTimezone) => {
+    setSettings((s) => ({
+      ...s,
+      timezone,
+    }));
+  }, []);
 
   const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
@@ -154,6 +186,9 @@ export function TickerDataContainer({
         subRows={fullData.subRows}
         rows={fullData.rows}
         settings={settings}
+        onInstrumentChange={handleInstrumentChange}
+        onResolutionChange={handleResolutionChange}
+        onTimezoneChange={handleTimezoneChange}
         onSettingsChange={setSettings}
       />
       {false && <PrettyDisplay content={settings} />}
