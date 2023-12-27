@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { TextInput } from '../../../../shared';
 import { dateIsoUtcToUnixSeconds } from '../../../../../util';
-import { ChartRange, TickerDataRows } from '../../../types';
+import { ChartRange, Bars } from '../../../types';
 import {
   SCHEMA_GO_TO_INPUT,
   dateInputToIso,
@@ -12,7 +12,7 @@ import {
 import { isChartRangeEqual } from '../../../util';
 
 export interface ChartToolbarGoToProps {
-  readonly data: TickerDataRows;
+  readonly data: Bars;
   readonly logicalRange: ChartRange | undefined;
   readonly onGoTo: (logicalRange: ChartRange) => void;
 }

@@ -1,4 +1,4 @@
-import { TickerDataRows } from '../../../../../types';
+import { Bars } from '../../../../../types';
 import { ManualTradeActionAny, TradingParameters } from '../inputs';
 import {
   ActiveOrder,
@@ -8,7 +8,7 @@ import {
 } from '../trade';
 
 export interface TradeProcessState {
-  readonly barData: TickerDataRows;
+  readonly barData: Bars;
   readonly barIndex: number;
   readonly tradingParams: TradingParameters;
   readonly remainingManualActions: readonly ManualTradeActionAny[];

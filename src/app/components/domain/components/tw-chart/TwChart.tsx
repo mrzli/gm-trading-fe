@@ -2,12 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UTCTimestamp, createChart } from 'lightweight-charts';
-import {
-  TickerDataRow,
-  TickerDataRows,
-  ChartTimezone,
-  ChartRange,
-} from '../../types';
+import { Bar, Bars, ChartTimezone, ChartRange } from '../../types';
 import { TwChartApi, TwInitInput } from './types';
 import {
   destroyChart,
@@ -20,7 +15,7 @@ import { isChartRangeEqual } from '../../util';
 
 export interface TwChartProps {
   readonly precision: number;
-  readonly data: TickerDataRows;
+  readonly data: Bars;
   readonly timezone: ChartTimezone;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
@@ -37,20 +32,19 @@ export function TwChart({
 }: TwChartProps): React.ReactElement {
   const chartElementRef = useRef<HTMLDivElement>(null);
 
-  const [currCrosshairItem, setCurrCrosshairItem] = useState<
-    TickerDataRow | undefined
-  >(undefined);
+  const [currCrosshairItem, setCurrCrosshairItem] = useState<Bar | undefined>(
+    undefined,
+  );
 
   const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
 
-  const adjustedData = useMemo<TickerDataRows>(
+  const adjustedData = useMemo<Bars>(
     () => data.map((row) => adjustRowForTimezone(row, timezone)),
     [data, timezone],
   );
 
   const input = useMemo<TwInitInput>(
-    () =>
-      getTwInitInput(precision, setCurrCrosshairItem, onLogicalRangeChange),
+    () => getTwInitInput(precision, setCurrCrosshairItem, onLogicalRangeChange),
     [precision, onLogicalRangeChange],
   );
 
@@ -104,7 +98,7 @@ export function TwChart({
 }
 
 function getOhlcLabelElement(
-  currCrosshairItem: TickerDataRow | undefined,
+  currCrosshairItem: Bar | undefined,
   precision: number,
 ): React.ReactElement | undefined {
   if (!currCrosshairItem) {
@@ -120,10 +114,7 @@ function getOhlcLabelElement(
   );
 }
 
-function adjustRowForTimezone(
-  row: TickerDataRow,
-  timezone: ChartTimezone,
-): TickerDataRow {
+function adjustRowForTimezone(row: Bar, timezone: ChartTimezone): Bar {
   const adjustedTimestamp = utcToTzTimestamp(row.time, timezone);
   return { ...row, time: adjustedTimestamp as UTCTimestamp };
 }

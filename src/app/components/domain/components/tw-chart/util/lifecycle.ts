@@ -1,5 +1,5 @@
 import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
-import { ChartRange, TickerDataRow, TickerDataRows } from '../../../types';
+import { ChartRange, Bar, Bars } from '../../../types';
 import {
   CrosshairMoveFn,
   TwInitInput,
@@ -17,7 +17,7 @@ import {
 
 export function getTwInitInput(
   precision: number,
-  // data: TickerDataRows,
+  // data: Bars,
   onCrosshairMove: CrosshairMoveFn,
   onChartTimeRangeChange: ChartTimeRangeChangeFn,
 ): TwInitInput {
@@ -56,7 +56,7 @@ export function initChart(
       return;
     }
 
-    onCrosshairMove(item as TickerDataRow);
+    onCrosshairMove(item as Bar);
   });
 
   timeScale.subscribeVisibleLogicalRangeChange((param) => {
@@ -81,8 +81,8 @@ export function initChart(
 function createSetDataFn(
   candlestickSeries: ISeriesApi<'Candlestick'>,
 ): SetDataFn {
-  return (data: TickerDataRows) => {
-    candlestickSeries.setData(data as TickerDataRow[]);
+  return (data: Bars) => {
+    candlestickSeries.setData(data as Bar[]);
   };
 }
 

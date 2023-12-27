@@ -1,6 +1,6 @@
 import { UTCTimestamp } from 'lightweight-charts';
 
-export interface TickerDataRow {
+export interface Bar {
   readonly time: UTCTimestamp;
   readonly open: number;
   readonly high: number;
@@ -8,6 +8,6 @@ export interface TickerDataRow {
   readonly close: number;
 }
 
-export type TickerDataRows = readonly TickerDataRow[];
+export type Bars = readonly Bar[];
 
-export type GroupedTickerDataRows = readonly TickerDataRows[];
+export type GroupedBars = readonly Bars[];

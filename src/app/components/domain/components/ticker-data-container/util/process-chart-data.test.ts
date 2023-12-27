@@ -4,11 +4,11 @@ import { readTextAsync } from '@gmjs/fs-async';
 import { mapGetOrThrow } from '@gmjs/data-container-util';
 import {
   TYPES_OF_CHART_RESOLUTIONS,
-  TickerDataRows,
+  Bars,
   ChartResolution,
 } from '../../../types';
 import {
-  toTickerDataRows,
+  toBars,
   groupDataRows,
   aggregateGroupedDataRows,
 } from './process-chart-data';
@@ -18,23 +18,23 @@ describe('process-chart-data', () => {
   let INPUT_QUARTER: readonly string[] = [];
   let INPUT_DAY: readonly string[] = [];
 
-  let INPUT_MINUTE_ROWS: TickerDataRows = [];
-  let INPUT_QUARTER_ROWS: TickerDataRows = [];
-  let INPUT_DAY_ROWS: TickerDataRows = [];
+  let INPUT_MINUTE_ROWS: Bars = [];
+  let INPUT_QUARTER_ROWS: Bars = [];
+  let INPUT_DAY_ROWS: Bars = [];
 
-  const RESULTS_MAP = new Map<ChartResolution, TickerDataRows>();
+  const RESULTS_MAP = new Map<ChartResolution, Bars>();
 
   beforeAll(async () => {
     INPUT_MINUTE = await readInputFile(
       join(__dirname, 'data/inputs/minute.csv'),
     );
-    INPUT_MINUTE_ROWS = toTickerDataRows(INPUT_MINUTE);
+    INPUT_MINUTE_ROWS = toBars(INPUT_MINUTE);
     INPUT_QUARTER = await readInputFile(
       join(__dirname, 'data/inputs/quarter.csv'),
     );
-    INPUT_QUARTER_ROWS = toTickerDataRows(INPUT_QUARTER);
+    INPUT_QUARTER_ROWS = toBars(INPUT_QUARTER);
     INPUT_DAY = await readInputFile(join(__dirname, 'data/inputs/day.csv'));
-    INPUT_DAY_ROWS = toTickerDataRows(INPUT_DAY);
+    INPUT_DAY_ROWS = toBars(INPUT_DAY);
 
     for (const resolution of TYPES_OF_CHART_RESOLUTIONS) {
       const path = join(__dirname, `data/results/${resolution}.json`);
@@ -43,7 +43,7 @@ describe('process-chart-data', () => {
     }
   });
 
-  function getInput(resolution: ChartResolution): TickerDataRows {
+  function getInput(resolution: ChartResolution): Bars {
     switch (resolution) {
       case '1m':
       case '2m':
@@ -103,7 +103,7 @@ async function readInputFile(path: string): Promise<readonly string[]> {
   return lines.length > 0 ? lines.slice(1) : [];
 }
 
-async function readResultsFile(path: string): Promise<TickerDataRows> {
+async function readResultsFile(path: string): Promise<Bars> {
   const content = await readTextAsync(path);
   return JSON.parse(content);
 }

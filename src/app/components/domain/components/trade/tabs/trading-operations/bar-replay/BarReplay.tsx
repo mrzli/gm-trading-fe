@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { BarReplayPosition, GroupedTickerDataRows } from '../../../../../types';
+import { BarReplayPosition, GroupedBars } from '../../../../../types';
 import { BarReplaySetBarIndex } from './BarReplaySetBarIndex';
 import { BarReplayNavigateBar } from './BarReplayNavigateBar';
 import { BarReplayNavigateSubBar } from './BarReplayNavigateSubBar';
 import { isBarReplayPositionEqual } from '../../../../../util';
 
 export interface BarReplayProps {
-  readonly subRows: GroupedTickerDataRows;
+  readonly subRows: GroupedBars;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }

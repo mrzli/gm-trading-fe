@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 import { clamp } from '@gmjs/number-util';
-import { GroupedTickerDataRows } from '../../../../../types';
+import { GroupedBars } from '../../../../../types';
 import { IconButton } from '../../../../shared';
 
 export interface BarReplayNavigateSubBarProps {
-  readonly subRows: GroupedTickerDataRows;
+  readonly subRows: GroupedBars;
   readonly barIndex: number | undefined;
   readonly subBarIndex: number;
   readonly onBarIndexChange: (
@@ -94,7 +94,7 @@ interface BarAndSubBarIndex {
 }
 
 function getBarAndSubBarIndex(
-  subRows: GroupedTickerDataRows,
+  subRows: GroupedBars,
   barIndex: number,
   subBarIndex: number,
   subBarMoveAmount: number,

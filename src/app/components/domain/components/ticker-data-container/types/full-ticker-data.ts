@@ -1,6 +1,6 @@
-import { GroupedTickerDataRows, TickerDataRows } from '../../../types';
+import { GroupedBars, Bars } from '../../../types';
 
 export interface FullTickerData {
-  readonly subRows: GroupedTickerDataRows;
-  readonly rows: TickerDataRows;
+  readonly subRows: GroupedBars;
+  readonly rows: Bars;
 }

@@ -1,11 +1,6 @@
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
-import {
-  GroupedTickerDataRows,
-  TickerDataRow,
-  TickerDataRows,
-  ChartResolution,
-} from '../../../types';
+import { GroupedBars, Bar, Bars, ChartResolution } from '../../../types';
 import { invariant } from '@gmjs/assert';
 import {
   DAY_TO_SECONDS,
@@ -14,11 +9,11 @@ import {
   WEEK_TO_SECONDS,
 } from '../../../../../util';
 
-export function toTickerDataRows(lines: readonly string[]): TickerDataRows {
-  return lines.map((element) => toTickerDataRow(element));
+export function toBars(lines: readonly string[]): Bars {
+  return lines.map((element) => toBar(element));
 }
 
-function toTickerDataRow(line: string): TickerDataRow {
+function toBar(line: string): Bar {
   const [timestamp, _date, open, high, low, close] = line.split(',');
 
   return {
@@ -31,9 +26,9 @@ function toTickerDataRow(line: string): TickerDataRow {
 }
 
 export function groupDataRows(
-  rows: TickerDataRows,
+  rows: Bars,
   resolution: ChartResolution,
-): GroupedTickerDataRows {
+): GroupedBars {
   switch (resolution) {
     case '1m':
     case '15m':
@@ -62,19 +57,17 @@ export function groupDataRows(
   }
 }
 
-export function aggregateGroupedDataRows(
-  rows: GroupedTickerDataRows,
-): TickerDataRows {
+export function aggregateGroupedDataRows(rows: GroupedBars): Bars {
   return rows.map((row) => aggregateRows(row));
 }
 
 function groupDataByFixedInterval(
-  rows: TickerDataRows,
+  rows: Bars,
   intervalSeconds: number,
   timeAdjustmentSeconds: number,
-): GroupedTickerDataRows {
-  const groupedData: TickerDataRows[] = [];
-  let bucket: TickerDataRow[] = [];
+): GroupedBars {
+  const groupedData: Bars[] = [];
+  let bucket: Bar[] = [];
 
   for (const row of rows) {
     const bucketIndex = getTimeBucketIndex(
@@ -131,9 +124,9 @@ function resolutionToSeconds(resolution: ChartResolution): number {
   }
 }
 
-function groupDataByMonth(rows: TickerDataRows): GroupedTickerDataRows {
-  const groupedData: TickerDataRows[] = [];
-  let bucket: TickerDataRow[] = [];
+function groupDataByMonth(rows: Bars): GroupedBars {
+  const groupedData: Bars[] = [];
+  let bucket: Bar[] = [];
 
   for (const row of rows) {
     const bucketIndex = getMonthTimeBucketIndex(row.time);
@@ -161,7 +154,7 @@ function getMonthTimeBucketIndex(time: number): number {
   return date.getUTCFullYear() * 12 + date.getUTCMonth();
 }
 
-export function aggregateRows(input: Iterable<TickerDataRow>): TickerDataRow {
+export function aggregateRows(input: Iterable<Bar>): Bar {
   let time: UTCTimestamp | undefined;
   let open: number | undefined;
   let high: number | undefined;

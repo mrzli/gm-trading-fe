@@ -5,7 +5,7 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
 } from '@mdi/js';
-import { ChartRange, TickerDataRows } from '../../../types';
+import { ChartRange, Bars } from '../../../types';
 import {
   logicalToLogicalRange,
   moveLogicalRange,
@@ -17,7 +17,7 @@ import { IconButton } from '../../shared';
 import { toSimpleSelectOption } from '../../../util';
 
 export interface ChartToolbarNavigateProps {
-  readonly data: TickerDataRows;
+  readonly data: Bars;
   readonly logicalRange: ChartRange | undefined;
   readonly onNavigate: (logicalRange: ChartRange) => void;
 }

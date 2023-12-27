@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
-import { ChartRange, TickerDataRows } from '../../../types';
+import { ChartRange, Bars } from '../../../types';
 import {
   HOUR_TO_SECONDS,
   DAY_TO_SECONDS,
@@ -15,18 +15,18 @@ const DEFAULT_SPAN = 60;
 export function moveLogicalRange(
   currLogicalRange: ChartRange,
   timeStep: ChartTimeStep,
-  data: TickerDataRows,
+  data: Bars,
 ): ChartRange {
   const currLogical = logicalRangeToLogical(currLogicalRange);
   const newLogical = moveLogical(currLogical, timeStep, data);
   return logicalToLogicalRange(newLogical, currLogicalRange, data.length);
 }
 
-export function timeToLogical(time: number, data: TickerDataRows): number {
+export function timeToLogical(time: number, data: Bars): number {
   return binarySearch(data, time, (row) => row.time);
 }
 
-export function logicalToTime(logical: number, data: TickerDataRows): number {
+export function logicalToTime(logical: number, data: Bars): number {
   if (logical < 0) {
     return data[0].time;
   } else if (logical >= data.length) {
@@ -39,7 +39,7 @@ export function logicalToTime(logical: number, data: TickerDataRows): number {
 function moveLogical(
   currLogical: number,
   timeStep: ChartTimeStep,
-  data: TickerDataRows,
+  data: Bars,
 ): number {
   const currBar = getCurrentBar(currLogical, data.length);
   const newLogical = moveLogicalInternal(currBar, timeStep, data);
@@ -57,7 +57,7 @@ function getCurrentBar(logical: number, length: number): number {
 function moveLogicalInternal(
   currBar: number,
   timeStep: ChartTimeStep,
-  data: TickerDataRows,
+  data: Bars,
 ): number {
   const { unit, value } = timeStep;
 

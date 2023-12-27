@@ -7,7 +7,7 @@ import {
   decoratorContainer,
   disableControl,
 } from '../../../../../storybook';
-import { TYPES_OF_CHART_TIMEZONES, TickerDataRows } from '../../types';
+import { TYPES_OF_CHART_TIMEZONES, Bars } from '../../types';
 import {
   TEST_TICKER_ROWS_DAY,
   TEST_TICKER_ROWS_MINUTE,
@@ -23,7 +23,7 @@ const STORY_META: Meta<TwChartProps> = {
     precision: argTypeInteger(0, 10),
     data: disableControl(),
     timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
-    onChartTimeRangeChange: disableControl(),
+    onLogicalRangeChange: disableControl(),
     onChartKeyDown: disableControl(),
   },
   args: {
@@ -43,7 +43,7 @@ export const Primary: StoryObj<TwChartProps> = {
   },
 };
 
-function getData(resolution: TickerDataResolution): TickerDataRows {
+function getData(resolution: TickerDataResolution): Bars {
   switch (resolution) {
     case 'day': {
       return TEST_TICKER_ROWS_DAY;

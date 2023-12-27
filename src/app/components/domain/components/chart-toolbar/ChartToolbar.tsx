@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import {
   BarReplayPosition,
-  GroupedTickerDataRows,
-  TickerDataRows,
+  GroupedBars,
+  Bars,
   ChartSettings,
   ChartResolution,
   ChartTimezone,
@@ -22,8 +22,8 @@ import { toSimpleSelectOption } from '../../util';
 
 export interface ChartToolbarProps {
   readonly instrumentNames: readonly string[];
-  readonly subRows: GroupedTickerDataRows;
-  readonly rows: TickerDataRows;
+  readonly subRows: GroupedBars;
+  readonly rows: Bars;
   readonly settings: ChartSettings;
   readonly onInstrumentChange: (instrumentName: string) => void;
   readonly onResolutionChange: (resolution: ChartResolution) => void;

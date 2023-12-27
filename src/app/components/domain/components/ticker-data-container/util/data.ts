@@ -1,5 +1,5 @@
 import {
-  toTickerDataRows,
+  toBars,
   groupDataRows,
   aggregateGroupedDataRows,
   aggregateRows,
@@ -7,19 +7,18 @@ import {
 import { FullTickerData } from '../types';
 import {
   BarReplayPosition,
-  TickerDataRow,
-  TickerDataRows,
+  Bar,
+  Bars,
   ChartResolution,
 } from '../../../types';
 import { applyFn } from '@gmjs/apply-function';
-import { compose } from '@gmjs/compose-function';
 import { flatten, toArray } from '@gmjs/value-transformers';
 
 export function rawDataToFullTickerData(
   rawData: readonly string[] | undefined,
   resolution: ChartResolution,
 ): FullTickerData {
-  const nonAggregatedRows = toTickerDataRows(rawData ?? []);
+  const nonAggregatedRows = toBars(rawData ?? []);
   const subRows = groupDataRows(nonAggregatedRows, resolution);
   const rows = aggregateGroupedDataRows(subRows);
   return {
@@ -31,7 +30,7 @@ export function rawDataToFullTickerData(
 export function getChartData(
   data: FullTickerData,
   replayPosition: BarReplayPosition,
-): TickerDataRows {
+): Bars {
   const { subRows, rows } = data;
   const { barIndex, subBarIndex } = replayPosition;
 
@@ -48,8 +47,8 @@ export function getChartData(
   }
 }
 
-export function getTradeData(data: FullTickerData): TickerDataRows {
-  return applyFn(data.subRows, compose(flatten<TickerDataRow>(), toArray()));
+export function getTradeData(data: FullTickerData): Bars {
+  return applyFn(data.subRows, flatten<Bar>(), toArray());
 }
 
 export function getTradeDataBarIndex(

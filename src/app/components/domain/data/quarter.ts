@@ -1,8 +1,8 @@
 /* eslint-disable unicorn/numeric-separators-style */
 import { UTCTimestamp } from 'lightweight-charts';
-import { TickerDataRows } from '../types';
+import { Bars } from '../types';
 
-export const TEST_TICKER_ROWS_QUARTER: TickerDataRows = [
+export const TEST_TICKER_ROWS_QUARTER: Bars = [
   {
     time: 1672622100 as UTCTimestamp, // '2023-01-02T01:15:00.000Z',
     open: 13901.5,
