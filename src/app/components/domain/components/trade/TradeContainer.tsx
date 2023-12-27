@@ -20,16 +20,23 @@ import {
   processTradeSequence,
   createManualTradeActionClose,
 } from './util';
-import { Bars, ChartSettings } from '../../types';
+import { BarReplayPosition, Bars, ChartSettings } from '../../types';
+import { FullBarData } from '../ticker-data-container/types';
 
 export interface TradeContainerProps {
   readonly settings: ChartSettings;
+  readonly fullData: FullBarData;
+  readonly replayPosition: BarReplayPosition;
+  readonly onReplayPositionChange: (value: BarReplayPosition) => void;
   readonly barData: Bars;
   readonly barIndex: number;
 }
 
 export function TradeContainer({
   settings,
+  fullData,
+  replayPosition,
+  onReplayPositionChange,
   barData,
   barIndex,
 }: TradeContainerProps): React.ReactElement {
@@ -37,17 +44,25 @@ export function TradeContainer({
 
   const [tradingDataAndInputs, setTradingDataAndInputs] =
     useState<TradingDataAndInputs>(
-      getInitialTradingDataAndInputs(settings, barData, barIndex),
+      getInitialTradingDataAndInputs(
+        settings,
+        fullData,
+        replayPosition,
+        barData,
+        barIndex,
+      ),
     );
 
   useEffect(() => {
     setTradingDataAndInputs((prev) => ({
       ...prev,
       settings,
+      fullData,
+      replayPosition,
       barData,
       barIndex,
     }));
-  }, [settings, barData, barIndex]);
+  }, [settings, fullData, replayPosition, barData, barIndex]);
 
   const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {
@@ -132,6 +147,7 @@ export function TradeContainer({
         tradingDataAndInputs,
         handleTradingInputsChange,
         tradeState,
+        onReplayPositionChange,
         handleCreateOrder,
         handleCancelOrder,
         handleCloseTrade,
@@ -141,6 +157,7 @@ export function TradeContainer({
       handleCloseTrade,
       handleCreateOrder,
       handleTradingInputsChange,
+      onReplayPositionChange,
       tradeState,
       tradingDataAndInputs,
     ],
@@ -159,6 +176,7 @@ function getTabEntries(
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
   tradingState: TradeProcessState,
+  handleReplayPositionChange: (value: BarReplayPosition) => void,
   handleCreateOrder: (order: OrderInputs) => void,
   handleCancelOrder: (id: number) => void,
   handleCloseTrade: (id: number) => void,
@@ -182,8 +200,9 @@ function getTabEntries(
       tab: 'Trading',
       content: (
         <TradingOperationsContent
-          timezone={timezone}
+          dataAndInputs={tradingDataAndInputs}
           state={tradingState}
+          onReplayPositionChange={handleReplayPositionChange}
           onCreateOrder={handleCreateOrder}
           onCancelOrder={handleCancelOrder}
           onCloseTrade={handleCloseTrade}
@@ -233,11 +252,15 @@ function getInitialTradeProcessState(
 
 function getInitialTradingDataAndInputs(
   settings: ChartSettings,
+  fullData: FullBarData,
+  replayPosition: BarReplayPosition,
   barData: Bars,
   barIndex: number,
 ): TradingDataAndInputs {
   return {
     settings,
+    fullData,
+    replayPosition,
     barData,
     barIndex,
     inputs: {

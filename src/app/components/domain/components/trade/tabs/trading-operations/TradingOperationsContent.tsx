@@ -1,29 +1,33 @@
 import React, { useCallback } from 'react';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
-import { TradeProcessState } from '../../types';
+import { TradeProcessState, TradingDataAndInputs } from '../../types';
 import { ItemList } from '../../shared';
 import { ActiveOrderItem } from './lists/ActiveOrderItem';
 import { ActiveTradeItem } from './lists/ActiveTradeItem';
 import { CompletedTradeItem } from './lists/CompletedTradeItem';
 import { ComponentStack } from '../../shared/ComponentStack';
-import { ChartTimezone } from '../../../../types';
+import { BarReplayPosition } from '../../../../types';
+import { BarStatus } from './BarStatus';
 
 export interface TradingOperationsContentProps {
-  readonly timezone: ChartTimezone;
+  readonly dataAndInputs: TradingDataAndInputs;
   readonly state: TradeProcessState;
+  readonly onReplayPositionChange: (position: BarReplayPosition) => void;
   readonly onCreateOrder: (order: OrderInputs) => void;
   readonly onCancelOrder: (id: number) => void;
   readonly onCloseTrade: (id: number) => void;
 }
 
 export function TradingOperationsContent({
-  timezone,
+  dataAndInputs,
   state,
+  onReplayPositionChange,
   onCreateOrder,
   onCancelOrder,
   onCloseTrade,
 }: TradingOperationsContentProps): React.ReactElement {
+  const { timezone } = dataAndInputs.settings;
   const { tradingParams, activeOrders, activeTrades, completedTrades } = state;
 
   const handleSubmit = useCallback(
@@ -35,6 +39,10 @@ export function TradingOperationsContent({
 
   return (
     <ComponentStack className='mt-1'>
+      <BarStatus
+        dataAndInputs={dataAndInputs}
+        onReplayPositionChange={onReplayPositionChange}
+      />
       <CreateOrderForm onSubmit={handleSubmit} />
       <ItemList
         title={'Active Orders'}

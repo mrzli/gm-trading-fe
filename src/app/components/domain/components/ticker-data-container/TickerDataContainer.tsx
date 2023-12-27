@@ -13,7 +13,7 @@ import {
   SideToolbar,
   SideToolbarEntry,
 } from '../../../shared';
-import { RightToolbarState } from './types';
+import { FullBarData, RightToolbarState } from './types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
 import {
@@ -178,7 +178,14 @@ export function TickerDataContainer({
   const right = (
     <SideToolbar
       position={'right'}
-      entries={getToolbarEntries(settings, barData, barIndex)}
+      entries={getToolbarEntries(
+        settings,
+        fullData,
+        replayPosition,
+        handleReplayPositionChange,
+        barData,
+        barIndex,
+      )}
       value={rightToolbarState}
       onValueChange={setRightToolbarState}
     />
@@ -189,6 +196,9 @@ export function TickerDataContainer({
 
 function getToolbarEntries(
   settings: ChartSettings,
+  fullData: FullBarData,
+  replayPosition: BarReplayPosition,
+  handleReplayPositionChange: (value: BarReplayPosition) => void,
   barData: Bars,
   barIndex: number,
 ): readonly SideToolbarEntry<RightToolbarState>[] {
@@ -200,6 +210,9 @@ function getToolbarEntries(
         <div className='min-w-[600px] h-full'>
           <TradeContainer
             settings={settings}
+            fullData={fullData}
+            replayPosition={replayPosition}
+            onReplayPositionChange={handleReplayPositionChange}
             barData={barData}
             barIndex={barIndex}
           />
