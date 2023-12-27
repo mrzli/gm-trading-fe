@@ -25,15 +25,15 @@ function toBar(line: string): Bar {
   };
 }
 
-export function groupDataRows(
-  rows: Bars,
+export function groupDataBars(
+  bars: Bars,
   resolution: ChartResolution,
 ): GroupedBars {
   switch (resolution) {
     case '1m':
     case '15m':
     case 'D': {
-      return rows.map((row) => [row]);
+      return bars.map((item) => [item]);
     }
     case '2m':
     case '5m':
@@ -44,7 +44,7 @@ export function groupDataRows(
     case '4h':
     case 'W': {
       return groupDataByFixedInterval(
-        rows,
+        bars,
         resolutionToSeconds(resolution),
         // UNIX time starts at 1970-01-01 00:00:00 UTC, which is a Thursday
         // to get a time which starts at Monday, we need to offset by 3 days
@@ -52,26 +52,26 @@ export function groupDataRows(
       );
     }
     case 'M': {
-      return groupDataByMonth(rows);
+      return groupDataByMonth(bars);
     }
   }
 }
 
-export function aggregateGroupedDataRows(rows: GroupedBars): Bars {
-  return rows.map((row) => aggregateRows(row));
+export function aggregateGroupedDataBars(bars: GroupedBars): Bars {
+  return bars.map((item) => aggregateBars(item));
 }
 
 function groupDataByFixedInterval(
-  rows: Bars,
+  bars: Bars,
   intervalSeconds: number,
   timeAdjustmentSeconds: number,
 ): GroupedBars {
   const groupedData: Bars[] = [];
   let bucket: Bar[] = [];
 
-  for (const row of rows) {
+  for (const bar of bars) {
     const bucketIndex = getTimeBucketIndex(
-      row.time + timeAdjustmentSeconds,
+      bar.time + timeAdjustmentSeconds,
       intervalSeconds,
     );
     if (
@@ -81,10 +81,10 @@ function groupDataByFixedInterval(
         intervalSeconds,
       ) === bucketIndex
     ) {
-      bucket.push(row);
+      bucket.push(bar);
     } else {
       groupedData.push(bucket);
-      bucket = [row];
+      bucket = [bar];
     }
   }
 
@@ -124,20 +124,20 @@ function resolutionToSeconds(resolution: ChartResolution): number {
   }
 }
 
-function groupDataByMonth(rows: Bars): GroupedBars {
+function groupDataByMonth(bars: Bars): GroupedBars {
   const groupedData: Bars[] = [];
   let bucket: Bar[] = [];
 
-  for (const row of rows) {
-    const bucketIndex = getMonthTimeBucketIndex(row.time);
+  for (const bar of bars) {
+    const bucketIndex = getMonthTimeBucketIndex(bar.time);
     if (
       bucket.length === 0 ||
       getMonthTimeBucketIndex(bucket[0].time) === bucketIndex
     ) {
-      bucket.push(row);
+      bucket.push(bar);
     } else {
       groupedData.push(bucket);
-      bucket = [row];
+      bucket = [bar];
     }
   }
 
@@ -154,7 +154,7 @@ function getMonthTimeBucketIndex(time: number): number {
   return date.getUTCFullYear() * 12 + date.getUTCMonth();
 }
 
-export function aggregateRows(input: Iterable<Bar>): Bar {
+export function aggregateBars(input: Iterable<Bar>): Bar {
   let time: UTCTimestamp | undefined;
   let open: number | undefined;
   let high: number | undefined;

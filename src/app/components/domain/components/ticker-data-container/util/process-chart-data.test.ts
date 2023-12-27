@@ -9,8 +9,8 @@ import {
 } from '../../../types';
 import {
   toBars,
-  groupDataRows,
-  aggregateGroupedDataRows,
+  groupDataBars,
+  aggregateGroupedDataBars,
 } from './process-chart-data';
 
 describe('process-chart-data', () => {
@@ -18,9 +18,9 @@ describe('process-chart-data', () => {
   let INPUT_QUARTER: readonly string[] = [];
   let INPUT_DAY: readonly string[] = [];
 
-  let INPUT_MINUTE_ROWS: Bars = [];
-  let INPUT_QUARTER_ROWS: Bars = [];
-  let INPUT_DAY_ROWS: Bars = [];
+  let INPUT_MINUTE_BARS: Bars = [];
+  let INPUT_QUARTER_BARS: Bars = [];
+  let INPUT_DAY_BARS: Bars = [];
 
   const RESULTS_MAP = new Map<ChartResolution, Bars>();
 
@@ -28,13 +28,13 @@ describe('process-chart-data', () => {
     INPUT_MINUTE = await readInputFile(
       join(__dirname, 'data/inputs/minute.csv'),
     );
-    INPUT_MINUTE_ROWS = toBars(INPUT_MINUTE);
+    INPUT_MINUTE_BARS = toBars(INPUT_MINUTE);
     INPUT_QUARTER = await readInputFile(
       join(__dirname, 'data/inputs/quarter.csv'),
     );
-    INPUT_QUARTER_ROWS = toBars(INPUT_QUARTER);
+    INPUT_QUARTER_BARS = toBars(INPUT_QUARTER);
     INPUT_DAY = await readInputFile(join(__dirname, 'data/inputs/day.csv'));
-    INPUT_DAY_ROWS = toBars(INPUT_DAY);
+    INPUT_DAY_BARS = toBars(INPUT_DAY);
 
     for (const resolution of TYPES_OF_CHART_RESOLUTIONS) {
       const path = join(__dirname, `data/results/${resolution}.json`);
@@ -49,24 +49,24 @@ describe('process-chart-data', () => {
       case '2m':
       case '5m':
       case '10m': {
-        return INPUT_MINUTE_ROWS;
+        return INPUT_MINUTE_BARS;
       }
       case '15m':
       case '30m':
       case '1h':
       case '2h':
       case '4h': {
-        return INPUT_QUARTER_ROWS;
+        return INPUT_QUARTER_BARS;
       }
       case 'D':
       case 'W':
       case 'M': {
-        return INPUT_DAY_ROWS;
+        return INPUT_DAY_BARS;
       }
     }
   }
 
-  describe('aggregateDataRows', () => {
+  describe('aggregateDataBars', () => {
     type Example = ChartResolution;
 
     const EXAMPLES: readonly Example[] = [
@@ -88,7 +88,7 @@ describe('process-chart-data', () => {
       it(JSON.stringify(example), () => {
         const input = getInput(example);
         const expected = mapGetOrThrow(RESULTS_MAP, example);
-        const actual = aggregateGroupedDataRows(groupDataRows(input, example));
+        const actual = aggregateGroupedDataBars(groupDataBars(input, example));
         // console.log('actual', actual);
         // console.log('expected', expected);
         expect(actual).toEqual(expected);

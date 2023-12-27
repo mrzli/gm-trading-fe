@@ -3,10 +3,10 @@ import { ChartToolbar, ChartToolbarProps } from './ChartToolbar';
 import { decoratorPadding, disableControl } from '../../../../../storybook';
 import { useState } from 'react';
 import { PrettyDisplay } from '../../../shared';
-import { TEST_TICKER_ROWS_MINUTE } from '../../data';
+import { TEST_TICKER_BARS_MINUTE } from '../../data';
 import {
-  aggregateGroupedDataRows,
-  groupDataRows,
+  aggregateGroupedDataBars,
+  groupDataBars,
 } from '../ticker-data-container/util/process-chart-data';
 import { BarReplayPosition, ChartRange, ChartSettings } from '../../types';
 
@@ -27,8 +27,8 @@ const STORY_META: Meta<ChartToolbarProps> = {
   decorators: [decoratorPadding()],
   argTypes: {
     settings: disableControl(),
-    subRows: disableControl(),
-    rows: disableControl(),
+    subBars: disableControl(),
+    bars: disableControl(),
     onInstrumentChange: disableControl(),
     onResolutionChange: disableControl(),
     onTimezoneChange: disableControl(),
@@ -37,9 +37,9 @@ const STORY_META: Meta<ChartToolbarProps> = {
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
-    subRows: groupDataRows(TEST_TICKER_ROWS_MINUTE, '5m'),
-    rows: aggregateGroupedDataRows(
-      groupDataRows(TEST_TICKER_ROWS_MINUTE, '5m'),
+    subBars: groupDataBars(TEST_TICKER_BARS_MINUTE, '5m'),
+    bars: aggregateGroupedDataBars(
+      groupDataBars(TEST_TICKER_BARS_MINUTE, '5m'),
     ),
   },
 };

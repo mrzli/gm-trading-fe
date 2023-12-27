@@ -5,7 +5,7 @@ import { GroupedBars } from '../../../../../types';
 import { IconButton } from '../../../../shared';
 
 export interface BarReplayNavigateSubBarProps {
-  readonly subRows: GroupedBars;
+  readonly subBars: GroupedBars;
   readonly barIndex: number | undefined;
   readonly subBarIndex: number;
   readonly onBarIndexChange: (
@@ -15,7 +15,7 @@ export interface BarReplayNavigateSubBarProps {
 }
 
 export function BarReplayNavigateSubBar({
-  subRows,
+  subBars,
   barIndex,
   subBarIndex,
   onBarIndexChange,
@@ -28,8 +28,8 @@ export function BarReplayNavigateSubBar({
   }, [barIndex, subBarIndex]);
 
   const isNavigateForwardEnabled = useMemo(() => {
-    return barIndex !== undefined && barIndex < subRows.length;
-  }, [barIndex, subRows.length]);
+    return barIndex !== undefined && barIndex < subBars.length;
+  }, [barIndex, subBars.length]);
 
   const isNavigateEnabled = useMemo(() => {
     return isNavigateBackEnabled || isNavigateForwardEnabled;
@@ -42,7 +42,7 @@ export function BarReplayNavigateSubBar({
       }
 
       const newBarAndSubBarIndexes = getBarAndSubBarIndex(
-        subRows,
+        subBars,
         barIndex!,
         subBarIndex,
         amount,
@@ -53,7 +53,7 @@ export function BarReplayNavigateSubBar({
 
       onBarIndexChange(newBarIndex, newSubBarIndex);
     },
-    [isNavigateEnabled, subRows, barIndex, subBarIndex, onBarIndexChange],
+    [isNavigateEnabled, subBars, barIndex, subBarIndex, onBarIndexChange],
   );
 
   const navigateBack = useCallback(() => {
@@ -94,7 +94,7 @@ interface BarAndSubBarIndex {
 }
 
 function getBarAndSubBarIndex(
-  subRows: GroupedBars,
+  subBars: GroupedBars,
   barIndex: number,
   subBarIndex: number,
   subBarMoveAmount: number,
@@ -104,22 +104,22 @@ function getBarAndSubBarIndex(
 
   while (newBarIndex > 1 && newSubBarIndex < 0) {
     newBarIndex--;
-    newSubBarIndex += subRows[newBarIndex].length;
+    newSubBarIndex += subBars[newBarIndex].length;
   }
 
   while (
-    newBarIndex < subRows.length &&
-    newSubBarIndex >= subRows[newBarIndex].length
+    newBarIndex < subBars.length &&
+    newSubBarIndex >= subBars[newBarIndex].length
   ) {
-    newSubBarIndex -= subRows[newBarIndex].length;
+    newSubBarIndex -= subBars[newBarIndex].length;
     newBarIndex++;
   }
 
-  newBarIndex = clamp(newBarIndex, 1, subRows.length);
+  newBarIndex = clamp(newBarIndex, 1, subBars.length);
   newSubBarIndex =
-    newBarIndex === subRows.length
+    newBarIndex === subBars.length
       ? 0
-      : clamp(newSubBarIndex, 0, subRows[newBarIndex].length - 1);
+      : clamp(newSubBarIndex, 0, subBars[newBarIndex].length - 1);
 
   return { barIndex: newBarIndex, subBarIndex: newSubBarIndex };
 }

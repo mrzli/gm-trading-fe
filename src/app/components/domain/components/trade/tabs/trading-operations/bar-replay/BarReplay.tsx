@@ -6,13 +6,13 @@ import { BarReplayNavigateSubBar } from './BarReplayNavigateSubBar';
 import { isBarReplayPositionEqual } from '../../../../../util';
 
 export interface BarReplayProps {
-  readonly subRows: GroupedBars;
+  readonly subBars: GroupedBars;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplay({
-  subRows,
+  subBars,
   replayPosition,
   onReplayPositionChange,
 }: BarReplayProps): React.ReactElement {
@@ -35,17 +35,17 @@ export function BarReplay({
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <BarReplaySetBarIndex
-        dataLength={subRows.length}
+        dataLength={subBars.length}
         barIndex={replayPosition.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
       <BarReplayNavigateBar
-        dataLength={subRows.length}
+        dataLength={subBars.length}
         barIndex={replayPosition.barIndex}
         onBarIndexChange={handleBarIndexChange}
       />
       <BarReplayNavigateSubBar
-        subRows={subRows}
+        subBars={subBars}
         barIndex={replayPosition.barIndex}
         subBarIndex={replayPosition.subBarIndex}
         onBarIndexChange={handleBarIndexChange}

@@ -2,7 +2,7 @@
 import { UTCTimestamp } from 'lightweight-charts';
 import { Bars } from '../types';
 
-export const TEST_TICKER_ROWS_MINUTE: Bars = [
+export const TEST_TICKER_BARS_MINUTE: Bars = [
   {
     time: 1673545380 as UTCTimestamp, // '2023-01-12T17:43:00.000Z',
     open: 15103.9,

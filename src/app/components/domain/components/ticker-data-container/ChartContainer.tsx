@@ -41,7 +41,7 @@ export function ChartContainer({
             value: offset,
           };
           const newLogicalRange = logicalRange
-            ? moveLogicalRange(logicalRange, timeStep, fullData.rows)
+            ? moveLogicalRange(logicalRange, timeStep, fullData.bars)
             : undefined;
           if (isChartRangeEqual(logicalRange, newLogicalRange)) {
             return;
@@ -52,7 +52,7 @@ export function ChartContainer({
         }
       }
     },
-    [fullData.rows, logicalRange, onLogicalRangeChange],
+    [fullData.bars, logicalRange, onLogicalRangeChange],
   );
 
   return (

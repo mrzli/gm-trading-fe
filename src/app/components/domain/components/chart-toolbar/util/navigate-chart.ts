@@ -23,7 +23,7 @@ export function moveLogicalRange(
 }
 
 export function timeToLogical(time: number, data: Bars): number {
-  return binarySearch(data, time, (row) => row.time);
+  return binarySearch(data, time, (item) => item.time);
 }
 
 export function logicalToTime(logical: number, data: Bars): number {

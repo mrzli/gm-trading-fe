@@ -9,9 +9,9 @@ import {
 } from '../../../../../storybook';
 import { TYPES_OF_CHART_TIMEZONES, Bars } from '../../types';
 import {
-  TEST_TICKER_ROWS_DAY,
-  TEST_TICKER_ROWS_MINUTE,
-  TEST_TICKER_ROWS_QUARTER,
+  TEST_TICKER_BARS_DAY,
+  TEST_TICKER_BARS_MINUTE,
+  TEST_TICKER_BARS_QUARTER,
 } from '../../data';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
@@ -46,13 +46,13 @@ export const Primary: StoryObj<TwChartProps> = {
 function getData(resolution: TickerDataResolution): Bars {
   switch (resolution) {
     case 'day': {
-      return TEST_TICKER_ROWS_DAY;
+      return TEST_TICKER_BARS_DAY;
     }
     case 'minute': {
-      return TEST_TICKER_ROWS_MINUTE;
+      return TEST_TICKER_BARS_MINUTE;
     }
     case 'quarter': {
-      return TEST_TICKER_ROWS_QUARTER;
+      return TEST_TICKER_BARS_QUARTER;
     }
   }
 }

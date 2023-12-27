@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { TradeContainer, TradeContainerProps } from './TradeContainer';
 import { decoratorPadding } from '../../../../../storybook';
 import { Bars } from '../../types';
-import { TEST_TICKER_ROWS_MINUTE } from '../../data';
+import { TEST_TICKER_BARS_MINUTE } from '../../data';
 import { TradingChartData } from './types';
 
-const BAR_DATA: Bars = TEST_TICKER_ROWS_MINUTE;
+const BAR_DATA: Bars = TEST_TICKER_BARS_MINUTE;
 
 const CHART_DATA: TradingChartData = {
   timezone: 'UTC',

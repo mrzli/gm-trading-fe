@@ -2,7 +2,7 @@
 import { UTCTimestamp } from 'lightweight-charts';
 import { Bars } from '../types';
 
-export const TEST_TICKER_ROWS_DAY: Bars = [
+export const TEST_TICKER_BARS_DAY: Bars = [
   {
     time: 1656633600 as UTCTimestamp, // '2022-07-01T00:00:00.000Z',
     open: 12805.1,

@@ -158,8 +158,8 @@ export function TickerDataContainer({
     <>
       <ChartToolbar
         instrumentNames={instrumentNames}
-        subRows={fullData.subRows}
-        rows={fullData.rows}
+        subBars={fullData.subBars}
+        bars={fullData.bars}
         settings={settings}
         onInstrumentChange={handleInstrumentChange}
         onResolutionChange={handleResolutionChange}

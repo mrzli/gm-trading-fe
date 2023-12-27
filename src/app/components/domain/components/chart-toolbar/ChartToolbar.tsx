@@ -22,8 +22,8 @@ import { toSimpleSelectOption } from '../../util';
 
 export interface ChartToolbarProps {
   readonly instrumentNames: readonly string[];
-  readonly subRows: GroupedBars;
-  readonly rows: Bars;
+  readonly subBars: GroupedBars;
+  readonly bars: Bars;
   readonly settings: ChartSettings;
   readonly onInstrumentChange: (instrumentName: string) => void;
   readonly onResolutionChange: (resolution: ChartResolution) => void;
@@ -36,8 +36,8 @@ export interface ChartToolbarProps {
 
 export function ChartToolbar({
   instrumentNames,
-  subRows,
-  rows,
+  subBars,
+  bars,
   settings,
   onInstrumentChange,
   onResolutionChange,
@@ -75,20 +75,20 @@ export function ChartToolbar({
         selectionWidth={128}
         selectItemWidth={128}
       />
-      {rows.length > 0 && (
+      {bars.length > 0 && (
         <>
           <ChartToolbarNavigate
-            data={rows}
+            data={bars}
             logicalRange={logicalRange}
             onNavigate={onLogicalRangeChange}
           />
           <ChartToolbarGoTo
-            data={rows}
+            data={bars}
             logicalRange={logicalRange}
             onGoTo={onLogicalRangeChange}
           />
           <BarReplay
-            subRows={subRows}
+            subBars={subBars}
             replayPosition={replayPosition}
             onReplayPositionChange={onReplayPositionChange}
           />

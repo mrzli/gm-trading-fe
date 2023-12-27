@@ -39,7 +39,7 @@ export function TwChart({
   const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
 
   const adjustedData = useMemo<Bars>(
-    () => data.map((row) => adjustRowForTimezone(row, timezone)),
+    () => data.map((item) => adjustBarForTimezone(item, timezone)),
     [data, timezone],
   );
 
@@ -114,7 +114,7 @@ function getOhlcLabelElement(
   );
 }
 
-function adjustRowForTimezone(row: Bar, timezone: ChartTimezone): Bar {
-  const adjustedTimestamp = utcToTzTimestamp(row.time, timezone);
-  return { ...row, time: adjustedTimestamp as UTCTimestamp };
+function adjustBarForTimezone(bar: Bar, timezone: ChartTimezone): Bar {
+  const adjustedTimestamp = utcToTzTimestamp(bar.time, timezone);
+  return { ...bar, time: adjustedTimestamp as UTCTimestamp };
 }
