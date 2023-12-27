@@ -4,7 +4,7 @@ import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { TwChartToolbar } from '../chart-toolbar/TwChartToolbar';
-import { moveLogicalRange } from '../tw-chart/util';
+import { moveLogicalRange } from '../chart-toolbar/util';
 import {
   getChartData,
   getTradeData,

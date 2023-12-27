@@ -6,16 +6,16 @@ import {
   mdiChevronRight,
 } from '@mdi/js';
 import { TwRange } from '../../tw-chart/types';
+import { TickerDataRows } from '../../../types';
 import {
   logicalToLogicalRange,
   moveLogicalRange,
-  toSimpleSelectOption,
-} from '../../tw-chart/util';
-import { TickerDataRows } from '../../../types';
-import { twTimeStepSelectionToTimeStep } from '../util';
+  twTimeStepSelectionToTimeStep,
+} from '../util';
 import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
 import { SelectButtonCentered } from '../../../../shared';
 import { IconButton } from '../../shared';
+import { toSimpleSelectOption } from '../../../util';
 
 export interface TwChartToolbarNavigateProps {
   readonly data: TickerDataRows;

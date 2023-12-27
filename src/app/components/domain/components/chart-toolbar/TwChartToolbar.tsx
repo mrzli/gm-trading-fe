@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import { TwRange } from '../tw-chart/types';
-import { toSimpleSelectOption } from '../tw-chart/util';
 import {
   BarReplayPosition,
   GroupedTickerDataRows,
@@ -19,6 +18,7 @@ import {
   SelectButtonCentered,
 } from '../../../shared';
 import { BarReplay } from '../trade/tabs/trading-operations/bar-replay/BarReplay';
+import { toSimpleSelectOption } from '../../util';
 
 export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];

@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import validator from 'validator';
-import { toSimpleSelectOption } from '../../../tw-chart/util';
 import { SelectOption } from '../../../../../shared';
 import { getDateInputParts } from '../util';
 import { SCHEMA_EMPTY_STRING } from './base';
 import { TYPES_OF_CHART_RESOLUTIONS, ChartResolution } from '../../../../types';
+import { toSimpleSelectOption } from '../../../../util';
 
 export const RESOLUTION_OPTIONS: readonly SelectOption<ChartResolution>[] =
   TYPES_OF_CHART_RESOLUTIONS.map((resolution) =>

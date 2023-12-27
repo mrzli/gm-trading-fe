@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
-import { TwRange } from '../types';
+import { TwRange } from '../../tw-chart/types';
 import { TickerDataRows } from '../../../types';
 import {
   HOUR_TO_SECONDS,
@@ -9,7 +9,7 @@ import {
   WEEK_TO_SECONDS,
 } from '../../../../../util';
 import { binarySearch } from './binary-search';
-import { ChartTimeStep } from '../../chart-toolbar/types';
+import { ChartTimeStep } from '../types';
 
 const DEFAULT_SPAN = 60;
 

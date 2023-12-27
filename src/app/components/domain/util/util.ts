@@ -1,4 +1,4 @@
-import { SelectOption } from '../../../../shared';
+import { SelectOption } from '../../shared';
 
 export function toSimpleSelectOption<TValue extends string>(
   value: TValue,
