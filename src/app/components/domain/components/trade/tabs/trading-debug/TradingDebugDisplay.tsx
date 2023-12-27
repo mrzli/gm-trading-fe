@@ -14,6 +14,8 @@ export interface TradingDebugDisplayProps {
   readonly state: TradeProcessState;
 }
 
+const MAX_BARS_TO_DISPLAY = 2;
+
 export function TradingDebugDisplay({
   dataAndInputs,
   state,
@@ -21,7 +23,12 @@ export function TradingDebugDisplay({
   const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
       ...dataAndInputs,
-      barData: dataAndInputs.barData.slice(0, 2),
+      fullData: {
+        ...dataAndInputs.fullData,
+        subBars: dataAndInputs.fullData.subBars.slice(0, MAX_BARS_TO_DISPLAY),
+        bars: dataAndInputs.fullData.bars.slice(0, MAX_BARS_TO_DISPLAY),
+      },
+      barData: dataAndInputs.barData.slice(0, MAX_BARS_TO_DISPLAY),
     };
   }, [dataAndInputs]);
 
