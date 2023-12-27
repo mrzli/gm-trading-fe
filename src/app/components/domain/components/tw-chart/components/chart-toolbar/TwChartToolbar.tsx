@@ -1,16 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
-import {
-  TYPES_OF_TW_CHART_TIMEZONES,
-  TwChartResolution,
-  TwChartSettings,
-  TwChartTimezone,
-  TwRange,
-} from '../../types';
+import { TwRange } from '../../types';
 import { toSimpleSelectOption } from '../../util';
 import {
   BarReplayPosition,
   GroupedTickerDataRows,
   TickerDataRows,
+  ChartSettings,
+  ChartResolution,
+  ChartTimezone,
+  TYPES_OF_CHART_TIMEZONES,
 } from '../../../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { TwChartToolbarGoTo } from './components/TwChartToolbarGoTo';
@@ -26,8 +24,8 @@ export interface TwChartToolbarProps {
   readonly instrumentNames: readonly string[];
   readonly subRows: GroupedTickerDataRows;
   readonly rows: TickerDataRows;
-  readonly settings: TwChartSettings;
-  readonly onSettingsChange: (settings: TwChartSettings) => void;
+  readonly settings: ChartSettings;
+  readonly onSettingsChange: (settings: ChartSettings) => void;
 }
 
 export function TwChartToolbar({
@@ -55,7 +53,7 @@ export function TwChartToolbar({
   );
 
   const handleResolutionChange = useCallback(
-    (resolution: TwChartResolution) => {
+    (resolution: ChartResolution) => {
       onSettingsChange({
         ...settings,
         resolution,
@@ -66,7 +64,7 @@ export function TwChartToolbar({
   );
 
   const handleTimezoneChange = useCallback(
-    (timezone: TwChartTimezone) => {
+    (timezone: ChartTimezone) => {
       onSettingsChange({
         ...settings,
         timezone,
@@ -104,13 +102,13 @@ export function TwChartToolbar({
         selectionWidth={80}
         selectItemWidth={80}
       />
-      <SelectButtonCentered<TwChartResolution, false>
+      <SelectButtonCentered<ChartResolution, false>
         options={RESOLUTION_OPTIONS}
         value={settings.resolution}
         onValueChange={handleResolutionChange}
         width={32}
       />
-      <SelectButton<TwChartTimezone, false>
+      <SelectButton<ChartTimezone, false>
         options={TIMEZONE_OPTIONS}
         value={settings.timezone}
         onValueChange={handleTimezoneChange}
@@ -140,5 +138,5 @@ export function TwChartToolbar({
   );
 }
 
-const TIMEZONE_OPTIONS: readonly SelectOption<TwChartTimezone>[] =
-  TYPES_OF_TW_CHART_TIMEZONES.map((timezone) => toSimpleSelectOption(timezone));
+const TIMEZONE_OPTIONS: readonly SelectOption<ChartTimezone>[] =
+  TYPES_OF_CHART_TIMEZONES.map((timezone) => toSimpleSelectOption(timezone));

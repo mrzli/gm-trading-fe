@@ -1,16 +1,16 @@
 import { z } from 'zod';
 import validator from 'validator';
-import {
-  TYPES_OF_TW_CHART_RESOLUTION,
-  TwChartResolution,
-} from '../../../../types';
 import { toSimpleSelectOption } from '../../../../util';
 import { SelectOption } from '../../../../../../../shared';
 import { getDateInputParts } from '../util';
 import { SCHEMA_EMPTY_STRING } from './base';
+import {
+  TYPES_OF_CHART_RESOLUTIONS,
+  ChartResolution,
+} from '../../../../../../types';
 
-export const RESOLUTION_OPTIONS: readonly SelectOption<TwChartResolution>[] =
-  TYPES_OF_TW_CHART_RESOLUTION.map((resolution) =>
+export const RESOLUTION_OPTIONS: readonly SelectOption<ChartResolution>[] =
+  TYPES_OF_CHART_RESOLUTIONS.map((resolution) =>
     toSimpleSelectOption(resolution),
   );
 

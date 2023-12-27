@@ -1,7 +1,7 @@
 {
   "extends": "@gmjs/tsconfig",
   "references": [{ "path": "./tsconfig.build.json" }],
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/app/components/domain/components/ticker-data-container/ChartContainer.tsx_"],
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "bundler",

@@ -2,11 +2,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UTCTimestamp, createChart } from 'lightweight-charts';
-import { TickerDataRow, TickerDataRows } from '../../types';
+import { TickerDataRow, TickerDataRows, ChartTimezone } from '../../types';
 import {
   ChartTimeRangeChangeFn,
   TwChartApi,
-  TwChartTimezone,
   TwInitInput,
   TwRange,
 } from './types';
@@ -21,7 +20,7 @@ import { TwOhlcLabel } from './components/TwOhlcLabel';
 export interface TwChartProps {
   readonly precision: number;
   readonly data: TickerDataRows;
-  readonly timezone: TwChartTimezone;
+  readonly timezone: ChartTimezone;
   readonly logicalRange: TwRange | undefined;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
@@ -122,7 +121,7 @@ function getOhlcLabelElement(
 
 function adjustRowForTimezone(
   row: TickerDataRow,
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
 ): TickerDataRow {
   const adjustedTimestamp = utcToTzTimestamp(row.time, timezone);
   return { ...row, time: adjustedTimestamp as UTCTimestamp };

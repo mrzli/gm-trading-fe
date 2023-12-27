@@ -2,11 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Key } from 'ts-key-enum';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
-import {
-  ChartTimeRangeChangeFn,
-  TwChartResolution,
-  TwChartSettings,
-} from '../tw-chart/types';
+import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { TwChartToolbar } from '../tw-chart/components/chart-toolbar/TwChartToolbar';
 import { moveLogicalRange } from '../tw-chart/util';
 import { TwTimeStep } from '../tw-chart/types/tw-time-step';
@@ -27,12 +23,13 @@ import { RightToolbarState } from './types';
 import { TradingChartData } from '../trade/types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
+import { ChartSettings, ChartResolution } from '../../types';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
   readonly isLoadingData: boolean;
   readonly rawData: readonly string[] | undefined;
-  readonly onRequestData: (name: string, resolution: TwChartResolution) => void;
+  readonly onRequestData: (name: string, resolution: ChartResolution) => void;
 }
 
 export function TickerDataContainer({
@@ -49,7 +46,7 @@ export function TickerDataContainer({
     return allInstruments?.map((instrument) => instrument.name) ?? [];
   }, [allInstruments]);
 
-  const [settings, setSettings] = useState<TwChartSettings>({
+  const [settings, setSettings] = useState<ChartSettings>({
     instrumentName: allInstruments[0].name,
     resolution: '5m',
     timezone: 'UTC',

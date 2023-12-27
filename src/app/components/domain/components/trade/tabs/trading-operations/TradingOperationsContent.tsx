@@ -2,15 +2,15 @@ import React, { useCallback } from 'react';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import { TradeProcessState } from '../../types';
-import { TwChartTimezone } from '../../../tw-chart/types';
 import { ItemList } from '../../shared';
 import { ActiveOrderItem } from './lists/ActiveOrderItem';
 import { ActiveTradeItem } from './lists/ActiveTradeItem';
 import { CompletedTradeItem } from './lists/CompletedTradeItem';
 import { ComponentStack } from '../../shared/ComponentStack';
+import { ChartTimezone } from '../../../../types';
 
 export interface TradingOperationsContentProps {
-  readonly timezone: TwChartTimezone;
+  readonly timezone: ChartTimezone;
   readonly state: TradeProcessState;
   readonly onCreateOrder: (order: OrderInputs) => void;
   readonly onCancelOrder: (id: number) => void;

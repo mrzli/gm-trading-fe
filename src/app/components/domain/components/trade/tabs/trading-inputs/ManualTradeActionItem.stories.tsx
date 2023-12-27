@@ -13,15 +13,15 @@ import {
   ManualTradeActionClose,
   ManualTradeActionOpen,
 } from '../../types';
-import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../tw-chart/types';
 import { DEFAULT_TRADING_PARAMS } from '../../util';
+import { TYPES_OF_CHART_TIMEZONES } from '../../../../types';
 
 const STORY_META: Meta<ManualTradeActionItemProps> = {
   component: ManualTradeActionItem,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
-    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
+    timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
   },
   args: {
     timezone: 'UTC',

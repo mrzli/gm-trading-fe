@@ -4,14 +4,14 @@ import {
   argTypeInlineRadio,
   decoratorPadding,
 } from '../../../../../../../../storybook';
-import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../tw-chart/types';
+import { TYPES_OF_CHART_TIMEZONES } from '../../../../../types';
 
 const STORY_META: Meta<DateValueDisplayProps> = {
   component: DateValueDisplay,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
-    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
+    timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
   },
   args: {
     label: 'Label',

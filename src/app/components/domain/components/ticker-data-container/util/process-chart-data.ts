@@ -4,8 +4,8 @@ import {
   GroupedTickerDataRows,
   TickerDataRow,
   TickerDataRows,
+  ChartResolution,
 } from '../../../types';
-import { TwChartResolution } from '../../tw-chart/types';
 import { invariant } from '@gmjs/assert';
 import {
   DAY_TO_SECONDS,
@@ -32,7 +32,7 @@ function toTickerDataRow(line: string): TickerDataRow {
 
 export function groupDataRows(
   rows: TickerDataRows,
-  resolution: TwChartResolution,
+  resolution: ChartResolution,
 ): GroupedTickerDataRows {
   switch (resolution) {
     case '1m':
@@ -107,7 +107,7 @@ function getTimeBucketIndex(time: number, interval: number): number {
   return Math.floor(time / interval);
 }
 
-function resolutionToSeconds(resolution: TwChartResolution): number {
+function resolutionToSeconds(resolution: ChartResolution): number {
   const unit = resolution.slice(-1);
 
   switch (unit) {

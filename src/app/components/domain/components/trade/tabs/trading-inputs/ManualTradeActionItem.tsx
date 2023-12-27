@@ -9,15 +9,15 @@ import {
   ManualTradeActionOpen,
   TradingParameters,
 } from '../../types';
-import { TwChartTimezone } from '../../../tw-chart/types';
 import {
   ValueDisplayDataAnyList,
   ValueDisplayItem,
   IconButton,
 } from '../../../shared';
+import { ChartTimezone } from '../../../../types';
 
 export interface ManualTradeActionItemProps {
-  readonly timezone: TwChartTimezone;
+  readonly timezone: ChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly tradeAction: ManualTradeActionAny;
   readonly onRemoveClick: (id: number) => void;
@@ -50,7 +50,7 @@ export function ManualTradeActionItem({
 }
 
 function getValueDisplayDataList(
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
   tradingParameters: TradingParameters,
   tradeAction: ManualTradeActionAny,
 ): ValueDisplayDataAnyList {
@@ -81,7 +81,7 @@ const DATE_DISPLAY_VALUE_SPAN = 2;
 
 function getDisplayPropsOpen(
   tradeAction: ManualTradeActionOpen,
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
   priceDecimals: number,
 ): ValueDisplayDataAnyList {
   const { id, time, price, amount, stopLossDistance, limitDistance } =
@@ -140,7 +140,7 @@ function getDisplayPropsOpen(
 
 function getDisplayPropsClose(
   tradeAction: ManualTradeActionClose,
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
   _priceDecimals: number,
 ): ValueDisplayDataAnyList {
   const { id, time, targetId } = tradeAction;
@@ -176,7 +176,7 @@ function getDisplayPropsClose(
 
 function getDisplayPropsAmendOrder(
   tradeAction: ManualTradeActionAmendOrder,
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
   priceDecimals: number,
 ): ValueDisplayDataAnyList {
   const { id, time, targetId, price, amount, stopLossDistance, limitDistance } =
@@ -240,7 +240,7 @@ function getDisplayPropsAmendOrder(
 
 function getDisplayPropsAmendTrade(
   tradeAction: ManualTradeActionAmendTrade,
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
   priceDecimals: number,
 ): ValueDisplayDataAnyList {
   const { id, time, targetId, stopLoss, limit } = tradeAction;

@@ -5,13 +5,13 @@ import {
   disableControl,
 } from '../../../../../../../storybook';
 import { useState } from 'react';
-import { TwChartSettings } from '../../types';
 import { PrettyDisplay } from '../../../../../shared';
 import { TEST_TICKER_ROWS_MINUTE } from '../../../../data';
 import {
   aggregateGroupedDataRows,
   groupDataRows,
 } from '../../../ticker-data-container/util/process-chart-data';
+import { ChartSettings } from '../../../../types';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -48,7 +48,7 @@ export const Primary: StoryObj<TwChartToolbarProps> = {
   render: (args: TwChartToolbarProps) => {
     const { settings: _ignore1, onSettingsChange: _ignore2, ...rest } = args;
 
-    const [settings, setSettings] = useState<TwChartSettings>({
+    const [settings, setSettings] = useState<ChartSettings>({
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
       timezone: 'UTC',

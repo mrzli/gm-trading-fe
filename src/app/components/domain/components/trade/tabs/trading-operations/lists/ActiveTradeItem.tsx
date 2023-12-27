@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiClose, mdiPencil } from '@mdi/js';
-import { TwChartTimezone } from '../../../../tw-chart/types';
 import { ActiveTrade, TradingParameters } from '../../../types';
 import {
   IconButton,
   ValueDisplayDataAnyList,
   ValueDisplayItem,
 } from '../../../../shared';
+import { ChartTimezone } from '../../../../../types';
 
 export interface ActiveTradeItemProps {
-  readonly timezone: TwChartTimezone;
+  readonly timezone: ChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly item: ActiveTrade;
   readonly onClose: (id: number) => void;
@@ -50,7 +50,7 @@ export function ActiveTradeItem({
 }
 
 function getDisplayItems(
-  timezone: TwChartTimezone,
+  timezone: ChartTimezone,
   tradingParams: TradingParameters,
   item: ActiveTrade,
 ): ValueDisplayDataAnyList {

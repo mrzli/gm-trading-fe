@@ -1,4 +1,3 @@
-import { TwChartResolution } from '../../tw-chart/types';
 import {
   toTickerDataRows,
   groupDataRows,
@@ -10,6 +9,7 @@ import {
   BarReplayPosition,
   TickerDataRow,
   TickerDataRows,
+  ChartResolution,
 } from '../../../types';
 import { applyFn } from '@gmjs/apply-function';
 import { compose } from '@gmjs/compose-function';
@@ -17,7 +17,7 @@ import { flatten, toArray } from '@gmjs/value-transformers';
 
 export function rawDataToFullTickerData(
   rawData: readonly string[] | undefined,
-  resolution: TwChartResolution,
+  resolution: ChartResolution,
 ): FullTickerData {
   const nonAggregatedRows = toTickerDataRows(rawData ?? []);
   const subRows = groupDataRows(nonAggregatedRows, resolution);

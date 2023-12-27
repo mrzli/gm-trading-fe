@@ -3,10 +3,10 @@ import { beforeAll, describe, expect, it } from '@jest/globals';
 import { readTextAsync } from '@gmjs/fs-async';
 import { mapGetOrThrow } from '@gmjs/data-container-util';
 import {
-  TYPES_OF_TW_CHART_RESOLUTION,
-  TwChartResolution,
-} from '../../tw-chart/types';
-import { TickerDataRows } from '../../../types';
+  TYPES_OF_CHART_RESOLUTIONS,
+  TickerDataRows,
+  ChartResolution,
+} from '../../../types';
 import {
   toTickerDataRows,
   groupDataRows,
@@ -22,7 +22,7 @@ describe('process-chart-data', () => {
   let INPUT_QUARTER_ROWS: TickerDataRows = [];
   let INPUT_DAY_ROWS: TickerDataRows = [];
 
-  const RESULTS_MAP = new Map<TwChartResolution, TickerDataRows>();
+  const RESULTS_MAP = new Map<ChartResolution, TickerDataRows>();
 
   beforeAll(async () => {
     INPUT_MINUTE = await readInputFile(
@@ -36,14 +36,14 @@ describe('process-chart-data', () => {
     INPUT_DAY = await readInputFile(join(__dirname, 'data/inputs/day.csv'));
     INPUT_DAY_ROWS = toTickerDataRows(INPUT_DAY);
 
-    for (const resolution of TYPES_OF_TW_CHART_RESOLUTION) {
+    for (const resolution of TYPES_OF_CHART_RESOLUTIONS) {
       const path = join(__dirname, `data/results/${resolution}.json`);
       const result = await readResultsFile(path);
       RESULTS_MAP.set(resolution, result);
     }
   });
 
-  function getInput(resolution: TwChartResolution): TickerDataRows {
+  function getInput(resolution: ChartResolution): TickerDataRows {
     switch (resolution) {
       case '1m':
       case '2m':
@@ -67,7 +67,7 @@ describe('process-chart-data', () => {
   }
 
   describe('aggregateDataRows', () => {
-    type Example = TwChartResolution;
+    type Example = ChartResolution;
 
     const EXAMPLES: readonly Example[] = [
       '1m',

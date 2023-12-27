@@ -2,8 +2,8 @@ import React, { useCallback, useEffect } from 'react';
 import { TickerDataContainer } from '../components/domain/components/ticker-data-container/TickerDataContainer';
 import { useStoreInstrument, useStoreTickerData } from '../../store';
 import { LoadingDisplay } from '../components/shared';
-import { TwChartResolution } from '../components/domain/components/tw-chart/types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { ChartResolution } from '../components/domain/types';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -17,7 +17,7 @@ export function TickerDataScreen(): React.ReactElement {
   }, [getAllInstruments]);
 
   const handleRequestData = useCallback(
-    (name: string, resolution: TwChartResolution) => {
+    (name: string, resolution: ChartResolution) => {
       getTickerData({
         name,
         resolution: toTickerDataResolution(resolution),
@@ -44,7 +44,7 @@ export function TickerDataScreen(): React.ReactElement {
 }
 
 function toTickerDataResolution(
-  resolution: TwChartResolution,
+  resolution: ChartResolution,
 ): TickerDataResolution {
   switch (resolution) {
     case '1m':

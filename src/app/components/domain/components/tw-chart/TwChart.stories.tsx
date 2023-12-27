@@ -7,14 +7,13 @@ import {
   decoratorContainer,
   disableControl,
 } from '../../../../../storybook';
-import { TickerDataRows } from '../../types';
+import { TYPES_OF_CHART_TIMEZONES, TickerDataRows } from '../../types';
 import {
   TEST_TICKER_ROWS_DAY,
   TEST_TICKER_ROWS_MINUTE,
   TEST_TICKER_ROWS_QUARTER,
 } from '../../data';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
-import { TYPES_OF_TW_CHART_TIMEZONES } from './types';
 
 const STORY_META: Meta<TwChartProps> = {
   component: TwChart,
@@ -23,7 +22,7 @@ const STORY_META: Meta<TwChartProps> = {
   argTypes: {
     precision: argTypeInteger(0, 10),
     data: disableControl(),
-    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
+    timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
     onChartTimeRangeChange: disableControl(),
     onChartKeyDown: disableControl(),
   },

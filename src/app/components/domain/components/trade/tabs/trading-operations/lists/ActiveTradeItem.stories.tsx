@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ActiveTradeItem, ActiveTradeItemProps } from './ActiveTradeItem';
-import { TYPES_OF_TW_CHART_TIMEZONES } from '../../../../tw-chart/types';
 import {
   argTypeInlineRadio,
   decoratorPadding,
 } from '../../../../../../../../storybook';
 import { DEFAULT_TRADING_PARAMS } from '../../../util';
 import { ActiveTrade } from '../../../types';
+import { TYPES_OF_CHART_TIMEZONES } from '../../../../../types';
 
 const STORY_META: Meta<ActiveTradeItemProps> = {
   component: ActiveTradeItem,
   tags: ['autodocs'],
   decorators: [decoratorPadding()],
   argTypes: {
-    timezone: argTypeInlineRadio(TYPES_OF_TW_CHART_TIMEZONES),
+    timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
   },
   args: {
     timezone: 'UTC',

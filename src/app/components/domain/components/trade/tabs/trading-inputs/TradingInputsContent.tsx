@@ -5,14 +5,14 @@ import {
   TradingInputs,
   TradingParameters,
 } from '../../types';
-import { TwChartTimezone } from '../../../tw-chart/types';
 import { ItemList } from '../../shared';
 import { Button } from '../../../../../shared';
 import { ManualTradeActionItem } from './ManualTradeActionItem';
 import { ComponentStack } from '../../shared/ComponentStack';
+import { ChartTimezone } from '../../../../types';
 
 export interface TradingInputsContentProps {
-  readonly timezone: TwChartTimezone;
+  readonly timezone: ChartTimezone;
   readonly value: TradingInputs;
   readonly onValueChange: (value: TradingInputs) => void;
 }
