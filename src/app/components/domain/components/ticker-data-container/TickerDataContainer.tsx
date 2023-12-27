@@ -160,7 +160,6 @@ export function TickerDataContainer({
     <>
       <ChartToolbar
         instrumentNames={instrumentNames}
-        subBars={fullData.subBars}
         bars={fullData.bars}
         settings={settings}
         onInstrumentChange={handleInstrumentChange}
@@ -168,8 +167,6 @@ export function TickerDataContainer({
         onTimezoneChange={handleTimezoneChange}
         logicalRange={logicalRange}
         onLogicalRangeChange={handleChartTimeRangeChange}
-        replayPosition={replayPosition}
-        onReplayPositionChange={handleReplayPositionChange}
       />
       {false && <PrettyDisplay content={settings} />}
     </>

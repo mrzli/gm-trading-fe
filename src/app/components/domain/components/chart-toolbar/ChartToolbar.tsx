@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react';
 import {
-  BarReplayPosition,
-  GroupedBars,
   Bars,
   ChartSettings,
   ChartResolution,
@@ -17,12 +15,10 @@ import {
   SelectButton,
   SelectButtonCentered,
 } from '../../../shared';
-import { BarReplay } from '../trade/tabs/trading-operations/bar-replay/BarReplay';
 import { toSimpleSelectOption } from '../../util';
 
 export interface ChartToolbarProps {
   readonly instrumentNames: readonly string[];
-  readonly subBars: GroupedBars;
   readonly bars: Bars;
   readonly settings: ChartSettings;
   readonly onInstrumentChange: (instrumentName: string) => void;
@@ -30,13 +26,10 @@ export interface ChartToolbarProps {
   readonly onTimezoneChange: (timezone: ChartTimezone) => void;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
-  readonly replayPosition: BarReplayPosition;
-  readonly onReplayPositionChange: (replayPosition: BarReplayPosition) => void;
 }
 
 export function ChartToolbar({
   instrumentNames,
-  subBars,
   bars,
   settings,
   onInstrumentChange,
@@ -44,8 +37,6 @@ export function ChartToolbar({
   onTimezoneChange,
   logicalRange,
   onLogicalRangeChange,
-  replayPosition,
-  onReplayPositionChange,
 }: ChartToolbarProps): React.ReactElement {
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
@@ -86,11 +77,6 @@ export function ChartToolbar({
             data={bars}
             logicalRange={logicalRange}
             onGoTo={onLogicalRangeChange}
-          />
-          <BarReplay
-            subBars={subBars}
-            replayPosition={replayPosition}
-            onReplayPositionChange={onReplayPositionChange}
           />
         </>
       )}
