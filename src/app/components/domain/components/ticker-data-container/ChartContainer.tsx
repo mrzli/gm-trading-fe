@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
 import { BarReplayPosition, ChartRange, ChartSettings } from '../../types';
-import { FullTickerData } from './types';
+import { FullBarData } from './types';
 import { Key } from 'ts-key-enum';
 import { ChartTimeStep } from '../chart-toolbar/types';
 import { moveLogicalRange } from '../chart-toolbar/util';
@@ -12,7 +12,7 @@ import { isChartRangeEqual } from '../../util';
 export interface ChartContainerProps {
   readonly instrument: Instrument;
   readonly settings: ChartSettings;
-  readonly fullData: FullTickerData;
+  readonly fullData: FullBarData;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly replayPosition: BarReplayPosition;

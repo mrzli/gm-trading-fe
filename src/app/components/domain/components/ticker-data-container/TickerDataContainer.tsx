@@ -5,7 +5,7 @@ import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import {
   getTradeData,
   getTradeDataBarIndex,
-  rawDataToFullTickerData,
+  rawDataToFullBarData,
 } from './util';
 import {
   LoadingDisplay,
@@ -79,7 +79,7 @@ export function TickerDataContainer({
   }, [allInstruments, instrumentName]);
 
   const fullData = useMemo(
-    () => rawDataToFullTickerData(rawData ?? [], resolution),
+    () => rawDataToFullBarData(rawData ?? [], resolution),
     [rawData, resolution],
   );
 
