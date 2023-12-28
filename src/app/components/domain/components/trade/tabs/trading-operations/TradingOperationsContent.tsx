@@ -8,7 +8,7 @@ import { ActiveTradeItem } from './lists/ActiveTradeItem';
 import { CompletedTradeItem } from './lists/CompletedTradeItem';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { BarReplayPosition } from '../../../../types';
-import { BarStatus } from './BarStatus';
+import { TradeStatusDisplay } from './TradeStatusDisplay';
 
 export interface TradingOperationsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -42,8 +42,9 @@ export function TradingOperationsContent({
 
   return (
     <ComponentStack className='mt-1'>
-      <BarStatus
+      <TradeStatusDisplay
         dataAndInputs={dataAndInputs}
+        state={state}
         onReplayPositionChange={onReplayPositionChange}
       />
       <CreateOrderForm onSubmit={handleSubmit} />
