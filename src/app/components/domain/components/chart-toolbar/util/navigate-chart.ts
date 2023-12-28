@@ -7,7 +7,7 @@ import {
   DAY_TO_SECONDS,
   WEEK_TO_SECONDS,
 } from '../../../../../util';
-import { binarySearch } from './binary-search';
+import { binarySearch } from '../../../util';
 import { ChartTimeStep } from '../types';
 
 const DEFAULT_SPAN = 60;
