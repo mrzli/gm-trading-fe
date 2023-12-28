@@ -46,6 +46,7 @@ function processTrade(
   );
 
   // TODO add log entry
+
   tradesToRemove.add(trade.id);
 
   return {

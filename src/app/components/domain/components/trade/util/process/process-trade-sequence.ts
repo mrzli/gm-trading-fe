@@ -11,7 +11,7 @@ export function processTradeSequence(
 
   let tradeProcessState = getInitialTradeProcessState(input);
 
-  for (let i = 1; i < barIndex; i++) {
+  for (let i = 1; i <= barIndex; i++) {
     tradeProcessState = processBar(tradeProcessState, i);
   }
 

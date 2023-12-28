@@ -12,6 +12,7 @@ import {
   ActiveTrade,
 } from '../../types';
 import { activeTradeToCompletedTrade } from './shared';
+import { getOhlc } from './ohlc';
 
 export function processManualTradeActions(
   state: TradeProcessState,
@@ -33,7 +34,7 @@ export function processManualTradeActions(
     currentState = processManualTradeAction(currentState, index, action);
   }
 
-  const remainingActions = applyFn(
+  const newRemainingManualActions = applyFn(
     remainingManualActions,
     filter((item) => !(item.time <= time)),
     toArray(),
@@ -41,7 +42,7 @@ export function processManualTradeActions(
 
   return {
     ...currentState,
-    remainingManualActions: remainingActions,
+    remainingManualActions: newRemainingManualActions,
   };
 }
 
@@ -95,8 +96,13 @@ function processManualTradeActionClose(
 ): TradeProcessState {
   const { targetId } = action;
 
-  const { barData, activeOrders, activeTrades, completedTrades } = state;
-  const { time, open } = barData[index];
+  const {
+    barData,
+    tradingParams,
+    activeOrders,
+    activeTrades,
+    completedTrades,
+  } = state;
 
   const activeOrder = activeOrders.find((item) => item.id === targetId);
   if (activeOrder) {
@@ -105,6 +111,7 @@ function processManualTradeActionClose(
     );
 
     // TODO add log entry
+
     return {
       ...state,
       activeOrders: newActiveOrders,
@@ -113,18 +120,26 @@ function processManualTradeActionClose(
 
   const activeTrade = activeTrades.find((item) => item.id === targetId);
   if (activeTrade) {
-    const newActiveTrades = activeTrades.filter(
-      (item) => item.id !== activeTrade.id,
-    );
+    const { spread } = tradingParams;
+    const { id, amount } = activeTrade;
+    const isBuy = amount > 0;
+
+    const currentBar = barData[index];
+    const time = currentBar.time;
+
+    // ohlc for closing the trade, which is the opposite of the trade direction
+    const ohlc = getOhlc(currentBar, !isBuy, spread);
 
     const completedTrade = activeTradeToCompletedTrade(
       activeTrade,
       time,
-      open,
+      ohlc.o,
       'manual',
     );
 
     // TODO add log entry
+
+    const newActiveTrades = activeTrades.filter((item) => item.id !== id);
 
     return {
       ...state,
