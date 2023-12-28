@@ -86,7 +86,7 @@ export function TradingParametersForm({
   ]);
 
   return (
-    <div className='flex flex-col gap-1'>
+    <div className='grid grid-cols-[repeat(7,_80px)_1fr] gap-1'>
       <TextInput
         id='initial-balance'
         label='Initial Balance'
@@ -125,13 +125,11 @@ export function TradingParametersForm({
       />
       <TextInput
         id='min-stop-loss-distance'
-        label='Min. Stop Loss Distance'
+        label='Min SL Dist'
         value={minStopLossDistanceInput}
         onValueChange={setMinStopLossDistanceInput}
       />
-      <div className='col-span-2'>
-        <Button onClick={handleApplyClick} content={'Apply'} width={'100%'} />
-      </div>
+      <Button onClick={handleApplyClick} content={'Apply'} width={'100%'} />
     </div>
   );
 }

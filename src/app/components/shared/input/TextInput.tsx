@@ -25,7 +25,7 @@ export function TextInput({
   error,
   width,
 }: TextInputProps): React.ReactElement {
-  const classes = cls('px-1 outline-none text-sm border rounded', {
+  const classes = cls('px-1 outline-none text-sm border rounded min-w-0', {
     'border-slate-400': !error && !disabled,
     'border-slate-200 text-gray-400 cursor-not-allowed': disabled,
     'border-red-500': error && !disabled,
@@ -43,7 +43,7 @@ export function TextInput({
       id={id}
       placeholder={placeholder}
       className={classes}
-      style={{ width: width }}
+      style={{ width }}
       disabled={disabled}
       value={value}
       onChange={handleChange}

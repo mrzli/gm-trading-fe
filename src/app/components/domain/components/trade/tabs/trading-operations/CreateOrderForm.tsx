@@ -59,44 +59,41 @@ export function CreateOrderForm({
   ]);
 
   return (
-    <div className='flex flex-col gap-1'>
-      <div className='grid grid-cols-2 gap-1 '>
-        <ToggleButton
-          label={'Buy'}
-          value={tradeDirection === 'buy'}
-          onValueChange={handleBuyClick}
-        />
-        <ToggleButton
-          label={'Sell'}
-          value={tradeDirection === 'sell'}
-          onValueChange={handleSellClick}
-        />
-        <TextInput
-          id='price'
-          label='Price'
-          value={priceInput}
-          onValueChange={setPriceInput}
-        />
-        <TextInput
-          id='amount'
-          label='Amount'
-          value={amountInput}
-          onValueChange={setAmountInput}
-          width={'auto'}
-        />
-        <TextInput
-          id='stop-loss-distance'
-          label='Stop Loss Distance'
-          value={stopLossDistanceInput}
-          onValueChange={setStopLossDistanceInput}
-        />
-        <TextInput
-          id='limit-distance'
-          label='Limit Distance'
-          value={limitDistanceInput}
-          onValueChange={setLimitDistanceInput}
-        />
-      </div>
+    <div className='grid grid-cols-[repeat(2,_1fr)_repeat(4,_100px)_1fr] gap-1 '>
+      <ToggleButton
+        label={'Buy'}
+        value={tradeDirection === 'buy'}
+        onValueChange={handleBuyClick}
+      />
+      <ToggleButton
+        label={'Sell'}
+        value={tradeDirection === 'sell'}
+        onValueChange={handleSellClick}
+      />
+      <TextInput
+        id='price'
+        label='Price'
+        value={priceInput}
+        onValueChange={setPriceInput}
+      />
+      <TextInput
+        id='amount'
+        label='Amount'
+        value={amountInput}
+        onValueChange={setAmountInput}
+      />
+      <TextInput
+        id='stop-loss-distance'
+        label='SL Dist'
+        value={stopLossDistanceInput}
+        onValueChange={setStopLossDistanceInput}
+      />
+      <TextInput
+        id='limit-distance'
+        label='Limit Dist'
+        value={limitDistanceInput}
+        onValueChange={setLimitDistanceInput}
+      />
       <Button content={'Submit'} onClick={handleSubmit} />
     </div>
   );
