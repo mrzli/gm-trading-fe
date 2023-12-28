@@ -41,7 +41,7 @@ export function ActiveOrderItem({
           return <ValueDisplayItem key={index} item={item} />;
         })}
       </div>
-      <div className='flex flex-row gap-2'>
+      <div className='flex flex-row gap-1'>
         <IconButton icon={mdiPencil} onClick={handleEdit} />
         <IconButton icon={mdiClose} onClick={handleCancel} />
       </div>
@@ -67,13 +67,13 @@ function getDisplayItems(
     },
     {
       kind: 'string',
-      label: 'Dir',
-      value: amount > 0 ? 'B' : 'S',
+      label: 'Direction',
+      value: amount > 0 ? 'Buy' : 'Sell',
     },
     {
       kind: 'date',
       colSpan: 2,
-      label: 'Time',
+      label: 'Order Time',
       fontSize: 10,
       value: time,
       timezone,
@@ -87,21 +87,21 @@ function getDisplayItems(
     },
     {
       kind: 'decimal',
-      label: 'Amt',
+      label: 'Amount',
       value: amount,
       precision: 1,
     },
     {
       kind: 'decimal',
       colSpan: 2,
-      label: 'SL Dst',
+      label: 'Stop-Loss Distance',
       value: stopLossDistance,
       precision: priceDecimals,
     },
     {
       kind: 'decimal',
       colSpan: 2,
-      label: 'L Dst',
+      label: 'Limit Distance',
       value: limitDistance,
       precision: priceDecimals,
     },

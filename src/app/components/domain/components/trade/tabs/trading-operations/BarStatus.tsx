@@ -3,7 +3,7 @@ import { BarReplayPosition } from '../../../../types';
 import { TradingDataAndInputs } from '../../types';
 import { BarReplay } from './bar-replay/BarReplay';
 import { DateValueDisplay, DecimalValueDisplay } from '../../../shared';
-import { getOhlc } from '../../util/process/ohlc';
+import { getOhlc } from '../../util/ohlc';
 
 export interface BarStatusProps {
   readonly dataAndInputs: TradingDataAndInputs;

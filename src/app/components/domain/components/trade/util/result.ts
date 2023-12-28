@@ -8,7 +8,14 @@ import {
   sum,
   toArray,
 } from '@gmjs/value-transformers';
-import { CompletedTrade, TradeProcessState, TradeResult } from '../types';
+import {
+  ActiveTrade,
+  CompletedTrade,
+  TradeProcessState,
+  TradeResult,
+} from '../types';
+import { getOhlc } from './ohlc';
+import { Bar } from '../../../types';
 
 export function calculateTradeResults(state: TradeProcessState): TradeResult {
   const { completedTrades } = state;
@@ -63,6 +70,36 @@ export function calculateTradeResults(state: TradeProcessState): TradeResult {
     avgLoss,
     maxDrawdown,
   };
+}
+
+export function getActiveTradePnlPoints(
+  trade: ActiveTrade,
+  bar: Bar,
+  spread: number,
+): number {
+  const { openPrice, amount } = trade;
+
+  const isBuy = amount > 0;
+
+  // ohlc for closing the trade, which is the opposite of the trade direction
+  const ohlc = getOhlc(bar, !isBuy, spread);
+
+  return (ohlc.o - openPrice) * Math.sign(amount);
+}
+
+export function getActiveTradePnl(
+  trade: ActiveTrade,
+  bar: Bar,
+  spread: number,
+): number {
+  const { openPrice, amount } = trade;
+
+  const isBuy = amount > 0;
+
+  // ohlc for closing the trade, which is the opposite of the trade direction
+  const ohlc = getOhlc(bar, !isBuy, spread);
+
+  return (ohlc.o - openPrice) * amount;
 }
 
 export function getCompletedTradePnlPoints(trade: CompletedTrade): number {

@@ -12,7 +12,7 @@ import {
   ActiveTrade,
 } from '../../types';
 import { activeTradeToCompletedTrade } from './shared';
-import { getOhlc } from './ohlc';
+import { getOhlc } from '../ohlc';
 
 export function processManualTradeActions(
   state: TradeProcessState,

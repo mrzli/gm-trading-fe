@@ -9,13 +9,17 @@ export function processTradeSequence(
 ): TradeProcessState {
   const barIndex = input.barIndex;
 
-  let tradeProcessState = getInitialTradeProcessState(input);
+  let currentState = getInitialTradeProcessState(input);
 
   for (let i = 1; i <= barIndex; i++) {
-    tradeProcessState = processBar(tradeProcessState, i);
+    currentState = processManualTradeActions(currentState, i);
+    if (i < barIndex) {
+      currentState = processOrders(currentState, i);
+      currentState = processTrades(currentState, i);
+    }
   }
 
-  return tradeProcessState;
+  return currentState;
 }
 
 function getInitialTradeProcessState(
@@ -36,17 +40,4 @@ function getInitialTradeProcessState(
     completedTrades: [],
     tradeLog: [],
   };
-}
-
-function processBar(
-  state: TradeProcessState,
-  index: number,
-): TradeProcessState {
-  let currentState = state;
-
-  currentState = processManualTradeActions(currentState, index);
-  currentState = processOrders(currentState, index);
-  currentState = processTrades(currentState, index);
-
-  return currentState;
 }

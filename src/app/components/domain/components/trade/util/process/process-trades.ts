@@ -1,6 +1,6 @@
 import { invariant } from '@gmjs/assert';
 import { ActiveTrade, TradeProcessState } from '../../types';
-import { getOhlc } from './ohlc';
+import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
 
 export function processTrades(

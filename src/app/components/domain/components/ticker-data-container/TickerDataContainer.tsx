@@ -197,7 +197,7 @@ function getToolbarEntries(
       value: 'trade',
       tab: 'Trade',
       content: (
-        <div className='min-w-[600px] h-full'>
+        <div className='min-w-[680px] h-full'>
           <TradeContainer
             settings={settings}
             fullData={fullData}

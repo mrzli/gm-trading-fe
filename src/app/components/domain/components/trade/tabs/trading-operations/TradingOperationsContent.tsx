@@ -27,8 +27,11 @@ export function TradingOperationsContent({
   onCancelOrder,
   onCloseTrade,
 }: TradingOperationsContentProps): React.ReactElement {
-  const { timezone } = dataAndInputs.settings;
+  const { settings, barData, barIndex } = dataAndInputs;
+  const { timezone } = settings;
   const { tradingParams, activeOrders, activeTrades, completedTrades } = state;
+
+  const bar = barData[barIndex];
 
   const handleSubmit = useCallback(
     (order: OrderInputs) => {
@@ -68,6 +71,7 @@ export function TradingOperationsContent({
               key={index}
               timezone={timezone}
               tradingParams={tradingParams}
+              bar={bar}
               item={item}
               onClose={onCloseTrade}
             />

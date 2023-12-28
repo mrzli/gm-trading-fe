@@ -1,5 +1,5 @@
 import { ActiveOrder, ActiveTrade, TradeProcessState } from '../../types';
-import { getOhlc } from './ohlc';
+import { getOhlc } from '../ohlc';
 
 export function processOrders(
   state: TradeProcessState,
@@ -31,8 +31,7 @@ function processOrder(
   order: ActiveOrder,
   ordersToRemove: Set<number>,
 ): TradeProcessState {
-  const { barData, tradingParams, activeTrades } = state;
-  const { spread } = tradingParams;
+  const { barData, activeTrades } = state;
 
   const checkFillResult = checkFillOrder(state, index, order);
   const { shouldFill, fillPrice } = checkFillResult;
@@ -41,12 +40,7 @@ function processOrder(
     return state;
   }
 
-  const activeTrade = orderToTrade(
-    order,
-    barData[index].time,
-    fillPrice,
-    spread,
-  );
+  const activeTrade = orderToTrade(order, barData[index].time, fillPrice);
 
   ordersToRemove.add(order.id);
 
@@ -85,12 +79,15 @@ function checkFillOrder(
       shouldFill: true,
       fillPrice: ohlc.o,
     };
-  } else if (time < currentBar.time && price >= prevOhlc.c && price <= ohlc.o) {
+  } else if (
+    time < currentBar.time &&
+    isBetweenInclusive(price, prevOhlc.c, ohlc.o)
+  ) {
     return {
       shouldFill: true,
       fillPrice: ohlc.o,
     };
-  } else if (price >= ohlc.l && price <= ohlc.h) {
+  } else if (isBetweenInclusive(price, ohlc.l, ohlc.h)) {
     return {
       shouldFill: true,
       fillPrice: price,
@@ -103,11 +100,16 @@ function checkFillOrder(
   }
 }
 
+function isBetweenInclusive(value: number, v1: number, v2: number): boolean {
+  const min = Math.min(v1, v2);
+  const max = Math.max(v1, v2);
+  return value >= min && value <= max;
+}
+
 function orderToTrade(
   order: ActiveOrder,
   openTime: number,
   openPrice: number,
-  spread: number,
 ): ActiveTrade {
   const { id, amount, stopLossDistance, limitDistance } = order;
   const isBuy = amount > 0;
@@ -117,8 +119,8 @@ function orderToTrade(
     openTime,
     openPrice,
     amount,
-    stopLoss: getStopLossPrice(isBuy, openPrice, stopLossDistance, spread),
-    limit: getLimitPrice(isBuy, openPrice, limitDistance, spread),
+    stopLoss: getStopLossPrice(isBuy, openPrice, stopLossDistance),
+    limit: getLimitPrice(isBuy, openPrice, limitDistance),
   };
 }
 
@@ -126,30 +128,22 @@ function getStopLossPrice(
   isBuy: boolean,
   openPrice: number,
   stopLossDistance: number | undefined,
-  spread: number,
 ): number | undefined {
   if (stopLossDistance === undefined) {
     return undefined;
   }
 
-  const finalSlDistance = stopLossDistance - spread;
-
-  return isBuy ? openPrice - finalSlDistance : openPrice + finalSlDistance;
+  return isBuy ? openPrice - stopLossDistance : openPrice + stopLossDistance;
 }
 
 function getLimitPrice(
   isBuy: boolean,
   openPrice: number,
   limitDistance: number | undefined,
-  spread: number,
 ): number | undefined {
   if (limitDistance === undefined) {
     return undefined;
   }
 
-  const finalLimitDistance = limitDistance + spread;
-
-  return isBuy
-    ? openPrice + finalLimitDistance
-    : openPrice - finalLimitDistance;
+  return isBuy ? openPrice + limitDistance : openPrice - limitDistance;
 }
