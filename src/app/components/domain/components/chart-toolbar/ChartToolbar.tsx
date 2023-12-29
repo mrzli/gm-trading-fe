@@ -74,6 +74,7 @@ export function ChartToolbar({
             onNavigate={onLogicalRangeChange}
           />
           <ChartToolbarGoTo
+            timezone={settings.timezone}
             data={bars}
             logicalRange={logicalRange}
             onGoTo={onLogicalRangeChange}

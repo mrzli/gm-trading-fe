@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { TextInput } from '../../../../shared';
-import { dateIsoUtcToUnixSeconds } from '../../../../../util';
-import { ChartRange, Bars } from '../../../types';
+import { dateIsoToUnixSeconds } from '../../../../../util';
+import { ChartRange, Bars, ChartTimezone } from '../../../types';
 import {
   SCHEMA_GO_TO_INPUT,
   dateInputToIso,
@@ -12,12 +12,14 @@ import {
 import { isChartRangeEqual } from '../../../util';
 
 export interface ChartToolbarGoToProps {
+  readonly timezone: ChartTimezone;
   readonly data: Bars;
   readonly logicalRange: ChartRange | undefined;
   readonly onGoTo: (logicalRange: ChartRange) => void;
 }
 
 export function ChartToolbarGoTo({
+  timezone,
   data,
   logicalRange,
   onGoTo,
@@ -37,7 +39,7 @@ export function ChartToolbarGoTo({
       return;
     }
 
-    const time = dateIsoUtcToUnixSeconds(dateInputToIso(goToInput));
+    const time = dateIsoToUnixSeconds(dateInputToIso(goToInput), timezone);
     const logical = timeToLogical(time, data);
     const newRange = logicalToLogicalRange(logical, logicalRange, data.length);
     if (isChartRangeEqual(newRange, logicalRange)) {
@@ -45,7 +47,7 @@ export function ChartToolbarGoTo({
     }
 
     onGoTo(newRange);
-  }, [isGoToValid, goToInput, data, logicalRange, onGoTo]);
+  }, [isGoToValid, goToInput, timezone, data, logicalRange, onGoTo]);
 
   const handleGoToInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
