@@ -35,8 +35,8 @@ export function ActiveOrderItem({
   const { id, price, amount, stopLossDistance, limitDistance } = item;
 
   const displayItems = useMemo(
-    () => getDisplayItems(timezone, tradingParams, item, isEditing),
-    [timezone, tradingParams, item, isEditing],
+    () => getDisplayItems(timezone, tradingParams, item),
+    [timezone, tradingParams, item],
   );
 
   const handleEdit = useCallback(() => {
@@ -88,56 +88,55 @@ export function ActiveOrderItem({
     onEditCancel(id);
   }, [id, onEditCancel]);
 
-  return (
-    <div className='flex-1 grid grid-cols-[repeat(11,_1fr)_auto] items-center gap-2'>
-      {displayItems.map((item, index) => {
-        return <ValueDisplayItem key={index} item={item} />;
-      })}
+  const editForm = (
+    <div className='grid grid-cols-[repeat(4,_1fr)_auto] items-end gap-2'>
+      <TextInput
+        id='price'
+        label='Price'
+        value={priceInput}
+        onValueChange={setPriceInput}
+        width={'100%'}
+      />
+      <TextInput
+        id='amount'
+        label='Amount'
+        value={amountInput}
+        onValueChange={setAmountInput}
+        width={'100%'}
+      />
+      <TextInput
+        id='stop-loss-distance'
+        label='Price'
+        value={stopLossDistanceInput}
+        onValueChange={setStopLossDistanceInput}
+        width={'100%'}
+      />
+      <TextInput
+        id='limit-distance'
+        label='Price'
+        value={limitDistanceInput}
+        onValueChange={setLimitDistanceInput}
+        width={'100%'}
+      />
       <div className='flex flex-row gap-1'>
-        <IconButton icon={mdiPencil} onClick={handleEdit} />
-        <IconButton icon={mdiClose} onClick={handleCancel} />
+        <IconButton icon={mdiCheck} onClick={handleEditOk} />
+        <IconButton icon={mdiCancel} onClick={handleEditCancel} />
       </div>
-      {isEditing && (
-        <>
-          <div className='col-span-3' />
-          <div className='col-span-2'>
-            <TextInput
-              id='price'
-              value={priceInput}
-              onValueChange={setPriceInput}
-              width={'100%'}
-            />
-          </div>
-          <div className='col-span-1'>
-            <TextInput
-              id='amount'
-              value={amountInput}
-              onValueChange={setAmountInput}
-              width={'100%'}
-            />
-          </div>
-          <div className='col-span-2'>
-            <TextInput
-              id='stop-loss-distance'
-              value={stopLossDistanceInput}
-              onValueChange={setStopLossDistanceInput}
-              width={'100%'}
-            />
-          </div>
-          <div className='col-span-2'>
-            <TextInput
-              id='limit-distance'
-              value={limitDistanceInput}
-              onValueChange={setLimitDistanceInput}
-              width={'100%'}
-            />
-          </div>
-          <div className='flex flex-row gap-1'>
-            <IconButton icon={mdiCheck} onClick={handleEditOk} />
-            <IconButton icon={mdiCancel} onClick={handleEditCancel} />
-          </div>
-        </>
-      )}
+    </div>
+  );
+
+  return (
+    <div className='flex flex-col'>
+      <div className='grid grid-cols-[repeat(11,_1fr)_auto] items-center gap-2'>
+        {displayItems.map((item, index) => {
+          return <ValueDisplayItem key={index} item={item} />;
+        })}
+        <div className='flex flex-row gap-1'>
+          <IconButton icon={mdiPencil} onClick={handleEdit} />
+          <IconButton icon={mdiClose} onClick={handleCancel} />
+        </div>
+      </div>
+      {isEditing && editForm}
     </div>
   );
 }
@@ -146,7 +145,6 @@ function getDisplayItems(
   timezone: ChartTimezone,
   tradingParams: TradingParameters,
   item: ActiveOrder,
-  isEditing: boolean,
 ): ValueDisplayDataAnyList {
   const { priceDecimals } = tradingParams;
 
@@ -155,7 +153,6 @@ function getDisplayItems(
   return [
     {
       kind: 'decimal',
-      rowSpan: isEditing ? 2 : 1,
       label: 'ID',
       value: id,
       precision: 0,

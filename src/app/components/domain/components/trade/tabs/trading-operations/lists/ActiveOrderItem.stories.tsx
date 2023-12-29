@@ -77,7 +77,4 @@ export const Primary: StoryObj<ActiveOrderItemProps> = {
       />
     );
   },
-  args: {
-    item: ITEM,
-  },
 };
