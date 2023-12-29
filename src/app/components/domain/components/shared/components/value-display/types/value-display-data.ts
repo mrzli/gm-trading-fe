@@ -31,6 +31,8 @@ export interface ValueDisplayDataDecimal extends ValueDisplayDataBase {
   readonly kind: 'decimal';
   readonly value: number | undefined;
   readonly precision: number;
+  readonly prefix?: string;
+  readonly suffix?: string;
 }
 
 export interface ValueDisplayDataDate extends ValueDisplayDataBase {

@@ -29,6 +29,17 @@ export const WithValue: StoryObj<DecimalValueDisplayProps> = {
   },
 };
 
+export const WithPrefixAndSuffix: StoryObj<DecimalValueDisplayProps> = {
+  ...Template,
+  args: {
+    label: 'Label',
+    value: 12.3456,
+    precision: 2,
+    prefix: 'P',
+    suffix: 'S',
+  },
+};
+
 export const WithoutValue: StoryObj<DecimalValueDisplayProps> = {
   ...Template,
   args: {

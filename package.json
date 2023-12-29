@@ -28,6 +28,7 @@
     "@floating-ui/react": "^0.26.4",
     "@gmjs/apply-function": "^0.0.3",
     "@gmjs/array-create": "^0.0.1",
+    "@gmjs/array-transformers": "^0.0.3",
     "@gmjs/assert": "^0.0.2",
     "@gmjs/browser-storage": "^0.0.2",
     "@gmjs/compose-function": "^0.0.2",
