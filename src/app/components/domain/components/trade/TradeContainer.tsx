@@ -20,11 +20,12 @@ import {
   getNextManualActionId,
   createManualTradeActionOpen,
   processTradeSequence,
-  createManualTradeActionClose,
   flattenGroupedBars,
   getTradeDataBarIndex,
   createManualTradeActionAmendOrder,
   createManualTradeActionAmendTrade,
+  createManualTradeActionCancelOrder,
+  createManualTradeActionCloseTrade,
 } from './util';
 import { BarReplayPosition, Bars, ChartSettings } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
@@ -114,12 +115,12 @@ export function TradeContainer({
     [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
   );
 
-  const handleCancelOrderOrCloseTrade = useCallback(
+  const handleCancelOrder = useCallback(
     (targetId: number) => {
       const { manualTradeActions } = tradingDataAndInputs.inputs;
 
       const id = getNextManualActionId(manualTradeActions);
-      const newAction = createManualTradeActionClose(
+      const newAction = createManualTradeActionCancelOrder(
         targetId,
         id,
         barData,
@@ -128,13 +129,6 @@ export function TradeContainer({
       appendManualTradeAction(newAction);
     },
     [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
-  );
-
-  const handleCancelOrder = useCallback(
-    (id: number) => {
-      handleCancelOrderOrCloseTrade(id);
-    },
-    [handleCancelOrderOrCloseTrade],
   );
 
   const handleAmendOrder = useCallback(
@@ -170,10 +164,19 @@ export function TradeContainer({
   );
 
   const handleCloseTrade = useCallback(
-    (id: number) => {
-      handleCancelOrderOrCloseTrade(id);
+    (targetId: number) => {
+      const { manualTradeActions } = tradingDataAndInputs.inputs;
+
+      const id = getNextManualActionId(manualTradeActions);
+      const newAction = createManualTradeActionCloseTrade(
+        targetId,
+        id,
+        barData,
+        barIndex,
+      );
+      appendManualTradeAction(newAction);
     },
-    [handleCancelOrderOrCloseTrade],
+    [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
   );
 
   const [tradeState, setTradeState] = useState<TradeProcessState>(

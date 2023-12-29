@@ -3,9 +3,37 @@ import { ActiveTrade, TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
 
-export function processTrades(
+type LimitIntersectionType = 'none' | 'stop-loss' | 'limit';
+
+interface LimitIntersectionsResult {
+  readonly intesectionType: LimitIntersectionType;
+  readonly price: number;
+}
+
+type CheckLimitFn = (
   state: TradeProcessState,
   index: number,
+  trade: ActiveTrade,
+) => LimitIntersectionsResult;
+
+export function processTradesForOpen(
+  state: TradeProcessState,
+  index: number,
+): TradeProcessState {
+  return processTradesInternal(state, index, checkLimitIntersectionsForOpen);
+}
+
+export function processTradesForBar(
+  state: TradeProcessState,
+  index: number,
+): TradeProcessState {
+  return processTradesInternal(state, index, checkLimitIntersectionsForBar);
+}
+
+function processTradesInternal(
+  state: TradeProcessState,
+  index: number,
+  checkLimit: CheckLimitFn,
 ): TradeProcessState {
   let currentState = state;
 
@@ -14,7 +42,13 @@ export function processTrades(
   const tradesToRemove = new Set<number>();
 
   for (const trade of activeTrades) {
-    currentState = processTrade(currentState, index, trade, tradesToRemove);
+    currentState = processTradeInternal(
+      currentState,
+      index,
+      trade,
+      tradesToRemove,
+      checkLimit,
+    );
   }
 
   const remainingTrades = activeTrades.filter(
@@ -27,13 +61,14 @@ export function processTrades(
   };
 }
 
-function processTrade(
+function processTradeInternal(
   state: TradeProcessState,
   index: number,
   trade: ActiveTrade,
   tradesToRemove: Set<number>,
+  checkLimit: CheckLimitFn,
 ): TradeProcessState {
-  const limitIntersectionsResult = checkLimitIntersections(state, index, trade);
+  const limitIntersectionsResult = checkLimit(state, index, trade);
   const { intesectionType, price } = limitIntersectionsResult;
   if (intesectionType === 'none') {
     return state;
@@ -55,14 +90,48 @@ function processTrade(
   };
 }
 
-type LimitIntersectionType = 'none' | 'stop-loss' | 'limit';
+function checkLimitIntersectionsForOpen(
+  state: TradeProcessState,
+  index: number,
+  trade: ActiveTrade,
+): LimitIntersectionsResult {
+  const { barData, tradingParams } = state;
+  const { spread } = tradingParams;
 
-interface LimitIntersectionsResult {
-  readonly intesectionType: LimitIntersectionType;
-  readonly price: number;
+  const { amount, stopLoss, limit } = trade;
+
+  const isBuy = amount > 0;
+
+  const currentBar = barData[index];
+
+  // ohlc for closing the trade, which is the opposite of the trade direction
+  const ohlc = getOhlc(currentBar, !isBuy, spread);
+
+  const isOpenStopLoss =
+    stopLoss !== undefined && (isBuy ? ohlc.o <= stopLoss : ohlc.o >= stopLoss);
+  if (isOpenStopLoss) {
+    return {
+      intesectionType: 'stop-loss',
+      price: ohlc.o,
+    };
+  }
+
+  const isOpenLimit =
+    limit !== undefined && (isBuy ? ohlc.o >= limit : ohlc.o <= limit);
+  if (isOpenLimit) {
+    return {
+      intesectionType: 'limit',
+      price: ohlc.o,
+    };
+  }
+
+  return {
+    intesectionType: 'none',
+    price: 0,
+  };
 }
 
-function checkLimitIntersections(
+function checkLimitIntersectionsForBar(
   state: TradeProcessState,
   index: number,
   trade: ActiveTrade,
@@ -88,24 +157,6 @@ function checkLimitIntersections(
     return {
       intesectionType: 'none',
       price: 0,
-    };
-  }
-
-  const isOpenStopLoss =
-    isPossibleStopLoss && (isBuy ? ohlc.o <= stopLoss : ohlc.o >= stopLoss);
-  if (isOpenStopLoss) {
-    return {
-      intesectionType: 'stop-loss',
-      price: ohlc.o,
-    };
-  }
-
-  const isOpenLimit =
-    isPossibleLimit && (isBuy ? ohlc.o >= limit : ohlc.o <= limit);
-  if (isOpenLimit) {
-    return {
-      intesectionType: 'limit',
-      price: ohlc.o,
     };
   }
 
@@ -151,6 +202,6 @@ function checkLimitIntersections(
 
   invariant(
     false,
-    'Processing limit intersections, this code should not be reachable.',
+    'Processing bar limit intersections, this code should not be reachable.',
   );
 }

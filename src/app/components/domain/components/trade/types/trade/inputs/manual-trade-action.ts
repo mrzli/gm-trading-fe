@@ -1,8 +1,9 @@
 export const KINDS_OF_MANUAL_TRADE_ACTIONS = [
   'open',
-  'close',
   'amend-order',
+  'cancel-order',
   'amend-trade',
+  'close-trade',
 ] as const;
 
 export type ManualTradeActionKind =
@@ -22,11 +23,6 @@ export interface ManualTradeActionOpen extends ManualTradeActionBase {
   readonly limitDistance: number | undefined;
 }
 
-export interface ManualTradeActionClose extends ManualTradeActionBase {
-  readonly kind: 'close';
-  readonly targetId: number;
-}
-
 export interface ManualTradeActionAmendOrder extends ManualTradeActionBase {
   readonly kind: 'amend-order';
   readonly targetId: number;
@@ -36,6 +32,11 @@ export interface ManualTradeActionAmendOrder extends ManualTradeActionBase {
   readonly limitDistance: number | undefined;
 }
 
+export interface ManualTradeActionCancelOrder extends ManualTradeActionBase {
+  readonly kind: 'cancel-order';
+  readonly targetId: number;
+}
+
 export interface ManualTradeActionAmendTrade extends ManualTradeActionBase {
   readonly kind: 'amend-trade';
   readonly targetId: number;
@@ -43,8 +44,14 @@ export interface ManualTradeActionAmendTrade extends ManualTradeActionBase {
   readonly limit: number | undefined;
 }
 
+export interface ManualTradeActionCloseTrade extends ManualTradeActionBase {
+  readonly kind: 'close-trade';
+  readonly targetId: number;
+}
+
 export type ManualTradeActionAny =
   | ManualTradeActionOpen
-  | ManualTradeActionClose
   | ManualTradeActionAmendOrder
-  | ManualTradeActionAmendTrade;
+  | ManualTradeActionAmendTrade
+  | ManualTradeActionCancelOrder
+  | ManualTradeActionCloseTrade;

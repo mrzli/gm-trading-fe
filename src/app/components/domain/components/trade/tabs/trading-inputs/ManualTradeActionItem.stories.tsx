@@ -10,7 +10,8 @@ import {
 import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
-  ManualTradeActionClose,
+  ManualTradeActionCancelOrder,
+  ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
 } from '../../types';
 import { DEFAULT_TRADING_PARAMS } from '../../util';
@@ -42,13 +43,6 @@ const TRADE_ACTION_OPEN: ManualTradeActionOpen = {
   limitDistance: 20,
 };
 
-const TRADE_ACTION_CLOSE: ManualTradeActionClose = {
-  kind: 'close',
-  id: 1,
-  time: TIME,
-  targetId: 0,
-};
-
 const TRADE_ACTION_AMEND_ORDER: ManualTradeActionAmendOrder = {
   kind: 'amend-order',
   id: 1,
@@ -60,6 +54,13 @@ const TRADE_ACTION_AMEND_ORDER: ManualTradeActionAmendOrder = {
   limitDistance: 20,
 };
 
+const TRADE_ACTION_CANCEL_ORDER: ManualTradeActionCancelOrder = {
+  kind: 'cancel-order',
+  id: 1,
+  time: TIME,
+  targetId: 0,
+};
+
 const TRADE_ACTION_AMEND_TRADE: ManualTradeActionAmendTrade = {
   kind: 'amend-trade',
   id: 1,
@@ -67,6 +68,13 @@ const TRADE_ACTION_AMEND_TRADE: ManualTradeActionAmendTrade = {
   targetId: 0,
   stopLoss: 9900,
   limit: 1020,
+};
+
+const TRADE_ACTION_CLOSE_TRADE: ManualTradeActionCloseTrade = {
+  kind: 'close-trade',
+  id: 1,
+  time: TIME,
+  targetId: 0,
 };
 
 const Template: StoryObj<ManualTradeActionItemProps> = {
@@ -82,17 +90,17 @@ export const Open: StoryObj<ManualTradeActionItemProps> = {
   },
 };
 
-export const Close: StoryObj<ManualTradeActionItemProps> = {
-  ...Template,
-  args: {
-    tradeAction: TRADE_ACTION_CLOSE,
-  },
-};
-
 export const AmendOrder: StoryObj<ManualTradeActionItemProps> = {
   ...Template,
   args: {
     tradeAction: TRADE_ACTION_AMEND_ORDER,
+  },
+};
+
+export const CancelOrder: StoryObj<ManualTradeActionItemProps> = {
+  ...Template,
+  args: {
+    tradeAction: TRADE_ACTION_CANCEL_ORDER,
   },
 };
 
@@ -103,6 +111,13 @@ export const AmendTrade: StoryObj<ManualTradeActionItemProps> = {
   },
 };
 
+export const CloseTrade: StoryObj<ManualTradeActionItemProps> = {
+  ...Template,
+  args: {
+    tradeAction: TRADE_ACTION_CLOSE_TRADE,
+  },
+};
+
 export const All: StoryObj<ManualTradeActionItemProps> = {
   render: (args: ManualTradeActionItemProps) => {
     const { tradeAction: _ignore1, ...rest } = args;
@@ -110,14 +125,21 @@ export const All: StoryObj<ManualTradeActionItemProps> = {
     return (
       <div className='flex flex-col gap-1'>
         <ManualTradeActionItem {...rest} tradeAction={TRADE_ACTION_OPEN} />
-        <ManualTradeActionItem {...rest} tradeAction={TRADE_ACTION_CLOSE} />
         <ManualTradeActionItem
           {...rest}
           tradeAction={TRADE_ACTION_AMEND_ORDER}
         />
         <ManualTradeActionItem
           {...rest}
+          tradeAction={TRADE_ACTION_CANCEL_ORDER}
+        />
+        <ManualTradeActionItem
+          {...rest}
           tradeAction={TRADE_ACTION_AMEND_TRADE}
+        />
+        <ManualTradeActionItem
+          {...rest}
+          tradeAction={TRADE_ACTION_CLOSE_TRADE}
         />
       </div>
     );

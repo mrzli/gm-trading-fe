@@ -5,7 +5,8 @@ import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionAny,
-  ManualTradeActionClose,
+  ManualTradeActionCancelOrder,
+  ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
   TradingParameters,
 } from '../../types';
@@ -62,14 +63,17 @@ function getValueDisplayDataList(
     case 'open': {
       return getDisplayPropsOpen(tradeAction, timezone, priceDecimals);
     }
-    case 'close': {
-      return getDisplayPropsClose(tradeAction, timezone, priceDecimals);
-    }
     case 'amend-order': {
       return getDisplayPropsAmendOrder(tradeAction, timezone, priceDecimals);
     }
+    case 'cancel-order': {
+      return getDisplayPropsCancelOrder(tradeAction, timezone, priceDecimals);
+    }
     case 'amend-trade': {
       return getDisplayPropsAmendTrade(tradeAction, timezone, priceDecimals);
+    }
+    case 'close-trade': {
+      return getDisplayPropsCloseTrade(tradeAction, timezone, priceDecimals);
     }
     default: {
       invariant(false, `Invalid manual trade action kind: '${kind}'.`);
@@ -138,42 +142,6 @@ function getDisplayPropsOpen(
   ];
 }
 
-function getDisplayPropsClose(
-  tradeAction: ManualTradeActionClose,
-  timezone: ChartTimezone,
-  _priceDecimals: number,
-): ValueDisplayDataAnyList {
-  const { id, time, targetId } = tradeAction;
-
-  return [
-    {
-      kind: 'decimal',
-      label: 'ID',
-      value: id,
-      precision: 0,
-    },
-    {
-      kind: 'string',
-      label: 'Type',
-      value: 'C',
-    },
-    {
-      kind: 'date',
-      colSpan: DATE_DISPLAY_VALUE_SPAN,
-      label: 'Time',
-      fontSize: 10,
-      value: time,
-      timezone,
-    },
-    {
-      kind: 'decimal',
-      label: 'Tgt ID',
-      value: targetId,
-      precision: 0,
-    },
-  ];
-}
-
 function getDisplayPropsAmendOrder(
   tradeAction: ManualTradeActionAmendOrder,
   timezone: ChartTimezone,
@@ -238,6 +206,42 @@ function getDisplayPropsAmendOrder(
   ];
 }
 
+function getDisplayPropsCancelOrder(
+  tradeAction: ManualTradeActionCancelOrder,
+  timezone: ChartTimezone,
+  _priceDecimals: number,
+): ValueDisplayDataAnyList {
+  const { id, time, targetId } = tradeAction;
+
+  return [
+    {
+      kind: 'decimal',
+      label: 'ID',
+      value: id,
+      precision: 0,
+    },
+    {
+      kind: 'string',
+      label: 'Type',
+      value: 'CO',
+    },
+    {
+      kind: 'date',
+      colSpan: DATE_DISPLAY_VALUE_SPAN,
+      label: 'Time',
+      fontSize: 10,
+      value: time,
+      timezone,
+    },
+    {
+      kind: 'decimal',
+      label: 'Tgt ID',
+      value: targetId,
+      precision: 0,
+    },
+  ];
+}
+
 function getDisplayPropsAmendTrade(
   tradeAction: ManualTradeActionAmendTrade,
   timezone: ChartTimezone,
@@ -288,6 +292,42 @@ function getDisplayPropsAmendTrade(
       label: 'L',
       value: limit,
       precision: priceDecimals,
+    },
+  ];
+}
+
+function getDisplayPropsCloseTrade(
+  tradeAction: ManualTradeActionCloseTrade,
+  timezone: ChartTimezone,
+  _priceDecimals: number,
+): ValueDisplayDataAnyList {
+  const { id, time, targetId } = tradeAction;
+
+  return [
+    {
+      kind: 'decimal',
+      label: 'ID',
+      value: id,
+      precision: 0,
+    },
+    {
+      kind: 'string',
+      label: 'Type',
+      value: 'CT',
+    },
+    {
+      kind: 'date',
+      colSpan: DATE_DISPLAY_VALUE_SPAN,
+      label: 'Time',
+      fontSize: 10,
+      value: time,
+      timezone,
+    },
+    {
+      kind: 'decimal',
+      label: 'Tgt ID',
+      value: targetId,
+      precision: 0,
     },
   ];
 }

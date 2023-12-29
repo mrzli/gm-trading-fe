@@ -5,7 +5,8 @@ import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionAny,
-  ManualTradeActionClose,
+  ManualTradeActionCancelOrder,
+  ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
   OrderInputs,
 } from '../types';
@@ -49,22 +50,6 @@ export function createManualTradeActionOpen(
   };
 }
 
-export function createManualTradeActionClose(
-  targetId: number,
-  id: number,
-  barData: Bars,
-  barIndex: number,
-): ManualTradeActionClose {
-  const time = barData[barIndex].time;
-
-  return {
-    kind: 'close',
-    id,
-    time,
-    targetId,
-  };
-}
-
 export function createManualTradeActionAmendOrder(
   data: AmendOrderData,
   id: number,
@@ -87,6 +72,22 @@ export function createManualTradeActionAmendOrder(
   };
 }
 
+export function createManualTradeActionCancelOrder(
+  targetId: number,
+  id: number,
+  barData: Bars,
+  barIndex: number,
+): ManualTradeActionCancelOrder {
+  const time = barData[barIndex].time;
+
+  return {
+    kind: 'cancel-order',
+    id,
+    time,
+    targetId,
+  };
+}
+
 export function createManualTradeActionAmendTrade(
   data: AmendTradeData,
   id: number,
@@ -104,5 +105,21 @@ export function createManualTradeActionAmendTrade(
     targetId,
     stopLoss,
     limit,
+  };
+}
+
+export function createManualTradeActionCloseTrade(
+  targetId: number,
+  id: number,
+  barData: Bars,
+  barIndex: number,
+): ManualTradeActionCloseTrade {
+  const time = barData[barIndex].time;
+
+  return {
+    kind: 'close-trade',
+    id,
+    time,
+    targetId,
   };
 }
