@@ -106,14 +106,14 @@ export function ActiveOrderItem({
       />
       <TextInput
         id='stop-loss-distance'
-        label='Price'
+        label='Stop-Loss Distance'
         value={stopLossDistanceInput}
         onValueChange={setStopLossDistanceInput}
         width={'100%'}
       />
       <TextInput
         id='limit-distance'
-        label='Price'
+        label='Limit Distance'
         value={limitDistanceInput}
         onValueChange={setLimitDistanceInput}
         width={'100%'}
@@ -126,7 +126,7 @@ export function ActiveOrderItem({
   );
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col gap-2'>
       <div className='grid grid-cols-[repeat(11,_1fr)_auto] items-center gap-2'>
         {displayItems.map((item, index) => {
           return <ValueDisplayItem key={index} item={item} />;

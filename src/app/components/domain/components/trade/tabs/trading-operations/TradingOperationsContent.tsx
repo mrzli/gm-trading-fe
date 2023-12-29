@@ -3,6 +3,7 @@ import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import {
   AmendOrderData,
+  AmendTradeData,
   TradeProcessState,
   TradingDataAndInputs,
 } from '../../types';
@@ -22,6 +23,7 @@ export interface TradingOperationsContentProps {
   readonly onCancelOrder: (id: number) => void;
   readonly onAmendOrder: (data: AmendOrderData) => void;
   readonly onCloseTrade: (id: number) => void;
+  readonly onAmendTrade: (data: AmendTradeData) => void;
 }
 
 export function TradingOperationsContent({
@@ -32,6 +34,7 @@ export function TradingOperationsContent({
   onCancelOrder,
   onAmendOrder,
   onCloseTrade,
+  onAmendTrade,
 }: TradingOperationsContentProps): React.ReactElement {
   const { settings, barData, barIndex } = dataAndInputs;
   const { timezone } = settings;
@@ -68,6 +71,30 @@ export function TradingOperationsContent({
       setEditOrderId(undefined);
     },
     [setEditOrderId],
+  );
+
+  const [editTradeId, setEditTradeId] = useState<number | undefined>(undefined);
+
+  const handleTradeEdit = useCallback(
+    (id: number) => {
+      setEditTradeId(editTradeId === id ? undefined : id);
+    },
+    [editTradeId],
+  );
+
+  const handleTradeEditOk = useCallback(
+    (data: AmendTradeData) => {
+      setEditTradeId(undefined);
+      onAmendTrade(data);
+    },
+    [onAmendTrade],
+  );
+
+  const handleTradeEditCancel = useCallback(
+    (_id: number) => {
+      setEditTradeId(undefined);
+    },
+    [setEditTradeId],
   );
 
   return (
@@ -108,7 +135,11 @@ export function TradingOperationsContent({
               tradingParams={tradingParams}
               bar={bar}
               item={item}
+              isEditing={editTradeId === item.id}
+              onEdit={handleTradeEdit}
               onClose={onCloseTrade}
+              onEditOk={handleTradeEditOk}
+              onEditCancel={handleTradeEditCancel}
             />
           );
         }}

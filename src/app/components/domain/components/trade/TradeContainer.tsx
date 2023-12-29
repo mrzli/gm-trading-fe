@@ -257,6 +257,7 @@ function getTabEntries(
           onCancelOrder={handleCancelOrder}
           onAmendOrder={handleAmendOrder}
           onCloseTrade={handleCloseTrade}
+          onAmendTrade={handleAmendTrade}
         />
       ),
     },
