@@ -272,7 +272,12 @@ function getTabEntries(
     {
       value: 'trading-results',
       tab: 'Results',
-      content: <TradingResultsContent state={tradingState} />,
+      content: (
+        <TradingResultsContent
+          tradingParams={tradingDataAndInputs.inputs.params}
+          state={tradingState}
+        />
+      ),
     },
     {
       value: 'trading-debug',
