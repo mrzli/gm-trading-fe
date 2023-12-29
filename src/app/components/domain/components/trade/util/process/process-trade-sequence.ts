@@ -1,5 +1,5 @@
 import { TradeProcessState, TradingDataAndInputs } from '../../types';
-import { sortManualTradeActions } from './sort-manual-trade-actions';
+import { groupManualTradeActionsByBar } from './manual-trade-actions-util';
 import { processManualTradeActions } from './process-manual-trade-actions';
 import { processOrders } from './process-orders';
 import { processTrades } from './process-trades';
@@ -28,13 +28,16 @@ function getInitialTradeProcessState(
   const { barData, barIndex, inputs } = input;
   const { manualTradeActions, params } = inputs;
 
-  const remainingManualActions = sortManualTradeActions(manualTradeActions);
+  const manualTradeActionsByBar = groupManualTradeActionsByBar(
+    manualTradeActions,
+    barData,
+  );
 
   return {
     barData,
     barIndex,
     tradingParams: params,
-    remainingManualActions,
+    manualTradeActionsByBar,
     activeOrders: [],
     activeTrades: [],
     completedTrades: [],

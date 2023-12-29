@@ -39,8 +39,8 @@ dependencies:
     specifier: ^0.0.1
     version: 0.0.1
   '@gmjs/value-transformers':
-    specifier: ^0.0.6
-    version: 0.0.6
+    specifier: ^0.0.7
+    version: 0.0.7
   '@mdi/js':
     specifier: ^7.3.67
     version: 7.3.67
@@ -2494,8 +2494,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gmjs/value-transformers@0.0.6:
-    resolution: {integrity: sha512-T/O6P0toAfj6S01Go9jPbgt6nlwBQWwuyhBS+99ioJgJK1jDcEBNskxi+qR6HDvFqRwEmdn15px9ei2/BNiVaA==}
+  /@gmjs/value-transformers@0.0.7:
+    resolution: {integrity: sha512-rdGkg6e3rGhYhA7hTCyC2DPeon3ZH7bsJXficG7h9gQRk1WsqKnXUf1keNRshOyWwn1U97XxVt5xDI6C5SFgTg==}
     engines: {node: '>=18.17.0'}
     dependencies:
       '@gmjs/compose-function': 0.0.1

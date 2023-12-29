@@ -1,6 +1,4 @@
 import { invariant } from '@gmjs/assert';
-import { applyFn } from '@gmjs/apply-function';
-import { filter, toArray } from '@gmjs/value-transformers';
 import {
   TradeProcessState,
   ManualTradeActionAny,
@@ -20,30 +18,15 @@ export function processManualTradeActions(
 ): TradeProcessState {
   let currentState = state;
 
-  const { barData, remainingManualActions } = currentState;
+  const { manualTradeActionsByBar } = currentState;
 
-  const time = barData[index].time;
-
-  const currentBarActions = applyFn(
-    remainingManualActions,
-    filter((item) => item.time <= time),
-    toArray(),
-  );
+  const currentBarActions = manualTradeActionsByBar.get(index) ?? [];
 
   for (const action of currentBarActions) {
     currentState = processManualTradeAction(currentState, index, action);
   }
 
-  const newRemainingManualActions = applyFn(
-    remainingManualActions,
-    filter((item) => !(item.time <= time)),
-    toArray(),
-  );
-
-  return {
-    ...currentState,
-    remainingManualActions: newRemainingManualActions,
-  };
+  return currentState;
 }
 
 function processManualTradeAction(

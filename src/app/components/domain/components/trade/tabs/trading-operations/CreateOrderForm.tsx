@@ -4,11 +4,11 @@ import { OrderInputs, TradeDirection } from '../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 
 export interface CreateOrderFormProps {
-  readonly onSubmit: (order: OrderInputs) => void;
+  readonly onCreateOrder: (order: OrderInputs) => void;
 }
 
 export function CreateOrderForm({
-  onSubmit,
+  onCreateOrder,
 }: CreateOrderFormProps): React.ReactElement {
   const [tradeDirection, setTradeDirection] = useState<
     TradeDirection | undefined
@@ -48,11 +48,11 @@ export function CreateOrderForm({
           ? undefined
           : parseFloatOrThrow(limitDistanceInput),
     };
-    onSubmit(order);
+    onCreateOrder(order);
   }, [
     amountInput,
     limitDistanceInput,
-    onSubmit,
+    onCreateOrder,
     priceInput,
     stopLossDistanceInput,
     tradeDirection,
@@ -94,7 +94,7 @@ export function CreateOrderForm({
         value={limitDistanceInput}
         onValueChange={setLimitDistanceInput}
       />
-      <Button content={'Submit'} onClick={handleSubmit} />
+      <Button content={'Create'} onClick={handleSubmit} />
     </div>
   );
 }

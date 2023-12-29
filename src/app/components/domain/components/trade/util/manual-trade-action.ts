@@ -1,6 +1,11 @@
 import { applyFn } from '@gmjs/apply-function';
 import {
+  AmendOrderData,
+  AmendTradeData,
+  ManualTradeActionAmendOrder,
+  ManualTradeActionAmendTrade,
   ManualTradeActionAny,
+  ManualTradeActionClose,
   ManualTradeActionOpen,
   OrderInputs,
 } from '../types';
@@ -45,11 +50,11 @@ export function createManualTradeActionOpen(
 }
 
 export function createManualTradeActionClose(
-  id: number,
   targetId: number,
+  id: number,
   barData: Bars,
   barIndex: number,
-): ManualTradeActionAny {
+): ManualTradeActionClose {
   const time = barData[barIndex].time;
 
   return {
@@ -57,5 +62,47 @@ export function createManualTradeActionClose(
     id,
     time,
     targetId,
+  };
+}
+
+export function createManualTradeActionAmendOrder(
+  data: AmendOrderData,
+  id: number,
+  barData: Bars,
+  barIndex: number,
+): ManualTradeActionAmendOrder {
+  const { id: targetId, price, amount, stopLossDistance, limitDistance } = data;
+
+  const time = barData[barIndex].time;
+
+  return {
+    kind: 'amend-order',
+    id,
+    time,
+    targetId,
+    price,
+    amount,
+    stopLossDistance,
+    limitDistance,
+  };
+}
+
+export function createManualTradeActionAmendTrade(
+  data: AmendTradeData,
+  id: number,
+  barData: Bars,
+  barIndex: number,
+): ManualTradeActionAmendTrade {
+  const { id: targetId, stopLoss, limit } = data;
+
+  const time = barData[barIndex].time;
+
+  return {
+    kind: 'amend-trade',
+    id,
+    time,
+    targetId,
+    stopLoss,
+    limit,
   };
 }

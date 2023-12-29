@@ -3,10 +3,12 @@ import { ActiveOrderItem, ActiveOrderItemProps } from './ActiveOrderItem';
 import {
   argTypeInlineRadio,
   decoratorPadding,
+  disableControl,
 } from '../../../../../../../../storybook';
 import { DEFAULT_TRADING_PARAMS } from '../../../util';
-import { ActiveOrder } from '../../../types';
+import { ActiveOrder, AmendOrderData } from '../../../types';
 import { TYPES_OF_CHART_TIMEZONES } from '../../../../../types';
+import { useState } from 'react';
 
 const STORY_META: Meta<ActiveOrderItemProps> = {
   component: ActiveOrderItem,
@@ -14,6 +16,12 @@ const STORY_META: Meta<ActiveOrderItemProps> = {
   decorators: [decoratorPadding()],
   argTypes: {
     timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
+    item: disableControl(),
+    onEdit: disableControl(),
+    onCancel: disableControl(),
+    isEditing: disableControl(),
+    onEditOk: disableControl(),
+    onEditCancel: disableControl(),
   },
   args: {
     timezone: 'UTC',
@@ -35,7 +43,39 @@ const ITEM: ActiveOrder = {
 
 export const Primary: StoryObj<ActiveOrderItemProps> = {
   render: (args: ActiveOrderItemProps) => {
-    return <ActiveOrderItem {...args} />;
+    const {
+      item: _ignore1,
+      onEdit: _ignore2,
+      isEditing: _ignore3,
+      onEditOk: _ignore4,
+      onEditCancel: _ignore5,
+      ...rest
+    } = args;
+
+    const [item, setItem] = useState(ITEM);
+
+    const [editing, setEditing] = useState(false);
+
+    return (
+      <ActiveOrderItem
+        {...rest}
+        item={item}
+        onEdit={() => {
+          setEditing(!editing);
+        }}
+        isEditing={editing}
+        onEditOk={(data: AmendOrderData) => {
+          setItem({
+            ...item,
+            ...data,
+          });
+          setEditing(false);
+        }}
+        onEditCancel={() => {
+          setEditing(false);
+        }}
+      />
+    );
   },
   args: {
     item: ITEM,

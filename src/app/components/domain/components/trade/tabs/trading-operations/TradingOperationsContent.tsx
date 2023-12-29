@@ -1,7 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
-import { TradeProcessState, TradingDataAndInputs } from '../../types';
+import {
+  AmendOrderData,
+  TradeProcessState,
+  TradingDataAndInputs,
+} from '../../types';
 import { ItemList } from '../../shared';
 import { ActiveOrderItem } from './lists/ActiveOrderItem';
 import { ActiveTradeItem } from './lists/ActiveTradeItem';
@@ -16,6 +20,7 @@ export interface TradingOperationsContentProps {
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
   readonly onCreateOrder: (order: OrderInputs) => void;
   readonly onCancelOrder: (id: number) => void;
+  readonly onAmendOrder: (data: AmendOrderData) => void;
   readonly onCloseTrade: (id: number) => void;
 }
 
@@ -25,6 +30,7 @@ export function TradingOperationsContent({
   onReplayPositionChange,
   onCreateOrder,
   onCancelOrder,
+  onAmendOrder,
   onCloseTrade,
 }: TradingOperationsContentProps): React.ReactElement {
   const { settings, barData, barIndex } = dataAndInputs;
@@ -33,11 +39,35 @@ export function TradingOperationsContent({
 
   const bar = barData[barIndex];
 
-  const handleSubmit = useCallback(
+  const handleCreateOrder = useCallback(
     (order: OrderInputs) => {
       onCreateOrder(order);
     },
     [onCreateOrder],
+  );
+
+  const [editOrderId, setEditOrderId] = useState<number | undefined>(undefined);
+
+  const handleOrderEdit = useCallback(
+    (id: number) => {
+      setEditOrderId(editOrderId === id ? undefined : id);
+    },
+    [editOrderId],
+  );
+
+  const handleOrderEditOk = useCallback(
+    (data: AmendOrderData) => {
+      setEditOrderId(undefined);
+      onAmendOrder(data);
+    },
+    [onAmendOrder],
+  );
+
+  const handleOrderEditCancel = useCallback(
+    (_id: number) => {
+      setEditOrderId(undefined);
+    },
+    [setEditOrderId],
   );
 
   return (
@@ -47,7 +77,7 @@ export function TradingOperationsContent({
         state={state}
         onReplayPositionChange={onReplayPositionChange}
       />
-      <CreateOrderForm onSubmit={handleSubmit} />
+      <CreateOrderForm onCreateOrder={handleCreateOrder} />
       <ItemList
         title={'Active Orders'}
         items={activeOrders}
@@ -58,7 +88,11 @@ export function TradingOperationsContent({
               timezone={timezone}
               tradingParams={tradingParams}
               item={item}
+              isEditing={editOrderId === item.id}
+              onEdit={handleOrderEdit}
               onCancel={onCancelOrder}
+              onEditOk={handleOrderEditOk}
+              onEditCancel={handleOrderEditCancel}
             />
           );
         }}

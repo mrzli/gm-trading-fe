@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TabLayout, TabLayoutEntry } from '../../../shared';
 import {
+  AmendOrderData,
+  AmendTradeData,
   ManualTradeActionAny,
   OrderInputs,
   TradeProcessState,
@@ -21,6 +23,8 @@ import {
   createManualTradeActionClose,
   flattenGroupedBars,
   getTradeDataBarIndex,
+  createManualTradeActionAmendOrder,
+  createManualTradeActionAmendTrade,
 } from './util';
 import { BarReplayPosition, Bars, ChartSettings } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
@@ -116,8 +120,8 @@ export function TradeContainer({
 
       const id = getNextManualActionId(manualTradeActions);
       const newAction = createManualTradeActionClose(
-        id,
         targetId,
+        id,
         barData,
         barIndex,
       );
@@ -131,6 +135,38 @@ export function TradeContainer({
       handleCancelOrderOrCloseTrade(id);
     },
     [handleCancelOrderOrCloseTrade],
+  );
+
+  const handleAmendOrder = useCallback(
+    (data: AmendOrderData) => {
+      const { manualTradeActions } = tradingDataAndInputs.inputs;
+
+      const id = getNextManualActionId(manualTradeActions);
+      const newAction = createManualTradeActionAmendOrder(
+        data,
+        id,
+        barData,
+        barIndex,
+      );
+      appendManualTradeAction(newAction);
+    },
+    [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
+  );
+
+  const handleAmendTrade = useCallback(
+    (data: AmendTradeData) => {
+      const { manualTradeActions } = tradingDataAndInputs.inputs;
+
+      const id = getNextManualActionId(manualTradeActions);
+      const newAction = createManualTradeActionAmendTrade(
+        data,
+        id,
+        barData,
+        barIndex,
+      );
+      appendManualTradeAction(newAction);
+    },
+    [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
   );
 
   const handleCloseTrade = useCallback(
@@ -158,9 +194,13 @@ export function TradeContainer({
         onReplayPositionChange,
         handleCreateOrder,
         handleCancelOrder,
+        handleAmendOrder,
         handleCloseTrade,
+        handleAmendTrade,
       ),
     [
+      handleAmendOrder,
+      handleAmendTrade,
       handleCancelOrder,
       handleCloseTrade,
       handleCreateOrder,
@@ -187,7 +227,9 @@ function getTabEntries(
   handleReplayPositionChange: (value: BarReplayPosition) => void,
   handleCreateOrder: (order: OrderInputs) => void,
   handleCancelOrder: (id: number) => void,
+  handleAmendOrder: (data: AmendOrderData) => void,
   handleCloseTrade: (id: number) => void,
+  handleAmendTrade: (data: AmendTradeData) => void,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   const timezone = tradingDataAndInputs.settings.timezone;
 
@@ -213,6 +255,7 @@ function getTabEntries(
           onReplayPositionChange={handleReplayPositionChange}
           onCreateOrder={handleCreateOrder}
           onCancelOrder={handleCancelOrder}
+          onAmendOrder={handleAmendOrder}
           onCloseTrade={handleCloseTrade}
         />
       ),
@@ -250,7 +293,7 @@ function getInitialTradeProcessState(
     barData,
     barIndex,
     tradingParams: params,
-    remainingManualActions: [],
+    manualTradeActionsByBar: new Map(),
     activeOrders: [],
     activeTrades: [],
     completedTrades: [],
