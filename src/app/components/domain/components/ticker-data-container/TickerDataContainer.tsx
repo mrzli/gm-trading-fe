@@ -119,6 +119,8 @@ export function TickerDataContainer({
       const { barIndex } = replayPosition;
       if (value === 'trade' && barIndex === undefined) {
         setReplayPosition({ barIndex: 1, subBarIndex: 0 });
+      } else if (value !== 'trade') {
+        setReplayPosition({ barIndex: undefined, subBarIndex: 0 });
       }
 
       setRightToolbarState(value);
