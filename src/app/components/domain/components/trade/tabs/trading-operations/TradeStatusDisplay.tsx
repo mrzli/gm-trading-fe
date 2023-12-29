@@ -82,6 +82,7 @@ export function TradeStatusDisplay({
   return (
     <div className='flex flex-col gap-2'>
       <BarReplay
+        timezone={timezone}
         subBars={subBars}
         replayPosition={replayPosition}
         onReplayPositionChange={onReplayPositionChange}

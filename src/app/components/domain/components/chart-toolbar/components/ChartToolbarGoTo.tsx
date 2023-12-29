@@ -3,13 +3,10 @@ import { TextInput } from '../../../../shared';
 import { dateIsoToUnixSeconds } from '../../../../../util';
 import { ChartRange, Bars, ChartTimezone } from '../../../types';
 import {
-  SCHEMA_GO_TO_INPUT,
-  dateInputToIso,
-  SCHEMA_GO_TO_DATE,
   timeToLogical,
   logicalToLogicalRange,
 } from '../util';
-import { isChartRangeEqual } from '../../../util';
+import { SCHEMA_DATE_FOR_INPUT, SCHEMA_DATE_INPUT, dateInputToIso, isChartRangeEqual } from '../../../util';
 
 export interface ChartToolbarGoToProps {
   readonly timezone: ChartTimezone;
@@ -26,11 +23,11 @@ export function ChartToolbarGoTo({
 }: ChartToolbarGoToProps): React.ReactElement {
   const [goToInput, setGoToInput] = useState('');
   const isGoToInputValid = useMemo(
-    () => SCHEMA_GO_TO_INPUT.safeParse(goToInput).success,
+    () => SCHEMA_DATE_INPUT.safeParse(goToInput).success,
     [goToInput],
   );
   const isGoToValid = useMemo(
-    () => SCHEMA_GO_TO_DATE.safeParse(goToInput).success && data.length > 0,
+    () => SCHEMA_DATE_FOR_INPUT.safeParse(goToInput).success && data.length > 0,
     [goToInput, data],
   );
 
