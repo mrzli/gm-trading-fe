@@ -13,11 +13,7 @@ import { Key } from 'ts-key-enum';
 import { ChartTimeStep } from '../chart-toolbar/types';
 import { moveLogicalRange } from '../chart-toolbar/util';
 import { getChartData, toLogicalOffset } from './util';
-import {
-  barReplayMoveSubBar,
-  isBarReplayPositionEqual,
-  isChartRangeEqual,
-} from '../../util';
+import { barReplayMoveSubBar, isChartRangeEqual } from '../../util';
 
 export interface ChartContainerProps {
   readonly instrument: Instrument;
@@ -140,10 +136,6 @@ function keyboardNavigateReplay(
     barIndex: newBarIndex,
     subBarIndex: newSubBarIndex,
   };
-
-  if (isBarReplayPositionEqual(replayPosition, newBarReplayPosition)) {
-    return;
-  }
 
   handleReplayPositionChange(newBarReplayPosition);
 }

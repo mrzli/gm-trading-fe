@@ -5,17 +5,18 @@ import {
   createSchemaIntegerInRange,
   createSchemaReplayInput,
 } from '../../../../chart-toolbar/util';
+import { BarReplayPosition } from '../../../../../types';
 
 export interface BarReplaySetBarIndexProps {
   readonly dataLength: number;
   readonly barIndex: number | undefined;
-  readonly onBarIndexChange: (barIndex: number | undefined) => void;
+  readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplaySetBarIndex({
   dataLength,
   barIndex,
-  onBarIndexChange,
+  onReplayPositionChange,
 }: BarReplaySetBarIndexProps): React.ReactElement {
   const [barIndexInput, setBarIndexInput] = useState<string>('');
 
@@ -35,7 +36,7 @@ export function BarReplaySetBarIndex({
 
   const handleReplaySetBarIndex = useCallback(() => {
     if (barIndexInput === '') {
-      onBarIndexChange(undefined);
+      onReplayPositionChange({ barIndex: undefined, subBarIndex: 0 });
       return;
     }
 
@@ -46,8 +47,8 @@ export function BarReplaySetBarIndex({
     const barIndexNum = parseIntegerOrThrow(barIndexInput);
     const newBarIndex = clamp(barIndexNum, 1, dataLength);
 
-    onBarIndexChange(newBarIndex);
-  }, [barIndexInput, dataLength, isReplayValueValid, onBarIndexChange]);
+    onReplayPositionChange({ barIndex: newBarIndex, subBarIndex: 0 });
+  }, [barIndexInput, dataLength, isReplayValueValid, onReplayPositionChange]);
 
   const handleReplayInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {

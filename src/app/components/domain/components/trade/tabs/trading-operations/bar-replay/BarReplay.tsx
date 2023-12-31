@@ -12,7 +12,6 @@ import {
   SCHEMA_DATE_INPUT,
   binarySearch,
   dateInputToIso,
-  isBarReplayPositionEqual,
 } from '../../../../../util';
 import { TextInput } from '../../../../../../shared';
 import { dateIsoToUnixSeconds } from '../../../../../../../util';
@@ -30,22 +29,6 @@ export function BarReplay({
   replayPosition,
   onReplayPositionChange,
 }: BarReplayProps): React.ReactElement {
-  const handleBarIndexChange = useCallback(
-    (barIndex: number | undefined, subBarIndex: number = 0) => {
-      const newBarReplayPosition: BarReplayPosition = {
-        barIndex,
-        subBarIndex,
-      };
-
-      if (isBarReplayPositionEqual(replayPosition, newBarReplayPosition)) {
-        return;
-      }
-
-      onReplayPositionChange(newBarReplayPosition);
-    },
-    [onReplayPositionChange, replayPosition],
-  );
-
   const [goToInput, setGoToInput] = useState('');
   const isGoToInputValid = useMemo(
     () => SCHEMA_DATE_INPUT.safeParse(goToInput).success,
@@ -70,13 +53,13 @@ export function BarReplay({
           return;
         }
 
-        handleBarIndexChange(barIndex);
+        onReplayPositionChange({ barIndex, subBarIndex: 0 });
       }
     },
     [
       goToInput,
-      handleBarIndexChange,
       isGoToValid,
+      onReplayPositionChange,
       replayPosition.barIndex,
       subBars,
       timezone,
@@ -88,18 +71,18 @@ export function BarReplay({
       <BarReplaySetBarIndex
         dataLength={subBars.length}
         barIndex={replayPosition.barIndex}
-        onBarIndexChange={handleBarIndexChange}
+        onReplayPositionChange={onReplayPositionChange}
       />
       <BarReplayNavigateBar
         dataLength={subBars.length}
         barIndex={replayPosition.barIndex}
-        onBarIndexChange={handleBarIndexChange}
+        onReplayPositionChange={onReplayPositionChange}
       />
       <BarReplayNavigateSubBar
         subBars={subBars}
         barIndex={replayPosition.barIndex}
         subBarIndex={replayPosition.subBarIndex}
-        onBarIndexChange={handleBarIndexChange}
+        onReplayPositionChange={onReplayPositionChange}
       />
       <TextInput
         placeholder='YYYY-MM-DD [HH:mm]'

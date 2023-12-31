@@ -4,17 +4,18 @@ import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
 import { SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT } from '../../../../chart-toolbar/util';
 import { TextInput } from '../../../../../../shared';
 import { IconButton } from '../../../../shared';
+import { BarReplayPosition } from '../../../../../types';
 
 export interface BarReplayNavigateBarProps {
   readonly dataLength: number;
   readonly barIndex: number | undefined;
-  readonly onBarIndexChange: (barIndex: number | undefined) => void;
+  readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplayNavigateBar({
   dataLength,
   barIndex,
-  onBarIndexChange,
+  onReplayPositionChange,
 }: BarReplayNavigateBarProps): React.ReactElement {
   const [replayNavigationStepSizeInput, setReplayNavigationStepSizeInput] =
     useState<string>('1');
@@ -47,9 +48,9 @@ export function BarReplayNavigateBar({
 
       const newBarIndex = clamp(currBarIndex + amount, 1, dataLength);
 
-      onBarIndexChange(newBarIndex);
+      onReplayPositionChange({ barIndex: newBarIndex, subBarIndex: 0 });
     },
-    [isNavigateEnabled, barIndex, dataLength, onBarIndexChange],
+    [isNavigateEnabled, barIndex, dataLength, onReplayPositionChange],
   );
 
   const navigateBack = useCallback(() => {

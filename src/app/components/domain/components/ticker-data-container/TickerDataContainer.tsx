@@ -20,6 +20,7 @@ import {
   BarReplayPosition,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
+import { isBarReplayPositionEqual } from '../../util';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -129,10 +130,14 @@ export function TickerDataContainer({
   );
 
   const handleReplayPositionChange = useCallback(
-    (replayPosition: BarReplayPosition) => {
-      setReplayPosition(replayPosition);
+    (newReplayPosition: BarReplayPosition) => {
+      if (isBarReplayPositionEqual(replayPosition, newReplayPosition)) {
+        return;
+      }
+
+      setReplayPosition(newReplayPosition);
     },
-    [],
+    [replayPosition],
   );
 
   if (!instrument) {

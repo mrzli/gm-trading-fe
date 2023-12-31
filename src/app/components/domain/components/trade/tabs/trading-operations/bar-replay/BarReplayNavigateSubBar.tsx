@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { GroupedBars } from '../../../../../types';
+import { BarReplayPosition, GroupedBars } from '../../../../../types';
 import { IconButton } from '../../../../shared';
 import { barReplayMoveSubBar } from '../../../../../util';
 
@@ -8,17 +8,14 @@ export interface BarReplayNavigateSubBarProps {
   readonly subBars: GroupedBars;
   readonly barIndex: number | undefined;
   readonly subBarIndex: number;
-  readonly onBarIndexChange: (
-    barIndex: number | undefined,
-    subBarIndex: number,
-  ) => void;
+  readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplayNavigateSubBar({
   subBars,
   barIndex,
   subBarIndex,
-  onBarIndexChange,
+  onReplayPositionChange,
 }: BarReplayNavigateSubBarProps): React.ReactElement {
   const isNavigateBackEnabled = useMemo(() => {
     return (
@@ -51,9 +48,12 @@ export function BarReplayNavigateSubBar({
       const { barIndex: newBarIndex, subBarIndex: newSubBarIndex } =
         newBarReplayIndexes;
 
-      onBarIndexChange(newBarIndex, newSubBarIndex);
+      onReplayPositionChange({
+        barIndex: newBarIndex,
+        subBarIndex: newSubBarIndex,
+      });
     },
-    [isNavigateEnabled, subBars, barIndex, subBarIndex, onBarIndexChange],
+    [isNavigateEnabled, subBars, barIndex, subBarIndex, onReplayPositionChange],
   );
 
   const navigateBack = useCallback(() => {
