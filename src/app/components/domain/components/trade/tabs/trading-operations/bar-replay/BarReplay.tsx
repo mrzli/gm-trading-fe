@@ -26,18 +26,17 @@ export function BarReplay({
     <div className='inline-flex flex-row gap-0.5'>
       <BarReplaySetBarIndex
         dataLength={subBars.length}
-        barIndex={replayPosition.barIndex}
+        replayPosition={replayPosition}
         onReplayPositionChange={onReplayPositionChange}
       />
       <BarReplayNavigateBar
         dataLength={subBars.length}
-        barIndex={replayPosition.barIndex}
+        replayPosition={replayPosition}
         onReplayPositionChange={onReplayPositionChange}
       />
       <BarReplayNavigateSubBar
         subBars={subBars}
-        barIndex={replayPosition.barIndex}
-        subBarIndex={replayPosition.subBarIndex}
+        replayPosition={replayPosition}
         onReplayPositionChange={onReplayPositionChange}
       />
       <BarReplayGoTo

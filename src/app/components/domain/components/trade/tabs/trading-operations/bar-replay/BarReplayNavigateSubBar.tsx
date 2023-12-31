@@ -6,17 +6,17 @@ import { barReplayMoveSubBar } from '../../../../../util';
 
 export interface BarReplayNavigateSubBarProps {
   readonly subBars: GroupedBars;
-  readonly barIndex: number | undefined;
-  readonly subBarIndex: number;
+  readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplayNavigateSubBar({
   subBars,
-  barIndex,
-  subBarIndex,
+  replayPosition,
   onReplayPositionChange,
 }: BarReplayNavigateSubBarProps): React.ReactElement {
+  const { barIndex, subBarIndex } = replayPosition;
+
   const isNavigateBackEnabled = useMemo(() => {
     return (
       barIndex !== undefined &&

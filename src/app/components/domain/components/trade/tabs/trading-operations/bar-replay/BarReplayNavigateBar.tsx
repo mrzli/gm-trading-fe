@@ -8,15 +8,17 @@ import { BarReplayPosition } from '../../../../../types';
 
 export interface BarReplayNavigateBarProps {
   readonly dataLength: number;
-  readonly barIndex: number | undefined;
+  readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplayNavigateBar({
   dataLength,
-  barIndex,
+  replayPosition,
   onReplayPositionChange,
 }: BarReplayNavigateBarProps): React.ReactElement {
+  const { barIndex } = replayPosition;
+
   const [replayNavigationStepSizeInput, setReplayNavigationStepSizeInput] =
     useState<string>('1');
 

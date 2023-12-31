@@ -9,15 +9,17 @@ import { BarReplayPosition } from '../../../../../types';
 
 export interface BarReplaySetBarIndexProps {
   readonly dataLength: number;
-  readonly barIndex: number | undefined;
+  readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplaySetBarIndex({
   dataLength,
-  barIndex,
+  replayPosition,
   onReplayPositionChange,
 }: BarReplaySetBarIndexProps): React.ReactElement {
+  const { barIndex } = replayPosition;
+
   const [barIndexInput, setBarIndexInput] = useState<string>('');
 
   useEffect(() => {
