@@ -11,6 +11,7 @@ import {
 } from '../../../util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../../shared';
 import { ChartTimezone } from '../../../../../types';
+import { PRECISION_POINT } from '../../../../../util';
 
 export interface CompletedTradeItemProps {
   readonly timezone: ChartTimezone;
@@ -96,7 +97,7 @@ function getDisplayItems(
       kind: 'decimal',
       label: 'Amount',
       value: amount,
-      precision: 1,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'string',
@@ -115,7 +116,7 @@ function getDisplayItems(
       colSpan: 2,
       label: 'P&L Pts',
       value: getCompletedTradePnlPoints(item),
-      precision: 1,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',

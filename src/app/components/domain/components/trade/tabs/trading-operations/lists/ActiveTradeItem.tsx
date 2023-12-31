@@ -10,6 +10,7 @@ import { Bar, ChartTimezone } from '../../../../../types';
 import { getActiveTradePnl, getActiveTradePnlPoints } from '../../../util';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
+import { PRECISION_POINT } from '../../../../../util';
 
 export interface ActiveTradeItemProps {
   readonly timezone: ChartTimezone;
@@ -152,9 +153,9 @@ function getDisplayItems(
     },
     {
       kind: 'decimal',
-      label: 'Aount',
+      label: 'Amount',
       value: amount,
-      precision: 1,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
@@ -183,7 +184,7 @@ function getDisplayItems(
       colSpan: 1,
       label: 'P&L Pts',
       value: getActiveTradePnlPoints(item, bar, spread),
-      precision: 1,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',

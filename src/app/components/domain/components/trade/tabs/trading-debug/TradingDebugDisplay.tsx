@@ -8,6 +8,7 @@ import {
 import { PrettyDisplay } from '../../../../../shared';
 import { calculateTradeResults } from '../../util';
 import { ComponentStack } from '../../shared/ComponentStack';
+import { PRECISION_POINT } from '../../../../util';
 
 export interface TradingDebugDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -60,7 +61,7 @@ function cleanUpTradeResult(result: TradeResult): TradeResult {
 
   return {
     pnl: round(pnl, 2),
-    pnlPoints: round(pnlPoints, 1),
+    pnlPoints: round(pnlPoints, PRECISION_POINT),
     totalCount,
     winCount,
     lossCount,

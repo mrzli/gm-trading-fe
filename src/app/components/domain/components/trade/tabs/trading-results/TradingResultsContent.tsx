@@ -3,6 +3,7 @@ import { TradeProcessState, TradeResult, TradingParameters } from '../../types';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { calculateTradeResults } from '../../util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
+import { PRECISION_POINT } from '../../../../util';
 
 export interface TradingResultsContentProps {
   readonly tradingParams: TradingParameters;
@@ -63,7 +64,7 @@ function getDisplayItems(
       kind: 'decimal',
       label: 'P&L Points',
       value: pnlPoints,
-      precision: 1,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'none',

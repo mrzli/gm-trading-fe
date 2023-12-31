@@ -12,6 +12,7 @@ import {
 } from '../../util';
 import { applyFn } from '@gmjs/apply-function';
 import { map, sum } from '@gmjs/value-transformers';
+import { PRECISION_POINT } from '../../../../util';
 
 export interface TradeStatusDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -108,7 +109,7 @@ export function TradeStatusDisplay({
         <DecimalValueDisplay
           label={'Active P&L Pts'}
           value={activeTradesPnlPoints}
-          precision={1}
+          precision={PRECISION_POINT}
         />
         <DecimalValueDisplay
           label={'Active P&L'}
@@ -118,7 +119,7 @@ export function TradeStatusDisplay({
         <DecimalValueDisplay
           label={'Comp P&L Pts'}
           value={completedTradesPnlPoints}
-          precision={1}
+          precision={PRECISION_POINT}
         />
         <DecimalValueDisplay
           label={'Comp P&L'}

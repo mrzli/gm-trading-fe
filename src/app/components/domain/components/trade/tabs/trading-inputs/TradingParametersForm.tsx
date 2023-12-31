@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TradingParameters } from '../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput, Button } from '../../../../../shared';
+import { PRECISION_POINT } from '../../../../util';
 
 export interface TradingParametersFormProps {
   readonly value: TradingParameters;
@@ -30,30 +31,30 @@ export function TradingParametersForm({
     priceDecimals.toFixed(0),
   );
 
-  const [spreadInput, setSpreadInput] = useState(spread.toFixed(2));
+  const [spreadInput, setSpreadInput] = useState(spread.toFixed(PRECISION_POINT));
 
   const [marginPercentInput, setMarginPercentInput] = useState(
     marginPercent.toFixed(2),
   );
 
   const [avgSlippageInput, setAvgSlippageInput] = useState(
-    avgSlippage.toFixed(2),
+    avgSlippage.toFixed(PRECISION_POINT),
   );
 
   const [pipDigitInput, setPipDigitInput] = useState(pipDigit.toFixed(0));
 
   const [minStopLossDistanceInput, setMinStopLossDistanceInput] = useState(
-    minStopLossDistance.toFixed(2),
+    minStopLossDistance.toFixed(PRECISION_POINT),
   );
 
   useEffect(() => {
     setInitialBalanceInput(initialBalance.toFixed(2));
     setPriceDecimalsInput(priceDecimals.toFixed(0));
-    setSpreadInput(spread.toFixed(2));
+    setSpreadInput(spread.toFixed(PRECISION_POINT));
     setMarginPercentInput(marginPercent.toFixed(2));
-    setAvgSlippageInput(avgSlippage.toFixed(2));
+    setAvgSlippageInput(avgSlippage.toFixed(PRECISION_POINT));
     setPipDigitInput(pipDigit.toFixed(0));
-    setMinStopLossDistanceInput(minStopLossDistance.toFixed(2));
+    setMinStopLossDistanceInput(minStopLossDistance.toFixed(PRECISION_POINT));
   }, [
     avgSlippage,
     initialBalance,

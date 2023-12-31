@@ -9,6 +9,7 @@ import {
 import { ChartTimezone } from '../../../../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
+import { PRECISION_POINT } from '../../../../../util';
 
 export interface ActiveOrderItemProps {
   readonly timezone: ChartTimezone;
@@ -181,7 +182,7 @@ function getDisplayItems(
       kind: 'decimal',
       label: 'Amount',
       value: amount,
-      precision: 1,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
