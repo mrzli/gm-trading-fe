@@ -33,8 +33,8 @@ dependencies:
     specifier: ^0.0.1
     version: 0.0.1
   '@gmjs/gm-trading-shared':
-    specifier: ^0.0.17
-    version: 0.0.17
+    specifier: ^0.0.18
+    version: 0.0.18
   '@gmjs/number-util':
     specifier: ^0.0.3
     version: 0.0.3
@@ -99,7 +99,7 @@ dependencies:
 devDependencies:
   '@gmjs/eslint-config':
     specifier: ^0.0.28
-    version: 0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.5.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3)
+    version: 0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.6.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3)
   '@gmjs/fs-async':
     specifier: ^0.0.5
     version: 0.0.5
@@ -2391,7 +2391,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gmjs/eslint-config@0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.5.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3):
+  /@gmjs/eslint-config@0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.6.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3):
     resolution: {integrity: sha512-onxPYzc1wkt0TosEVytA8hF/aHS9x25GPzf9wrVbbW4BpKgIus8A+HUkqYBzR6YnV9XjkYwPffBboUvp5sjLuA==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': ^6.15.0
@@ -2424,7 +2424,7 @@ packages:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.16.0)(eslint-plugin-import@2.29.1)(eslint@8.56.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.16.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.56.0)
-      eslint-plugin-n: 16.5.0(eslint@8.56.0)
+      eslint-plugin-n: 16.6.0(eslint@8.56.0)
       eslint-plugin-react: 7.33.2(eslint@8.56.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.56.0)
       eslint-plugin-react-refresh: 0.4.5(eslint@8.56.0)
@@ -2466,8 +2466,8 @@ packages:
     dependencies:
       tslib: 2.6.2
 
-  /@gmjs/gm-trading-shared@0.0.17:
-    resolution: {integrity: sha512-7Bm3ewtymgQd7FnAZvm9gMfNSLFvMPZ6WlbCfnluy6xUrSvmRLH68+6qsQ9UDuqdBCtMhF1vFb+PGtMTBBdrxg==}
+  /@gmjs/gm-trading-shared@0.0.18:
+    resolution: {integrity: sha512-rxYhfq1LiXd9+4jPh2e9tjtdRMPtLX06Wo9alHxbtzV9mAkKSm81mnMI1F6Y6GjbAOubzAqSdscbpbyoawtp3g==}
     engines: {node: '>=18.17.0'}
     dependencies:
       tslib: 2.6.2
@@ -7061,8 +7061,8 @@ packages:
       object.fromentries: 2.0.7
     dev: true
 
-  /eslint-plugin-n@16.5.0(eslint@8.56.0):
-    resolution: {integrity: sha512-Hw02Bj1QrZIlKyj471Tb1jSReTl4ghIMHGuBGiMVmw+s0jOPbI4CBuYpGbZr+tdQ+VAvSK6FDSta3J4ib/SKHQ==}
+  /eslint-plugin-n@16.6.0(eslint@8.56.0):
+    resolution: {integrity: sha512-Ag3tYFF90lYU8JdHEl9qSSpeLYbVnO+Oj7sgPUarWUacv1mPL3d5h5yG4Bv3tLe71hrcxmgTi7oByYwKXaVatw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       eslint: '>=7.0.0'
@@ -7072,6 +7072,7 @@ packages:
       eslint: 8.56.0
       eslint-plugin-es-x: 7.5.0(eslint@8.56.0)
       get-tsconfig: 4.7.2
+      globals: 13.24.0
       ignore: 5.3.0
       is-builtin-module: 3.2.1
       is-core-module: 2.13.1
@@ -7838,6 +7839,13 @@ packages:
 
   /globals@13.23.0:
     resolution: {integrity: sha512-XAmF0RjlrjY23MA51q3HltdlGxUpXPvg0GioKiD9X6HD28iMjo2dKC8Vqwm7lne4GNr78+RHTfliktR6ZH09wA==}
+    engines: {node: '>=8'}
+    dependencies:
+      type-fest: 0.20.2
+    dev: true
+
+  /globals@13.24.0:
+    resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
     engines: {node: '>=8'}
     dependencies:
       type-fest: 0.20.2

@@ -176,6 +176,7 @@ export function TickerDataContainer({
       position={'right'}
       entries={getToolbarEntries(
         settings,
+        instrument,
         fullData,
         replayPosition,
         handleReplayPositionChange,
@@ -190,6 +191,7 @@ export function TickerDataContainer({
 
 function getToolbarEntries(
   settings: ChartSettings,
+  instrument: Instrument,
   fullData: FullBarData,
   replayPosition: BarReplayPosition,
   handleReplayPositionChange: (value: BarReplayPosition) => void,
@@ -202,6 +204,7 @@ function getToolbarEntries(
         <div className='w-[680px] h-full'>
           <TradeContainer
             settings={settings}
+            instrument={instrument}
             fullData={fullData}
             replayPosition={replayPosition}
             onReplayPositionChange={handleReplayPositionChange}

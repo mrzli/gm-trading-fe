@@ -9,6 +9,7 @@ import {
   TradeTabValue,
   TradingDataAndInputs,
   TradingInputs,
+  TradingParameters,
 } from './types';
 import { TradingOperationsContent } from './tabs/trading-operations/TradingOperationsContent';
 import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
@@ -29,9 +30,11 @@ import {
 } from './util';
 import { BarReplayPosition, Bars, ChartSettings } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
+import { Instrument } from '@gmjs/gm-trading-shared';
 
 export interface TradeContainerProps {
   readonly settings: ChartSettings;
+  readonly instrument: Instrument;
   readonly fullData: FullBarData;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
@@ -39,6 +42,7 @@ export interface TradeContainerProps {
 
 export function TradeContainer({
   settings,
+  instrument,
   fullData,
   replayPosition,
   onReplayPositionChange,
@@ -59,6 +63,7 @@ export function TradeContainer({
     useState<TradingDataAndInputs>(
       getInitialTradingDataAndInputs(
         settings,
+        instrument,
         fullData,
         replayPosition,
         barData,
@@ -76,6 +81,15 @@ export function TradeContainer({
       barIndex,
     }));
   }, [settings, fullData, replayPosition, barData, barIndex]);
+
+  useEffect(() => {
+    setTradingDataAndInputs((prev) => ({
+      ...prev,
+      inputs: {
+        ...prev.inputs,
+        params: getInitialTradingParameters(instrument),
+      },
+    }))}, [instrument]);
 
   const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {
@@ -312,6 +326,7 @@ function getInitialTradeProcessState(
 
 function getInitialTradingDataAndInputs(
   settings: ChartSettings,
+  instrument: Instrument,
   fullData: FullBarData,
   replayPosition: BarReplayPosition,
   barData: Bars,
@@ -324,8 +339,22 @@ function getInitialTradingDataAndInputs(
     barData,
     barIndex,
     inputs: {
-      params: DEFAULT_TRADING_PARAMS,
+      params: getInitialTradingParameters(instrument),
       manualTradeActions: [],
     },
+  };
+}
+
+function getInitialTradingParameters(
+  instrument: Instrument,
+): TradingParameters {
+  const { precision, pipDigit, spread, minStopLoss } = instrument;
+
+  return {
+    ...DEFAULT_TRADING_PARAMS,
+    priceDecimals: precision,
+    pipDigit,
+    spread,
+    minStopLossDistance: minStopLoss,
   };
 }
