@@ -93,9 +93,3 @@ function processBar(
 
   return currentState;
 }
-
-// order of processing
-// - manual action open (creates active order)
-// - manual action amend order (amends active order)
-// - manual action cancel order (cancels active order)
-// - process orders (fill order -> create active trade)

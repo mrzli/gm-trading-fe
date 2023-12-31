@@ -13,23 +13,6 @@ import {
 import { activeTradeToCompletedTrade } from './shared';
 import { getOhlc } from '../ohlc';
 
-// export function processManualTradeActions(
-//   state: TradeProcessState,
-//   index: number,
-// ): TradeProcessState {
-//   let currentState = state;
-
-//   const { manualTradeActionsByBar } = currentState;
-
-//   const currentBarActions = manualTradeActionsByBar.get(index) ?? [];
-
-//   for (const action of currentBarActions) {
-//     currentState = processManualTradeAction(currentState, index, action);
-//   }
-
-//   return currentState;
-// }
-
 export function processManualTradeActionsByType<T extends ManualTradeActionAny>(
   state: TradeProcessState,
   index: number,
