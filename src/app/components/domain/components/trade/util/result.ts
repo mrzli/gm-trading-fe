@@ -16,19 +16,23 @@ import {
 } from '../types';
 import { getOhlc } from './ohlc';
 import { Bar } from '../../../types';
+import { pipAdjustInverse } from '.';
 
-export function calculateTradeResults(state: TradeProcessState): TradeResult {
+export function calculateTradeResults(
+  state: TradeProcessState,
+  pipDigit: number,
+): TradeResult {
   const { completedTrades } = state;
 
   const pnlList = applyFn(
     completedTrades,
-    map((item) => getCompletedTradePnl(item)),
+    map((item) => getCompletedTradePnl(item, pipDigit)),
     toArray(),
   );
 
   const pnlPointsList = applyFn(
     completedTrades,
-    map((item) => getCompletedTradePnlPoints(item)),
+    map((item) => getCompletedTradePnlPoints(item, pipDigit)),
     toArray(),
   );
 
@@ -75,6 +79,7 @@ export function calculateTradeResults(state: TradeProcessState): TradeResult {
 export function getActiveTradePnlPoints(
   trade: ActiveTrade,
   bar: Bar,
+  pipDigit: number,
   spread: number,
 ): number {
   const { openPrice, amount } = trade;
@@ -84,12 +89,14 @@ export function getActiveTradePnlPoints(
   // ohlc for closing the trade, which is the opposite of the trade direction
   const ohlc = getOhlc(bar, !isBuy, spread);
 
-  return (ohlc.o - openPrice) * Math.sign(amount);
+  const pointDiff = pipAdjustInverse(ohlc.o - openPrice, pipDigit);
+  return pointDiff * Math.sign(amount);
 }
 
 export function getActiveTradePnl(
   trade: ActiveTrade,
   bar: Bar,
+  pipDigit: number,
   spread: number,
 ): number {
   const { openPrice, amount } = trade;
@@ -99,15 +106,24 @@ export function getActiveTradePnl(
   // ohlc for closing the trade, which is the opposite of the trade direction
   const ohlc = getOhlc(bar, !isBuy, spread);
 
-  return (ohlc.o - openPrice) * amount;
+  const pointDiff = pipAdjustInverse(ohlc.o - openPrice, pipDigit);
+  return pointDiff * amount;
 }
 
-export function getCompletedTradePnlPoints(trade: CompletedTrade): number {
+export function getCompletedTradePnlPoints(
+  trade: CompletedTrade,
+  pipDigit: number,
+): number {
   const { closePrice, openPrice, amount } = trade;
-  return (closePrice - openPrice) * Math.sign(amount);
+  const pointDiff = pipAdjustInverse(closePrice - openPrice, pipDigit);
+  return pointDiff * Math.sign(amount);
 }
 
-export function getCompletedTradePnl(trade: CompletedTrade): number {
+export function getCompletedTradePnl(
+  trade: CompletedTrade,
+  pipDigit: number,
+): number {
   const { closePrice, openPrice, amount } = trade;
-  return (closePrice - openPrice) * amount;
+  const pointDiff = pipAdjustInverse(closePrice - openPrice, pipDigit);
+  return pointDiff * amount;
 }

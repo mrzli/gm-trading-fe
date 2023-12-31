@@ -16,6 +16,7 @@ import {
   IconButton,
 } from '../../../shared';
 import { ChartTimezone } from '../../../../types';
+import { PRECISION_POINT } from '../../../../util';
 
 export interface ManualTradeActionItemProps {
   readonly timezone: ChartTimezone;
@@ -121,7 +122,7 @@ function getDisplayPropsOpen(
     },
     {
       kind: 'decimal',
-      label: 'Amt',
+      label: 'Amount',
       value: amount,
       precision: 1,
     },
@@ -130,14 +131,14 @@ function getDisplayPropsOpen(
       colSpan: 2,
       label: 'SL Dst',
       value: stopLossDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 2,
       label: 'L Dst',
       value: limitDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
   ];
 }
@@ -185,7 +186,7 @@ function getDisplayPropsAmendOrder(
     },
     {
       kind: 'decimal',
-      label: 'Amt',
+      label: 'Amount',
       value: amount,
       precision: 1,
     },
@@ -194,14 +195,14 @@ function getDisplayPropsAmendOrder(
       colSpan: 2,
       label: 'SL Dst',
       value: stopLossDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 2,
       label: 'L Dst',
       value: limitDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
   ];
 }

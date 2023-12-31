@@ -11,7 +11,7 @@ import {
 } from '../../../util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../../shared';
 import { ChartTimezone } from '../../../../../types';
-import { PRECISION_POINT } from '../../../../../util';
+import { PRECISION_MONEY, PRECISION_POINT } from '../../../../../util';
 
 export interface CompletedTradeItemProps {
   readonly timezone: ChartTimezone;
@@ -43,7 +43,7 @@ function getDisplayItems(
   tradingParams: TradingParameters,
   item: CompletedTrade,
 ): ValueDisplayDataAnyList {
-  const { priceDecimals } = tradingParams;
+  const { priceDecimals, pipDigit } = tradingParams;
 
   const {
     id,
@@ -115,15 +115,15 @@ function getDisplayItems(
       kind: 'decimal',
       colSpan: 2,
       label: 'P&L Pts',
-      value: getCompletedTradePnlPoints(item),
+      value: getCompletedTradePnlPoints(item, pipDigit),
       precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 2,
       label: 'P&L',
-      value: getCompletedTradePnl(item),
-      precision: priceDecimals,
+      value: getCompletedTradePnl(item, pipDigit),
+      precision: PRECISION_MONEY,
     },
   ];
 }

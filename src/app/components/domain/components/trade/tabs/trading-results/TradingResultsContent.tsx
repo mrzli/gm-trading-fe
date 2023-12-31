@@ -3,7 +3,7 @@ import { TradeProcessState, TradeResult, TradingParameters } from '../../types';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { calculateTradeResults } from '../../util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
-import { PRECISION_POINT } from '../../../../util';
+import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
 
 export interface TradingResultsContentProps {
   readonly tradingParams: TradingParameters;
@@ -14,13 +14,15 @@ export function TradingResultsContent({
   tradingParams,
   state,
 }: TradingResultsContentProps): React.ReactElement {
+  const pipDigit = tradingParams.pipDigit;
+
   const result = useMemo(() => {
-    return calculateTradeResults(state);
-  }, [state]);
+    return calculateTradeResults(state, pipDigit);
+  }, [pipDigit, state]);
 
   const displayItems = useMemo(
-    () => getDisplayItems(tradingParams, result),
-    [result, tradingParams],
+    () => getDisplayItems(result),
+    [result],
   );
 
   return (
@@ -35,11 +37,8 @@ export function TradingResultsContent({
 }
 
 function getDisplayItems(
-  tradingParams: TradingParameters,
   result: TradeResult,
 ): ValueDisplayDataAnyList {
-  const { priceDecimals } = tradingParams;
-
   const {
     pnl,
     pnlPoints,
@@ -58,7 +57,7 @@ function getDisplayItems(
       kind: 'decimal',
       label: 'P&L',
       value: pnl,
-      precision: priceDecimals,
+      precision: PRECISION_MONEY,
     },
     {
       kind: 'decimal',
@@ -114,13 +113,13 @@ function getDisplayItems(
       kind: 'decimal',
       label: 'Avg Win',
       value: avgWin,
-      precision: priceDecimals,
+      precision: PRECISION_MONEY,
     },
     {
       kind: 'decimal',
       label: 'Avg Loss',
       value: avgLoss,
-      precision: priceDecimals,
+      precision: PRECISION_MONEY,
     },
     {
       kind: 'none',
@@ -130,7 +129,7 @@ function getDisplayItems(
       kind: 'decimal',
       label: 'Max Drawdown',
       value: maxDrawdown,
-      precision: priceDecimals,
+      precision: PRECISION_MONEY,
     },
   ];
 }

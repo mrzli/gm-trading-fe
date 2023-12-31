@@ -9,10 +9,11 @@ import {
   getActiveTradePnlPoints,
   getCompletedTradePnl,
   getCompletedTradePnlPoints,
+  pipAdjust,
 } from '../../util';
 import { applyFn } from '@gmjs/apply-function';
 import { map, sum } from '@gmjs/value-transformers';
-import { PRECISION_POINT } from '../../../../util';
+import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
 
 export interface TradeStatusDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -30,7 +31,8 @@ export function TradeStatusDisplay({
   const { timezone } = settings;
   const { subBars } = fullData;
   const { params } = inputs;
-  const { priceDecimals, spread } = params;
+  const { priceDecimals, spread: pointSpread, pipDigit } = params;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { activeTrades, completedTrades } = state;
 
@@ -44,40 +46,40 @@ export function TradeStatusDisplay({
     () =>
       applyFn(
         activeTrades,
-        map((item) => getActiveTradePnlPoints(item, bar, spread)),
+        map((item) => getActiveTradePnlPoints(item, bar, pipDigit, spread)),
         sum(),
       ),
-    [activeTrades, bar, spread],
+    [activeTrades, bar, pipDigit, spread],
   );
 
   const activeTradesPnl = useMemo(
     () =>
       applyFn(
         activeTrades,
-        map((item) => getActiveTradePnl(item, bar, spread)),
+        map((item) => getActiveTradePnl(item, bar, pipDigit, spread)),
         sum(),
       ),
-    [activeTrades, bar, spread],
+    [activeTrades, bar, pipDigit, spread],
   );
 
   const completedTradesPnlPoints = useMemo(
     () =>
       applyFn(
         completedTrades,
-        map((item) => getCompletedTradePnlPoints(item)),
+        map((item) => getCompletedTradePnlPoints(item, pipDigit)),
         sum(),
       ),
-    [completedTrades],
+    [completedTrades, pipDigit],
   );
 
   const completedTradesPnl = useMemo(
     () =>
       applyFn(
         completedTrades,
-        map((item) => getCompletedTradePnl(item)),
+        map((item) => getCompletedTradePnl(item, pipDigit)),
         sum(),
       ),
-    [completedTrades],
+    [completedTrades, pipDigit],
   );
 
   return (
@@ -114,7 +116,7 @@ export function TradeStatusDisplay({
         <DecimalValueDisplay
           label={'Active P&L'}
           value={activeTradesPnl}
-          precision={priceDecimals}
+          precision={PRECISION_MONEY}
         />
         <DecimalValueDisplay
           label={'Comp P&L Pts'}
@@ -124,7 +126,7 @@ export function TradeStatusDisplay({
         <DecimalValueDisplay
           label={'Comp P&L'}
           value={completedTradesPnl}
-          precision={priceDecimals}
+          precision={PRECISION_MONEY}
         />
       </div>
     </div>

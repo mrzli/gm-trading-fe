@@ -12,6 +12,7 @@ import {
 } from '../../types';
 import { activeTradeToCompletedTrade } from './shared';
 import { getOhlc } from '../ohlc';
+import { pipAdjust } from '../pip-adjust';
 
 export function processManualTradeActionsByType<T extends ManualTradeActionAny>(
   state: TradeProcessState,
@@ -38,7 +39,6 @@ export function processManualTradeAction<T extends ManualTradeActionAny>(
     case 'open': {
       return processManualTradeActionOpen(state, index, action);
     }
-
     case 'amend-order': {
       return processManualTradeActionAmendOrder(state, index, action);
     }
@@ -199,7 +199,9 @@ function processManualTradeActionCloseTrade(
     `Could not find active trade with id: '${targetId}'.`,
   );
 
-  const { spread } = tradingParams;
+  const { pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
+
   const { id, amount } = activeTrade;
   const isBuy = amount > 0;
 

@@ -21,6 +21,8 @@ export function TradingDebugDisplay({
   dataAndInputs,
   state,
 }: TradingDebugDisplayProps): React.ReactElement {
+  const pipDigit = dataAndInputs.inputs.params.pipDigit
+
   const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
       ...dataAndInputs,
@@ -40,8 +42,8 @@ export function TradingDebugDisplay({
   }, [dataAndInputs]);
 
   const result = useMemo(() => {
-    return cleanUpTradeResult(calculateTradeResults(state));
-  }, [state]);
+    return cleanUpTradeResult(calculateTradeResults(state, pipDigit));
+  }, [pipDigit, state]);
 
   return (
     <ComponentStack className='mt-1'>

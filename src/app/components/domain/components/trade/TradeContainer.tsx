@@ -71,6 +71,23 @@ export function TradeContainer({
       ),
     );
 
+  // reset data when instrument changes
+  useEffect(
+    () => {
+      const dataAndInputs = getInitialTradingDataAndInputs(
+        settings,
+        instrument,
+        fullData,
+        replayPosition,
+        barData,
+        barIndex,
+      );
+      setTradingDataAndInputs(dataAndInputs);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [instrument],
+  );
+
   useEffect(() => {
     setTradingDataAndInputs((prev) => ({
       ...prev,
@@ -81,15 +98,6 @@ export function TradeContainer({
       barIndex,
     }));
   }, [settings, fullData, replayPosition, barData, barIndex]);
-
-  useEffect(() => {
-    setTradingDataAndInputs((prev) => ({
-      ...prev,
-      inputs: {
-        ...prev.inputs,
-        params: getInitialTradingParameters(instrument),
-      },
-    }))}, [instrument]);
 
   const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {

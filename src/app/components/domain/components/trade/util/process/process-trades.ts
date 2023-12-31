@@ -2,6 +2,7 @@ import { invariant } from '@gmjs/assert';
 import { ActiveTrade, TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
+import { pipAdjust } from '../pip-adjust';
 
 type LimitIntersectionType = 'none' | 'stop-loss' | 'limit';
 
@@ -96,7 +97,9 @@ function checkLimitIntersectionsForOpen(
   trade: ActiveTrade,
 ): LimitIntersectionsResult {
   const { barData, tradingParams } = state;
-  const { spread } = tradingParams;
+
+  const { pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { amount, stopLoss, limit } = trade;
 
@@ -137,7 +140,9 @@ function checkLimitIntersectionsForBar(
   trade: ActiveTrade,
 ): LimitIntersectionsResult {
   const { barData, tradingParams } = state;
-  const { spread } = tradingParams;
+
+  const { pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { amount, stopLoss, limit } = trade;
 

@@ -189,14 +189,14 @@ function getDisplayItems(
       colSpan: 2,
       label: 'Stop-Loss Distance',
       value: stopLossDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 2,
       label: 'Limit Distance',
       value: limitDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
   ];
 }

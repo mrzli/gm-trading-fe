@@ -7,10 +7,15 @@ import {
   ValueDisplayItem,
 } from '../../../../shared';
 import { Bar, ChartTimezone } from '../../../../../types';
-import { getActiveTradePnl, getActiveTradePnlPoints } from '../../../util';
+import {
+  getActiveTradePnl,
+  getActiveTradePnlPoints,
+  pipAdjust,
+  pipAdjustInverse,
+} from '../../../util';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
-import { PRECISION_POINT } from '../../../../../util';
+import { PRECISION_MONEY, PRECISION_POINT } from '../../../../../util';
 
 export interface ActiveTradeItemProps {
   readonly timezone: ChartTimezone;
@@ -119,14 +124,19 @@ function getDisplayItems(
   bar: Bar,
   item: ActiveTrade,
 ): ValueDisplayDataAnyList {
-  const { priceDecimals, spread } = tradingParams;
+  const { priceDecimals, pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { id, openTime, openPrice, amount, stopLoss, limit } = item;
 
   const stopLossDistance =
-    stopLoss === undefined ? undefined : Math.abs(openPrice - stopLoss);
+    stopLoss === undefined
+      ? undefined
+      : pipAdjustInverse(Math.abs(openPrice - stopLoss), pipDigit);
   const limitDistance =
-    limit === undefined ? undefined : Math.abs(openPrice - limit);
+    limit === undefined
+      ? undefined
+      : pipAdjustInverse(Math.abs(openPrice - limit), pipDigit);
 
   return [
     {
@@ -183,15 +193,15 @@ function getDisplayItems(
       kind: 'decimal',
       colSpan: 1,
       label: 'P&L Pts',
-      value: getActiveTradePnlPoints(item, bar, spread),
+      value: getActiveTradePnlPoints(item, bar, pipDigit, spread),
       precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 1,
       label: 'P&L',
-      value: getActiveTradePnl(item, bar, spread),
-      precision: priceDecimals,
+      value: getActiveTradePnl(item, bar, pipDigit, spread),
+      precision: PRECISION_MONEY,
     },
     {
       kind: 'none',
@@ -201,14 +211,14 @@ function getDisplayItems(
       colSpan: 2,
       label: 'Stop-Loss Distance',
       value: stopLossDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 2,
       label: 'Limit Distance',
       value: limitDistance,
-      precision: priceDecimals,
+      precision: PRECISION_POINT,
     },
   ];
 }

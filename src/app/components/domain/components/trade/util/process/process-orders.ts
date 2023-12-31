@@ -1,5 +1,6 @@
 import { ActiveOrder, ActiveTrade, TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
+import { pipAdjust } from '../pip-adjust';
 
 export function processOrders(
   state: TradeProcessState,
@@ -40,7 +41,12 @@ function processOrder(
     return state;
   }
 
-  const activeTrade = orderToTrade(order, barData[index].time, fillPrice);
+  const activeTrade = orderToTrade(
+    state,
+    order,
+    barData[index].time,
+    fillPrice,
+  );
 
   ordersToRemove.add(order.id);
 
@@ -63,7 +69,9 @@ function checkFillOrder(
   order: ActiveOrder,
 ): CheckFillOrderResult {
   const { barData, tradingParams } = state;
-  const { spread } = tradingParams;
+
+  const { pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { time, price, amount } = order;
   const isBuy = amount > 0;
@@ -107,11 +115,30 @@ function isBetweenInclusive(value: number, v1: number, v2: number): boolean {
 }
 
 function orderToTrade(
+  state: TradeProcessState,
   order: ActiveOrder,
   openTime: number,
   openPrice: number,
 ): ActiveTrade {
-  const { id, amount, stopLossDistance, limitDistance } = order;
+  const { tradingParams } = state;
+  const { pipDigit } = tradingParams;
+
+  const {
+    id,
+    amount,
+    stopLossDistance: pointStopLossDistance,
+    limitDistance: pointLimitDistance,
+  } = order;
+
+  const stopLossDistance =
+    pointStopLossDistance === undefined
+      ? undefined
+      : pipAdjust(pointStopLossDistance, pipDigit);
+  const limitDistance =
+    pointLimitDistance === undefined
+      ? undefined
+      : pipAdjust(pointLimitDistance, pipDigit);
+
   const isBuy = amount > 0;
 
   return {
