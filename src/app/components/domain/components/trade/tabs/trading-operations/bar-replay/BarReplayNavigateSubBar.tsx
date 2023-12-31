@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
-import { clamp } from '@gmjs/number-util';
 import { GroupedBars } from '../../../../../types';
 import { IconButton } from '../../../../shared';
+import { barReplayMoveSubBar } from '../../../../../util';
 
 export interface BarReplayNavigateSubBarProps {
   readonly subBars: GroupedBars;
@@ -41,7 +41,7 @@ export function BarReplayNavigateSubBar({
         return;
       }
 
-      const newBarAndSubBarIndexes = getBarAndSubBarIndex(
+      const newBarReplayIndexes = barReplayMoveSubBar(
         subBars,
         barIndex!,
         subBarIndex,
@@ -49,7 +49,7 @@ export function BarReplayNavigateSubBar({
       );
 
       const { barIndex: newBarIndex, subBarIndex: newSubBarIndex } =
-        newBarAndSubBarIndexes;
+        newBarReplayIndexes;
 
       onBarIndexChange(newBarIndex, newSubBarIndex);
     },
@@ -86,40 +86,4 @@ export function BarReplayNavigateSubBar({
       />
     </div>
   );
-}
-
-interface BarAndSubBarIndex {
-  readonly barIndex: number;
-  readonly subBarIndex: number;
-}
-
-function getBarAndSubBarIndex(
-  subBars: GroupedBars,
-  barIndex: number,
-  subBarIndex: number,
-  subBarMoveAmount: number,
-): BarAndSubBarIndex {
-  let newBarIndex = barIndex;
-  let newSubBarIndex = subBarIndex + subBarMoveAmount;
-
-  while (newBarIndex > 1 && newSubBarIndex < 0) {
-    newBarIndex--;
-    newSubBarIndex += subBars[newBarIndex].length;
-  }
-
-  while (
-    newBarIndex < subBars.length &&
-    newSubBarIndex >= subBars[newBarIndex].length
-  ) {
-    newSubBarIndex -= subBars[newBarIndex].length;
-    newBarIndex++;
-  }
-
-  newBarIndex = clamp(newBarIndex, 1, subBars.length);
-  newSubBarIndex =
-    newBarIndex === subBars.length
-      ? 0
-      : clamp(newSubBarIndex, 0, subBars[newBarIndex].length - 1);
-
-  return { barIndex: newBarIndex, subBarIndex: newSubBarIndex };
 }

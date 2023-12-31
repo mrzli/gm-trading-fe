@@ -145,9 +145,11 @@ export function TickerDataContainer({
         instrument={instrument}
         settings={settings}
         fullData={fullData}
+        isTrading={rightToolbarState === 'trade'}
         logicalRange={logicalRange}
         onLogicalRangeChange={handleChartTimeRangeChange}
         replayPosition={replayPosition}
+        onReplayPositionChange={handleReplayPositionChange}
       />
     ) : isLoadingData ? (
       <LoadingDisplay />

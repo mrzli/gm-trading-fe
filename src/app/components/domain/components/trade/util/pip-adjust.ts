@@ -1,9 +1,9 @@
-// point to price adjustment
+// pip to price point adjustment
 export function pipAdjust(value: number, pipDigit: number): number {
   return value * toPipMultiplier(pipDigit);
 }
 
-// price to point adjustment
+// price point to pip adjustment
 export function pipAdjustInverse(value: number, pipDigit: number): number {
   return value * toPipMultiplier(-pipDigit);
 }

@@ -1,4 +1,4 @@
-import { BarReplayPosition } from '../types';
+import { BarReplayPosition } from '../../types';
 
 export function isBarReplayPositionEqual(
   a: BarReplayPosition,
