@@ -37,6 +37,8 @@ function processOrder(
   const checkFillResult = checkFillOrder(state, index, order);
   const { shouldFill, fillPrice } = checkFillResult;
 
+  console.log('checkFillResult', checkFillResult);
+
   if (!shouldFill) {
     return state;
   }

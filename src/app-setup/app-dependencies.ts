@@ -8,11 +8,12 @@ import {
 import { AppConfig } from './app-config';
 import { createServer } from './server';
 import { AppApi, createAppApi } from '../api';
+import { LocalStorageKeys } from './dependencies';
 
 export interface AppDependencies {
   readonly api: AppApi;
   readonly cookie: CookieWrapper<string>;
-  readonly localStorage: StorageWrapper<string>;
+  readonly localStorage: StorageWrapper<LocalStorageKeys>;
   readonly sessionStorage: StorageWrapper<string>;
 }
 

@@ -1,35 +1,29 @@
 import React, { useCallback } from 'react';
 import { TradingInputs } from '../../types';
-import { useAppContext } from '../../../../../../util';
 import { Button } from '../../../../../shared';
+import { useLocalStorageTradingInputs } from '../../../../hooks';
 
 export interface TradingInputsStorageProps {
   readonly inputs: TradingInputs;
   readonly onInputsLoaded: (value: TradingInputs) => void;
 }
 
-const SAVE_KEY = 'trading-inputs';
-
 export function TradingInputsStorage({
   inputs,
   onInputsLoaded,
 }: TradingInputsStorageProps): React.ReactElement {
-  const context = useAppContext();
-  const { localStorage } = context.dependencies;
-
-  // const [nameInput, setNameInput] = useState<string>('');
+  const [getTradingInputs, setTradingInputs] = useLocalStorageTradingInputs();
 
   const handleSave = useCallback(() => {
-    localStorage.set(SAVE_KEY, JSON.stringify(inputs));
-  }, [inputs, localStorage]);
+    setTradingInputs(inputs);
+  }, [inputs, setTradingInputs]);
 
   const handleLoad = useCallback(() => {
-    const loaded = localStorage.get(SAVE_KEY);
-    if (loaded) {
-      const parsed = JSON.parse(loaded);
-      onInputsLoaded(parsed);
+    const tradingInputs = getTradingInputs();
+    if (tradingInputs) {
+      onInputsLoaded(tradingInputs);
     }
-  }, [localStorage, onInputsLoaded]);
+  }, [getTradingInputs, onInputsLoaded]);
 
   return (
     <div className='grid grid-cols-2 gap-2'>
