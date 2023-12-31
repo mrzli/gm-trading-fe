@@ -15,7 +15,7 @@ export interface TradingDebugDisplayProps {
   readonly state: TradeProcessState;
 }
 
-const MAX_BARS_TO_DISPLAY = 2;
+const MAX_BARS_TO_DISPLAY_IN_DEBUG = 2;
 
 export function TradingDebugDisplay({
   dataAndInputs,
@@ -26,10 +26,16 @@ export function TradingDebugDisplay({
       ...dataAndInputs,
       fullData: {
         ...dataAndInputs.fullData,
-        subBars: dataAndInputs.fullData.subBars.slice(0, MAX_BARS_TO_DISPLAY),
-        bars: dataAndInputs.fullData.bars.slice(0, MAX_BARS_TO_DISPLAY),
+        subBars: dataAndInputs.fullData.subBars.slice(
+          0,
+          MAX_BARS_TO_DISPLAY_IN_DEBUG,
+        ),
+        bars: dataAndInputs.fullData.bars.slice(
+          0,
+          MAX_BARS_TO_DISPLAY_IN_DEBUG,
+        ),
       },
-      barData: dataAndInputs.barData.slice(0, MAX_BARS_TO_DISPLAY),
+      barData: dataAndInputs.barData.slice(0, MAX_BARS_TO_DISPLAY_IN_DEBUG),
     };
   }, [dataAndInputs]);
 
@@ -65,8 +71,8 @@ function cleanUpTradeResult(result: TradeResult): TradeResult {
     totalCount,
     winCount,
     lossCount,
-    winFraction: round(winFraction, 2),
-    lossFraction: round(lossFraction, 2),
+    winFraction: round(winFraction, 4),
+    lossFraction: round(lossFraction, 4),
     avgWin: round(avgWin, PRECISION_MONEY),
     avgLoss: round(avgLoss, PRECISION_MONEY),
     maxDrawdown: round(maxDrawdown, PRECISION_MONEY),
