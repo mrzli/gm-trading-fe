@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TradingParameters } from '../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput, Button } from '../../../../../shared';
-import { PRECISION_POINT } from '../../../../util';
+import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
 
 export interface TradingParametersFormProps {
   readonly value: TradingParameters;
@@ -24,7 +24,7 @@ export function TradingParametersForm({
   } = value;
 
   const [initialBalanceInput, setInitialBalanceInput] = useState(
-    initialBalance.toFixed(2),
+    initialBalance.toFixed(PRECISION_MONEY),
   );
 
   const [priceDecimalsInput, setPriceDecimalsInput] = useState(
@@ -48,7 +48,7 @@ export function TradingParametersForm({
   );
 
   useEffect(() => {
-    setInitialBalanceInput(initialBalance.toFixed(2));
+    setInitialBalanceInput(initialBalance.toFixed(PRECISION_MONEY));
     setPriceDecimalsInput(priceDecimals.toFixed(0));
     setSpreadInput(spread.toFixed(PRECISION_POINT));
     setMarginPercentInput(marginPercent.toFixed(2));
