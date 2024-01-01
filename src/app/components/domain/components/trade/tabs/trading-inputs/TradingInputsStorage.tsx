@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { TradingInputs } from '../../types';
 import { Button } from '../../../../../shared';
-import { useLocalStorageTradingInputs } from '../../../../hooks';
+import { useLocalStorageTradingInputsAccessor } from '../../../../hooks';
 
 export interface TradingInputsStorageProps {
   readonly inputs: TradingInputs;
@@ -12,7 +12,8 @@ export function TradingInputsStorage({
   inputs,
   onInputsLoaded,
 }: TradingInputsStorageProps): React.ReactElement {
-  const [getTradingInputs, setTradingInputs] = useLocalStorageTradingInputs();
+  const [getTradingInputs, setTradingInputs] =
+    useLocalStorageTradingInputsAccessor();
 
   const handleSave = useCallback(() => {
     setTradingInputs(inputs);

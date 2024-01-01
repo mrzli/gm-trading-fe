@@ -1,11 +1,27 @@
 import { useMemo } from 'react';
+import { isFunction } from '@gmjs/type-checks';
+import { StorageWrapper } from '@gmjs/browser-storage';
 import { useLocalStorage } from './local-storage';
 import { LocalStorageKeys } from '../../../../../app-setup/dependencies';
-import { StorageWrapper } from '@gmjs/browser-storage';
+
+export type UseStorageValueAccessorResultGetValue<TValue> = () =>
+  | TValue
+  | undefined;
+
+export type UseStorageValueAccessorResultSetValueFromPrev<TValue> = (
+  prev: TValue | undefined,
+) => TValue | undefined;
+
+export type UseStorageValueAccessorResultSetValue<TValue> = (
+  value:
+    | TValue
+    | undefined
+    | UseStorageValueAccessorResultSetValueFromPrev<TValue>,
+) => void;
 
 export type UseStorageValueAccessorResult<TValue> = readonly [
-  getValue: () => TValue | undefined,
-  setValue: (value: TValue | undefined) => void,
+  getValue: UseStorageValueAccessorResultGetValue<TValue>,
+  setValue: UseStorageValueAccessorResultSetValue<TValue>,
 ];
 
 export function useLocalStorageAccessor<K extends LocalStorageKeys, TValue>(
@@ -32,8 +48,8 @@ function useStorageValueAccessor<
 }
 
 interface StorageValueAccessor<TValue> {
-  readonly getValue: () => TValue | undefined;
-  readonly setValue: (value: TValue | undefined) => void;
+  readonly getValue: UseStorageValueAccessorResultGetValue<TValue>;
+  readonly setValue: UseStorageValueAccessorResultSetValue<TValue>;
 }
 
 function getStorageValueAccessor<
@@ -44,18 +60,28 @@ function getStorageValueAccessor<
   storage: StorageWrapper<TStorageKeys>,
   key: TKey,
 ): StorageValueAccessor<TValue> {
-  const getValue = (): TValue | undefined => {
+  const getValue: UseStorageValueAccessorResultGetValue<TValue> = () => {
     const valueRaw = storage.get(key);
     const value = valueRaw === undefined ? undefined : JSON.parse(valueRaw);
     return value;
   };
 
-  const setValue = (tradingInputs: TValue | undefined): void => {
-    if (tradingInputs === undefined) {
+  const setValueInternal = (value: TValue | undefined): void => {
+    if (value === undefined) {
       storage.remove(key);
     } else {
-      storage.set(key, JSON.stringify(tradingInputs));
+      storage.set(key, JSON.stringify(value));
     }
+  };
+
+  const setValue: UseStorageValueAccessorResultSetValue<TValue> = (value) => {
+    const prev = getValue();
+    const finalValue = isFunction<
+      UseStorageValueAccessorResultSetValueFromPrev<TValue>
+    >(value)
+      ? value(prev)
+      : value;
+    setValueInternal(finalValue);
   };
 
   return {

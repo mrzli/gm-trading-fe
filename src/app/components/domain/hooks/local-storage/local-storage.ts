@@ -13,10 +13,10 @@ export function useLocalStorage(): StorageWrapper<LocalStorageKeys> {
   return context.dependencies.localStorage;
 }
 
-export function useLocalStorageTradingInputs(): UseStorageValueAccessorResult<TradingInputs> {
+export function useLocalStorageTradingInputsAccessor(): UseStorageValueAccessorResult<TradingInputs> {
   return useLocalStorageAccessor('trading-inputs');
 }
 
-export function useLocalStorageTradingUiState(): UseStorageValueAccessorResult<TradingUiState> {
+export function useLocalStorageTradingUiStateAccessor(): UseStorageValueAccessorResult<TradingUiState> {
   return useLocalStorageAccessor('trading-ui-state');
 }

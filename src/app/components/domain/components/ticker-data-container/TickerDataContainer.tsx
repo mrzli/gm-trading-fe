@@ -9,7 +9,7 @@ import {
   SideToolbar,
   SideToolbarEntry,
 } from '../../../shared';
-import { FullBarData, RightToolbarState } from './types';
+import { FullBarData } from './types';
 import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
 import {
@@ -18,9 +18,12 @@ import {
   ChartTimezone,
   ChartRange,
   BarReplayPosition,
+  RightToolbarState,
+  TradingUiState,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
+import { useLocalStorageTradingUiStateAccessor } from '../../hooks';
 
 export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
@@ -35,21 +38,41 @@ export function TickerDataContainer({
   rawData,
   onRequestData,
 }: TickerDataContainerProps): React.ReactElement {
+  const [getTradingUiState, setTradingUiState] =
+    useLocalStorageTradingUiStateAccessor();
+
+  const tradingUiState = useMemo(() => {
+    return getTradingUiState();
+  }, [getTradingUiState]);
+
   const [rightToolbarState, setRightToolbarState] = useState<
     RightToolbarState | undefined
-  >(undefined);
+  >(getInitialRightToolbarState(tradingUiState));
 
   const instrumentNames = useMemo(() => {
     return allInstruments?.map((instrument) => instrument.name) ?? [];
   }, [allInstruments]);
 
-  const [settings, setSettings] = useState<ChartSettings>({
-    instrumentName: allInstruments[0].name,
-    resolution: '5m',
-    timezone: 'UTC',
-  });
+  const [settings, setSettings] = useState<ChartSettings>(
+    getInitialChartSettings(tradingUiState, instrumentNames[0]),
+  );
 
-  const { instrumentName, resolution } = settings;
+  const { instrumentName, resolution, timezone } = settings;
+
+  useEffect(() => {
+    setTradingUiState({
+      instrumentName,
+      resolution,
+      timezone,
+      rightToolbarState,
+    });
+  }, [
+    instrumentName,
+    resolution,
+    rightToolbarState,
+    setTradingUiState,
+    timezone,
+  ]);
 
   const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>(
     undefined,
@@ -85,9 +108,12 @@ export function TickerDataContainer({
         ...s,
         instrumentName,
       }));
+      setTradingUiState((prev) =>
+        prev ? { ...prev, instrumentName } : undefined,
+      );
       onRequestData(instrumentName, resolution);
     },
-    [onRequestData, resolution],
+    [onRequestData, resolution, setTradingUiState],
   );
 
   const handleResolutionChange = useCallback(
@@ -96,9 +122,10 @@ export function TickerDataContainer({
         ...s,
         resolution,
       }));
+      setTradingUiState((prev) => (prev ? { ...prev, resolution } : undefined));
       onRequestData(instrumentName, resolution);
     },
-    [instrumentName, onRequestData],
+    [instrumentName, onRequestData, setTradingUiState],
   );
 
   const handleTimezoneChange = useCallback((timezone: ChartTimezone) => {
@@ -124,9 +151,12 @@ export function TickerDataContainer({
         setReplayPosition({ barIndex: undefined, subBarIndex: 0 });
       }
 
+      setTradingUiState((prev) =>
+        prev ? { ...prev, rightToolbarState: value } : undefined,
+      );
       setRightToolbarState(value);
     },
-    [replayPosition],
+    [replayPosition, setTradingUiState],
   );
 
   const handleReplayPositionChange = useCallback(
@@ -220,4 +250,35 @@ function getToolbarEntries(
       ),
     },
   ];
+}
+
+function getInitialChartSettings(
+  tradingUiState: TradingUiState | undefined,
+  firstInstrumentName: string,
+): ChartSettings {
+  if (!tradingUiState) {
+    return {
+      instrumentName: firstInstrumentName,
+      resolution: '5m',
+      timezone: 'UTC',
+    };
+  }
+
+  const { instrumentName, resolution, timezone } = tradingUiState;
+
+  return {
+    instrumentName,
+    resolution,
+    timezone,
+  };
+}
+
+function getInitialRightToolbarState(
+  tradingUiState: TradingUiState | undefined,
+): RightToolbarState | undefined {
+  if (!tradingUiState) {
+    return undefined;
+  }
+
+  return tradingUiState.rightToolbarState;
 }

@@ -38,6 +38,9 @@ dependencies:
   '@gmjs/number-util':
     specifier: ^0.0.3
     version: 0.0.3
+  '@gmjs/type-checks':
+    specifier: ^0.0.4
+    version: 0.0.4
   '@gmjs/value-generators':
     specifier: ^0.0.1
     version: 0.0.1
@@ -2495,6 +2498,13 @@ packages:
   /@gmjs/tsconfig@1.0.12:
     resolution: {integrity: sha512-ghcLAXunX6WOIn3ggRnPv8V51qmmZ8ohHdxAynTpUhgXF8FbhcoJqYc8j7U5ZV0+ivvOKJMek4NeEO+xgPO4nw==}
     dev: true
+
+  /@gmjs/type-checks@0.0.4:
+    resolution: {integrity: sha512-Qk18M3mqyMYeuBXlS2wnFQHrX6PqEhfmffq7VbwJLPMn5UUpRXvrWJp/tSrhf30rsxA0Gti7PPDjtu6eeCdmAw==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
 
   /@gmjs/value-generators@0.0.1:
     resolution: {integrity: sha512-nvA6HbJEVIARIN1Nxur6dcb92NWBo0xqfB+r+8199O2qHUSiH8U5vpBV2IgQurDPaNf45HpYdd10z6AENs6N1g==}
