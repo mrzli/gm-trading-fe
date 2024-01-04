@@ -2,12 +2,8 @@ import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
 import { GroupedBars, Bar, Bars, ChartResolution } from '../../../types';
 import { invariant } from '@gmjs/assert';
-import {
-  DAY_TO_SECONDS,
-  HOUR_TO_SECONDS,
-  MINUTE_TO_SECONDS,
-  WEEK_TO_SECONDS,
-} from '../../../../../util';
+import { DAY_TO_SECONDS } from '../../../../../util';
+import { resolutionToSeconds } from '../../../util';
 
 export function toBars(lines: readonly string[]): Bars {
   return lines.map((element) => toBar(element));
@@ -98,30 +94,6 @@ function groupDataByFixedInterval(
 
 function getTimeBucketIndex(time: number, interval: number): number {
   return Math.floor(time / interval);
-}
-
-function resolutionToSeconds(resolution: ChartResolution): number {
-  const unit = resolution.slice(-1);
-
-  switch (unit) {
-    case 'm': {
-      const value = parseIntegerOrThrow(resolution.slice(0, -1));
-      return value * MINUTE_TO_SECONDS;
-    }
-    case 'h': {
-      const value = parseIntegerOrThrow(resolution.slice(0, -1));
-      return value * HOUR_TO_SECONDS;
-    }
-    case 'D': {
-      return DAY_TO_SECONDS;
-    }
-    case 'W': {
-      return WEEK_TO_SECONDS;
-    }
-    default: {
-      invariant(false, `Unexpected unit: ${unit}`);
-    }
-  }
 }
 
 function groupDataByMonth(bars: Bars): GroupedBars {

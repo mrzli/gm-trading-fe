@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { BarReplayPosition } from '../../../../types';
+import { Bar, BarReplayPosition, ChartResolution } from '../../../../types';
 import { TradeProcessState, TradingDataAndInputs } from '../../types';
 import { BarReplay } from './bar-replay/BarReplay';
 import { DateValueDisplay, DecimalValueDisplay } from '../../../shared';
@@ -13,7 +13,12 @@ import {
 } from '../../util';
 import { applyFn } from '@gmjs/apply-function';
 import { map, sum } from '@gmjs/value-transformers';
-import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
+import {
+  PRECISION_MONEY,
+  PRECISION_POINT,
+  resolutionToSeconds,
+} from '../../../../util';
+import { UTCTimestamp } from 'lightweight-charts';
 
 export interface TradeStatusDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -28,7 +33,7 @@ export function TradeStatusDisplay({
 }: TradeStatusDisplayProps): React.ReactElement {
   const { settings, fullData, replayPosition, barData, barIndex, inputs } =
     dataAndInputs;
-  const { timezone } = settings;
+  const { resolution, timezone } = settings;
   const { subBars } = fullData;
   const { params } = inputs;
   const { priceDecimals, spread: pointSpread, pipDigit } = params;
@@ -36,7 +41,8 @@ export function TradeStatusDisplay({
 
   const { activeTrades, completedTrades } = state;
 
-  const bar = barData[barIndex];
+  const bar =
+    barData[barIndex] ?? createAfterLastBar(barData[barIndex - 1], resolution);
   const time = bar.time;
 
   const barBuy = useMemo(() => getOhlc(bar, true, spread), [bar, spread]);
@@ -131,4 +137,17 @@ export function TradeStatusDisplay({
       </div>
     </div>
   );
+}
+
+function createAfterLastBar(lastBar: Bar, resolution: ChartResolution): Bar {
+  const newTime = lastBar.time + resolutionToSeconds(resolution);
+  const newOpen = lastBar.close;
+
+  return {
+    time: newTime as UTCTimestamp,
+    open: newOpen,
+    high: newOpen,
+    low: newOpen,
+    close: newOpen,
+  };
 }
