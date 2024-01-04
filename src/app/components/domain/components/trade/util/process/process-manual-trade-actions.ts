@@ -84,7 +84,7 @@ function processManualTradeActionAmendOrder(
   const { activeOrders } = state;
 
   const activeOrderIndex = activeOrders.findIndex(
-    (item) => item.id !== targetId,
+    (item) => item.id === targetId,
   );
   invariant(
     activeOrderIndex !== -1,
@@ -151,7 +151,7 @@ function processManualTradeActionAmendTrade(
   const { activeTrades } = state;
 
   const activeTradeIndex = activeTrades.findIndex(
-    (item) => item.id !== targetId,
+    (item) => item.id === targetId,
   );
   invariant(
     activeTradeIndex !== -1,
