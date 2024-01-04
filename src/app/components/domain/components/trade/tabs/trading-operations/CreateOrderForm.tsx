@@ -59,7 +59,7 @@ export function CreateOrderForm({
   ]);
 
   return (
-    <div className='grid grid-cols-[repeat(2,_1fr)_repeat(4,_100px)_1fr] gap-1 '>
+    <div className='grid grid-cols-[repeat(2,_1fr)_repeat(4,_100px)_1fr] gap-1 items-end'>
       <ToggleButton
         label={'Buy'}
         value={tradeDirection === 'buy'}

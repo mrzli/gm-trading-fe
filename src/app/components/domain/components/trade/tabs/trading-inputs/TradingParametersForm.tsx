@@ -87,7 +87,7 @@ export function TradingParametersForm({
   ]);
 
   return (
-    <div className='grid grid-cols-[repeat(7,_80px)_1fr] gap-1'>
+    <div className='grid grid-cols-[repeat(7,_80px)_1fr] gap-1 items-end'>
       <TextInput
         id='initial-balance'
         label='Initial Balance'
