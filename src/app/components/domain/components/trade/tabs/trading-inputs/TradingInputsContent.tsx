@@ -25,6 +25,7 @@ export function TradingInputsContent({
 }: TradingInputsContentProps): React.ReactElement {
   const handleTradingParametersChange = useCallback(
     (params: TradingParameters): void => {
+      console.log(params);
       onValueChange({
         ...value,
         params,
