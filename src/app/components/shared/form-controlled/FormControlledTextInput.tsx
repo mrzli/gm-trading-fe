@@ -33,7 +33,7 @@ export function FormControlledTextInput<
       name={name}
       control={control}
       render={({ field }) => {
-        const { ref: _ignoreRef, onChange, ...fieldRest } = field;
+        const { onChange, ...fieldRest } = field;
         return (
           <TextInput
             id={id}

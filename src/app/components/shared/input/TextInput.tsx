@@ -8,23 +8,28 @@ export interface TextInputProps {
   readonly placeholder?: string;
   readonly value: string;
   readonly onValueChange: (value: string) => void;
+  readonly onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   readonly onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   readonly disabled?: boolean;
   readonly error?: boolean;
   readonly width?: CSSProperties['width'];
 }
 
-export function TextInput({
-  id,
-  label,
-  placeholder,
-  value,
-  onValueChange,
-  onKeyDown,
-  disabled,
-  error,
-  width,
-}: TextInputProps): React.ReactElement {
+function TextInputInternal(
+  {
+    id,
+    label,
+    placeholder,
+    value,
+    onValueChange,
+    onBlur,
+    onKeyDown,
+    disabled,
+    error,
+    width,
+  }: TextInputProps,
+  ref: React.Ref<HTMLInputElement>,
+): React.ReactElement {
   const classes = cls('px-1 outline-none text-sm border rounded min-w-0', {
     'border-slate-400': !error && !disabled,
     'border-slate-200 text-gray-400 cursor-not-allowed': disabled,
@@ -40,6 +45,7 @@ export function TextInput({
 
   const inputElement = (
     <input
+      ref={ref}
       id={id}
       placeholder={placeholder}
       className={classes}
@@ -47,6 +53,7 @@ export function TextInput({
       disabled={disabled}
       value={value}
       onChange={handleChange}
+      onBlur={onBlur}
       onKeyDown={onKeyDown}
     />
   );
@@ -60,3 +67,7 @@ export function TextInput({
     inputElement
   );
 }
+
+export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
+  TextInputInternal,
+);
