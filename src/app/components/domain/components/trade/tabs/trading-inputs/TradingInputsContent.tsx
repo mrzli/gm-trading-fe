@@ -85,6 +85,24 @@ export function TradingInputsContent({
           );
         }}
       />
+      {/* <div>
+        {FORM_BUILDER.build({
+          entries: [
+            {
+              kind: 'text-input',
+            },
+            {
+              kind: 'select',
+            },
+            {
+              kind: 'text-input',
+            },
+            {
+              kind: 'select',
+            },
+          ],
+        })}
+      </div> */}
     </ComponentStack>
   );
 }
