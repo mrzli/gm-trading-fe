@@ -5,6 +5,7 @@ export interface ToggleButtonProps {
   readonly label: string;
   readonly value: boolean;
   readonly onValueChange: (value: boolean) => void;
+  readonly onBlur?: () => void;
   readonly disabled?: boolean;
   readonly width?: CSSProperties['width'];
 }
@@ -13,6 +14,7 @@ export function ToggleButton({
   label,
   value,
   onValueChange,
+  onBlur,
   disabled,
   width,
 }: ToggleButtonProps): React.ReactElement {
@@ -34,6 +36,7 @@ export function ToggleButton({
       className={classes}
       style={{ width }}
       onClick={handleClick}
+      onBlur={onBlur}
       disabled={disabled}
     >
       {label}

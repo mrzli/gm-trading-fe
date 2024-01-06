@@ -36,9 +36,11 @@ export function TradingOperationsContent({
   onCloseTrade,
   onAmendTrade,
 }: TradingOperationsContentProps): React.ReactElement {
-  const { settings, barData, barIndex } = dataAndInputs;
+  const { settings, replayPosition, barData, barIndex } = dataAndInputs;
   const { timezone } = settings;
   const { tradingParams, activeOrders, activeTrades, completedTrades } = state;
+
+  const isTradingActivated = replayPosition.barIndex !== undefined;
 
   const bar = barData[barIndex];
 
@@ -104,60 +106,67 @@ export function TradingOperationsContent({
         state={state}
         onReplayPositionChange={onReplayPositionChange}
       />
-      <CreateOrderForm onCreateOrder={handleCreateOrder} />
-      <ItemList
-        title={'Active Orders'}
-        items={activeOrders}
-        itemRenderer={(item, index) => {
-          return (
-            <ActiveOrderItem
-              key={index}
-              timezone={timezone}
-              tradingParams={tradingParams}
-              item={item}
-              isEditing={editOrderId === item.id}
-              onEdit={handleOrderEdit}
-              onCancel={onCancelOrder}
-              onEditOk={handleOrderEditOk}
-              onEditCancel={handleOrderEditCancel}
-            />
-          );
-        }}
-      />
-      <ItemList
-        title={'Active Trades'}
-        items={activeTrades}
-        itemRenderer={(item, index) => {
-          return (
-            <ActiveTradeItem
-              key={index}
-              timezone={timezone}
-              tradingParams={tradingParams}
-              bar={bar}
-              item={item}
-              isEditing={editTradeId === item.id}
-              onEdit={handleTradeEdit}
-              onClose={onCloseTrade}
-              onEditOk={handleTradeEditOk}
-              onEditCancel={handleTradeEditCancel}
-            />
-          );
-        }}
-      />
-      <ItemList
-        title={'Completed Trades'}
-        items={completedTrades}
-        itemRenderer={(item, index) => {
-          return (
-            <CompletedTradeItem
-              key={index}
-              timezone={timezone}
-              tradingParams={tradingParams}
-              item={item}
-            />
-          );
-        }}
-      />
+      {isTradingActivated && (
+        <>
+          <CreateOrderForm
+            tradingParams={tradingParams}
+            onCreateOrder={handleCreateOrder}
+          />
+          <ItemList
+            title={'Active Orders'}
+            items={activeOrders}
+            itemRenderer={(item, index) => {
+              return (
+                <ActiveOrderItem
+                  key={index}
+                  timezone={timezone}
+                  tradingParams={tradingParams}
+                  item={item}
+                  isEditing={editOrderId === item.id}
+                  onEdit={handleOrderEdit}
+                  onCancel={onCancelOrder}
+                  onEditOk={handleOrderEditOk}
+                  onEditCancel={handleOrderEditCancel}
+                />
+              );
+            }}
+          />
+          <ItemList
+            title={'Active Trades'}
+            items={activeTrades}
+            itemRenderer={(item, index) => {
+              return (
+                <ActiveTradeItem
+                  key={index}
+                  timezone={timezone}
+                  tradingParams={tradingParams}
+                  bar={bar}
+                  item={item}
+                  isEditing={editTradeId === item.id}
+                  onEdit={handleTradeEdit}
+                  onClose={onCloseTrade}
+                  onEditOk={handleTradeEditOk}
+                  onEditCancel={handleTradeEditCancel}
+                />
+              );
+            }}
+          />
+          <ItemList
+            title={'Completed Trades'}
+            items={completedTrades}
+            itemRenderer={(item, index) => {
+              return (
+                <CompletedTradeItem
+                  key={index}
+                  timezone={timezone}
+                  tradingParams={tradingParams}
+                  item={item}
+                />
+              );
+            }}
+          />
+        </>
+      )}
     </ComponentStack>
   );
 }
