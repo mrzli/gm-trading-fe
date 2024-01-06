@@ -19,7 +19,7 @@ export function PopupMenu({
   );
 
   const contentWrapper = (
-    <div className='border rounded border-slate-400 shadow-sm p-1'>
+    <div className='border rounded border-slate-400 bg-white shadow-sm p-1'>
       {content}
     </div>
   );
