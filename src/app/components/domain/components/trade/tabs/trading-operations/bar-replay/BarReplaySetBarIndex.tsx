@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { clamp, parseIntegerOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
-import {
-  createSchemaIntegerInRange,
-  createSchemaReplayInput,
-} from '../../../../chart-toolbar/util';
+import { createSchemaReplayInput } from '../../../../chart-toolbar/util';
 import { BarReplayPosition } from '../../../../../types';
+import { schemaStringAsIntegerInRange } from '../../../../../util';
 
 export interface BarReplaySetBarIndexProps {
   readonly dataLength: number;
@@ -32,7 +30,7 @@ export function BarReplaySetBarIndex({
   }, [barIndexInput, dataLength]);
 
   const isReplayValueValid = useMemo(() => {
-    return createSchemaIntegerInRange(1, dataLength).safeParse(barIndexInput)
+    return schemaStringAsIntegerInRange(1, dataLength).safeParse(barIndexInput)
       .success;
   }, [barIndexInput, dataLength]);
 

@@ -1,14 +1,17 @@
 import { z } from 'zod';
-import { SCHEMA_EMPTY_STRING, createSchemaIntegerInRange } from './base';
+import {
+  SCHEMA_EMPTY_STRING,
+  schemaStringAsIntegerInRange,
+} from '../../../../util';
 
 export function createSchemaReplayInput(
   min: number,
   max: number,
 ): z.ZodUnion<
-  [typeof SCHEMA_EMPTY_STRING, ReturnType<typeof createSchemaIntegerInRange>]
+  [typeof SCHEMA_EMPTY_STRING, ReturnType<typeof schemaStringAsIntegerInRange>]
 > {
-  return z.union([SCHEMA_EMPTY_STRING, createSchemaIntegerInRange(min, max)]);
+  return z.union([SCHEMA_EMPTY_STRING, schemaStringAsIntegerInRange(min, max)]);
 }
 
 export const SCHEMA_REPLAY_NAVIGATION_STEP_SIZE_INPUT =
-  createSchemaIntegerInRange(0, 10_000);
+  schemaStringAsIntegerInRange(0, 10_000);
