@@ -21,23 +21,18 @@ export function TradingParametersForm({
 
   const submitHandler: SubmitHandler<TradingParametersInputs> = useCallback(
     (inputs: TradingParametersInputs) => {
-      onValueChange({
-        initialBalance: parseFloatOrThrow(inputs.initialBalance),
-        priceDecimals: parseFloatOrThrow(inputs.priceDecimals),
-        spread: parseFloatOrThrow(inputs.spread),
-        marginPercent: parseFloatOrThrow(inputs.marginPercent),
-        avgSlippage: parseFloatOrThrow(inputs.avgSlippage),
-        pipDigit: parseFloatOrThrow(inputs.pipDigit),
-        minStopLossDistance: parseFloatOrThrow(inputs.minStopLossDistance),
-      });
+      onValueChange(toTradingParameters(inputs));
     },
     [onValueChange],
   );
 
-  const handleApplyClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    handleSubmit(submitHandler)();
-  }, [handleSubmit, submitHandler]);
+  const handleApplyClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      handleSubmit(submitHandler)();
+    },
+    [handleSubmit, submitHandler],
+  );
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -126,5 +121,29 @@ function toTradingParametersInputs(
     avgSlippage: avgSlippage.toFixed(PRECISION_POINT),
     pipDigit: pipDigit.toFixed(0),
     minStopLossDistance: minStopLossDistance.toFixed(PRECISION_POINT),
+  };
+}
+
+function toTradingParameters(
+  tradingParametersInputs: TradingParametersInputs,
+): TradingParameters {
+  const {
+    initialBalance,
+    priceDecimals,
+    spread,
+    marginPercent,
+    avgSlippage,
+    pipDigit,
+    minStopLossDistance,
+  } = tradingParametersInputs;
+
+  return {
+    initialBalance: parseFloatOrThrow(initialBalance),
+    priceDecimals: parseFloatOrThrow(priceDecimals),
+    spread: parseFloatOrThrow(spread),
+    marginPercent: parseFloatOrThrow(marginPercent),
+    avgSlippage: parseFloatOrThrow(avgSlippage),
+    pipDigit: parseFloatOrThrow(pipDigit),
+    minStopLossDistance: parseFloatOrThrow(minStopLossDistance),
   };
 }
