@@ -4,11 +4,11 @@ import {
   ChartTimeStepUnit,
   TYPES_OF_CHART_TIME_STEP_UNITS,
   ChartTimeStep,
-  TwTimeStepSelection,
+  TimeStepSelection,
 } from '../types';
 
 export function twTimeStepSelectionToTimeStep(
-  timeStepSelection: TwTimeStepSelection,
+  timeStepSelection: TimeStepSelection,
   isForward: boolean,
 ): ChartTimeStep {
   const value = parseIntegerOrThrow(timeStepSelection.slice(0, -1));

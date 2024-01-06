@@ -10,5 +10,5 @@ export const TYPES_OF_TIME_STEP_SELECTIONS = [
   '1M',
 ] as const;
 
-export type TwTimeStepSelection =
+export type TimeStepSelection =
   (typeof TYPES_OF_TIME_STEP_SELECTIONS)[number];

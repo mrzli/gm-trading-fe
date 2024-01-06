@@ -16,6 +16,7 @@ import {
   SelectButtonCentered,
 } from '../../../shared';
 import { toSimpleSelectOption } from '../../util';
+import { ChartToolbarAdditional } from './components/ChartToolbarAdditional';
 
 export interface ChartToolbarProps {
   readonly instrumentNames: readonly string[];
@@ -81,6 +82,7 @@ export function ChartToolbar({
           />
         </>
       )}
+      <ChartToolbarAdditional />
     </div>
   );
 }

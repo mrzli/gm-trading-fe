@@ -11,7 +11,7 @@ import {
   moveLogicalRange,
   twTimeStepSelectionToTimeStep,
 } from '../util';
-import { TwTimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
+import { TimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
 import { SelectButtonCentered } from '../../../../shared';
 import { IconButton } from '../../shared';
 import { toSimpleSelectOption } from '../../../util';
@@ -28,7 +28,7 @@ export function ChartToolbarNavigate({
   onNavigate,
 }: ChartToolbarNavigateProps): React.ReactElement {
   const [timeStepSelection, setTimeStepSelection] =
-    useState<TwTimeStepSelection>('100B');
+    useState<TimeStepSelection>('100B');
 
   const navigateToStart = useCallback(() => {
     const newRange = logicalToLogicalRange(0, logicalRange, data.length);
@@ -74,7 +74,7 @@ export function ChartToolbarNavigate({
     <div className='inline-flex flex-row gap-0.5'>
       <IconButton icon={mdiChevronDoubleLeft} onClick={navigateToStart} />
       <IconButton icon={mdiChevronLeft} onClick={navigateBack} />
-      <SelectButtonCentered<TwTimeStepSelection, false>
+      <SelectButtonCentered<TimeStepSelection, false>
         options={TIME_STEP_OPTIONS}
         value={timeStepSelection}
         onValueChange={setTimeStepSelection}
