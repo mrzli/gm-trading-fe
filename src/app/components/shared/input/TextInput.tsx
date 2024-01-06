@@ -30,11 +30,15 @@ function TextInputInternal(
   }: TextInputProps,
   ref: React.Ref<HTMLInputElement>,
 ): React.ReactElement {
-  const classes = cls('px-1 outline-none text-sm border rounded min-w-0', {
-    'border-slate-400': !error && !disabled,
-    'border-slate-200 text-gray-400 cursor-not-allowed': disabled,
-    'border-red-500': error && !disabled,
-  });
+  const classes = cls(
+    'px-1 py-0 text-sm border rounded min-w-0 focus:outline-none focus:ring-0 focus:ring-offset-0',
+    {
+      'border-slate-400 focus:border-slate-400': !error && !disabled,
+      'border-slate-200 focus:border-slate-200 text-gray-400 cursor-not-allowed':
+        disabled,
+      'border-red-500 focus:border-red-500': error && !disabled,
+    },
+  );
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
