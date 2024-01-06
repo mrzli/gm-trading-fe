@@ -32,13 +32,16 @@ export function FormControlledTextInput<
     <Controller<TFieldValues, TName>
       name={name}
       control={control}
-      render={({ field }) => {
+      render={({ field, fieldState }) => {
         const { onChange, ...fieldRest } = field;
+        const { error } = fieldState;
+
         return (
           <TextInput
             id={id}
             label={label}
             {...fieldRest}
+            error={error !== undefined}
             onValueChange={onChange}
           />
         );

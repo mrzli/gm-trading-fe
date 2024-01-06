@@ -39,6 +39,7 @@
     "@gmjs/type-checks": "^0.0.4",
     "@gmjs/value-generators": "^0.0.1",
     "@gmjs/value-transformers": "^0.0.7",
+    "@hookform/resolvers": "^3.3.4",
     "@mdi/js": "^7.3.67",
     "@mdi/react": "^1.6.1",
     "@uidotdev/usehooks": "^2.4.1",

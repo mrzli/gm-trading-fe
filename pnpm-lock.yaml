@@ -47,6 +47,9 @@ dependencies:
   '@gmjs/value-transformers':
     specifier: ^0.0.7
     version: 0.0.7
+  '@hookform/resolvers':
+    specifier: ^3.3.4
+    version: 3.3.4(react-hook-form@7.49.2)
   '@mdi/js':
     specifier: ^7.3.67
     version: 7.3.67
@@ -2524,6 +2527,14 @@ packages:
       '@gmjs/compose-function': 0.0.1
       '@gmjs/generic-types': 0.0.1
       tslib: 2.6.2
+    dev: false
+
+  /@hookform/resolvers@3.3.4(react-hook-form@7.49.2):
+    resolution: {integrity: sha512-o5cgpGOuJYrd+iMKvkttOclgwRW86EsWJZZRC23prf0uU2i48Htq4PuT73AVb9ionFyZrwYEITuOFGF+BydEtQ==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.49.2(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:

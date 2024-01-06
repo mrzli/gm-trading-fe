@@ -20,7 +20,7 @@ export function schemaStringAsIntegerInRange(
   });
 }
 
-export function schemaStringIntInRange(
+export function schemaStringIntegerInRange(
   min: number | undefined,
   max: number | undefined,
 ): z.ZodEffects<z.ZodString, string, string> {

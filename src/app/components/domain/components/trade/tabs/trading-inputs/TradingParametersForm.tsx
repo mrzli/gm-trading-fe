@@ -1,10 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TradingParameters } from '../../types';
-import { Button } from '../../../../../shared';
-import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
-import { FormControlledTextInput } from '../../../../../shared/form-controlled/FormControlledTextInput';
+import { Button, FormControlledTextInput } from '../../../../../shared';
+import {
+  PRECISION_MONEY,
+  PRECISION_POINT,
+  schemaStringDecimalInRange,
+  schemaStringIntegerInRange,
+} from '../../../../util';
 
 export interface TradingParametersFormProps {
   readonly value: TradingParameters;
@@ -15,9 +21,14 @@ export function TradingParametersForm({
   value,
   onValueChange,
 }: TradingParametersFormProps): React.ReactElement {
-  const { handleSubmit, control } = useForm<TradingParametersInputs>({
-    defaultValues: toTradingParametersInputs(value),
-  });
+  const { handleSubmit, control, formState } = useForm<TradingParametersInputs>(
+    {
+      defaultValues: toTradingParametersInputs(value),
+      resolver: zodResolver(SCHEMA),
+    },
+  );
+
+  const { isValid } = formState;
 
   const submitHandler: SubmitHandler<TradingParametersInputs> = useCallback(
     (inputs: TradingParametersInputs) => {
@@ -26,17 +37,13 @@ export function TradingParametersForm({
     [onValueChange],
   );
 
-  
-
-  const handleApplyClick = useCallback(
-    () => {
-      handleSubmit(submitHandler)();
-    },
+  const triggerSubmit = useMemo(
+    () => handleSubmit(submitHandler),
     [handleSubmit, submitHandler],
   );
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)}>
+    <form onSubmit={triggerSubmit}>
       <div className='grid grid-cols-[repeat(7,_80px)_1fr] gap-1 items-end'>
         <FormControlledTextInput<TradingParametersInputs, 'initialBalance'>
           control={control}
@@ -82,8 +89,9 @@ export function TradingParametersForm({
         />
         <Button
           type={'submit'}
-          onClick={handleApplyClick}
+          onClick={triggerSubmit}
           preventDefault={true}
+          disabled={!isValid}
           content={'Apply'}
           width={'100%'}
         />
@@ -101,6 +109,16 @@ interface TradingParametersInputs {
   readonly pipDigit: string;
   readonly minStopLossDistance: string;
 }
+
+const SCHEMA = z.object({
+  initialBalance: schemaStringDecimalInRange(PRECISION_MONEY, 100, 1_000_000),
+  priceDecimals: schemaStringIntegerInRange(0, 8),
+  spread: schemaStringDecimalInRange(PRECISION_POINT, 0, 10_000),
+  marginPercent: schemaStringDecimalInRange(2, 0, 100),
+  avgSlippage: schemaStringDecimalInRange(PRECISION_POINT, 0, 10_000),
+  pipDigit: schemaStringIntegerInRange(-8, 8),
+  minStopLossDistance: schemaStringDecimalInRange(PRECISION_POINT, 0, 10_000),
+});
 
 function toTradingParametersInputs(
   tradingParameters: TradingParameters,
