@@ -26,9 +26,10 @@ export function TradingParametersForm({
     [onValueChange],
   );
 
+  
+
   const handleApplyClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+    () => {
       handleSubmit(submitHandler)();
     },
     [handleSubmit, submitHandler],
@@ -82,6 +83,7 @@ export function TradingParametersForm({
         <Button
           type={'submit'}
           onClick={handleApplyClick}
+          preventDefault={true}
           content={'Apply'}
           width={'100%'}
         />
