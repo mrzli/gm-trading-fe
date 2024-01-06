@@ -47,7 +47,7 @@ export function ChartToolbarGoTo({
   }, [isGoToValid, goToInput, timezone, data, logicalRange, onGoTo]);
 
   const handleGoToInputKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+    (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         handleGoToClick();
       }

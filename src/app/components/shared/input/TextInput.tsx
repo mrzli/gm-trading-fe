@@ -8,8 +8,8 @@ export interface TextInputProps {
   readonly placeholder?: string;
   readonly value: string;
   readonly onValueChange: (value: string) => void;
-  readonly onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  readonly onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  readonly onBlur?: () => void;
+  readonly onKeyDown?: (event: React.KeyboardEvent) => void;
   readonly disabled?: boolean;
   readonly error?: boolean;
   readonly width?: CSSProperties['width'];

@@ -51,7 +51,7 @@ export function BarReplayGoTo({
   }, [navigationTimezone, timezone]);
 
   const handleGoToInputKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+    (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         if (!isGoToValid) {
           return;

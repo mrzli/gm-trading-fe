@@ -53,7 +53,7 @@ export function BarReplaySetBarIndex({
   }, [barIndexInput, dataLength, isReplayValueValid, onReplayPositionChange]);
 
   const handleReplayInputKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+    (event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         handleReplaySetBarIndex();
       }
