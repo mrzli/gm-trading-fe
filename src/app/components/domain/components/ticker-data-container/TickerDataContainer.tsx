@@ -20,6 +20,7 @@ import {
   BarReplayPosition,
   RightToolbarState,
   TradingUiState,
+  ChartAdditionalSettings,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
@@ -170,6 +171,16 @@ export function TickerDataContainer({
     [replayPosition],
   );
 
+  const handleAdditionalSettingsChange = useCallback(
+    (additionalSettings: ChartAdditionalSettings) => {
+      setSettings((s) => ({
+        ...s,
+        additional: additionalSettings,
+      }));
+    },
+    [],
+  );
+
   if (!instrument) {
     return <div>Instrument not found.</div>;
   }
@@ -203,6 +214,7 @@ export function TickerDataContainer({
         onTimezoneChange={handleTimezoneChange}
         logicalRange={logicalRange}
         onLogicalRangeChange={handleChartTimeRangeChange}
+        onAdditionalSettingsChange={handleAdditionalSettingsChange}
       />
       {false && <PrettyDisplay content={settings} />}
     </>
@@ -261,6 +273,7 @@ function getInitialChartSettings(
       instrumentName: firstInstrumentName,
       resolution: '5m',
       timezone: 'UTC',
+      additional: INITIAL_CHART_ADDITIONAL_SETTINGS,
     };
   }
 
@@ -270,8 +283,13 @@ function getInitialChartSettings(
     instrumentName,
     resolution,
     timezone,
+    additional: INITIAL_CHART_ADDITIONAL_SETTINGS,
   };
 }
+
+const INITIAL_CHART_ADDITIONAL_SETTINGS: ChartAdditionalSettings = {
+  highlightSession: false,
+};
 
 function getInitialRightToolbarState(
   tradingUiState: TradingUiState | undefined,

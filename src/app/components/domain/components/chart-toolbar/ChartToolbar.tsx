@@ -6,6 +6,7 @@ import {
   ChartTimezone,
   TYPES_OF_CHART_TIMEZONES,
   ChartRange,
+  ChartAdditionalSettings,
 } from '../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { ChartToolbarGoTo } from './components/ChartToolbarGoTo';
@@ -27,6 +28,9 @@ export interface ChartToolbarProps {
   readonly onTimezoneChange: (timezone: ChartTimezone) => void;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
+  readonly onAdditionalSettingsChange: (
+    additionalSettings: ChartAdditionalSettings,
+  ) => void;
 }
 
 export function ChartToolbar({
@@ -38,7 +42,10 @@ export function ChartToolbar({
   onTimezoneChange,
   logicalRange,
   onLogicalRangeChange,
+  onAdditionalSettingsChange,
 }: ChartToolbarProps): React.ReactElement {
+  const { instrumentName, resolution, timezone, additional } = settings;
+
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
     return instrumentNames.map((instrumentName) =>
       toSimpleSelectOption(instrumentName),
@@ -49,20 +56,20 @@ export function ChartToolbar({
     <div className='inline-flex flex-row gap-0.5'>
       <SelectButton<string, false>
         options={instrumentOptions}
-        value={settings.instrumentName}
+        value={instrumentName}
         onValueChange={onInstrumentChange}
         selectionWidth={80}
         selectItemWidth={80}
       />
       <SelectButtonCentered<ChartResolution, false>
         options={RESOLUTION_OPTIONS}
-        value={settings.resolution}
+        value={resolution}
         onValueChange={onResolutionChange}
         width={32}
       />
       <SelectButton<ChartTimezone, false>
         options={TIMEZONE_OPTIONS}
-        value={settings.timezone}
+        value={timezone}
         onValueChange={onTimezoneChange}
         selectionWidth={128}
         selectItemWidth={128}
@@ -75,14 +82,17 @@ export function ChartToolbar({
             onNavigate={onLogicalRangeChange}
           />
           <ChartToolbarGoTo
-            timezone={settings.timezone}
+            timezone={timezone}
             data={bars}
             logicalRange={logicalRange}
             onGoTo={onLogicalRangeChange}
           />
         </>
       )}
-      <ChartToolbarAdditional />
+      <ChartToolbarAdditional
+        value={additional}
+        onValueChange={onAdditionalSettingsChange}
+      />
     </div>
   );
 }
