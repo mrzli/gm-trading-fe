@@ -1,5 +1,4 @@
 import { ChartTimezone } from '../../../types';
-import { Time, isUTCTimestamp, isBusinessDay } from 'lightweight-charts';
 import {
   DateObjectTz,
   dateObjectTzToUnixSeconds,
@@ -45,13 +44,3 @@ export function tzToUtcTimestamp(
   };
   return dateObjectTzToUnixSeconds(adjustedDateObject);
 }
-
-// function twTimeToTimestamp(time: Time): number {
-//   if (isUTCTimestamp(time)) {
-//     return time;
-//   } else if (isBusinessDay(time)) {
-//     return new Date(time.year, time.month, time.day);
-//   } else {
-//     return new Date(time);
-//   }
-// }

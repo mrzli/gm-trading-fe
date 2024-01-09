@@ -1,11 +1,7 @@
 import { useMemo } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChart, TwChartProps } from './TwChart';
-import {
-  argTypeInteger,
-  decoratorContainer,
-  disableControl,
-} from '../../../../../storybook';
+import { decoratorContainer, disableControl } from '../../../../../storybook';
 import { Bars } from '../../types';
 import {
   TEST_TICKER_BARS_DAY,
@@ -19,14 +15,11 @@ const STORY_META: Meta<TwChartProps> = {
   tags: ['autodocs'],
   decorators: [decoratorContainer({ height: '100vh', padding: 16 })],
   argTypes: {
-    precision: argTypeInteger(0, 10),
     data: disableControl(),
     onLogicalRangeChange: disableControl(),
     onChartKeyDown: disableControl(),
   },
-  args: {
-    precision: 2,
-  },
+  args: {},
 };
 export default STORY_META;
 

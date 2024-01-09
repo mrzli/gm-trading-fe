@@ -2,7 +2,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UTCTimestamp, createChart } from 'lightweight-charts';
-import { Bar, Bars, ChartTimezone, ChartRange, ChartSettings } from '../../types';
+import {
+  Bar,
+  Bars,
+  ChartTimezone,
+  ChartRange,
+  ChartSettings,
+} from '../../types';
 import { TwChartApi, TwInitInput } from './types';
 import {
   destroyChart,
@@ -12,10 +18,11 @@ import {
 } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
+import { Instrument } from '@gmjs/gm-trading-shared';
 
 export interface TwChartProps {
   readonly settings: ChartSettings;
-  readonly precision: number;
+  readonly instrument: Instrument;
   readonly data: Bars;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
@@ -24,13 +31,14 @@ export interface TwChartProps {
 
 export function TwChart({
   settings,
-  precision,
+  instrument,
   data,
   logicalRange,
   onLogicalRangeChange,
   onChartKeyDown,
 }: TwChartProps): React.ReactElement {
   const { timezone } = settings;
+  const { precision } = instrument;
 
   const chartElementRef = useRef<HTMLDivElement>(null);
 
@@ -54,13 +62,13 @@ export function TwChart({
     const c = chartElementRef.current
       ? createChart(chartElementRef.current)
       : undefined;
-    const chartApi = initChart(settings, c, input);
+    const chartApi = initChart(settings, instrument, c, input);
     setChartApi(chartApi);
 
     return () => {
       destroyChart(c);
     };
-  }, [input, settings]);
+  }, [input, instrument, settings]);
 
   useEffect(() => {
     if (!logicalRange || !chartApi) {

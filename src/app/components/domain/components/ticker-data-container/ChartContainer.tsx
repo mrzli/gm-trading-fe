@@ -84,7 +84,7 @@ export function ChartContainer({
   return (
     <TwChart
       settings={settings}
-      precision={instrument.precision}
+      instrument={instrument}
       data={chartData}
       logicalRange={logicalRange}
       onLogicalRangeChange={onLogicalRangeChange}

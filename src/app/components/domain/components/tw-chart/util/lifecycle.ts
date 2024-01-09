@@ -15,6 +15,7 @@ import {
   getTimeScaleOptions,
 } from './options';
 import { applyPlugins } from './plugins';
+import { Instrument } from '@gmjs/gm-trading-shared';
 
 export function getTwInitInput(
   precision: number,
@@ -32,6 +33,7 @@ export function getTwInitInput(
 
 export function initChart(
   settings: ChartSettings,
+  instrument: Instrument,
   chart: IChartApi | undefined,
   input: TwInitInput,
 ): TwChartApi | undefined {
@@ -51,7 +53,7 @@ export function initChart(
   const timeScale = chart.timeScale();
   timeScale.applyOptions(timeScaleOptions);
 
-  applyPlugins(settings, chart, candlestickSeries);
+  applyPlugins(settings, instrument, chart, candlestickSeries);
 
   chart.subscribeCrosshairMove((param) => {
     const item = param.seriesData.get(candlestickSeries);
