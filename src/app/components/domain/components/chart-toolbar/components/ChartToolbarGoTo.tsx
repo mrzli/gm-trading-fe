@@ -1,12 +1,16 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { TextInput } from '../../../../shared';
-import { dateIsoToUnixSeconds } from '../../../../../util';
-import { ChartRange, Bars, ChartTimezone } from '../../../types';
 import {
-  timeToLogical,
-  logicalToLogicalRange,
-} from '../util';
-import { SCHEMA_DATE_FOR_INPUT, SCHEMA_DATE_INPUT, dateInputToIso, isChartRangeEqual } from '../../../util';
+  dateObjectTzToUnixSeconds,
+} from '@gmjs/date-util';
+import { TextInput } from '../../../../shared';
+import { ChartRange, Bars, ChartTimezone } from '../../../types';
+import { timeToLogical, logicalToLogicalRange } from '../util';
+import {
+  SCHEMA_DATE_FOR_INPUT,
+  SCHEMA_DATE_INPUT,
+  dateInputToDateObjectTz,
+  isChartRangeEqual,
+} from '../../../util';
 
 export interface ChartToolbarGoToProps {
   readonly timezone: ChartTimezone;
@@ -36,7 +40,9 @@ export function ChartToolbarGoTo({
       return;
     }
 
-    const time = dateIsoToUnixSeconds(dateInputToIso(goToInput), timezone);
+    const time = dateObjectTzToUnixSeconds(
+      dateInputToDateObjectTz(goToInput, timezone),
+    );
     const logical = timeToLogical(time, data);
     const newRange = logicalToLogicalRange(logical, logicalRange, data.length);
     if (isChartRangeEqual(newRange, logicalRange)) {

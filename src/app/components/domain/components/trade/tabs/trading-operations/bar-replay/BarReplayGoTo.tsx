@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { dateIsoToUnixSeconds } from '../../../../../../../util';
 import {
   SelectButton,
   SelectOption,
@@ -8,9 +7,9 @@ import {
 import {
   SCHEMA_DATE_INPUT,
   SCHEMA_DATE_FOR_INPUT,
-  dateInputToIso,
   binarySearch,
   toSimpleSelectOption,
+  dateInputToDateObjectTz,
 } from '../../../../../util';
 import {
   ChartTimezone,
@@ -18,6 +17,7 @@ import {
   BarReplayPosition,
   TYPES_OF_CHART_TIMEZONES,
 } from '../../../../../types';
+import { dateObjectTzToUnixSeconds } from '@gmjs/date-util';
 
 export interface BarReplayGoToProps {
   readonly timezone: ChartTimezone;
@@ -57,10 +57,10 @@ export function BarReplayGoTo({
           return;
         }
 
-        const time = dateIsoToUnixSeconds(
-          dateInputToIso(goToInput),
-          finalTimezone,
+        const time = dateObjectTzToUnixSeconds(
+          dateInputToDateObjectTz(goToInput, finalTimezone),
         );
+
         const barIndex = binarySearch(subBars, time, (item) => item[0].time);
         if (barIndex === replayPosition.barIndex) {
           return;
