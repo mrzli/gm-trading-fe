@@ -5,7 +5,7 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
 } from '@mdi/js';
-import { ChartRange, Bars } from '../../../types';
+import { ChartRange, Bars, ChartSettings } from '../../../types';
 import {
   logicalToLogicalRange,
   moveLogicalRange,
@@ -17,16 +17,20 @@ import { IconButton } from '../../shared';
 import { toSimpleSelectOption } from '../../../util';
 
 export interface ChartToolbarNavigateProps {
+  readonly settings: ChartSettings;
   readonly data: Bars;
   readonly logicalRange: ChartRange | undefined;
   readonly onNavigate: (logicalRange: ChartRange) => void;
 }
 
 export function ChartToolbarNavigate({
+  settings,
   data,
   logicalRange,
   onNavigate,
 }: ChartToolbarNavigateProps): React.ReactElement {
+  const { timezone } = settings;
+
   const [timeStepSelection, setTimeStepSelection] =
     useState<TimeStepSelection>('100B');
 
@@ -55,10 +59,15 @@ export function ChartToolbarNavigate({
         isForward,
       );
 
-      const newLogicalRange = moveLogicalRange(logicalRange, timeStep, data);
+      const newLogicalRange = moveLogicalRange(
+        logicalRange,
+        timeStep,
+        data,
+        timezone,
+      );
       onNavigate(newLogicalRange);
     },
-    [logicalRange, timeStepSelection, data, onNavigate],
+    [logicalRange, timeStepSelection, data, timezone, onNavigate],
   );
 
   const navigateBack = useCallback(

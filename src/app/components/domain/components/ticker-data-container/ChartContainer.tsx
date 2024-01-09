@@ -6,6 +6,7 @@ import {
   Bars,
   ChartRange,
   ChartSettings,
+  ChartTimezone,
   GroupedBars,
 } from '../../types';
 import { FullBarData } from './types';
@@ -36,7 +37,7 @@ export function ChartContainer({
   replayPosition,
   onReplayPositionChange,
 }: ChartContainerProps): React.ReactElement {
-  const { resolution } = settings;
+  const { resolution, timezone } = settings;
   const { subBars, bars } = fullData;
 
   const chartData = useMemo(() => {
@@ -59,6 +60,7 @@ export function ChartContainer({
             keyboardNavigateChart(
               event,
               bars,
+              timezone,
               logicalRange,
               onLogicalRangeChange,
             );
@@ -75,6 +77,7 @@ export function ChartContainer({
       onReplayPositionChange,
       replayPosition,
       subBars,
+      timezone,
     ],
   );
 
@@ -93,6 +96,7 @@ export function ChartContainer({
 function keyboardNavigateChart(
   event: React.KeyboardEvent<HTMLDivElement>,
   bars: Bars,
+  timezone: ChartTimezone,
   logicalRange: ChartRange | undefined,
   handleLogicalRangeChange: (logicalRange: ChartRange | undefined) => void,
 ): void {
@@ -102,7 +106,7 @@ function keyboardNavigateChart(
     value: offset,
   };
   const newLogicalRange = logicalRange
-    ? moveLogicalRange(logicalRange, timeStep, bars)
+    ? moveLogicalRange(logicalRange, timeStep, bars, timezone)
     : undefined;
   if (isChartRangeEqual(logicalRange, newLogicalRange)) {
     return;

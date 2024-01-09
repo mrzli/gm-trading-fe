@@ -1,14 +1,9 @@
-import { DateTime } from 'luxon';
 import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
-import { ChartRange, Bars } from '../../../types';
-import {
-  HOUR_TO_SECONDS,
-  DAY_TO_SECONDS,
-  WEEK_TO_SECONDS,
-} from '../../../../../util';
+import { ChartRange, Bars, ChartTimezone } from '../../../types';
 import { binarySearch } from '../../../util';
 import { ChartTimeStep } from '../types';
+import { Duration, unixSecondsChange } from '@gmjs/date-util';
 
 const DEFAULT_SPAN = 60;
 
@@ -16,9 +11,10 @@ export function moveLogicalRange(
   currLogicalRange: ChartRange,
   timeStep: ChartTimeStep,
   data: Bars,
+  timezone: ChartTimezone,
 ): ChartRange {
   const currLogical = logicalRangeToLogical(currLogicalRange);
-  const newLogical = moveLogical(currLogical, timeStep, data);
+  const newLogical = moveLogical(currLogical, timeStep, data, timezone);
   return logicalToLogicalRange(newLogical, currLogicalRange, data.length);
 }
 
@@ -40,9 +36,10 @@ function moveLogical(
   currLogical: number,
   timeStep: ChartTimeStep,
   data: Bars,
+  timezone: ChartTimezone,
 ): number {
   const currBar = getCurrentBar(currLogical, data.length);
-  const newLogical = moveLogicalInternal(currBar, timeStep, data);
+  const newLogical = moveLogicalInternal(currBar, timeStep, data, timezone);
   const newBar = getCurrentBar(newLogical, data.length);
   // make sure you move at least one bar
   const adjustedNewBar =
@@ -58,6 +55,7 @@ function moveLogicalInternal(
   currBar: number,
   timeStep: ChartTimeStep,
   data: Bars,
+  timezone: ChartTimezone,
 ): number {
   const { unit, value } = timeStep;
 
@@ -65,56 +63,51 @@ function moveLogicalInternal(
     return currBar + value;
   } else {
     const currTime = data[currBar].time;
-    const targetTime = moveTime(currTime, timeStep);
+    const targetTime = moveTime(currTime, timezone, timeStep);
     return timeToLogical(targetTime, data);
   }
 }
 
-function moveTime(currTime: number, timeStep: ChartTimeStep): number {
-  const { unit, value } = timeStep;
-
-  switch (unit) {
-    case 'h':
-    case 'D':
-    case 'W': {
-      const timeDelta = getTimeDelta(timeStep);
-      return currTime + timeDelta;
-    }
-    case 'M': {
-      return addMonth(currTime, value);
-    }
-    default: {
-      invariant(false, `Unexpected time unit when moving by time: '${unit}'.`);
-    }
-  }
+function moveTime(
+  currTime: number,
+  timezone: ChartTimezone,
+  timeStep: ChartTimeStep,
+): number {
+  const amount = timeStepToDuration(timeStep);
+  return unixSecondsChange(currTime, timezone, amount);
 }
 
-function getTimeDelta(timeStep: ChartTimeStep): number {
+function timeStepToDuration(timeStep: ChartTimeStep): Duration {
   const { unit, value } = timeStep;
 
   switch (unit) {
     case 'h': {
-      return value * HOUR_TO_SECONDS;
+      return {
+        hours: value,
+      };
     }
     case 'D': {
-      return value * DAY_TO_SECONDS;
+      return {
+        days: value,
+      };
     }
     case 'W': {
-      return value * WEEK_TO_SECONDS;
+      return {
+        weeks: value,
+      };
+    }
+    case 'M': {
+      return {
+        months: value,
+      };
     }
     default: {
       invariant(
         false,
-        `Unexpected time unit when calculating time delta: '${unit}'.`,
+        `Unexpected time unit when converting time step to duration: '${unit}'.`,
       );
     }
   }
-}
-
-function addMonth(timestamp: number, months: number): number {
-  return DateTime.fromSeconds(timestamp, { zone: 'UTC' })
-    .plus({ months })
-    .toSeconds();
 }
 
 function logicalRangeToLogical(logicalRange: ChartRange): number {

@@ -77,6 +77,7 @@ export function ChartToolbar({
       {bars.length > 0 && (
         <>
           <ChartToolbarNavigate
+            settings={settings}
             data={bars}
             logicalRange={logicalRange}
             onNavigate={onLogicalRangeChange}
