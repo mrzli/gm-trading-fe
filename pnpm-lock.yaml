@@ -29,6 +29,9 @@ dependencies:
   '@gmjs/data-container-util':
     specifier: ^0.0.1
     version: 0.0.1
+  '@gmjs/date-util':
+    specifier: ^0.0.4
+    version: 0.0.4
   '@gmjs/generic-functions':
     specifier: ^0.0.1
     version: 0.0.1
@@ -2403,6 +2406,14 @@ packages:
     resolution: {integrity: sha512-mN6k1VWxiFWNSpeS2vr+sTlBleh277RNaTfI4isRjsl8m481EWDXNNoqWy3RVtfAldKMpwO/ppLZRiR6E2bmIw==}
     engines: {node: '>=16.0.0'}
     dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /@gmjs/date-util@0.0.4:
+    resolution: {integrity: sha512-AfqcuQQ+sXH3RkskpjbFT9sJF8Aiz9LGPFXN1W0ZuI9IsgHpTkuTXlLEptCxyq03dKF3RLTr2V7CSRpR0d+8wg==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      luxon: 3.4.4
       tslib: 2.6.2
     dev: false
 

@@ -2,12 +2,11 @@ import { useMemo } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { TwChart, TwChartProps } from './TwChart';
 import {
-  argTypeInlineRadio,
   argTypeInteger,
   decoratorContainer,
   disableControl,
 } from '../../../../../storybook';
-import { TYPES_OF_CHART_TIMEZONES, Bars } from '../../types';
+import { Bars } from '../../types';
 import {
   TEST_TICKER_BARS_DAY,
   TEST_TICKER_BARS_MINUTE,
@@ -22,13 +21,11 @@ const STORY_META: Meta<TwChartProps> = {
   argTypes: {
     precision: argTypeInteger(0, 10),
     data: disableControl(),
-    timezone: argTypeInlineRadio(TYPES_OF_CHART_TIMEZONES),
     onLogicalRangeChange: disableControl(),
     onChartKeyDown: disableControl(),
   },
   args: {
     precision: 2,
-    timezone: 'UTC',
   },
 };
 export default STORY_META;

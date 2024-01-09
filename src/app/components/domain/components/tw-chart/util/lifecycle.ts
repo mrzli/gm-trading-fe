@@ -1,5 +1,5 @@
 import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
-import { ChartRange, Bar, Bars } from '../../../types';
+import { ChartRange, Bar, Bars, ChartSettings } from '../../../types';
 import {
   CrosshairMoveFn,
   TwInitInput,
@@ -14,6 +14,7 @@ import {
   getDataSeriesOptions,
   getTimeScaleOptions,
 } from './options';
+import { applyPlugins } from './plugins';
 
 export function getTwInitInput(
   precision: number,
@@ -30,6 +31,7 @@ export function getTwInitInput(
 }
 
 export function initChart(
+  settings: ChartSettings,
   chart: IChartApi | undefined,
   input: TwInitInput,
 ): TwChartApi | undefined {
@@ -48,6 +50,8 @@ export function initChart(
   const timeScaleOptions = getTimeScaleOptions();
   const timeScale = chart.timeScale();
   timeScale.applyOptions(timeScaleOptions);
+
+  applyPlugins(settings, chart, candlestickSeries);
 
   chart.subscribeCrosshairMove((param) => {
     const item = param.seriesData.get(candlestickSeries);

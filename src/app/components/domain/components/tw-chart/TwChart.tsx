@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { UTCTimestamp, createChart } from 'lightweight-charts';
-import { Bar, Bars, ChartTimezone, ChartRange } from '../../types';
+import { Bar, Bars, ChartTimezone, ChartRange, ChartSettings } from '../../types';
 import { TwChartApi, TwInitInput } from './types';
 import {
   destroyChart,
@@ -14,22 +14,24 @@ import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
 
 export interface TwChartProps {
+  readonly settings: ChartSettings;
   readonly precision: number;
   readonly data: Bars;
-  readonly timezone: ChartTimezone;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 export function TwChart({
+  settings,
   precision,
   data,
-  timezone,
   logicalRange,
   onLogicalRangeChange,
   onChartKeyDown,
 }: TwChartProps): React.ReactElement {
+  const { timezone } = settings;
+
   const chartElementRef = useRef<HTMLDivElement>(null);
 
   const [currCrosshairItem, setCurrCrosshairItem] = useState<Bar | undefined>(
@@ -52,13 +54,13 @@ export function TwChart({
     const c = chartElementRef.current
       ? createChart(chartElementRef.current)
       : undefined;
-    const chartApi = initChart(c, input);
+    const chartApi = initChart(settings, c, input);
     setChartApi(chartApi);
 
     return () => {
       destroyChart(c);
     };
-  }, [input]);
+  }, [input, settings]);
 
   useEffect(() => {
     if (!logicalRange || !chartApi) {

@@ -36,7 +36,7 @@ export function ChartContainer({
   replayPosition,
   onReplayPositionChange,
 }: ChartContainerProps): React.ReactElement {
-  const { resolution, timezone } = settings;
+  const { resolution } = settings;
   const { subBars, bars } = fullData;
 
   const chartData = useMemo(() => {
@@ -80,9 +80,9 @@ export function ChartContainer({
 
   return (
     <TwChart
+      settings={settings}
       precision={instrument.precision}
       data={chartData}
-      timezone={timezone}
       logicalRange={logicalRange}
       onLogicalRangeChange={onLogicalRangeChange}
       onChartKeyDown={handleChartKeyDown}
