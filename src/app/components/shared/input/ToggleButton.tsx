@@ -27,9 +27,13 @@ export function ToggleButton({
     'border-slate-200 bg-slate-100 text-gray-400 cursor-not-allowed': disabled,
   });
 
-  const handleClick = useCallback(() => {
-    onValueChange(!value);
-  }, [value, onValueChange]);
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      onValueChange(!value);
+    },
+    [value, onValueChange],
+  );
 
   return (
     <button
