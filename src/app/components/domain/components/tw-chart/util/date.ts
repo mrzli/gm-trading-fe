@@ -1,6 +1,10 @@
-import { DateTime } from 'luxon';
 import { ChartTimezone } from '../../../types';
 import { Time, isUTCTimestamp, isBusinessDay } from 'lightweight-charts';
+import {
+  DateObjectTz,
+  dateObjectTzToUnixSeconds,
+  unixSecondsToDateObjectTz,
+} from '@gmjs/date-util';
 
 // tradingview lightweight-charts uses timestamps in UTC
 // this function is used to adjust timestamp so that the chart
@@ -20,9 +24,25 @@ export function utcToTzTimestamp(
   timestamp: number,
   timezone: ChartTimezone,
 ): number {
-  const dateTime = DateTime.fromSeconds(timestamp, { zone: timezone });
-  const result = dateTime.setZone('UTC', { keepLocalTime: true }).toSeconds();
-  return result;
+  const dateObject = unixSecondsToDateObjectTz(timestamp, timezone);
+  const adjustedDateObject: DateObjectTz = {
+    ...dateObject,
+    timezone: 'UTC',
+  };
+  return dateObjectTzToUnixSeconds(adjustedDateObject);
+}
+
+// inverse of the above operation
+export function tzToUtcTimestamp(
+  timestamp: number,
+  timezone: ChartTimezone,
+): number {
+  const dateObject = unixSecondsToDateObjectTz(timestamp, 'UTC');
+  const adjustedDateObject: DateObjectTz = {
+    ...dateObject,
+    timezone,
+  };
+  return dateObjectTzToUnixSeconds(adjustedDateObject);
 }
 
 // function twTimeToTimestamp(time: Time): number {
