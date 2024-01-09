@@ -190,14 +190,14 @@ function getDisplayItems(
       kind: 'none',
     },
     {
-      kind: 'decimal',
+      kind: 'pnl',
       colSpan: 1,
       label: 'P&L Pts',
       value: getActiveTradePnlPoints(item, bar, pipDigit, spread),
       precision: PRECISION_POINT,
     },
     {
-      kind: 'decimal',
+      kind: 'pnl',
       colSpan: 1,
       label: 'P&L',
       value: getActiveTradePnl(item, bar, pipDigit, spread),

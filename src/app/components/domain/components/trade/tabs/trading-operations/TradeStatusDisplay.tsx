@@ -2,7 +2,11 @@ import React, { useMemo } from 'react';
 import { BarReplayPosition } from '../../../../types';
 import { TradeProcessState, TradingDataAndInputs } from '../../types';
 import { BarReplay } from './bar-replay/BarReplay';
-import { DateValueDisplay, DecimalValueDisplay } from '../../../shared';
+import {
+  DateValueDisplay,
+  DecimalValueDisplay,
+  getPnlColor,
+} from '../../../shared';
 import { getOhlc } from '../../util/ohlc';
 import {
   getActiveTradePnl,
@@ -117,21 +121,25 @@ export function TradeStatusDisplay({
         />
         <DecimalValueDisplay
           label={'Active P&L Pts'}
+          color={getPnlColor(activeTradesPnlPoints)}
           value={activeTradesPnlPoints}
           precision={PRECISION_POINT}
         />
         <DecimalValueDisplay
           label={'Active P&L'}
+          color={getPnlColor(activeTradesPnl)}
           value={activeTradesPnl}
           precision={PRECISION_MONEY}
         />
         <DecimalValueDisplay
           label={'Comp P&L Pts'}
+          color={getPnlColor(completedTradesPnlPoints)}
           value={completedTradesPnlPoints}
           precision={PRECISION_POINT}
         />
         <DecimalValueDisplay
           label={'Comp P&L'}
+          color={getPnlColor(completedTradesPnl)}
           value={completedTradesPnl}
           precision={PRECISION_MONEY}
         />

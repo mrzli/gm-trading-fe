@@ -3,6 +3,7 @@ export const KINDS_OF_VALUE_DISPLAY_DATA = [
   'string',
   'decimal',
   'date',
+  'pnl',
 ] as const;
 
 export type KindOfValueDisplayData =
@@ -41,10 +42,17 @@ export interface ValueDisplayDataDate extends ValueDisplayDataBase {
   readonly timezone: string;
 }
 
+export interface ValueDisplayDataPnl extends ValueDisplayDataBase {
+  readonly kind: 'pnl';
+  readonly value: number | undefined;
+  readonly precision: number;
+}
+
 export type ValueDisplayDataAny =
   | ValueDisplayDataNone
   | ValueDisplayDataString
   | ValueDisplayDataDecimal
-  | ValueDisplayDataDate;
+  | ValueDisplayDataDate
+  | ValueDisplayDataPnl;
 
 export type ValueDisplayDataAnyList = readonly ValueDisplayDataAny[];

@@ -112,14 +112,14 @@ function getDisplayItems(
       value: mapGetOrThrow(CLOSE_REASON_DISPLAY_NAME_MAP, closeReason),
     },
     {
-      kind: 'decimal',
+      kind: 'pnl',
       colSpan: 2,
       label: 'P&L Pts',
       value: getCompletedTradePnlPoints(item, pipDigit),
       precision: PRECISION_POINT,
     },
     {
-      kind: 'decimal',
+      kind: 'pnl',
       colSpan: 2,
       label: 'P&L',
       value: getCompletedTradePnl(item, pipDigit),

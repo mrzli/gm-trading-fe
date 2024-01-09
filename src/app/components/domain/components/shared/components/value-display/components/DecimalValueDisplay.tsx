@@ -5,6 +5,7 @@ import { filterOutNullish } from '@gmjs/array-transformers';
 export interface DecimalValueDisplayProps {
   readonly label?: string;
   readonly fontSize?: CSSProperties['fontSize'];
+  readonly color?: CSSProperties['color'];
   readonly value: number | undefined;
   readonly precision: number;
   readonly prefix?: string;
@@ -14,6 +15,7 @@ export interface DecimalValueDisplayProps {
 export function DecimalValueDisplay({
   label,
   fontSize,
+  color,
   value,
   precision,
   prefix,
@@ -24,7 +26,14 @@ export function DecimalValueDisplay({
       ? '-'
       : getValueString(value, precision, prefix, suffix);
 
-  return <ValueDisplay label={label} fontSize={fontSize} value={valueString} />;
+  return (
+    <ValueDisplay
+      label={label}
+      fontSize={fontSize}
+      color={color}
+      value={valueString}
+    />
+  );
 }
 
 function getValueString(

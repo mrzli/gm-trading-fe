@@ -54,13 +54,13 @@ function getDisplayItems(
 
   return [
     {
-      kind: 'decimal',
+      kind: 'pnl',
       label: 'P&L',
       value: pnl,
       precision: PRECISION_MONEY,
     },
     {
-      kind: 'decimal',
+      kind: 'pnl',
       label: 'P&L Points',
       value: pnlPoints,
       precision: PRECISION_POINT,

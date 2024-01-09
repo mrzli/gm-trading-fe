@@ -4,6 +4,7 @@ import { invariant } from '@gmjs/assert';
 import { DecimalValueDisplay } from './DecimalValueDisplay';
 import { ValueDisplay } from '../../../../../../shared';
 import { DateValueDisplay } from './DateValueDisplay';
+import { getPnlColor } from '../util';
 
 export interface ValueDisplayItemProps {
   readonly item: ValueDisplayDataAny;
@@ -60,6 +61,18 @@ function getValueDisplayItemContent(
           fontSize={fontSize}
           value={value}
           timezone={timezone}
+        />
+      );
+    }
+    case 'pnl': {
+      const { value, precision } = item;
+      return (
+        <DecimalValueDisplay
+          label={label}
+          fontSize={fontSize}
+          color={getPnlColor(value)}
+          value={value}
+          precision={precision}
         />
       );
     }
