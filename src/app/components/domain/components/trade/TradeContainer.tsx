@@ -342,6 +342,7 @@ function getInitialTradingDataAndInputs(
 ): TradingDataAndInputs {
   return {
     settings,
+    instrument,
     fullData,
     replayPosition,
     barData,

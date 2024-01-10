@@ -3,7 +3,7 @@ import { clamp } from '@gmjs/number-util';
 import { ChartRange, Bars, ChartTimezone } from '../../../types';
 import { binarySearch } from '../../../util';
 import { ChartTimeStep } from '../types';
-import { Duration, unixSecondsChange } from '@gmjs/date-util';
+import { Duration, unixSecondsAdd } from '@gmjs/date-util';
 
 const DEFAULT_SPAN = 60;
 
@@ -74,7 +74,7 @@ function moveTime(
   timeStep: ChartTimeStep,
 ): number {
   const amount = timeStepToDuration(timeStep);
-  return unixSecondsChange(currTime, timezone, amount);
+  return unixSecondsAdd(currTime, timezone, amount);
 }
 
 function timeStepToDuration(timeStep: ChartTimeStep): Duration {

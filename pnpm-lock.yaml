@@ -30,8 +30,8 @@ dependencies:
     specifier: ^0.0.1
     version: 0.0.1
   '@gmjs/date-util':
-    specifier: ^0.0.4
-    version: 0.0.4
+    specifier: ^0.0.5
+    version: 0.0.5
   '@gmjs/generic-functions':
     specifier: ^0.0.1
     version: 0.0.1
@@ -2409,8 +2409,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gmjs/date-util@0.0.4:
-    resolution: {integrity: sha512-AfqcuQQ+sXH3RkskpjbFT9sJF8Aiz9LGPFXN1W0ZuI9IsgHpTkuTXlLEptCxyq03dKF3RLTr2V7CSRpR0d+8wg==}
+  /@gmjs/date-util@0.0.5:
+    resolution: {integrity: sha512-MeoaAa6xLg9YOhREABsA/pCknCIvc36zvVhTk3u/kIcfzzPbJT5lHmqwxYrUCZrP9kK7L+c3SMQ+feZLQAj8YQ==}
     engines: {node: '>=16.0.0'}
     dependencies:
       luxon: 3.4.4

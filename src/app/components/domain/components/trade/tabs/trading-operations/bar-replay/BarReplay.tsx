@@ -8,20 +8,27 @@ import { BarReplaySetBarIndex } from './BarReplaySetBarIndex';
 import { BarReplayNavigateBar } from './BarReplayNavigateBar';
 import { BarReplayNavigateSubBar } from './BarReplayNavigateSubBar';
 import { BarReplayGoTo } from './BarReplayGoTo';
+import { Instrument } from '@gmjs/gm-trading-shared';
+import { BarReplayNavigateSession } from './BarReplayNavigateSession';
+import { FullBarData } from '../../../../ticker-data-container/types';
 
 export interface BarReplayProps {
   readonly timezone: ChartTimezone;
-  readonly subBars: GroupedBars;
+  readonly instrument: Instrument;
+  readonly fullData: FullBarData;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function BarReplay({
   timezone,
-  subBars,
+  instrument,
+  fullData,
   replayPosition,
   onReplayPositionChange,
 }: BarReplayProps): React.ReactElement {
+  const { subBars, bars } = fullData;
+
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <BarReplaySetBarIndex
@@ -42,6 +49,12 @@ export function BarReplay({
       <BarReplayGoTo
         timezone={timezone}
         subBars={subBars}
+        replayPosition={replayPosition}
+        onReplayPositionChange={onReplayPositionChange}
+      />
+      <BarReplayNavigateSession
+        instrument={instrument}
+        bars={bars}
         replayPosition={replayPosition}
         onReplayPositionChange={onReplayPositionChange}
       />

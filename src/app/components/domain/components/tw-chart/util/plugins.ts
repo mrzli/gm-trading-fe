@@ -4,13 +4,13 @@ import {
   Time,
   isUTCTimestamp,
 } from 'lightweight-charts';
+import { Instrument } from '@gmjs/gm-trading-shared';
+import { unixSecondsToDateObjectTz } from '@gmjs/date-util';
+import { parseIntegerOrThrow } from '@gmjs/number-util';
 import { ChartResolution, ChartSettings, ChartTimezone } from '../../../types';
 import { SessionHighlighting, SessionHighlighter } from '../plugins';
 import { tzToUtcTimestamp } from './date';
-import { DateObjectTz, unixSecondsToDateObjectTz } from '@gmjs/date-util';
-import { DateTime } from 'luxon';
-import { Instrument } from '@gmjs/gm-trading-shared';
-import { parseIntegerOrThrow } from '@gmjs/number-util';
+import { dateObjectTzToWeekday, getHourMinute, unixSecondsToWeekday } from '../../../util';
 
 export function applyPlugins(
   settings: ChartSettings,
@@ -59,7 +59,7 @@ function createSessionHighlighter(
 
     const time = tzToUtcTimestamp(chartAdjustedTime, timezone);
     const dateObject = unixSecondsToDateObjectTz(time, instrumentTimezone);
-    const weekday = getWeekday(dateObject);
+    const weekday = dateObjectTzToWeekday(dateObject);
     if (weekday > 5) {
       return '';
     }
@@ -72,16 +72,4 @@ function createSessionHighlighter(
       ? 'rgba(41, 98, 255, 0.08)'
       : '';
   };
-}
-
-function getWeekday(dateObject: DateObjectTz): number {
-  const { timezone, ...rest } = dateObject;
-  return DateTime.fromObject(rest, { zone: timezone }).weekday;
-}
-
-function getHourMinute(hourMinuteStr: string): readonly [number, number] {
-  const [hourStr, minuteStr] = hourMinuteStr.split(':');
-  const hour = parseIntegerOrThrow(hourStr);
-  const minute = parseIntegerOrThrow(minuteStr);
-  return [hour, minute];
 }

@@ -34,8 +34,15 @@ export function TradeStatusDisplay({
   state,
   onReplayPositionChange,
 }: TradeStatusDisplayProps): React.ReactElement {
-  const { settings, fullData, replayPosition, barData, barIndex, inputs } =
-    dataAndInputs;
+  const {
+    settings,
+    instrument,
+    fullData,
+    replayPosition,
+    barData,
+    barIndex,
+    inputs,
+  } = dataAndInputs;
   const { resolution, timezone } = settings;
   const { subBars } = fullData;
   const { params } = inputs;
@@ -97,7 +104,8 @@ export function TradeStatusDisplay({
     <div className='flex flex-col gap-2'>
       <BarReplay
         timezone={timezone}
-        subBars={subBars}
+        instrument={instrument}
+        fullData={fullData}
         replayPosition={replayPosition}
         onReplayPositionChange={onReplayPositionChange}
       />
