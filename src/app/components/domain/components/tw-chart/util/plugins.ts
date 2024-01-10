@@ -6,11 +6,10 @@ import {
 } from 'lightweight-charts';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { unixSecondsToDateObjectTz } from '@gmjs/date-util';
-import { parseIntegerOrThrow } from '@gmjs/number-util';
 import { ChartResolution, ChartSettings, ChartTimezone } from '../../../types';
 import { SessionHighlighting, SessionHighlighter } from '../plugins';
 import { tzToUtcTimestamp } from './date';
-import { dateObjectTzToWeekday, getHourMinute, unixSecondsToWeekday } from '../../../util';
+import { dateObjectTzToWeekday, getHourMinute } from '../../../util';
 
 export function applyPlugins(
   settings: ChartSettings,
