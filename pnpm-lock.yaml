@@ -36,8 +36,8 @@ dependencies:
     specifier: ^0.0.1
     version: 0.0.1
   '@gmjs/gm-trading-shared':
-    specifier: ^0.0.18
-    version: 0.0.18
+    specifier: ^0.0.20
+    version: 0.0.20
   '@gmjs/number-util':
     specifier: ^0.0.3
     version: 0.0.3
@@ -114,7 +114,7 @@ dependencies:
 devDependencies:
   '@gmjs/eslint-config':
     specifier: ^0.0.28
-    version: 0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.6.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3)
+    version: 0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.6.2)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3)
   '@gmjs/fs-async':
     specifier: ^0.0.5
     version: 0.0.5
@@ -2417,7 +2417,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gmjs/eslint-config@0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.6.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3):
+  /@gmjs/eslint-config@0.0.28(@typescript-eslint/eslint-plugin@6.16.0)(@typescript-eslint/parser@6.16.0)(eslint-config-prettier@9.1.0)(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-n@16.6.2)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react-refresh@0.4.5)(eslint-plugin-react@7.33.2)(eslint-plugin-storybook@0.6.15)(eslint-plugin-unicorn@50.0.1)(eslint@8.56.0)(prettier@3.1.1)(typescript@5.3.3):
     resolution: {integrity: sha512-onxPYzc1wkt0TosEVytA8hF/aHS9x25GPzf9wrVbbW4BpKgIus8A+HUkqYBzR6YnV9XjkYwPffBboUvp5sjLuA==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': ^6.15.0
@@ -2450,7 +2450,7 @@ packages:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.16.0)(eslint-plugin-import@2.29.1)(eslint@8.56.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.16.0)(eslint-import-resolver-typescript@3.6.1)(eslint@8.56.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.56.0)
-      eslint-plugin-n: 16.6.0(eslint@8.56.0)
+      eslint-plugin-n: 16.6.2(eslint@8.56.0)
       eslint-plugin-react: 7.33.2(eslint@8.56.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.56.0)
       eslint-plugin-react-refresh: 0.4.5(eslint@8.56.0)
@@ -2492,8 +2492,8 @@ packages:
     dependencies:
       tslib: 2.6.2
 
-  /@gmjs/gm-trading-shared@0.0.18:
-    resolution: {integrity: sha512-rxYhfq1LiXd9+4jPh2e9tjtdRMPtLX06Wo9alHxbtzV9mAkKSm81mnMI1F6Y6GjbAOubzAqSdscbpbyoawtp3g==}
+  /@gmjs/gm-trading-shared@0.0.20:
+    resolution: {integrity: sha512-Ib2FhAdoea3P9yNyoLZmX1AeN+y0jMnDHavlfDuxnaldo66eFsz4WTeIkN24d3LTzl4FCeaPpCiwEksdUTrHzg==}
     engines: {node: '>=18.17.0'}
     dependencies:
       tslib: 2.6.2
@@ -7111,8 +7111,8 @@ packages:
       object.fromentries: 2.0.7
     dev: true
 
-  /eslint-plugin-n@16.6.0(eslint@8.56.0):
-    resolution: {integrity: sha512-Ag3tYFF90lYU8JdHEl9qSSpeLYbVnO+Oj7sgPUarWUacv1mPL3d5h5yG4Bv3tLe71hrcxmgTi7oByYwKXaVatw==}
+  /eslint-plugin-n@16.6.2(eslint@8.56.0):
+    resolution: {integrity: sha512-6TyDmZ1HXoFQXnhCTUjVFULReoBPOAjpuiKELMkeP40yffI/1ZRO+d9ug/VC6fqISo2WkuIBk3cvuRPALaWlOQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       eslint: '>=7.0.0'

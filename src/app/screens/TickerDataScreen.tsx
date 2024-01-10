@@ -4,6 +4,7 @@ import { useStoreInstrument, useStoreTickerData } from '../../store';
 import { LoadingDisplay } from '../components/shared';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { ChartResolution } from '../components/domain/types';
+import { TICKER_DATA_SOURCE } from '../util';
 
 export function TickerDataScreen(): React.ReactElement {
   const { isLoadingAllInstruments, allInstruments, getAllInstruments } =
@@ -19,6 +20,7 @@ export function TickerDataScreen(): React.ReactElement {
   const handleRequestData = useCallback(
     (name: string, resolution: ChartResolution) => {
       getTickerData({
+        source: TICKER_DATA_SOURCE,
         name,
         resolution: toTickerDataResolution(resolution),
         date: undefined,
