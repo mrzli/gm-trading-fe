@@ -1,3 +1,7 @@
+export * from './cache';
+export * from './dependencies';
+
+export * from './app-cache';
 export * from './app-config';
 export * from './app-context';
 export * from './app-dependencies';
