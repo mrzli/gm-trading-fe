@@ -18,8 +18,8 @@ dependencies:
     specifier: ^0.0.3
     version: 0.0.3
   '@gmjs/assert':
-    specifier: ^0.0.2
-    version: 0.0.2
+    specifier: ^0.0.6
+    version: 0.0.6
   '@gmjs/browser-storage':
     specifier: ^0.0.2
     version: 0.0.2
@@ -2368,8 +2368,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gmjs/assert@0.0.2:
-    resolution: {integrity: sha512-ZqwGmv72n4NXH2RFOwJqLHUiLhpvqzvSi5Rmke+M4RKoCnchWaNzAmrq/y6OBJIzhA0OOLAfSdF/sLWuJtGcgQ==}
+  /@gmjs/assert@0.0.6:
+    resolution: {integrity: sha512-eVzr9x1a/6Zk/nYGjWFfpdOysiEbcNAc9CosMVXak/jS4wi1dTwCwR4EQAz7Cx7wAu6rL18KkUvw/6cKcb+MgQ==}
     engines: {node: '>=16.0.0'}
     dependencies:
       tslib: 2.6.2

@@ -8,6 +8,7 @@ import {
   argTypeInlineRadio,
   decoratorFullHeight,
 } from '../../../../../storybook';
+import { ensureNever } from '@gmjs/assert';
 
 const TYPES_OF_CONTENT_TYPE = ['regular', 'tall'] as const;
 const TYPES_OF_OPTIONAL_CONTENT_TYPE = [
@@ -81,6 +82,9 @@ function getContent(
     }
     case 'none': {
       return undefined;
+    }
+    default: {
+      return ensureNever(type);
     }
   }
 }
