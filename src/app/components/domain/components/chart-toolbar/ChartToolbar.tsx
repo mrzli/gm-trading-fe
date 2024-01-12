@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import {
   Bars,
   ChartSettings,
-  ChartResolution,
   ChartTimezone,
   TYPES_OF_CHART_TIMEZONES,
   ChartRange,
@@ -18,13 +17,14 @@ import {
 } from '../../../shared';
 import { toSimpleSelectOption } from '../../util';
 import { ChartToolbarAdditional } from './components/ChartToolbarAdditional';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export interface ChartToolbarProps {
   readonly instrumentNames: readonly string[];
   readonly bars: Bars;
   readonly settings: ChartSettings;
   readonly onInstrumentChange: (instrumentName: string) => void;
-  readonly onResolutionChange: (resolution: ChartResolution) => void;
+  readonly onResolutionChange: (resolution: TickerDataResolution) => void;
   readonly onTimezoneChange: (timezone: ChartTimezone) => void;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
@@ -61,7 +61,7 @@ export function ChartToolbar({
         selectionWidth={80}
         selectItemWidth={80}
       />
-      <SelectButtonCentered<ChartResolution, false>
+      <SelectButtonCentered<TickerDataResolution, false>
         options={RESOLUTION_OPTIONS}
         value={resolution}
         onValueChange={onResolutionChange}

@@ -5,12 +5,13 @@ import {
   aggregateBars,
 } from './process-chart-data';
 import { FullBarData } from '../types';
-import { Bar, BarReplayPosition, Bars, ChartResolution } from '../../../types';
+import { Bar, BarReplayPosition, Bars } from '../../../types';
 import { createAfterLastBar } from '../../../util';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function rawDataToFullBarData(
   rawData: readonly string[] | undefined,
-  resolution: ChartResolution,
+  resolution: TickerDataResolution,
 ): FullBarData {
   const nonAggregatedBarss = toBars(rawData ?? []);
   const subBars = groupDataBars(nonAggregatedBarss, resolution);
@@ -24,7 +25,7 @@ export function rawDataToFullBarData(
 export function getChartData(
   data: FullBarData,
   replayPosition: BarReplayPosition,
-  resolution: ChartResolution,
+  resolution: TickerDataResolution,
 ): Bars {
   const { subBars, bars } = data;
   const { barIndex, subBarIndex } = replayPosition;
@@ -56,7 +57,7 @@ export function getChartData(
 function createReplayBarLastOpen(
   bars: Bars,
   barIndex: number,
-  resolution: ChartResolution,
+  resolution: TickerDataResolution,
 ): Bar {
   const currentReplayBar = bars[barIndex];
 

@@ -6,9 +6,9 @@ import {
   DAY_TO_SECONDS,
   WEEK_TO_SECONDS,
 } from '../../../util';
-import { ChartResolution } from '../types';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
-export function resolutionToSeconds(resolution: ChartResolution): number {
+export function resolutionToSeconds(resolution: TickerDataResolution): number {
   const unit = resolution.slice(-1);
 
   switch (unit) {

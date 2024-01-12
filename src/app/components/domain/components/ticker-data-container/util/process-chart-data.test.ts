@@ -2,16 +2,16 @@ import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from '@jest/globals';
 import { readTextAsync } from '@gmjs/fs-async';
 import { mapGetOrThrow } from '@gmjs/data-container-util';
-import {
-  TYPES_OF_CHART_RESOLUTIONS,
-  Bars,
-  ChartResolution,
-} from '../../../types';
+import { Bars } from '../../../types';
 import {
   toBars,
   groupDataBars,
   aggregateGroupedDataBars,
 } from './process-chart-data';
+import {
+  TYPES_OF_TICKER_DATA_RESOLUTIONS,
+  TickerDataResolution,
+} from '@gmjs/gm-trading-shared';
 
 describe('process-chart-data', () => {
   let INPUT_MINUTE: readonly string[] = [];
@@ -22,7 +22,7 @@ describe('process-chart-data', () => {
   let INPUT_QUARTER_BARS: Bars = [];
   let INPUT_DAY_BARS: Bars = [];
 
-  const RESULTS_MAP = new Map<ChartResolution, Bars>();
+  const RESULTS_MAP = new Map<TickerDataResolution, Bars>();
 
   beforeAll(async () => {
     INPUT_MINUTE = await readInputFile(
@@ -36,14 +36,14 @@ describe('process-chart-data', () => {
     INPUT_DAY = await readInputFile(join(__dirname, 'data/inputs/day.csv'));
     INPUT_DAY_BARS = toBars(INPUT_DAY);
 
-    for (const resolution of TYPES_OF_CHART_RESOLUTIONS) {
+    for (const resolution of TYPES_OF_TICKER_DATA_RESOLUTIONS) {
       const path = join(__dirname, `data/results/${resolution}.json`);
       const result = await readResultsFile(path);
       RESULTS_MAP.set(resolution, result);
     }
   });
 
-  function getInput(resolution: ChartResolution): Bars {
+  function getInput(resolution: TickerDataResolution): Bars {
     switch (resolution) {
       case '1m':
       case '2m':
@@ -67,7 +67,7 @@ describe('process-chart-data', () => {
   }
 
   describe('aggregateDataBars', () => {
-    type Example = ChartResolution;
+    type Example = TickerDataResolution;
 
     const EXAMPLES: readonly Example[] = [
       '1m',

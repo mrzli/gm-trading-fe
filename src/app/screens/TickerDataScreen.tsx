@@ -3,7 +3,6 @@ import { TickerDataContainer } from '../components/domain/components/ticker-data
 import { useStoreInstrument, useStoreTickerData } from '../../store';
 import { LoadingDisplay } from '../components/shared';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
-import { ChartResolution } from '../components/domain/types';
 import { TICKER_DATA_SOURCE } from '../util';
 
 export function TickerDataScreen(): React.ReactElement {
@@ -18,11 +17,11 @@ export function TickerDataScreen(): React.ReactElement {
   }, [getAllInstruments]);
 
   const handleRequestData = useCallback(
-    (name: string, resolution: ChartResolution) => {
+    (name: string, resolution: TickerDataResolution) => {
       getTickerData({
         source: TICKER_DATA_SOURCE,
         name,
-        resolution: toTickerDataResolution(resolution),
+        resolution,
         from: undefined,
         to: undefined
       });
@@ -44,29 +43,4 @@ export function TickerDataScreen(): React.ReactElement {
       onRequestData={handleRequestData}
     />
   );
-}
-
-function toTickerDataResolution(
-  resolution: ChartResolution,
-): TickerDataResolution {
-  switch (resolution) {
-    case '1m':
-    case '2m':
-    case '5m':
-    case '10m': {
-      return 'minute';
-    }
-    case '15m':
-    case '30m':
-    case '1h':
-    case '2h':
-    case '4h': {
-      return 'quarter';
-    }
-    case 'D':
-    case 'W':
-    case 'M': {
-      return 'day';
-    }
-  }
 }

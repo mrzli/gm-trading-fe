@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Instrument } from '@gmjs/gm-trading-shared';
+import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import { rawDataToFullBarData } from './util';
@@ -14,7 +14,6 @@ import { TickerDataLayout } from '../layout';
 import { TradeContainer } from '../trade/TradeContainer';
 import {
   ChartSettings,
-  ChartResolution,
   ChartTimezone,
   ChartRange,
   BarReplayPosition,
@@ -30,7 +29,10 @@ export interface TickerDataContainerProps {
   readonly allInstruments: readonly Instrument[];
   readonly isLoadingData: boolean;
   readonly rawData: readonly string[] | undefined;
-  readonly onRequestData: (name: string, resolution: ChartResolution) => void;
+  readonly onRequestData: (
+    name: string,
+    resolution: TickerDataResolution,
+  ) => void;
 }
 
 export function TickerDataContainer({
@@ -118,7 +120,7 @@ export function TickerDataContainer({
   );
 
   const handleResolutionChange = useCallback(
-    (resolution: ChartResolution) => {
+    (resolution: TickerDataResolution) => {
       setSettings((s) => ({
         ...s,
         resolution,

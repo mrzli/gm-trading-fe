@@ -4,9 +4,9 @@ import {
   Time,
   isUTCTimestamp,
 } from 'lightweight-charts';
-import { Instrument } from '@gmjs/gm-trading-shared';
+import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { unixSecondsToDateObjectTz } from '@gmjs/date-util';
-import { ChartResolution, ChartSettings, ChartTimezone } from '../../../types';
+import { ChartSettings, ChartTimezone } from '../../../types';
 import { SessionHighlighting, SessionHighlighter } from '../plugins';
 import { tzToUtcTimestamp } from './date';
 import { dateObjectTzToWeekday, getHourMinute } from '../../../util';
@@ -33,7 +33,7 @@ export function applyPlugins(
   }
 }
 
-const HIGHLIGHTING_RESOLUTIONS: ReadonlySet<ChartResolution> = new Set([
+const HIGHLIGHTING_RESOLUTIONS: ReadonlySet<TickerDataResolution> = new Set([
   '1m',
   '2m',
   '5m',

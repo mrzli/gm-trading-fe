@@ -1,9 +1,10 @@
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
 import { UTCTimestamp } from 'lightweight-charts';
-import { GroupedBars, Bar, Bars, ChartResolution } from '../../../types';
+import { GroupedBars, Bar, Bars } from '../../../types';
 import { invariant } from '@gmjs/assert';
 import { DAY_TO_SECONDS } from '../../../../../util';
 import { resolutionToSeconds } from '../../../util';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function toBars(lines: readonly string[]): Bars {
   return lines.map((element) => toBar(element));
@@ -23,7 +24,7 @@ function toBar(line: string): Bar {
 
 export function groupDataBars(
   bars: Bars,
-  resolution: ChartResolution,
+  resolution: TickerDataResolution,
 ): GroupedBars {
   switch (resolution) {
     case '1m':
