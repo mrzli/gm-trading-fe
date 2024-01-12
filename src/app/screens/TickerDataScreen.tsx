@@ -22,8 +22,6 @@ export function TickerDataScreen(): React.ReactElement {
         source: TICKER_DATA_SOURCE,
         name,
         resolution,
-        from: undefined,
-        to: undefined
       });
     },
     [getTickerData],
