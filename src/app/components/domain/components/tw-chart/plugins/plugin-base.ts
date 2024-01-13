@@ -10,7 +10,6 @@ import {
 import { ensureDefined } from './helpers';
 
 export abstract class PluginBase implements ISeriesPrimitive<Time> {
-
   protected __name: string = 'PluginBase';
 
   private _chart: IChartApi | undefined = undefined;
@@ -18,6 +17,7 @@ export abstract class PluginBase implements ISeriesPrimitive<Time> {
 
   protected abstract dataUpdated(scope: DataChangedScope): void;
   protected requestUpdate(): void {
+    //console.log('PluginBase.requestUpdate');
     if (this._requestUpdate) {
       this._requestUpdate();
     }
@@ -51,6 +51,7 @@ export abstract class PluginBase implements ISeriesPrimitive<Time> {
   }
 
   private _fireDataUpdated(scope: DataChangedScope): void {
+    //console.log('PluginBase._fireDataUpdated');
     this.dataUpdated(scope);
   }
 }

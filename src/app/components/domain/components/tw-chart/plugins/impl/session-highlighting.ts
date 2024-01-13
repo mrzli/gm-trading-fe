@@ -5,9 +5,7 @@ import {
   ISeriesPrimitivePaneRenderer,
   ISeriesPrimitivePaneView,
   SeriesAttachedParameter,
-  SeriesDataItemTypeMap,
   SeriesPrimitivePaneViewZOrder,
-  SeriesType,
   Time,
 } from 'lightweight-charts';
 import { PluginBase } from '../plugin-base';
@@ -66,6 +64,7 @@ class SessionHighlightingPaneView implements ISeriesPrimitivePaneView {
   }
 
   public update(): void {
+    //console.log('SessionHighlightingPaneView.update');
     const timeScale = this._source.chart.timeScale();
     this._data.data = this._source.backgroundColors.map((d) => {
       return {
@@ -80,6 +79,7 @@ class SessionHighlightingPaneView implements ISeriesPrimitivePaneView {
   }
 
   public renderer(): SessionHighlightingPaneRenderer {
+    //console.log('SessionHighlightingPaneView.renderer');
     return new SessionHighlightingPaneRenderer(this._data);
   }
 
@@ -101,7 +101,6 @@ export type SessionHighlighter = (date: Time) => string;
 
 export class SessionHighlighting extends PluginBase {
   private _paneViews: SessionHighlightingPaneView[];
-  private _seriesData: SeriesDataItemTypeMap[SeriesType][] = [];
   private _backgroundColors: BackgroundData[] = [];
   private _options: Required<SessionHighlightingOptions>;
   private _highlighter: SessionHighlighter;
@@ -117,6 +116,7 @@ export class SessionHighlighting extends PluginBase {
   }
 
   public updateAllViews(): void {
+    //console.log('SessionHighlighting.updateAllViews');
     for (const pw of this._paneViews) {
       pw.update();
     }
@@ -132,6 +132,7 @@ export class SessionHighlighting extends PluginBase {
   }
 
   public override dataUpdated(_scope: DataChangedScope): void {
+    //console.log('SessionHighlighting.dataUpdated');
     // plugin base has fired a data changed event
     // TODO: only update the last value if the scope is 'update'
     this._backgroundColors = this.series.data().map((dataPoint) => {

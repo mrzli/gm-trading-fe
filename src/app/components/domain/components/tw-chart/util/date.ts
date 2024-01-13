@@ -1,9 +1,10 @@
-import { ChartTimezone } from '../../../types';
 import {
   DateObjectTz,
   dateObjectTzToUnixSeconds,
   unixSecondsToDateObjectTz,
 } from '@gmjs/date-util';
+import { Bars } from '../../../types';
+import { UTCTimestamp } from 'lightweight-charts';
 
 // tradingview lightweight-charts uses timestamps in UTC
 // this function is used to adjust timestamp so that the chart
@@ -20,10 +21,7 @@ import {
 //   - it will have a timestamp 1704110400, and time of 2024-01-01T13:00:00.000+01:00
 //   - then we (re-)set the zone to UTC, and but keep the local time (meaning hour 13)
 //   - the resulting time is 2024-01-01T13:00:00.000Z, and the timestamp is 1704114000
-export function utcToTzTimestamp(
-  timestamp: number,
-  timezone: ChartTimezone,
-): number {
+export function utcToTzTimestamp(timestamp: number, timezone: string): number {
   const dateObject = unixSecondsToDateObjectTz(timestamp, timezone);
   const adjustedDateObject: DateObjectTz = {
     ...dateObject,
@@ -33,14 +31,37 @@ export function utcToTzTimestamp(
 }
 
 // inverse of the above operation
-export function tzToUtcTimestamp(
-  timestamp: number,
-  timezone: ChartTimezone,
-): number {
+export function tzToUtcTimestamp(timestamp: number, timezone: string): number {
   const dateObject = unixSecondsToDateObjectTz(timestamp, 'UTC');
   const adjustedDateObject: DateObjectTz = {
     ...dateObject,
     timezone,
   };
   return dateObjectTzToUnixSeconds(adjustedDateObject);
+}
+
+export function utcToTzTimestampForBars(bars: Bars, timezone: string): Bars {
+  const firstBarTime = bars[0].time;
+  const firstBarChangedTime = utcToTzTimestamp(firstBarTime, timezone);
+  const timeAdjustment = firstBarChangedTime - firstBarTime;
+
+  return bars.map((bar) => {
+    return {
+      ...bar,
+      time: (bar.time + timeAdjustment) as UTCTimestamp,
+    };
+  });
+}
+
+export function tzToUtcTimestampForBars(bars: Bars, timezone: string): Bars {
+  const firstBarTime = bars[0].time;
+  const firstBarChangedTime = tzToUtcTimestamp(firstBarTime, timezone);
+  const timeAdjustment = firstBarChangedTime - firstBarTime;
+
+  return bars.map((bar) => {
+    return {
+      ...bar,
+      time: (bar.time + timeAdjustment) as UTCTimestamp,
+    };
+  });
 }

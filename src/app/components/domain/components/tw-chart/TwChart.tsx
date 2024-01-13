@@ -1,20 +1,14 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { UTCTimestamp, createChart } from 'lightweight-charts';
-import {
-  Bar,
-  Bars,
-  ChartTimezone,
-  ChartRange,
-  ChartSettings,
-} from '../../types';
+import { createChart } from 'lightweight-charts';
+import { Bar, Bars, ChartRange, ChartSettings } from '../../types';
 import { TwChartApi, TwInitInput } from './types';
 import {
   destroyChart,
   getTwInitInput,
   initChart,
-  utcToTzTimestamp,
+  utcToTzTimestampForBars,
 } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
@@ -48,10 +42,9 @@ export function TwChart({
 
   const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
 
-  const adjustedData = useMemo<Bars>(
-    () => data.map((item) => adjustBarForTimezone(item, timezone)),
-    [data, timezone],
-  );
+  const adjustedData = useMemo<Bars>(() => {
+    return utcToTzTimestampForBars(data, timezone);
+  }, [data, timezone]);
 
   const input = useMemo<TwInitInput>(
     () => getTwInitInput(precision, setCurrCrosshairItem, onLogicalRangeChange),
@@ -122,9 +115,4 @@ function getOhlcLabelElement(
       <TwOhlcLabel o={open} h={high} l={low} c={close} precision={precision} />
     </div>
   );
-}
-
-function adjustBarForTimezone(bar: Bar, timezone: ChartTimezone): Bar {
-  const adjustedTimestamp = utcToTzTimestamp(bar.time, timezone);
-  return { ...bar, time: adjustedTimestamp as UTCTimestamp };
 }
