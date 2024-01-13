@@ -125,8 +125,8 @@ function createSessionHighlightPrimitivePaneRenderer(
         return;
       }
 
-      const fromIndex = Math.floor(logicalRange.from);
-      const toIndex = Math.ceil(logicalRange.to);
+      const fromIndex = Math.max(0, Math.floor(logicalRange.from));
+      const toIndex = Math.max(0, Math.ceil(logicalRange.to));
 
       const series = primitiveContext.series();
       const visibleData: Bars = series
