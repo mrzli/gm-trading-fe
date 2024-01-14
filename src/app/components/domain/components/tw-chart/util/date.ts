@@ -41,27 +41,38 @@ export function tzToUtcTimestamp(timestamp: number, timezone: string): number {
 }
 
 export function utcToTzTimestampForBars(bars: Bars, timezone: string): Bars {
-  const firstBarTime = bars[0].time;
-  const firstBarChangedTime = utcToTzTimestamp(firstBarTime, timezone);
-  const timeAdjustment = firstBarChangedTime - firstBarTime;
+  if (timezone === 'UTC') {
+    return bars;
+  }
+
+  // to optimize, we would need to take into account the timezone offset
+  // const firstBarTime = bars[0].time;
+  // const firstBarChangedTime = utcToTzTimestamp(firstBarTime, timezone);
+  // const timeAdjustment = firstBarChangedTime - firstBarTime;
 
   return bars.map((bar) => {
     return {
       ...bar,
-      time: (bar.time + timeAdjustment) as UTCTimestamp,
+      time: utcToTzTimestamp(bar.time, timezone) as UTCTimestamp
+      //time: (bar.time + timeAdjustment) as UTCTimestamp,
     };
   });
 }
 
 export function tzToUtcTimestampForBars(bars: Bars, timezone: string): Bars {
-  const firstBarTime = bars[0].time;
-  const firstBarChangedTime = tzToUtcTimestamp(firstBarTime, timezone);
-  const timeAdjustment = firstBarChangedTime - firstBarTime;
+  if (timezone === 'UTC') {
+    return bars;
+  }
+
+  // const firstBarTime = bars[0].time;
+  // const firstBarChangedTime = tzToUtcTimestamp(firstBarTime, timezone);
+  // const timeAdjustment = firstBarChangedTime - firstBarTime;
 
   return bars.map((bar) => {
     return {
       ...bar,
-      time: (bar.time + timeAdjustment) as UTCTimestamp,
+      time: tzToUtcTimestamp(bar.time, timezone) as UTCTimestamp,
+      // time: (bar.time + timeAdjustment) as UTCTimestamp,
     };
   });
 }
