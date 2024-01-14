@@ -3,7 +3,9 @@ import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { ChartSettings } from '../../../types';
 import {
   createSeriesPrimitiveSessionHighlight,
+  createSeriesPrimitiveTradeLines,
   SessionHighlightOptions,
+  TradeLinesOptions,
 } from '../plugins';
 
 export function applyPlugins(
@@ -31,12 +33,12 @@ export function applyPlugins(
     series.attachPrimitive(sessionHighlightPrimitive);
   }
 
-  // const tradeLinesOptions: TradeLinesOptions = {
-  //   color: 'blue',
-  // };
-  // const tradeLinesPrimitive =
-  //   createSeriesPrimitiveTradeLines(tradeLinesOptions);
-  // series.attachPrimitive(tradeLinesPrimitive);
+  const tradeLinesOptions: TradeLinesOptions = {
+    color: 'blue',
+  };
+  const tradeLinesPrimitive =
+    createSeriesPrimitiveTradeLines(tradeLinesOptions);
+  series.attachPrimitive(tradeLinesPrimitive);
 }
 
 const HIGHLIGHTING_RESOLUTIONS: ReadonlySet<TickerDataResolution> = new Set([
