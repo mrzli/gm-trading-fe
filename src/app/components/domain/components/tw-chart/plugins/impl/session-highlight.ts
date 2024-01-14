@@ -117,7 +117,7 @@ function drawSessionHighlight(
   visibleData: Bars,
 ): void {
   const { context: ctx, bitmapSize, horizontalPixelRatio } = scope;
-  const { width, height } = bitmapSize;
+  const { width: bitmapWidth, height: bitmapHeight } = bitmapSize;
   const { instrument, chartTimezone, color } = options;
 
   if (visibleData.length === 0) {
@@ -145,9 +145,9 @@ function drawSessionHighlight(
     const x1Scaled = p1 * horizontalPixelRatio;
     const x2Scaled = p2 * horizontalPixelRatio;
     const x1 = Math.max(0, Math.round(x1Scaled - halfWidth));
-    const x2 = Math.min(width, Math.round(x2Scaled + halfWidth));
+    const x2 = Math.min(bitmapWidth, Math.round(x2Scaled + halfWidth));
     ctx.fillStyle = color;
-    ctx.fillRect(x1, 0, x2 - x1, height);
+    ctx.fillRect(x1, 0, x2 - x1, bitmapHeight);
   }
 }
 
