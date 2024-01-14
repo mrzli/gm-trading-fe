@@ -1,4 +1,4 @@
-import { ActiveOrder, ActiveTrade, TradeProcessState } from '../../types';
+import { ActiveOrder, ActiveTrade, TradeLogEntryFillOrder, TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
 
@@ -32,7 +32,9 @@ function processOrder(
   order: ActiveOrder,
   ordersToRemove: Set<number>,
 ): TradeProcessState {
-  const { barData, activeTrades } = state;
+  const { barData, activeTrades, tradeLog } = state;
+
+  const time = barData[index].time;
 
   const checkFillResult = checkFillOrder(state, index, order);
   const { shouldFill, fillPrice } = checkFillResult;
@@ -50,11 +52,21 @@ function processOrder(
 
   ordersToRemove.add(order.id);
 
-  // TODO add log entry
+  const logEntry: TradeLogEntryFillOrder = {
+    kind: 'fill-order',
+    time,
+    barIndex: index,
+    orderId: order.id,
+    tradeId: activeTrade.id,
+    price: fillPrice,
+    stopLoss: activeTrade.stopLoss,
+    limit: activeTrade.limit,
+  };
 
   return {
     ...state,
     activeTrades: [...activeTrades, activeTrade],
+    tradeLog: [...tradeLog, logEntry],
   };
 }
 

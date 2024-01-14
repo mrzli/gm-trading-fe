@@ -44,7 +44,6 @@ export function TradeStatusDisplay({
     inputs,
   } = dataAndInputs;
   const { resolution, timezone } = settings;
-  const { subBars } = fullData;
   const { params } = inputs;
   const { priceDecimals, spread: pointSpread, pipDigit } = params;
   const spread = pipAdjust(pointSpread, pipDigit);

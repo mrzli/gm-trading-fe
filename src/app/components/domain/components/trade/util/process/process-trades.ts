@@ -1,5 +1,10 @@
-import { invariant } from '@gmjs/assert';
-import { ActiveTrade, TradeProcessState } from '../../types';
+import { ensureNever, invariant } from '@gmjs/assert';
+import {
+  ActiveTrade,
+  TradeLogEntryLimit,
+  TradeLogEntryStopLoss,
+  TradeProcessState,
+} from '../../types';
 import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
 import { pipAdjust } from '../pip-adjust';
@@ -69,6 +74,10 @@ function processTradeInternal(
   tradesToRemove: Set<number>,
   checkLimit: CheckLimitFn,
 ): TradeProcessState {
+  const { barData, completedTrades, tradeLog } = state;
+
+  const time = barData[index].time;
+
   const limitIntersectionsResult = checkLimit(state, index, trade);
   const { intesectionType, price } = limitIntersectionsResult;
   if (intesectionType === 'none') {
@@ -76,18 +85,38 @@ function processTradeInternal(
   }
   const completedTrade = activeTradeToCompletedTrade(
     trade,
-    state.barData[index].time,
+    time,
     price,
     intesectionType,
   );
 
-  // TODO add log entry
+  let logEntry: TradeLogEntryStopLoss | TradeLogEntryLimit | undefined;
+  if (intesectionType === 'stop-loss') {
+    logEntry = {
+      kind: 'stop-loss',
+      time,
+      barIndex: index,
+      tradeId: trade.id,
+      price,
+    } as TradeLogEntryStopLoss;
+  } else if (intesectionType === 'limit') {
+    logEntry = {
+      kind: 'limit',
+      time,
+      barIndex: index,
+      tradeId: trade.id,
+      price,
+    } as TradeLogEntryLimit;
+  } else {
+    ensureNever(intesectionType);
+  }
 
   tradesToRemove.add(trade.id);
 
   return {
     ...state,
-    completedTrades: [...state.completedTrades, completedTrade],
+    completedTrades: [...completedTrades, completedTrade],
+    tradeLog: [...tradeLog, logEntry],
   };
 }
 

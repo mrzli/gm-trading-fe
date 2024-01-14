@@ -289,7 +289,9 @@ function getTabEntries(
     {
       value: 'trading-log',
       tab: 'Log',
-      content: <TradingLog />,
+      content: (
+        <TradingLog dataAndInputs={tradingDataAndInputs} state={tradingState} />
+      ),
     },
     {
       value: 'trading-results',

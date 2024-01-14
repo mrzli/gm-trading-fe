@@ -9,6 +9,11 @@ import {
   ManualTradeActionAny,
   ManualTradeActionCloseTrade,
   ManualTradeActionCancelOrder,
+  TradeLogEntryCreateOrder,
+  TradeLogEntryAmendOrder,
+  TradeLogEntryCancelOrder,
+  TradeLogEntryAmendTrade,
+  TradeLogEntryCloseTrade,
 } from '../../types';
 import { activeTradeToCompletedTrade } from './shared';
 import { getOhlc } from '../ohlc';
@@ -59,11 +64,14 @@ export function processManualTradeAction<T extends ManualTradeActionAny>(
 
 function processManualTradeActionOpen(
   state: TradeProcessState,
-  _index: number,
+  index: number,
   action: ManualTradeActionOpen,
 ): TradeProcessState {
-  const { id, time, price, amount, stopLossDistance, limitDistance } =
-    action;
+  const { barData, activeOrders, tradeLog } = state;
+
+  const { id, price, amount, stopLossDistance, limitDistance } = action;
+
+  const time = barData[index].time;
 
   const activeOrder: ActiveOrder = {
     id,
@@ -74,22 +82,34 @@ function processManualTradeActionOpen(
     limitDistance,
   };
 
-  // TODO add log entry
+  const logEntry: TradeLogEntryCreateOrder = {
+    kind: 'create-order',
+    time,
+    barIndex: index,
+    orderId: id,
+    price,
+    amount,
+    stopLossDistance,
+    limitDistance,
+  };
 
   return {
     ...state,
-    activeOrders: [...state.activeOrders, activeOrder],
+    activeOrders: [...activeOrders, activeOrder],
+    tradeLog: [...tradeLog, logEntry],
   };
 }
 
 function processManualTradeActionAmendOrder(
   state: TradeProcessState,
-  _index: number,
+  index: number,
   action: ManualTradeActionAmendOrder,
 ): TradeProcessState {
+  const { barData, activeOrders, tradeLog } = state;
+
   const { targetId, price, amount, stopLossDistance, limitDistance } = action;
 
-  const { activeOrders } = state;
+  const time = barData[index].time;
 
   const activeOrderIndex = activeOrders.findIndex(
     (item) => item.id === targetId,
@@ -114,22 +134,34 @@ function processManualTradeActionAmendOrder(
     updatedActiveOrder,
   );
 
-  // TODO add log entry
+  const logEntry: TradeLogEntryAmendOrder = {
+    kind: 'amend-order',
+    time,
+    barIndex: index,
+    orderId: targetId,
+    price,
+    amount,
+    stopLossDistance,
+    limitDistance,
+  };
 
   return {
     ...state,
     activeOrders: newActiveOrders,
+    tradeLog: [...tradeLog, logEntry],
   };
 }
 
 function processManualTradeActionCancelOrder(
   state: TradeProcessState,
-  _index: number,
+  index: number,
   action: ManualTradeActionCancelOrder,
 ): TradeProcessState {
+  const { barData, activeOrders, tradeLog } = state;
+
   const { targetId } = action;
 
-  const { activeOrders } = state;
+  const time = barData[index].time;
 
   const activeOrder = activeOrders.find((item) => item.id === targetId);
   invariant(
@@ -141,22 +173,30 @@ function processManualTradeActionCancelOrder(
     (item) => item.id !== activeOrder.id,
   );
 
-  // TODO add log entry
+  const logEntry: TradeLogEntryCancelOrder = {
+    kind: 'cancel-order',
+    time,
+    barIndex: index,
+    orderId: targetId,
+  };
 
   return {
     ...state,
     activeOrders: newActiveOrders,
+    tradeLog: [...tradeLog, logEntry],
   };
 }
 
 function processManualTradeActionAmendTrade(
   state: TradeProcessState,
-  _index: number,
+  index: number,
   action: ManualTradeActionAmendTrade,
 ): TradeProcessState {
+  const { barData, activeTrades, tradeLog } = state;
+
   const { targetId, stopLoss, limit } = action;
 
-  const { activeTrades } = state;
+  const time = barData[index].time;
 
   const activeTradeIndex = activeTrades.findIndex(
     (item) => item.id === targetId,
@@ -184,11 +224,19 @@ function processManualTradeActionAmendTrade(
     updatedActiveTrade,
   );
 
-  // TODO add log entry
+  const logEntry: TradeLogEntryAmendTrade = {
+    kind: 'amend-trade',
+    time,
+    barIndex: index,
+    tradeId: targetId,
+    stopLoss,
+    limit,
+  };
 
   return {
     ...state,
     activeTrades: newActiveTrades,
+    tradeLog: [...tradeLog, logEntry],
   };
 }
 
@@ -197,9 +245,13 @@ function processManualTradeActionCloseTrade(
   index: number,
   action: ManualTradeActionCloseTrade,
 ): TradeProcessState {
+  const { barData, tradingParams, activeTrades, completedTrades, tradeLog } =
+    state;
+
   const { targetId } = action;
 
-  const { barData, tradingParams, activeTrades, completedTrades } = state;
+  const currentBar = barData[index];
+  const time = currentBar.time;
 
   const activeTrade = activeTrades.find((item) => item.id === targetId);
   invariant(
@@ -213,9 +265,6 @@ function processManualTradeActionCloseTrade(
   const { id, amount } = activeTrade;
   const isBuy = amount > 0;
 
-  const currentBar = barData[index];
-  const time = currentBar.time;
-
   // ohlc for closing the trade, which is the opposite of the trade direction
   const ohlc = getOhlc(currentBar, !isBuy, spread);
 
@@ -226,13 +275,20 @@ function processManualTradeActionCloseTrade(
     'manual',
   );
 
-  // TODO add log entry
-
   const newActiveTrades = activeTrades.filter((item) => item.id !== id);
+
+  const logEntry: TradeLogEntryCloseTrade = {
+    kind: 'close-trade',
+    time,
+    barIndex: index,
+    tradeId: targetId,
+    price: ohlc.o,
+  };
 
   return {
     ...state,
     activeTrades: newActiveTrades,
     completedTrades: [...completedTrades, completedTrade],
+    tradeLog: [...tradeLog, logEntry],
   };
 }
