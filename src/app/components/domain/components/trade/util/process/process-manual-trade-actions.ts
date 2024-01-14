@@ -62,8 +62,16 @@ function processManualTradeActionOpen(
   _index: number,
   action: ManualTradeActionOpen,
 ): TradeProcessState {
+  const { id, time, price, amount, stopLossDistance, limitDistance } =
+    action;
+
   const activeOrder: ActiveOrder = {
-    ...action,
+    id,
+    time,
+    price,
+    amount,
+    stopLossDistance,
+    limitDistance,
   };
 
   // TODO add log entry
