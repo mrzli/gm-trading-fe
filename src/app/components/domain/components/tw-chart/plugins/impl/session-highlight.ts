@@ -1,19 +1,14 @@
-import { ensureNotUndefined } from '@gmjs/assert';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import {
   BitmapCoordinatesRenderingScope,
   CanvasRenderingTarget2D,
 } from 'fancy-canvas';
 import {
-  IChartApi,
-  ISeriesApi,
   ISeriesPrimitive,
   ISeriesPrimitivePaneRenderer,
   ISeriesPrimitivePaneView,
-  ITimeScaleApi,
   SeriesAttachedParameter,
   SeriesPrimitivePaneViewZOrder,
-  Time,
 } from 'lightweight-charts';
 import { Bars } from '../../../../types';
 import { tzToUtcTimestampForBars } from '../../util';
@@ -24,6 +19,13 @@ import {
   dateObjectTzToUnixSeconds,
   unixSecondsToDateObjectTz,
 } from '@gmjs/date-util';
+import {
+  ChartHorizontalScaleItem,
+  ChartPrimitiveContext,
+  ChartSeriesType,
+  ChartTimeScaleApi,
+} from '../types';
+import { createChartPrimitiveContext } from '../shared';
 
 export interface SessionHighlightOptions {
   readonly instrument: Instrument;
@@ -31,41 +33,11 @@ export interface SessionHighlightOptions {
   readonly color: string;
 }
 
-type HorizontalScaleItem = Time;
-type SeriesType = 'Candlestick';
-
-// type RequestUpdate = () => void;
-
-interface SessionHighlightPrimitiveContext {
-  readonly chart: () => IChartApi;
-  readonly series: () => ISeriesApi<SeriesType>;
-  readonly timeScale: () => ITimeScaleApi<HorizontalScaleItem>;
-}
-
 export function createSessionHighlightSeriesPrimitive(
   options: SessionHighlightOptions,
-): ISeriesPrimitive<HorizontalScaleItem> {
-  let _chart: IChartApi | undefined = undefined;
-  let _series: ISeriesApi<SeriesType> | undefined = undefined;
-  // let _requestUpdate: RequestUpdate | undefined = undefined;
-
-  function chart(): IChartApi {
-    return ensureNotUndefined(_chart);
-  }
-
-  function series(): ISeriesApi<SeriesType> {
-    return ensureNotUndefined(_series);
-  }
-
-  function timeScale(): ITimeScaleApi<HorizontalScaleItem> {
-    return chart().timeScale();
-  }
-
-  const primitiveContext: SessionHighlightPrimitiveContext = {
-    chart,
-    series,
-    timeScale,
-  };
+): ISeriesPrimitive<ChartHorizontalScaleItem> {
+  const [primitiveContextInitalize, primitiveContextDestroy, primitiveContext] =
+    createChartPrimitiveContext();
 
   const _paneView: ISeriesPrimitivePaneView =
     createSessionHighlightPrimitivePaneView(primitiveContext, options);
@@ -82,24 +54,20 @@ export function createSessionHighlightSeriesPrimitive(
     timeAxisPaneViews: undefined, // (): readonly ISeriesPrimitivePaneView[];
     autoscaleInfo: undefined, // (startTimePoint: Logical, endTimePoint: Logical): AutoscaleInfo | null;
     attached: (
-      p: SeriesAttachedParameter<HorizontalScaleItem, SeriesType>,
+      p: SeriesAttachedParameter<ChartHorizontalScaleItem, ChartSeriesType>,
     ): void => {
-      const { chart: c, series: s } = p;
-      _chart = c;
-      _series = s;
-      // _requestUpdate = ru;
+      const { chart, series } = p;
+      primitiveContextInitalize(chart, series);
     },
     detached: (): void => {
-      // _requestUpdate = undefined;
-      _series = undefined;
-      _chart = undefined;
+      primitiveContextDestroy();
     },
     hitTest: undefined, // (x: number, y: number): PrimitiveHoveredItem | null;
   };
 }
 
 function createSessionHighlightPrimitivePaneView(
-  primitiveContext: SessionHighlightPrimitiveContext,
+  primitiveContext: ChartPrimitiveContext,
   options: SessionHighlightOptions,
 ): ISeriesPrimitivePaneView {
   const _renderer = createSessionHighlightPrimitivePaneRenderer(
@@ -118,7 +86,7 @@ function createSessionHighlightPrimitivePaneView(
 }
 
 function createSessionHighlightPrimitivePaneRenderer(
-  primitiveContext: SessionHighlightPrimitiveContext,
+  primitiveContext: ChartPrimitiveContext,
   options: SessionHighlightOptions,
 ): ISeriesPrimitivePaneRenderer {
   return {
@@ -148,7 +116,7 @@ function createSessionHighlightPrimitivePaneRenderer(
 
 function drawSessionHighlight(
   scope: BitmapCoordinatesRenderingScope,
-  primitiveContext: SessionHighlightPrimitiveContext,
+  primitiveContext: ChartPrimitiveContext,
   options: SessionHighlightOptions,
   visibleData: Bars,
 ): void {
@@ -189,10 +157,7 @@ function drawSessionHighlight(
 
 const DEFAULT_BAR_WIDTH = 6;
 
-function getBarWidth(
-  visibleData: Bars,
-  timeScale: ITimeScaleApi<HorizontalScaleItem>,
-): number {
+function getBarWidth(visibleData: Bars, timeScale: ChartTimeScaleApi): number {
   if (visibleData.length < 2) {
     return DEFAULT_BAR_WIDTH;
   }
