@@ -1,5 +1,6 @@
 import { ChartRange } from '../../../types';
 import { ChartBar, ChartBars } from './chart-bar';
+import {  TwPluginsApi } from './plugins';
 
 export interface TwInitInput {
   readonly precision: number;
@@ -12,6 +13,7 @@ export interface TwChartApi {
   readonly setData: SetDataFn;
   readonly getTimeRange: GetTimeRangeFn;
   readonly setTimeRange: SetTimeRangeFn;
+  readonly plugins: TwPluginsApi;
 }
 
 export type SetDataFn = (data: ChartBars) => void;

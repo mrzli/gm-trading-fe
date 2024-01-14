@@ -7,13 +7,14 @@ import {
   SessionHighlightOptions,
   TradeLinesOptions,
 } from '../plugins';
+import { TradeLine, TwPluginsApi } from '../types';
 
 export function applyPlugins(
   settings: ChartSettings,
   instrument: Instrument,
   _chart: IChartApi,
   series: ISeriesApi<'Candlestick'>,
-): void {
+): TwPluginsApi {
   const { resolution, timezone, additional } = settings;
   const { highlightSession } = additional;
 
@@ -39,6 +40,12 @@ export function applyPlugins(
   const tradeLinesPrimitive =
     createSeriesPrimitiveTradeLines(tradeLinesOptions);
   series.attachPrimitive(tradeLinesPrimitive);
+
+  return {
+    setTradeLines: (tradeLines: readonly TradeLine[]): void => {
+      tradeLinesPrimitive.setTradeLines(tradeLines);
+    },
+  };
 }
 
 const HIGHLIGHTING_RESOLUTIONS: ReadonlySet<TickerDataResolution> = new Set([

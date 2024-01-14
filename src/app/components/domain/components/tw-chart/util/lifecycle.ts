@@ -55,7 +55,12 @@ export function initChart(
   const timeScale = chart.timeScale();
   timeScale.applyOptions(timeScaleOptions);
 
-  applyPlugins(settings, instrument, chart, candlestickSeries);
+  const pluginsApi = applyPlugins(
+    settings,
+    instrument,
+    chart,
+    candlestickSeries,
+  );
 
   chart.subscribeCrosshairMove((param) => {
     const item = param.seriesData.get(candlestickSeries);
@@ -83,6 +88,7 @@ export function initChart(
     setData: createSetDataFn(candlestickSeries),
     getTimeRange: createGetTimeRangeFn(timeScale),
     setTimeRange: createSetTimeRangeFn(timeScale),
+    plugins: pluginsApi,
   };
 }
 
