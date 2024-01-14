@@ -12,7 +12,13 @@ import {
   binarySearch,
 } from '../../../../../../util';
 
-export function getPrevOpenTime(currentTime: number, instrument: Instrument): number {
+export function getBarIndexPrevSessionOpen(
+  instrument: Instrument,
+  bars: Bars,
+  barIndex: number,
+): number {
+  const currentTime = bars[barIndex].time;
+
   const { timezone: instrumentTimezone, openTime } = instrument;
   const dateObject = unixSecondsToDateObjectTz(currentTime, instrumentTimezone);
   const [openHour, openMinute] = getHourMinute(openTime);
@@ -26,7 +32,9 @@ export function getPrevOpenTime(currentTime: number, instrument: Instrument): nu
     second: 0,
     millisecond: 0,
   };
-  return dateObjectTzToUnixSeconds(openDateObject);
+
+  const newTime = dateObjectTzToUnixSeconds(openDateObject);
+  return timeToBarIndex(newTime, bars);
 }
 
 function getPrevOpenTimeDayChange(
@@ -46,7 +54,13 @@ function getPrevOpenTimeDayChange(
   }
 }
 
-export function getNextOpenTime(currentTime: number, instrument: Instrument): number {
+export function getBarIndexNextSessionOpen(
+  instrument: Instrument,
+  bars: Bars,
+  barIndex: number,
+): number {
+  const currentTime = bars[barIndex].time;
+
   const { timezone: instrumentTimezone, openTime } = instrument;
   const dateObject = unixSecondsToDateObjectTz(currentTime, instrumentTimezone);
   const [openHour, openMinute] = getHourMinute(openTime);
@@ -60,7 +74,8 @@ export function getNextOpenTime(currentTime: number, instrument: Instrument): nu
     second: 0,
     millisecond: 0,
   };
-  return dateObjectTzToUnixSeconds(openDateObject);
+  const newTime = dateObjectTzToUnixSeconds(openDateObject);
+  return timeToBarIndex(newTime, bars);
 }
 
 function getNextOpenTimeDayChange(
@@ -80,17 +95,6 @@ function getNextOpenTimeDayChange(
   }
 }
 
-export function getSessionOpenBarIndex(
-  bars: Bars,
-  time: number | undefined,
-): number | undefined {
-  if (time === undefined) {
-    return undefined;
-  }
-
-  if (bars.length === 0) {
-    return undefined;
-  }
-
+function timeToBarIndex(time: number, bars: Bars): number {
   return binarySearch(bars, time, (item) => item.time);
 }

@@ -2,11 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { BarReplayPosition, Bars } from '../../../../../types';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { Button } from '../../../../../../shared';
-import {
-  getNextOpenTime,
-  getPrevOpenTime,
-  getSessionOpenBarIndex,
-} from './util';
+import { getBarIndexNextSessionOpen, getBarIndexPrevSessionOpen } from './util';
 
 export interface BarReplayNavigateSessionProps {
   readonly instrument: Instrument;
@@ -23,32 +19,24 @@ export function BarReplayNavigateSession({
 }: BarReplayNavigateSessionProps): React.ReactElement {
   const { barIndex } = replayPosition;
 
-  const prevSessionClickEnabled = useMemo(() => {
-    return barIndex !== undefined && barIndex > 0;
-  }, [barIndex]);
-
   const prevSessionOpenBarIndex = useMemo(() => {
-    const prevSessionOpenTime =
-      barIndex === undefined
-        ? undefined
-        : getPrevOpenTime(bars[barIndex].time, instrument);
-    return getSessionOpenBarIndex(bars, prevSessionOpenTime);
+    if (barIndex === undefined || barIndex === 0) {
+      return undefined;
+    }
+
+    return getBarIndexPrevSessionOpen(instrument, bars, barIndex);
   }, [barIndex, bars, instrument]);
 
-  const nextSessionClickEnabled = useMemo(() => {
-    return barIndex !== undefined && barIndex < bars.length - 1;
-  }, [barIndex, bars.length]);
-
   const nextSessionOpenBarIndex = useMemo(() => {
-    const nextSessionOpenTime =
-      barIndex === undefined
-        ? undefined
-        : getNextOpenTime(bars[barIndex].time, instrument);
-    return getSessionOpenBarIndex(bars, nextSessionOpenTime);
+    if (barIndex === undefined || barIndex >= bars.length - 1) {
+      return undefined;
+    }
+
+    return getBarIndexNextSessionOpen(instrument, bars, barIndex);
   }, [barIndex, bars, instrument]);
 
   const handlePreviousOpenClick = useCallback(() => {
-    if (!prevSessionClickEnabled) {
+    if (prevSessionOpenBarIndex === undefined) {
       return;
     }
 
@@ -56,10 +44,10 @@ export function BarReplayNavigateSession({
       barIndex: prevSessionOpenBarIndex,
       subBarIndex: 0,
     });
-  }, [onReplayPositionChange, prevSessionClickEnabled, prevSessionOpenBarIndex]);
+  }, [onReplayPositionChange, prevSessionOpenBarIndex]);
 
   const handleNextOpenClick = useCallback(() => {
-    if (!nextSessionClickEnabled) {
+    if (nextSessionOpenBarIndex === undefined) {
       return;
     }
 
@@ -67,19 +55,19 @@ export function BarReplayNavigateSession({
       barIndex: nextSessionOpenBarIndex,
       subBarIndex: 0,
     });
-  }, [nextSessionClickEnabled, nextSessionOpenBarIndex, onReplayPositionChange]);
+  }, [nextSessionOpenBarIndex, onReplayPositionChange]);
 
   return (
     <div className='grid grid-cols-2 gap-0.5'>
       <Button
         content={'<PO'}
         onClick={handlePreviousOpenClick}
-        disabled={!prevSessionClickEnabled}
+        disabled={prevSessionOpenBarIndex === undefined}
       />
       <Button
         content={'NO>'}
         onClick={handleNextOpenClick}
-        disabled={!nextSessionClickEnabled}
+        disabled={nextSessionOpenBarIndex === undefined}
       />
     </div>
   );
