@@ -129,14 +129,22 @@ function getDisplayItems(
 
   const { id, openTime, openPrice, amount, stopLoss, limit } = item;
 
-  const stopLossDistance =
+  const isBuy = amount > 0;
+
+  const stopLossOffset =
     stopLoss === undefined
       ? undefined
-      : pipAdjustInverse(Math.abs(openPrice - stopLoss), pipDigit);
-  const limitDistance =
+      : pipAdjustInverse(
+          isBuy ? stopLoss - openPrice : openPrice - stopLoss,
+          pipDigit,
+        );
+  const limitOffset =
     limit === undefined
       ? undefined
-      : pipAdjustInverse(Math.abs(openPrice - limit), pipDigit);
+      : pipAdjustInverse(
+          isBuy ? limit - openPrice : openPrice - limit,
+          pipDigit,
+        );
 
   return [
     {
@@ -184,7 +192,7 @@ function getDisplayItems(
     {
       kind: 'string',
       label: 'Direction',
-      value: amount > 0 ? 'Buy' : 'Sell',
+      value: isBuy ? 'Buy' : 'Sell',
     },
     {
       kind: 'none',
@@ -209,15 +217,15 @@ function getDisplayItems(
     {
       kind: 'decimal',
       colSpan: 2,
-      label: 'Stop-Loss Distance',
-      value: stopLossDistance,
+      label: 'Stop-Loss Offset',
+      value: stopLossOffset,
       precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',
       colSpan: 2,
-      label: 'Limit Distance',
-      value: limitDistance,
+      label: 'Limit Offset',
+      value: limitOffset,
       precision: PRECISION_POINT,
     },
   ];
