@@ -23,6 +23,10 @@ export function BarReplayNavigateSession({
 }: BarReplayNavigateSessionProps): React.ReactElement {
   const { barIndex } = replayPosition;
 
+  const prevSessionClickEnabled = useMemo(() => {
+    return barIndex !== undefined && barIndex > 0;
+  }, [barIndex]);
+
   const prevSessionOpenBarIndex = useMemo(() => {
     const prevSessionOpenTime =
       barIndex === undefined
@@ -30,6 +34,10 @@ export function BarReplayNavigateSession({
         : getPrevOpenTime(bars[barIndex].time, instrument);
     return getSessionOpenBarIndex(bars, prevSessionOpenTime);
   }, [barIndex, bars, instrument]);
+
+  const nextSessionClickEnabled = useMemo(() => {
+    return barIndex !== undefined && barIndex < bars.length - 1;
+  }, [barIndex, bars.length]);
 
   const nextSessionOpenBarIndex = useMemo(() => {
     const nextSessionOpenTime =
@@ -40,7 +48,7 @@ export function BarReplayNavigateSession({
   }, [barIndex, bars, instrument]);
 
   const handlePreviousOpenClick = useCallback(() => {
-    if (prevSessionOpenBarIndex === undefined) {
+    if (!prevSessionClickEnabled) {
       return;
     }
 
@@ -48,10 +56,10 @@ export function BarReplayNavigateSession({
       barIndex: prevSessionOpenBarIndex,
       subBarIndex: 0,
     });
-  }, [onReplayPositionChange, prevSessionOpenBarIndex]);
+  }, [onReplayPositionChange, prevSessionClickEnabled, prevSessionOpenBarIndex]);
 
   const handleNextOpenClick = useCallback(() => {
-    if (nextSessionOpenBarIndex === undefined) {
+    if (!nextSessionClickEnabled) {
       return;
     }
 
@@ -59,19 +67,19 @@ export function BarReplayNavigateSession({
       barIndex: nextSessionOpenBarIndex,
       subBarIndex: 0,
     });
-  }, [nextSessionOpenBarIndex, onReplayPositionChange]);
+  }, [nextSessionClickEnabled, nextSessionOpenBarIndex, onReplayPositionChange]);
 
   return (
     <div className='grid grid-cols-2 gap-0.5'>
       <Button
         content={'<PO'}
         onClick={handlePreviousOpenClick}
-        disabled={prevSessionOpenBarIndex === undefined}
+        disabled={!prevSessionClickEnabled}
       />
       <Button
         content={'NO>'}
         onClick={handleNextOpenClick}
-        disabled={nextSessionOpenBarIndex === undefined}
+        disabled={!nextSessionClickEnabled}
       />
     </div>
   );

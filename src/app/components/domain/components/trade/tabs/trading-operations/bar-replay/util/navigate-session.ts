@@ -88,7 +88,7 @@ export function getSessionOpenBarIndex(
     return undefined;
   }
 
-  if (bars.length === 0 || time < bars[0].time || time > bars.at(-1)!.time) {
+  if (bars.length === 0) {
     return undefined;
   }
 
