@@ -15,10 +15,15 @@ import {
   SeriesPrimitivePaneViewZOrder,
   Time,
 } from 'lightweight-charts';
-import { Bar, Bars } from '../../../../types';
+import { Bars } from '../../../../types';
 import { tzToUtcTimestampForBars } from '../../util';
 import { dateObjectTzToWeekday, getHourMinute } from '../../../../util';
-import { unixSecondsToDateObjectTz } from '@gmjs/date-util';
+import {
+  DateObjectTz,
+  dateObjectTzAdd,
+  dateObjectTzToUnixSeconds,
+  unixSecondsToDateObjectTz,
+} from '@gmjs/date-util';
 
 export interface SessionHighlightOptions {
   readonly instrument: Instrument;
@@ -164,7 +169,7 @@ function drawSessionHighlight(
   //   previous adjustment is done to visually have corrent timezone data in chart
   const timeCorrectedData = tzToUtcTimestampForBars(visibleData, chartTimezone);
 
-  const sessionRanges = getSessionRanges(timeCorrectedData, instrument);
+  const sessionRanges = getSessionIndexRanges(timeCorrectedData, instrument);
 
   for (const [i1, i2] of sessionRanges) {
     const p1 = timeScale.timeToCoordinate(visibleData[i1].time);
@@ -201,56 +206,111 @@ function getBarWidth(
   return secondBarX - firstBarX;
 }
 
-function getSessionRanges(
-  timeCorrectedData: Bars,
+function getSessionIndexRanges(
+  bars: Bars,
   instrument: Instrument,
 ): readonly (readonly [number, number])[] {
-  const { timezone: instrumentTimezone, openTime, closeTime } = instrument;
-  const [openHour, openMinute] = getHourMinute(openTime);
-  const [closeHour, closeMinute] = getHourMinute(closeTime);
-  const openMinuteOfDay = openHour * 60 + openMinute;
-  const closeMinuteOfDay = closeHour * 60 + closeMinute;
+  const timeRanges = getSessionTimeRanges(bars, instrument);
+  if (timeRanges.length === 0) {
+    return [];
+  }
 
-  const sessionBars = timeCorrectedData.map((bar) =>
-    isInSession(bar, instrumentTimezone, openMinuteOfDay, closeMinuteOfDay),
-  );
-
-  let start: number | undefined = undefined;
   const ranges: (readonly [number, number])[] = [];
 
-  for (const [i, isInSession] of sessionBars.entries()) {
-    if (isInSession && start === undefined) {
-      start = i; // start of a new range
-    } else if (!isInSession && start !== undefined) {
-      ranges.push([start, i - 1]);
-      start = undefined; // end of the current range
+  let barIndex = 0;
+  let rangeIndex = 0;
+  let start: number | undefined = undefined;
+
+  while (rangeIndex < timeRanges.length && barIndex < bars.length) {
+    const time = bars[barIndex].time as number;
+    const [from, to] = timeRanges[rangeIndex];
+
+    if (time < from) {
+      barIndex++;
+    } else if (time >= from && time < to) {
+      if (start === undefined) {
+        start = barIndex;
+      }
+      barIndex++;
+    } else if (time >= to) {
+      if (start !== undefined) {
+        ranges.push([start, barIndex - 1]);
+        start = undefined;
+      }
+      rangeIndex++;
     }
   }
 
-  // if last element is part of range
   if (start !== undefined) {
-    ranges.push([start, sessionBars.length - 1]);
+    ranges.push([start, bars.length - 1]);
+    start = undefined;
   }
 
   return ranges;
 }
 
-function isInSession(
-  bar: Bar,
-  instrumentTimezone: string,
-  openMinuteOfDay: number,
-  closeMinuteOfDay: number,
-): boolean {
-  const time = bar.time as number;
-  const dateObject = unixSecondsToDateObjectTz(time, instrumentTimezone);
-  const weekday = dateObjectTzToWeekday(dateObject);
-  if (weekday > 5) {
-    return false;
+function getSessionTimeRanges(
+  bars: Bars,
+  instrument: Instrument,
+): readonly (readonly [number, number])[] {
+  const { timezone: instrumentTimezone, openTime, closeTime } = instrument;
+  const [openHour, openMinute] = getHourMinute(openTime);
+  const [closeHour, closeMinute] = getHourMinute(closeTime);
+
+  const firstTime = bars[0].time;
+  const lastTime = bars.at(-1)!.time;
+
+  const sessionRanges: (readonly [number, number])[] = [];
+
+  let instrumentDay: DateObjectTz = {
+    ...unixSecondsToDateObjectTz(firstTime, instrumentTimezone),
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  };
+  let weekday = dateObjectTzToWeekday(instrumentDay);
+  while (dateObjectTzToUnixSeconds(instrumentDay) <= lastTime) {
+    if (weekday <= 5) {
+      const sessionRange = getSessionRangeForDay(
+        instrumentDay,
+        openHour,
+        openMinute,
+        closeHour,
+        closeMinute,
+      );
+      sessionRanges.push(sessionRange);
+    }
+    const dayIncrement = weekday >= 5 ? 8 - weekday : 1;
+    instrumentDay = dateObjectTzAdd(instrumentDay, { days: dayIncrement });
+    weekday = ((weekday + dayIncrement - 1) % 7) + 1;
   }
 
-  const { hour, minute } = dateObject;
+  return sessionRanges;
+}
 
-  const minuteOfDay = hour * 60 + minute;
+function getSessionRangeForDay(
+  instrumentDay: DateObjectTz,
+  openHour: number,
+  openMinute: number,
+  closeHour: number,
+  closeMinute: number,
+): readonly [number, number] {
+  const from = dateObjectTzToUnixSeconds({
+    ...instrumentDay,
+    hour: openHour,
+    minute: openMinute,
+    second: 0,
+    millisecond: 0,
+  });
 
-  return minuteOfDay >= openMinuteOfDay && minuteOfDay < closeMinuteOfDay;
+  const to = dateObjectTzToUnixSeconds({
+    ...instrumentDay,
+    hour: closeHour,
+    minute: closeMinute,
+    second: 0,
+    millisecond: 0,
+  });
+
+  return [from, to];
 }
