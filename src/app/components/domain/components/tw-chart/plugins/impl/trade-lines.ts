@@ -19,31 +19,25 @@ import {
   createChartPrimitiveContext,
   getVisibleBarIndexRange,
 } from '../shared';
-import { ChartBars } from '../../types';
+import { ChartBars, TradeLine } from '../../types';
 
 export interface TradeLinesOptions {
   readonly color: string;
 }
 
-export type TradeLineType = 'solid' | 'dashed';
-
-export interface TradeLine {
-  readonly startIndex: number;
-  readonly endIndex: number;
-  readonly price: number;
-  readonly type: TradeLineType;
+export interface SeriesPrimitiveTradeLine
+  extends ISeriesPrimitive<ChartHorizontalScaleItem> {
+  readonly setTradeLines: (tradeLines: readonly TradeLine[]) => void;
 }
 
 export function createSeriesPrimitiveTradeLines(
   options: TradeLinesOptions,
-): ISeriesPrimitive<ChartHorizontalScaleItem> {
+): SeriesPrimitiveTradeLine {
   const [primitiveContextInitalize, primitiveContextDestroy, primitiveContext] =
     createChartPrimitiveContext();
 
-  const _paneView: ISeriesPrimitivePaneView = createPrimitivePaneViewTradeLines(
-    primitiveContext,
-    options,
-  );
+  const _paneView: SeriesPrimitivePaneViewTradeLines =
+    createPrimitivePaneViewTradeLines(primitiveContext, options);
   const _paneViews: readonly ISeriesPrimitivePaneView[] = [_paneView];
 
   return {
@@ -59,14 +53,22 @@ export function createSeriesPrimitiveTradeLines(
     detached: (): void => {
       primitiveContextDestroy();
     },
+    setTradeLines: (tradeLines: readonly TradeLine[]): void => {
+      _paneView.setTradeLines(tradeLines);
+      primitiveContext.requestUpdate();
+    },
   };
+}
+
+interface SeriesPrimitivePaneViewTradeLines extends ISeriesPrimitivePaneView {
+  readonly setTradeLines: (tradeLines: readonly TradeLine[]) => void;
 }
 
 function createPrimitivePaneViewTradeLines(
   primitiveContext: ChartPrimitiveContext,
   options: TradeLinesOptions,
-): ISeriesPrimitivePaneView {
-  const _renderer: ISeriesPrimitivePaneRenderer =
+): SeriesPrimitivePaneViewTradeLines {
+  const _renderer: SeriesPrimitivePaneRendererTradeLines =
     createPrimitivePaneRendererTradeLines(primitiveContext, options);
 
   return {
@@ -76,30 +78,24 @@ function createPrimitivePaneViewTradeLines(
     zOrder: (): SeriesPrimitivePaneViewZOrder => {
       return 'top';
     },
+    setTradeLines: (tradeLines: readonly TradeLine[]): void => {
+      _renderer.setTradeLines(tradeLines);
+    },
   };
+}
+
+interface SeriesPrimitivePaneRendererTradeLines extends ISeriesPrimitivePaneRenderer {
+  readonly setTradeLines: (tradeLines: readonly TradeLine[]) => void;
 }
 
 function createPrimitivePaneRendererTradeLines(
   primitiveContext: ChartPrimitiveContext,
   options: TradeLinesOptions,
-): ISeriesPrimitivePaneRenderer {
+): SeriesPrimitivePaneRendererTradeLines {
+  let _tradeLines: readonly TradeLine[] = [];
+
   return {
     draw: (target: CanvasRenderingTarget2D): void => {
-      const tradeLines: readonly TradeLine[] = [
-        {
-          startIndex: 5,
-          endIndex: 15,
-          price: 34_280,
-          type: 'solid',
-        },
-        {
-          startIndex: 5,
-          endIndex: 15,
-          price: 34_300,
-          type: 'dashed',
-        },
-      ];
-
       const range = getVisibleBarIndexRange(primitiveContext.timeScale());
       if (!range) {
         return;
@@ -114,10 +110,13 @@ function createPrimitivePaneRendererTradeLines(
           options,
           data,
           range,
-          tradeLines,
+          _tradeLines,
         );
       });
     },
+    setTradeLines: (tradeLines: readonly TradeLine[]): void => {
+      _tradeLines = tradeLines;
+    }
   };
 }
 
@@ -149,6 +148,8 @@ function drawTradeLines(
   const dashedLinePattern = DASHED_LINE_PATTERN.map(
     (v) => v * verticalPixelRatio,
   );
+
+  console.log('drawTradeLines');
 
   // ctx.save();
   for (const tradeLine of tradeLines) {
