@@ -12,10 +12,63 @@ import {
   binarySearch,
 } from '../../../../../../util';
 
+type ChangeDirection = 'prev' | 'next';
+
+type DayChangeFunction = (
+  dateObject: DateObjectTz,
+  openHour: number,
+  openMinute: number,
+) => number;
+
 export function getBarIndexPrevSessionOpen(
   instrument: Instrument,
   bars: Bars,
   barIndex: number,
+): number {
+  return getBarIndexSessionOpenIterate(instrument, bars, barIndex, 'prev');
+}
+
+export function getBarIndexNextSessionOpen(
+  instrument: Instrument,
+  bars: Bars,
+  barIndex: number,
+): number {
+  return getBarIndexSessionOpenIterate(instrument, bars, barIndex, 'next');
+}
+
+function getBarIndexSessionOpenIterate(
+  instrument: Instrument,
+  bars: Bars,
+  barIndex: number,
+  direction: ChangeDirection,
+): number {
+  let currentIndex = barIndex;
+
+  const dayChangeFunction: DayChangeFunction =
+    direction === 'prev' ? getPrevOpenTimeDayChange : getNextOpenTimeDayChange;
+
+  while (currentIndex > 0 && currentIndex < bars.length - 1) {
+    const nextIndex = getBarIndexSessionOpenSingleIteration(
+      instrument,
+      bars,
+      currentIndex,
+      dayChangeFunction,
+    );
+    if (nextIndex === currentIndex) {
+      currentIndex += direction === 'prev' ? -1 : 1;
+    } else {
+      return nextIndex;
+    }
+  }
+
+  return currentIndex;
+}
+
+function getBarIndexSessionOpenSingleIteration(
+  instrument: Instrument,
+  bars: Bars,
+  barIndex: number,
+  dayChangeFunction: DayChangeFunction,
 ): number {
   const currentTime = bars[barIndex].time;
 
@@ -23,7 +76,7 @@ export function getBarIndexPrevSessionOpen(
   const dateObject = unixSecondsToDateObjectTz(currentTime, instrumentTimezone);
   const [openHour, openMinute] = getHourMinute(openTime);
 
-  const dayChange = getPrevOpenTimeDayChange(dateObject, openHour, openMinute);
+  const dayChange = dayChangeFunction(dateObject, openHour, openMinute);
   const openDay = dateObjectTzAdd(dateObject, { days: dayChange });
   const openDateObject: DateObjectTz = {
     ...openDay,
@@ -32,7 +85,6 @@ export function getBarIndexPrevSessionOpen(
     second: 0,
     millisecond: 0,
   };
-
   const newTime = dateObjectTzToUnixSeconds(openDateObject);
   return timeToBarIndex(newTime, bars);
 }
@@ -52,30 +104,6 @@ function getPrevOpenTimeDayChange(
   } else {
     return 0;
   }
-}
-
-export function getBarIndexNextSessionOpen(
-  instrument: Instrument,
-  bars: Bars,
-  barIndex: number,
-): number {
-  const currentTime = bars[barIndex].time;
-
-  const { timezone: instrumentTimezone, openTime } = instrument;
-  const dateObject = unixSecondsToDateObjectTz(currentTime, instrumentTimezone);
-  const [openHour, openMinute] = getHourMinute(openTime);
-
-  const dayChange = getNextOpenTimeDayChange(dateObject, openHour, openMinute);
-  const openDay = dateObjectTzAdd(dateObject, { days: dayChange });
-  const openDateObject: DateObjectTz = {
-    ...openDay,
-    hour: openHour,
-    minute: openMinute,
-    second: 0,
-    millisecond: 0,
-  };
-  const newTime = dateObjectTzToUnixSeconds(openDateObject);
-  return timeToBarIndex(newTime, bars);
 }
 
 function getNextOpenTimeDayChange(
