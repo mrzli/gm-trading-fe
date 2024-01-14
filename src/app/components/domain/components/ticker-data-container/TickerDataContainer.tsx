@@ -222,20 +222,21 @@ export function TickerDataContainer({
     </>
   );
 
-  const right = (
-    <SideToolbar
-      position={'right'}
-      entries={getToolbarEntries(
-        settings,
-        instrument,
-        fullData,
-        replayPosition,
-        handleReplayPositionChange,
-      )}
-      value={rightToolbarState}
-      onValueChange={handleRightToolbarStateChange}
-    />
-  );
+  const right =
+    !isLoadingData && rawData && rawData.length > 0 ? (
+      <SideToolbar
+        position={'right'}
+        entries={getToolbarEntries(
+          settings,
+          instrument,
+          fullData,
+          replayPosition,
+          handleReplayPositionChange,
+        )}
+        value={rightToolbarState}
+        onValueChange={handleRightToolbarStateChange}
+      />
+    ) : undefined;
 
   return <TickerDataLayout main={dataChartElement} top={top} right={right} />;
 }
