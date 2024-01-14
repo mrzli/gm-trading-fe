@@ -1,5 +1,4 @@
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
-import { UTCTimestamp } from 'lightweight-charts';
 import { GroupedBars, Bar, Bars } from '../../../types';
 import { invariant } from '@gmjs/assert';
 import { DAY_TO_SECONDS } from '../../../../../util';
@@ -14,7 +13,7 @@ function toBar(line: string): Bar {
   const [timestamp, _date, open, high, low, close] = line.split(',');
 
   return {
-    time: parseIntegerOrThrow(timestamp) as UTCTimestamp,
+    time: parseIntegerOrThrow(timestamp),
     open: parseFloatOrThrow(open),
     high: parseFloatOrThrow(high),
     low: parseFloatOrThrow(low),
@@ -128,7 +127,7 @@ function getMonthTimeBucketIndex(time: number): number {
 }
 
 export function aggregateBars(input: Iterable<Bar>): Bar {
-  let time: UTCTimestamp | undefined;
+  let time: number | undefined;
   let open: number | undefined;
   let high: number | undefined;
   let low: number | undefined;

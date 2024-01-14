@@ -1,7 +1,6 @@
-import { UTCTimestamp } from 'lightweight-charts';
-import { resolutionToSeconds } from '.';
-import { Bar } from '../types';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { resolutionToSeconds } from './resolution';
+import { Bar } from '../types';
 
 export function createAfterLastBar(
   lastBar: Bar,
@@ -11,7 +10,7 @@ export function createAfterLastBar(
   const newOpen = lastBar.close;
 
   return {
-    time: newTime as UTCTimestamp,
+    time: newTime,
     open: newOpen,
     high: newOpen,
     low: newOpen,

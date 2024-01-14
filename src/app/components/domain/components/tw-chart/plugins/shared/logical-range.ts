@@ -1,10 +1,10 @@
 import { Range } from 'lightweight-charts';
-import { Bars } from '../../../../types';
 import { ChartSeriesApi, ChartTimeScaleApi } from '../types';
+import { ChartBars } from '../../types';
 
-export function getVisibleData(series: ChartSeriesApi, range: Range<number>): Bars {
+export function getVisibleData(series: ChartSeriesApi, range: Range<number>): ChartBars {
   const { from, to } = range;
-  return series.data().slice(from, to + 1) as Bars;
+  return series.data().slice(from, to + 1) as unknown as ChartBars;
 }
 
 export function getVisibleBarIndexRange(

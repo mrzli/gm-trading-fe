@@ -10,8 +10,6 @@ import {
   SeriesAttachedParameter,
   SeriesPrimitivePaneViewZOrder,
 } from 'lightweight-charts';
-import { Bars } from '../../../../types';
-import { tzToUtcTimestampForBars } from '../../util';
 import { dateObjectTzToWeekday, getHourMinute } from '../../../../util';
 import {
   DateObjectTz,
@@ -30,6 +28,7 @@ import {
   getVisibleBarIndexRange,
   getVisibleData,
 } from '../shared';
+import { ChartBars } from '../../types';
 
 export interface SessionHighlightOptions {
   readonly instrument: Instrument;
@@ -114,11 +113,11 @@ function drawSessionHighlight(
   scope: BitmapCoordinatesRenderingScope,
   primitiveContext: ChartPrimitiveContext,
   options: SessionHighlightOptions,
-  visibleData: Bars,
+  visibleData: ChartBars,
 ): void {
   const { context: ctx, bitmapSize, horizontalPixelRatio } = scope;
   const { width: bitmapWidth, height: bitmapHeight } = bitmapSize;
-  const { instrument, chartTimezone, color } = options;
+  const { instrument, color } = options;
 
   if (visibleData.length === 0) {
     return;
@@ -129,11 +128,7 @@ function drawSessionHighlight(
   const barWidth = getBarWidth(visibleData, timeScale);
   const halfWidth = (horizontalPixelRatio * barWidth) / 2;
 
-  // unadjust time to correct for previous adjustment
-  //   previous adjustment is done to visually have corrent timezone data in chart
-  const timeCorrectedData = tzToUtcTimestampForBars(visibleData, chartTimezone);
-
-  const sessionRanges = getSessionIndexRanges(timeCorrectedData, instrument);
+  const sessionRanges = getSessionIndexRanges(visibleData, instrument);
 
   for (const [i1, i2] of sessionRanges) {
     const p1 = timeScale.timeToCoordinate(visibleData[i1].time);
@@ -152,7 +147,7 @@ function drawSessionHighlight(
 }
 
 function getSessionIndexRanges(
-  bars: Bars,
+  bars: ChartBars,
   instrument: Instrument,
 ): readonly (readonly [number, number])[] {
   const timeRanges = getSessionTimeRanges(bars, instrument);
@@ -167,7 +162,7 @@ function getSessionIndexRanges(
   let start: number | undefined = undefined;
 
   while (rangeIndex < timeRanges.length && barIndex < bars.length) {
-    const time = bars[barIndex].time as number;
+    const time = bars[barIndex].customValues.realTime;
     const [from, to] = timeRanges[rangeIndex];
 
     if (time < from) {
@@ -195,7 +190,7 @@ function getSessionIndexRanges(
 }
 
 function getSessionTimeRanges(
-  bars: Bars,
+  bars: ChartBars,
   instrument: Instrument,
 ): readonly (readonly [number, number])[] {
   const { timezone: instrumentTimezone, openTime, closeTime } = instrument;

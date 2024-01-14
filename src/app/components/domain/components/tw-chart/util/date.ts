@@ -3,8 +3,6 @@ import {
   dateObjectTzToUnixSeconds,
   unixSecondsToDateObjectTz,
 } from '@gmjs/date-util';
-import { Bars } from '../../../types';
-import { UTCTimestamp } from 'lightweight-charts';
 
 // tradingview lightweight-charts uses timestamps in UTC
 // this function is used to adjust timestamp so that the chart
@@ -31,48 +29,11 @@ export function utcToTzTimestamp(timestamp: number, timezone: string): number {
 }
 
 // inverse of the above operation
-export function tzToUtcTimestamp(timestamp: number, timezone: string): number {
-  const dateObject = unixSecondsToDateObjectTz(timestamp, 'UTC');
-  const adjustedDateObject: DateObjectTz = {
-    ...dateObject,
-    timezone,
-  };
-  return dateObjectTzToUnixSeconds(adjustedDateObject);
-}
-
-export function utcToTzTimestampForBars(bars: Bars, timezone: string): Bars {
-  if (timezone === 'UTC') {
-    return bars;
-  }
-
-  // to optimize, we would need to take into account the timezone offset
-  // const firstBarTime = bars[0].time;
-  // const firstBarChangedTime = utcToTzTimestamp(firstBarTime, timezone);
-  // const timeAdjustment = firstBarChangedTime - firstBarTime;
-
-  return bars.map((bar) => {
-    return {
-      ...bar,
-      time: utcToTzTimestamp(bar.time, timezone) as UTCTimestamp
-      //time: (bar.time + timeAdjustment) as UTCTimestamp,
-    };
-  });
-}
-
-export function tzToUtcTimestampForBars(bars: Bars, timezone: string): Bars {
-  if (timezone === 'UTC') {
-    return bars;
-  }
-
-  // const firstBarTime = bars[0].time;
-  // const firstBarChangedTime = tzToUtcTimestamp(firstBarTime, timezone);
-  // const timeAdjustment = firstBarChangedTime - firstBarTime;
-
-  return bars.map((bar) => {
-    return {
-      ...bar,
-      time: tzToUtcTimestamp(bar.time, timezone) as UTCTimestamp,
-      // time: (bar.time + timeAdjustment) as UTCTimestamp,
-    };
-  });
-}
+// function tzToUtcTimestamp(timestamp: number, timezone: string): number {
+//   const dateObject = unixSecondsToDateObjectTz(timestamp, 'UTC');
+//   const adjustedDateObject: DateObjectTz = {
+//     ...dateObject,
+//     timezone,
+//   };
+//   return dateObjectTzToUnixSeconds(adjustedDateObject);
+// }

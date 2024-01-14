@@ -1,5 +1,5 @@
 import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
-import { ChartRange, Bar, Bars, ChartSettings } from '../../../types';
+import { ChartRange, ChartSettings } from '../../../types';
 import {
   CrosshairMoveFn,
   TwInitInput,
@@ -8,6 +8,8 @@ import {
   SetTimeRangeFn,
   SetDataFn,
   GetTimeRangeFn,
+  ChartBar,
+  ChartBars,
 } from '../types';
 import {
   getChartOptions,
@@ -19,7 +21,7 @@ import { Instrument } from '@gmjs/gm-trading-shared';
 
 export function getTwInitInput(
   precision: number,
-  // data: Bars,
+  // data: ChartBars,
   onCrosshairMove: CrosshairMoveFn,
   onChartTimeRangeChange: ChartTimeRangeChangeFn,
 ): TwInitInput {
@@ -62,7 +64,7 @@ export function initChart(
       return;
     }
 
-    onCrosshairMove(item as Bar);
+    onCrosshairMove(item as ChartBar);
   });
 
   timeScale.subscribeVisibleLogicalRangeChange((param) => {
@@ -87,8 +89,8 @@ export function initChart(
 function createSetDataFn(
   candlestickSeries: ISeriesApi<'Candlestick'>,
 ): SetDataFn {
-  return (data: Bars) => {
-    candlestickSeries.setData(data as Bar[]);
+  return (data: ChartBars) => {
+    candlestickSeries.setData(data as ChartBar[]);
   };
 }
 

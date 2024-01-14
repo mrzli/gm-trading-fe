@@ -2,17 +2,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
-import { Bar, Bars, ChartRange, ChartSettings } from '../../types';
-import { TwChartApi, TwInitInput } from './types';
-import {
-  destroyChart,
-  getTwInitInput,
-  initChart,
-  utcToTzTimestampForBars,
-} from './util';
+import { Instrument } from '@gmjs/gm-trading-shared';
+import { Bars, ChartRange, ChartSettings } from '../../types';
+import { ChartBar, ChartBars, TwChartApi, TwInitInput } from './types';
+import { destroyChart, getChartBars, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
-import { Instrument } from '@gmjs/gm-trading-shared';
 
 export interface TwChartProps {
   readonly settings: ChartSettings;
@@ -36,14 +31,14 @@ export function TwChart({
 
   const chartElementRef = useRef<HTMLDivElement>(null);
 
-  const [currCrosshairItem, setCurrCrosshairItem] = useState<Bar | undefined>(
-    undefined,
-  );
+  const [currCrosshairItem, setCurrCrosshairItem] = useState<
+    ChartBar | undefined
+  >(undefined);
 
   const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
 
-  const adjustedData = useMemo<Bars>(() => {
-    return utcToTzTimestampForBars(data, timezone);
+  const chartBars = useMemo<ChartBars>(() => {
+    return getChartBars(data, timezone);
   }, [data, timezone]);
 
   const input = useMemo<TwInitInput>(
@@ -79,16 +74,13 @@ export function TwChart({
       return;
     }
 
-    chartApi.setData(adjustedData);
-  }, [adjustedData, chartApi]);
+    chartApi.setData(chartBars);
+  }, [chartBars, chartApi]);
 
   return (
     <div className='h-full overflow-hidden relative'>
       <div>
-        {getOhlcLabelElement(
-          currCrosshairItem ?? adjustedData.at(-1),
-          precision,
-        )}
+        {getOhlcLabelElement(currCrosshairItem ?? chartBars.at(-1), precision)}
       </div>
       <div
         ref={chartElementRef}
@@ -101,7 +93,7 @@ export function TwChart({
 }
 
 function getOhlcLabelElement(
-  currCrosshairItem: Bar | undefined,
+  currCrosshairItem: ChartBar | undefined,
   precision: number,
 ): React.ReactElement | undefined {
   if (!currCrosshairItem) {

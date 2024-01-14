@@ -1,10 +1,10 @@
-import { Bars } from '../../../../types';
+import { ChartBars } from '../../types';
 import { ChartTimeScaleApi } from '../types';
 
 const DEFAULT_BAR_WIDTH = 6;
 
 export function getBarWidth(
-  visibleData: Bars,
+  visibleData: ChartBars,
   timeScale: ChartTimeScaleApi,
 ): number {
   if (visibleData.length < 2) {

@@ -1,7 +1,5 @@
-import { UTCTimestamp } from 'lightweight-charts';
-
 export interface Bar {
-  readonly time: UTCTimestamp;
+  readonly time: number;
   readonly open: number;
   readonly high: number;
   readonly low: number;

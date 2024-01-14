@@ -30,6 +30,13 @@ export function applyPlugins(
     );
     series.attachPrimitive(sessionHighlightPrimitive);
   }
+
+  // const tradeLinesOptions: TradeLinesOptions = {
+  //   color: 'blue',
+  // };
+  // const tradeLinesPrimitive =
+  //   createSeriesPrimitiveTradeLines(tradeLinesOptions);
+  // series.attachPrimitive(tradeLinesPrimitive);
 }
 
 const HIGHLIGHTING_RESOLUTIONS: ReadonlySet<TickerDataResolution> = new Set([
