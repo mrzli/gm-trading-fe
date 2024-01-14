@@ -9,6 +9,7 @@ import {
   TEST_TICKER_BARS_QUARTER,
 } from '../../data';
 import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { invariant } from '@gmjs/assert';
 
 const STORY_META: Meta<TwChartProps> = {
   component: TwChart,
@@ -27,7 +28,7 @@ export const Primary: StoryObj<TwChartProps> = {
   render: (args: TwChartProps) => {
     const { data: _ignore1, ...rest } = args;
 
-    const data = useMemo(() => getData('minute'), []);
+    const data = useMemo(() => getData('1m'), []);
 
     return <TwChart {...rest} data={data} />;
   },
@@ -35,14 +36,17 @@ export const Primary: StoryObj<TwChartProps> = {
 
 function getData(resolution: TickerDataResolution): Bars {
   switch (resolution) {
-    case 'day': {
-      return TEST_TICKER_BARS_DAY;
-    }
-    case 'minute': {
+    case '1m': {
       return TEST_TICKER_BARS_MINUTE;
     }
-    case 'quarter': {
+    case '15m': {
       return TEST_TICKER_BARS_QUARTER;
+    }
+    case 'D': {
+      return TEST_TICKER_BARS_DAY;
+    }
+    default: {
+      invariant(false, `Data does not exist for resolution: '${resolution}'.`);
     }
   }
 }
