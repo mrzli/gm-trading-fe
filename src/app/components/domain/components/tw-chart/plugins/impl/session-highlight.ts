@@ -33,14 +33,14 @@ export interface SessionHighlightOptions {
   readonly color: string;
 }
 
-export function createSessionHighlightSeriesPrimitive(
+export function createSeriesPrimitiveSessionHighlight(
   options: SessionHighlightOptions,
 ): ISeriesPrimitive<ChartHorizontalScaleItem> {
   const [primitiveContextInitalize, primitiveContextDestroy, primitiveContext] =
     createChartPrimitiveContext();
 
   const _paneView: ISeriesPrimitivePaneView =
-    createSessionHighlightPrimitivePaneView(primitiveContext, options);
+    createPrimitivePaneViewSessionHighlight(primitiveContext, options);
   const _paneViews: readonly ISeriesPrimitivePaneView[] = [_paneView];
 
   return {
@@ -66,11 +66,11 @@ export function createSessionHighlightSeriesPrimitive(
   };
 }
 
-function createSessionHighlightPrimitivePaneView(
+function createPrimitivePaneViewSessionHighlight(
   primitiveContext: ChartPrimitiveContext,
   options: SessionHighlightOptions,
 ): ISeriesPrimitivePaneView {
-  const _renderer = createSessionHighlightPrimitivePaneRenderer(
+  const _renderer = createPrimitivePaneRendererSessionHighlight(
     primitiveContext,
     options,
   );
@@ -85,7 +85,7 @@ function createSessionHighlightPrimitivePaneView(
   };
 }
 
-function createSessionHighlightPrimitivePaneRenderer(
+function createPrimitivePaneRendererSessionHighlight(
   primitiveContext: ChartPrimitiveContext,
   options: SessionHighlightOptions,
 ): ISeriesPrimitivePaneRenderer {

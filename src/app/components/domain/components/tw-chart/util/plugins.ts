@@ -1,11 +1,8 @@
-import {
-  IChartApi,
-  ISeriesApi,
-} from 'lightweight-charts';
+import { IChartApi, ISeriesApi } from 'lightweight-charts';
 import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { ChartSettings } from '../../../types';
 import {
-  createSessionHighlightSeriesPrimitive,
+  createSeriesPrimitiveSessionHighlight,
   SessionHighlightOptions,
 } from '../plugins';
 
@@ -28,7 +25,7 @@ export function applyPlugins(
       chartTimezone: timezone,
       color: 'rgba(41, 98, 255, 0.08)',
     };
-    const sessionHighlightPrimitive = createSessionHighlightSeriesPrimitive(
+    const sessionHighlightPrimitive = createSeriesPrimitiveSessionHighlight(
       sessionHighlightOptions,
     );
     series.attachPrimitive(sessionHighlightPrimitive);
