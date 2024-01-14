@@ -53,8 +53,8 @@ export function createSeriesPrimitiveTradeLines(
     attached: (
       p: SeriesAttachedParameter<ChartHorizontalScaleItem, ChartSeriesType>,
     ): void => {
-      const { chart, series } = p;
-      primitiveContextInitalize(chart, series);
+      const { chart, series, requestUpdate } = p;
+      primitiveContextInitalize(chart, series, requestUpdate);
     },
     detached: (): void => {
       primitiveContextDestroy();
@@ -198,7 +198,6 @@ const LINE_WIDTH = 1;
 
 const SOLID_LINE_PATTERN: readonly number[] = [];
 const DASHED_LINE_PATTERN: readonly number[] = [4, 2];
-
 
 // the rest of the code is taken from:
 //   lightweight-charts\plugin-examples\src\helpers\dimensions\positions.ts

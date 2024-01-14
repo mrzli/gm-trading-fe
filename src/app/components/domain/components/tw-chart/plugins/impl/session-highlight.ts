@@ -59,8 +59,8 @@ export function createSeriesPrimitiveSessionHighlight(
     attached: (
       p: SeriesAttachedParameter<ChartHorizontalScaleItem, ChartSeriesType>,
     ): void => {
-      const { chart, series } = p;
-      primitiveContextInitalize(chart, series);
+      const { chart, series, requestUpdate } = p;
+      primitiveContextInitalize(chart, series, requestUpdate);
     },
     detached: (): void => {
       primitiveContextDestroy();
