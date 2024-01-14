@@ -8,7 +8,7 @@ import {
   aggregateGroupedDataBars,
   groupDataBars,
 } from '../ticker-data-container/util/process-chart-data';
-import { BarReplayPosition, ChartRange, ChartSettings } from '../../types';
+import { ChartRange, ChartSettings } from '../../types';
 
 const INSTRUMENT_NAMES: readonly string[] = [
   'DJI',
@@ -27,17 +27,14 @@ const STORY_META: Meta<ChartToolbarProps> = {
   decorators: [decoratorPadding()],
   argTypes: {
     settings: disableControl(),
-    subBars: disableControl(),
     bars: disableControl(),
     onInstrumentChange: disableControl(),
     onResolutionChange: disableControl(),
     onTimezoneChange: disableControl(),
     onLogicalRangeChange: disableControl(),
-    onReplayPositionChange: disableControl(),
   },
   args: {
     instrumentNames: INSTRUMENT_NAMES,
-    subBars: groupDataBars(TEST_TICKER_BARS_MINUTE, '5m'),
     bars: aggregateGroupedDataBars(
       groupDataBars(TEST_TICKER_BARS_MINUTE, '5m'),
     ),
@@ -54,8 +51,6 @@ export const Primary: StoryObj<ChartToolbarProps> = {
       onTimezoneChange: _ignore4,
       logicalRange: _ignore5,
       onLogicalRangeChange: _ignore6,
-      replayPosition: _ignore7,
-      onReplayPositionChange: _ignore8,
       ...rest
     } = args;
 
@@ -63,16 +58,14 @@ export const Primary: StoryObj<ChartToolbarProps> = {
       instrumentName: INSTRUMENT_NAMES[0],
       resolution: '5m',
       timezone: 'UTC',
+      additional: {
+        highlightSession: false,
+      },
     });
 
     const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>({
       from: 5,
       to: 15,
-    });
-
-    const [replayPosition, setReplayPosition] = useState<BarReplayPosition>({
-      barIndex: undefined,
-      subBarIndex: 0,
     });
 
     return (
@@ -100,8 +93,6 @@ export const Primary: StoryObj<ChartToolbarProps> = {
           }}
           logicalRange={logicalRange}
           onLogicalRangeChange={setLogicalRange}
-          replayPosition={replayPosition}
-          onReplayPositionChange={setReplayPosition}
         />
         <div style={{ marginTop: 20 }}>
           <PrettyDisplay content={settings} />
