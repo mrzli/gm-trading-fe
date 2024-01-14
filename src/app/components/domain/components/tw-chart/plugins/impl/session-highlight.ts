@@ -23,10 +23,10 @@ import {
   ChartHorizontalScaleItem,
   ChartPrimitiveContext,
   ChartSeriesType,
-  ChartTimeScaleApi,
 } from '../types';
 import {
   createChartPrimitiveContext,
+  getBarWidth,
   getVisibleBarIndexRange,
   getVisibleData,
 } from '../shared';
@@ -149,22 +149,6 @@ function drawSessionHighlight(
     ctx.fillStyle = color;
     ctx.fillRect(x1, 0, x2 - x1, height);
   }
-}
-
-const DEFAULT_BAR_WIDTH = 6;
-
-function getBarWidth(visibleData: Bars, timeScale: ChartTimeScaleApi): number {
-  if (visibleData.length < 2) {
-    return DEFAULT_BAR_WIDTH;
-  }
-
-  const firstBarX = timeScale.timeToCoordinate(visibleData[0].time);
-  const secondBarX = timeScale.timeToCoordinate(visibleData[1].time);
-  if (firstBarX === null || secondBarX === null) {
-    return DEFAULT_BAR_WIDTH;
-  }
-
-  return secondBarX - firstBarX;
 }
 
 function getSessionIndexRanges(
