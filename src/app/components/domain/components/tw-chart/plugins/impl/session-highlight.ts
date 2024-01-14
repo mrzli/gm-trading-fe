@@ -25,7 +25,11 @@ import {
   ChartSeriesType,
   ChartTimeScaleApi,
 } from '../types';
-import { createChartPrimitiveContext } from '../shared';
+import {
+  createChartPrimitiveContext,
+  getVisibleBarIndexRange,
+  getVisibleData,
+} from '../shared';
 
 export interface SessionHighlightOptions {
   readonly instrument: Instrument;
@@ -91,20 +95,12 @@ function createPrimitivePaneRendererSessionHighlight(
 ): ISeriesPrimitivePaneRenderer {
   return {
     draw: (target: CanvasRenderingTarget2D): void => {
-      const timeScale = primitiveContext.timeScale();
-
-      const logicalRange = timeScale.getVisibleLogicalRange() ?? undefined;
-      if (!logicalRange) {
+      const range = getVisibleBarIndexRange(primitiveContext.timeScale());
+      if (!range) {
         return;
       }
 
-      const fromIndex = Math.max(0, Math.floor(logicalRange.from));
-      const toIndex = Math.max(0, Math.ceil(logicalRange.to));
-
-      const series = primitiveContext.series();
-      const visibleData: Bars = series
-        .data()
-        .slice(fromIndex, toIndex + 1) as Bars;
+      const visibleData = getVisibleData(primitiveContext.series(), range);
 
       target.useBitmapCoordinateSpace((scope): void => {
         drawSessionHighlight(scope, primitiveContext, options, visibleData);
