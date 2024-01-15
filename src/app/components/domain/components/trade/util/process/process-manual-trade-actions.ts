@@ -67,11 +67,19 @@ function processManualTradeActionOpen(
   index: number,
   action: ManualTradeActionOpen,
 ): TradeProcessState {
-  const { barData, activeOrders, tradeLog } = state;
+  const { barData, tradingParams, activeOrders, tradeLog } = state;
+
+  const { pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { id, price, amount, stopLossDistance, limitDistance } = action;
 
-  const time = barData[index].time;
+  const currentBar = barData[index];
+  const time = currentBar.time;
+
+  const isBuy = amount > 0;
+
+  const ohlc = getOhlc(currentBar, isBuy, spread);
 
   const activeOrder: ActiveOrder = {
     id,
@@ -88,6 +96,7 @@ function processManualTradeActionOpen(
     barIndex: index,
     orderId: id,
     price,
+    marketPrice: ohlc.o,
     amount,
     stopLossDistance,
     limitDistance,
@@ -105,11 +114,19 @@ function processManualTradeActionAmendOrder(
   index: number,
   action: ManualTradeActionAmendOrder,
 ): TradeProcessState {
-  const { barData, activeOrders, tradeLog } = state;
+  const { barData, tradingParams, activeOrders, tradeLog } = state;
+
+  const { pipDigit, spread: pointSpread } = tradingParams;
+  const spread = pipAdjust(pointSpread, pipDigit);
 
   const { targetId, price, amount, stopLossDistance, limitDistance } = action;
 
-  const time = barData[index].time;
+  const currentBar = barData[index];
+  const time = currentBar.time;
+
+  const isBuy = amount > 0;
+
+  const ohlc = getOhlc(currentBar, isBuy, spread);
 
   const activeOrderIndex = activeOrders.findIndex(
     (item) => item.id === targetId,
@@ -140,6 +157,7 @@ function processManualTradeActionAmendOrder(
     barIndex: index,
     orderId: targetId,
     price,
+    marketPrice: ohlc.o,
     amount,
     stopLossDistance,
     limitDistance,

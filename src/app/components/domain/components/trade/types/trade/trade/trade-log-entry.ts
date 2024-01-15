@@ -21,6 +21,7 @@ export interface TradeLogEntryCreateOrder extends TradeLogEntryBase {
   readonly kind: 'create-order';
   readonly orderId: number;
   readonly price: number | undefined;
+  readonly marketPrice: number;
   readonly amount: number;
   readonly stopLossDistance: number | undefined;
   readonly limitDistance: number | undefined;
@@ -30,6 +31,7 @@ export interface TradeLogEntryAmendOrder extends TradeLogEntryBase {
   readonly kind: 'amend-order';
   readonly orderId: number;
   readonly price: number | undefined;
+  readonly marketPrice: number;
   readonly amount: number;
   readonly stopLossDistance: number | undefined;
   readonly limitDistance: number | undefined;
