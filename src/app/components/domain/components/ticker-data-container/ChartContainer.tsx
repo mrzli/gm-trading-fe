@@ -8,6 +8,7 @@ import {
   ChartSettings,
   ChartTimezone,
   GroupedBars,
+  TradeLine,
 } from '../../types';
 import { FullBarData } from './types';
 import { Key } from 'ts-key-enum';
@@ -25,6 +26,7 @@ export interface ChartContainerProps {
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
+  readonly tradeLines: readonly TradeLine[];
 }
 
 export function ChartContainer({
@@ -36,6 +38,7 @@ export function ChartContainer({
   onLogicalRangeChange,
   replayPosition,
   onReplayPositionChange,
+  tradeLines,
 }: ChartContainerProps): React.ReactElement {
   const { resolution, timezone } = settings;
   const { subBars, bars } = fullData;
@@ -89,6 +92,7 @@ export function ChartContainer({
       logicalRange={logicalRange}
       onLogicalRangeChange={onLogicalRangeChange}
       onChartKeyDown={handleChartKeyDown}
+      tradeLines={tradeLines}
     />
   );
 }

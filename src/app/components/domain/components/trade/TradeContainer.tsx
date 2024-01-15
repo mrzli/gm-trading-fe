@@ -27,8 +27,9 @@ import {
   createManualTradeActionAmendTrade,
   createManualTradeActionCancelOrder,
   createManualTradeActionCloseTrade,
+  calculateTradeLines,
 } from './util';
-import { BarReplayPosition, Bars, ChartSettings } from '../../types';
+import { BarReplayPosition, Bars, ChartSettings, TradeLine } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
 import { Instrument } from '@gmjs/gm-trading-shared';
 
@@ -38,6 +39,7 @@ export interface TradeContainerProps {
   readonly fullData: FullBarData;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
+  readonly onTradeLinesChange: (tradeLines: readonly TradeLine[]) => void;
 }
 
 export function TradeContainer({
@@ -46,6 +48,7 @@ export function TradeContainer({
   fullData,
   replayPosition,
   onReplayPositionChange,
+  onTradeLinesChange,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
 
@@ -208,7 +211,9 @@ export function TradeContainer({
   useEffect(() => {
     const state = processTradeSequence(tradingDataAndInputs);
     setTradeState(state);
-  }, [tradingDataAndInputs]);
+    const tradeLines = calculateTradeLines(state);
+    onTradeLinesChange(tradeLines);
+  }, [onTradeLinesChange, tradingDataAndInputs]);
 
   const tabEntries = useMemo(
     () =>

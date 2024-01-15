@@ -1,13 +1,13 @@
 import { IChartApi, ISeriesApi } from 'lightweight-charts';
 import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
-import { ChartSettings } from '../../../types';
+import { ChartSettings, TradeLine } from '../../../types';
 import {
   createSeriesPrimitiveSessionHighlight,
   createSeriesPrimitiveTradeLines,
   SessionHighlightOptions,
   TradeLinesOptions,
 } from '../plugins';
-import { TradeLine, TwPluginsApi } from '../types';
+import { TwPluginsApi } from '../types';
 
 export function applyPlugins(
   settings: ChartSettings,

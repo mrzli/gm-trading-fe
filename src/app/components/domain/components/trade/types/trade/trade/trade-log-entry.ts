@@ -35,6 +35,11 @@ export interface TradeLogEntryAmendOrder extends TradeLogEntryBase {
   readonly limitDistance: number | undefined;
 }
 
+export interface TradeLogEntryCancelOrder extends TradeLogEntryBase {
+  readonly kind: 'cancel-order';
+  readonly orderId: number;
+}
+
 export interface TradeLogEntryFillOrder extends TradeLogEntryBase {
   readonly kind: 'fill-order';
   readonly orderId: number;
@@ -44,16 +49,17 @@ export interface TradeLogEntryFillOrder extends TradeLogEntryBase {
   readonly limit: number | undefined;
 }
 
-export interface TradeLogEntryCancelOrder extends TradeLogEntryBase {
-  readonly kind: 'cancel-order';
-  readonly orderId: number;
-}
-
 export interface TradeLogEntryAmendTrade extends TradeLogEntryBase {
   readonly kind: 'amend-trade';
   readonly tradeId: number;
   readonly stopLoss: number | undefined;
   readonly limit: number | undefined;
+}
+
+export interface TradeLogEntryCloseTrade extends TradeLogEntryBase {
+  readonly kind: 'close-trade';
+  readonly tradeId: number;
+  readonly price: number;
 }
 
 export interface TradeLogEntryStopLoss extends TradeLogEntryBase {
@@ -68,18 +74,12 @@ export interface TradeLogEntryLimit extends TradeLogEntryBase {
   readonly price: number;
 }
 
-export interface TradeLogEntryCloseTrade extends TradeLogEntryBase {
-  readonly kind: 'close-trade';
-  readonly tradeId: number;
-  readonly price: number;
-}
-
 export type TradeLogEntryAny =
   | TradeLogEntryCreateOrder
   | TradeLogEntryAmendOrder
-  | TradeLogEntryFillOrder
   | TradeLogEntryCancelOrder
+  | TradeLogEntryFillOrder
   | TradeLogEntryAmendTrade
+  | TradeLogEntryCloseTrade
   | TradeLogEntryStopLoss
-  | TradeLogEntryLimit
-  | TradeLogEntryCloseTrade;
+  | TradeLogEntryLimit;

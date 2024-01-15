@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createChart } from 'lightweight-charts';
 import { Instrument } from '@gmjs/gm-trading-shared';
-import { Bars, ChartRange, ChartSettings } from '../../types';
+import { Bars, ChartRange, ChartSettings, TradeLine } from '../../types';
 import { ChartBar, ChartBars, TwChartApi, TwInitInput } from './types';
 import { destroyChart, getChartBars, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
@@ -16,6 +16,7 @@ export interface TwChartProps {
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  readonly tradeLines: readonly TradeLine[];
 }
 
 export function TwChart({
@@ -25,6 +26,7 @@ export function TwChart({
   logicalRange,
   onLogicalRangeChange,
   onChartKeyDown,
+  tradeLines,
 }: TwChartProps): React.ReactElement {
   const { timezone } = settings;
   const { precision } = instrument;
@@ -76,6 +78,14 @@ export function TwChart({
 
     chartApi.setData(chartBars);
   }, [chartBars, chartApi]);
+
+  useEffect(() => {
+    if (!chartApi) {
+      return;
+    }
+
+    chartApi.plugins.setTradeLines(tradeLines);
+  }, [tradeLines, chartApi]);
 
   return (
     <div className='h-full overflow-hidden relative'>

@@ -1,4 +1,4 @@
-import { TradeLine } from './trade-line';
+import { TradeLine } from "../../../types";
 
 export type SetTradeLinesFn = (tradeLines: readonly TradeLine[]) => void;
 

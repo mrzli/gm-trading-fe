@@ -20,6 +20,7 @@ import {
   RightToolbarState,
   TradingUiState,
   ChartAdditionalSettings,
+  TradeLine,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
@@ -86,6 +87,8 @@ export function TickerDataContainer({
     subBarIndex: 0,
   });
 
+  const [tradeLines, setTradeLines] = useState<readonly TradeLine[]>([]);
+
   useEffect(
     () => {
       onRequestData(instrumentName, resolution);
@@ -145,6 +148,16 @@ export function TickerDataContainer({
     [],
   );
 
+  const handleAdditionalSettingsChange = useCallback(
+    (additionalSettings: ChartAdditionalSettings) => {
+      setSettings((s) => ({
+        ...s,
+        additional: additionalSettings,
+      }));
+    },
+    [],
+  );
+
   const handleRightToolbarStateChange = useCallback(
     (value: RightToolbarState | undefined) => {
       const { barIndex } = replayPosition;
@@ -173,12 +186,9 @@ export function TickerDataContainer({
     [replayPosition],
   );
 
-  const handleAdditionalSettingsChange = useCallback(
-    (additionalSettings: ChartAdditionalSettings) => {
-      setSettings((s) => ({
-        ...s,
-        additional: additionalSettings,
-      }));
+  const handleTradeLinesChange = useCallback(
+    (tradeLines: readonly TradeLine[]) => {
+      setTradeLines(tradeLines);
     },
     [],
   );
@@ -198,6 +208,7 @@ export function TickerDataContainer({
         onLogicalRangeChange={handleChartTimeRangeChange}
         replayPosition={replayPosition}
         onReplayPositionChange={handleReplayPositionChange}
+        tradeLines={tradeLines}
       />
     ) : isLoadingData ? (
       <LoadingDisplay />
@@ -232,6 +243,7 @@ export function TickerDataContainer({
           fullData,
           replayPosition,
           handleReplayPositionChange,
+          handleTradeLinesChange,
         )}
         value={rightToolbarState}
         onValueChange={handleRightToolbarStateChange}
@@ -247,6 +259,7 @@ function getToolbarEntries(
   fullData: FullBarData,
   replayPosition: BarReplayPosition,
   handleReplayPositionChange: (value: BarReplayPosition) => void,
+  handleTradeLinesChange: (tradeLines: readonly TradeLine[]) => void,
 ): readonly SideToolbarEntry<RightToolbarState>[] {
   return [
     {
@@ -260,6 +273,7 @@ function getToolbarEntries(
             fullData={fullData}
             replayPosition={replayPosition}
             onReplayPositionChange={handleReplayPositionChange}
+            onTradeLinesChange={handleTradeLinesChange}
           />
         </div>
       ),

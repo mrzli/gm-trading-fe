@@ -19,7 +19,8 @@ import {
   createChartPrimitiveContext,
   getVisibleBarIndexRange,
 } from '../shared';
-import { ChartBars, TradeLine } from '../../types';
+import { ChartBars } from '../../types';
+import { TradeLine } from '../../../../types';
 
 export interface TradeLinesOptions {
   readonly color: string;
@@ -84,7 +85,8 @@ function createPrimitivePaneViewTradeLines(
   };
 }
 
-interface SeriesPrimitivePaneRendererTradeLines extends ISeriesPrimitivePaneRenderer {
+interface SeriesPrimitivePaneRendererTradeLines
+  extends ISeriesPrimitivePaneRenderer {
   readonly setTradeLines: (tradeLines: readonly TradeLine[]) => void;
 }
 
@@ -116,7 +118,7 @@ function createPrimitivePaneRendererTradeLines(
     },
     setTradeLines: (tradeLines: readonly TradeLine[]): void => {
       _tradeLines = tradeLines;
-    }
+    },
   };
 }
 
@@ -149,7 +151,8 @@ function drawTradeLines(
     (v) => v * verticalPixelRatio,
   );
 
-  console.log('drawTradeLines');
+  const lineEndRadiuxX = LINE_END_RADIUS * horizontalPixelRatio;
+  const lineEndRadiuxY = LINE_END_RADIUS * verticalPixelRatio;
 
   // ctx.save();
   for (const tradeLine of tradeLines) {
@@ -180,8 +183,11 @@ function drawTradeLines(
       continue;
     }
 
-    const x1 = Math.max(0, Math.round(x1Scaled));
-    const x2 = Math.min(bitmapWidth, Math.round(x2Scaled));
+    const x1Uncropped = Math.round(x1Scaled);
+    const x2Uncropped = Math.round(x2Scaled);
+
+    const x1 = Math.max(0, x1Uncropped);
+    const x2 = Math.min(bitmapWidth, x2Uncropped);
     const yCenter = yPosition.position + yPosition.length / 2;
 
     ctx.setLineDash(linePattern);
@@ -190,12 +196,35 @@ function drawTradeLines(
     ctx.beginPath();
     ctx.moveTo(x1, yCenter);
     ctx.lineTo(x2, yCenter);
+    if (x1Uncropped >= 0) {
+      ctx.ellipse(
+        x1,
+        yCenter,
+        lineEndRadiuxX,
+        lineEndRadiuxY,
+        0,
+        0,
+        2 * Math.PI,
+      );
+    }
+    if (x2Uncropped <= bitmapWidth) {
+      ctx.ellipse(
+        x2,
+        yCenter,
+        lineEndRadiuxX,
+        lineEndRadiuxY,
+        0,
+        0,
+        2 * Math.PI,
+      );
+    }
     ctx.stroke();
   }
   // ctx.restore();
 }
 
 const LINE_WIDTH = 1;
+const LINE_END_RADIUS = 2;
 
 const SOLID_LINE_PATTERN: readonly number[] = [];
 const DASHED_LINE_PATTERN: readonly number[] = [4, 2];

@@ -4,4 +4,5 @@ export * from './chart-additional-settings';
 export * from './chart-range';
 export * from './chart-settings';
 export * from './chart-timezone';
+export * from './trade-line';
 export * from './ui';
