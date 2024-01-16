@@ -10,6 +10,8 @@ import {
   BitmapCoordinatesRenderingScope,
   CanvasRenderingTarget2D,
 } from 'fancy-canvas';
+import { applyFn } from '@gmjs/apply-function';
+import { map, toMap } from '@gmjs/value-transformers';
 import {
   ChartHorizontalScaleItem,
   ChartPrimitiveContext,
@@ -20,11 +22,10 @@ import {
   getVisibleBarIndexRange,
 } from '../shared';
 import { ChartBars } from '../../types';
-import { TradeLine } from '../../../../types';
+import { TradeLine, TradeLineRepresentation } from '../../../../types';
+import { mapGetOrThrow } from '@gmjs/data-container-util';
 
-export interface TradeLinesOptions {
-  readonly color: string;
-}
+export interface TradeLinesOptions {}
 
 export interface SeriesPrimitiveTradeLine
   extends ISeriesPrimitive<ChartHorizontalScaleItem> {
@@ -125,7 +126,7 @@ function createPrimitivePaneRendererTradeLines(
 function drawTradeLines(
   scope: BitmapCoordinatesRenderingScope,
   primitiveContext: ChartPrimitiveContext,
-  options: TradeLinesOptions,
+  _options: TradeLinesOptions,
   data: ChartBars,
   visibleRange: Range<number>,
   tradeLines: readonly TradeLine[],
@@ -137,26 +138,20 @@ function drawTradeLines(
     verticalPixelRatio,
   } = scope;
   const { width: bitmapWidth, height: bitmapHeight } = bitmapSize;
-  const { color } = options;
 
   const { from: visibleFrom, to: visibleTo } = visibleRange;
 
   const timeScale = primitiveContext.timeScale();
   const series = primitiveContext.series();
 
-  const solidLinePattern = SOLID_LINE_PATTERN.map(
-    (v) => v * verticalPixelRatio,
-  );
-  const dashedLinePattern = DASHED_LINE_PATTERN.map(
-    (v) => v * verticalPixelRatio,
-  );
+  const patternMap = createPatternMap(horizontalPixelRatio);
 
   const lineEndRadiuxX = LINE_END_RADIUS * horizontalPixelRatio;
   const lineEndRadiuxY = LINE_END_RADIUS * verticalPixelRatio;
 
   // ctx.save();
   for (const tradeLine of tradeLines) {
-    const { startIndex, endIndex, price, type } = tradeLine;
+    const { startIndex, endIndex, price, offset } = tradeLine;
 
     if (endIndex < visibleFrom || startIndex > visibleTo) {
       continue;
@@ -164,8 +159,6 @@ function drawTradeLines(
 
     const finalStartIndex = Math.max(startIndex, visibleFrom - 1, 0);
     const finalEndIndex = Math.min(endIndex, visibleTo + 1, data.length - 1);
-
-    const linePattern = type === 'solid' ? solidLinePattern : dashedLinePattern;
 
     const px1 = timeScale.timeToCoordinate(data[finalStartIndex].time);
     const px2 = timeScale.timeToCoordinate(data[finalEndIndex].time);
@@ -183,6 +176,9 @@ function drawTradeLines(
       continue;
     }
 
+    const linePattern = getPattern(patternMap, tradeLine);
+    const color = getColor(tradeLine);
+
     const x1Uncropped = Math.round(x1Scaled);
     const x2Uncropped = Math.round(x2Scaled);
 
@@ -196,38 +192,95 @@ function drawTradeLines(
     ctx.beginPath();
     ctx.moveTo(x1, yCenter);
     ctx.lineTo(x2, yCenter);
-    if (x1Uncropped >= 0) {
-      ctx.ellipse(
-        x1,
-        yCenter,
-        lineEndRadiuxX,
-        lineEndRadiuxY,
-        0,
-        0,
-        2 * Math.PI,
-      );
-    }
-    if (x2Uncropped <= bitmapWidth) {
-      ctx.ellipse(
-        x2,
-        yCenter,
-        lineEndRadiuxX,
-        lineEndRadiuxY,
-        0,
-        0,
-        2 * Math.PI,
-      );
-    }
     ctx.stroke();
+
+    if (offset === 'mid' && (x1Uncropped >= 0 || x2Uncropped <= bitmapWidth)) {
+      ctx.setLineDash(SOLID_PATTERN);
+      ctx.fillStyle = color;
+      if (x1Uncropped >= 0) {
+        ctx.beginPath();
+        ctx.ellipse(
+          x1,
+          yCenter,
+          lineEndRadiuxX,
+          lineEndRadiuxY,
+          0,
+          0,
+          2 * Math.PI,
+        );
+        ctx.fill();
+      }
+
+      if (x2Uncropped <= bitmapWidth) {
+        ctx.beginPath();
+        ctx.ellipse(
+          x2,
+          yCenter,
+          lineEndRadiuxX,
+          lineEndRadiuxY,
+          0,
+          0,
+          2 * Math.PI,
+        );
+        ctx.fill();
+      }
+    }
   }
   // ctx.restore();
 }
 
-const LINE_WIDTH = 1;
+const LINE_WIDTH = 2;
 const LINE_END_RADIUS = 2;
 
-const SOLID_LINE_PATTERN: readonly number[] = [];
-const DASHED_LINE_PATTERN: readonly number[] = [4, 2];
+function getColor(tradeLine: TradeLine): string {
+  const { source, direction } = tradeLine;
+
+  if (source === 'trade') {
+    return direction === 'buy' ? `rgba(32, 178, 170, 1)` : `rgba(220, 20, 60, 1)`;
+  } else {
+    return direction === 'buy'
+      ? `rgba(127, 127, 0, 1)`
+      : `rgba(127, 0, 127, 1)`;
+  }
+}
+
+const SOLID_PATTERN = [] as const;
+
+function getPattern(
+  patternMap: ReadonlyMap<
+    TradeLineRepresentation | 'execution',
+    readonly number[]
+  >,
+  tradeLine: TradeLine,
+): readonly number[] {
+  const { representation, offset } = tradeLine;
+
+  if (offset === 'execution') {
+    return mapGetOrThrow(patternMap, 'execution');
+  }
+
+  return mapGetOrThrow(patternMap, representation);
+}
+
+const RAW_PATTERN_MAP: ReadonlyMap<
+  TradeLineRepresentation | 'execution',
+  readonly number[]
+> = new Map<TradeLineRepresentation | 'execution', readonly number[]>([
+  ['price', [0, 0]],
+  ['stop-loss', [2, 2]],
+  ['limit', [6, 2]],
+  ['execution', [2, 6]],
+]);
+
+function createPatternMap(
+  pixelRatio: number,
+): ReadonlyMap<TradeLineRepresentation | 'execution', readonly number[]> {
+  return applyFn(
+    RAW_PATTERN_MAP,
+    map(([k, pat]) => [k, pat.map((v) => v * pixelRatio)] as const),
+    toMap(),
+  );
+}
 
 // the rest of the code is taken from:
 //   lightweight-charts\plugin-examples\src\helpers\dimensions\positions.ts

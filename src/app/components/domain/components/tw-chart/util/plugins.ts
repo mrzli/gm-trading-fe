@@ -34,9 +34,7 @@ export function applyPlugins(
     series.attachPrimitive(sessionHighlightPrimitive);
   }
 
-  const tradeLinesOptions: TradeLinesOptions = {
-    color: 'blue',
-  };
+  const tradeLinesOptions: TradeLinesOptions = {};
   const tradeLinesPrimitive =
     createSeriesPrimitiveTradeLines(tradeLinesOptions);
   series.attachPrimitive(tradeLinesPrimitive);

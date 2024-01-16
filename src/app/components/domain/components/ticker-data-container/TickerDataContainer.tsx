@@ -89,6 +89,10 @@ export function TickerDataContainer({
 
   const [tradeLines, setTradeLines] = useState<readonly TradeLine[]>([]);
 
+  // useEffect(() => {
+  //   setTradeLines(EXAMPLE_TRADE_LINES);
+  // }, []);
+
   useEffect(
     () => {
       onRequestData(instrumentName, resolution);

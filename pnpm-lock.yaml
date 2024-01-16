@@ -48,8 +48,8 @@ dependencies:
     specifier: ^0.0.1
     version: 0.0.1
   '@gmjs/value-transformers':
-    specifier: ^0.0.7
-    version: 0.0.7
+    specifier: ^0.0.11
+    version: 0.0.11
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.49.2)
@@ -2537,8 +2537,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@gmjs/value-transformers@0.0.7:
-    resolution: {integrity: sha512-rdGkg6e3rGhYhA7hTCyC2DPeon3ZH7bsJXficG7h9gQRk1WsqKnXUf1keNRshOyWwn1U97XxVt5xDI6C5SFgTg==}
+  /@gmjs/value-transformers@0.0.11:
+    resolution: {integrity: sha512-pTVqbDwmjiLlNYigI18qm/RoS7OYiSFq3r0Zn7ynp8xI8dW2MUdIi41WZIUOcpiaWRqcYbpvvtwxuxLVxuiUEg==}
     engines: {node: '>=18.17.0'}
     dependencies:
       '@gmjs/compose-function': 0.0.1
