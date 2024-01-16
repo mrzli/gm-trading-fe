@@ -236,7 +236,9 @@ function getColor(tradeLine: TradeLine): string {
   const { source, direction } = tradeLine;
 
   if (source === 'trade') {
-    return direction === 'buy' ? `rgba(32, 178, 170, 1)` : `rgba(220, 20, 60, 1)`;
+    return direction === 'buy'
+      ? `rgba(32, 178, 170, 1)`
+      : `rgba(220, 20, 60, 1)`;
   } else {
     return direction === 'buy'
       ? `rgba(127, 127, 0, 1)`
@@ -246,35 +248,32 @@ function getColor(tradeLine: TradeLine): string {
 
 const SOLID_PATTERN = [] as const;
 
+type TradeLineDashPattern = TradeLineRepresentation | 'mid';
+
 function getPattern(
-  patternMap: ReadonlyMap<
-    TradeLineRepresentation | 'execution',
-    readonly number[]
-  >,
+  patternMap: ReadonlyMap<TradeLineDashPattern, readonly number[]>,
   tradeLine: TradeLine,
 ): readonly number[] {
   const { representation, offset } = tradeLine;
 
-  if (offset === 'execution') {
-    return mapGetOrThrow(patternMap, 'execution');
+  if (offset === 'mid') {
+    return mapGetOrThrow(patternMap, 'mid');
   }
 
   return mapGetOrThrow(patternMap, representation);
 }
 
-const RAW_PATTERN_MAP: ReadonlyMap<
-  TradeLineRepresentation | 'execution',
-  readonly number[]
-> = new Map<TradeLineRepresentation | 'execution', readonly number[]>([
-  ['price', [0, 0]],
-  ['stop-loss', [2, 2]],
-  ['limit', [6, 2]],
-  ['execution', [2, 6]],
-]);
+const RAW_PATTERN_MAP: ReadonlyMap<TradeLineDashPattern, readonly number[]> =
+  new Map<TradeLineDashPattern, readonly number[]>([
+    ['price', [0, 0]],
+    ['stop-loss', [2, 2]],
+    ['limit', [6, 2]],
+    ['mid', [2, 6]],
+  ]);
 
 function createPatternMap(
   pixelRatio: number,
-): ReadonlyMap<TradeLineRepresentation | 'execution', readonly number[]> {
+): ReadonlyMap<TradeLineDashPattern, readonly number[]> {
   return applyFn(
     RAW_PATTERN_MAP,
     map(([k, pat]) => [k, pat.map((v) => v * pixelRatio)] as const),

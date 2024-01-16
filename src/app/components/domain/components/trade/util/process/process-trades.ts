@@ -25,20 +25,33 @@ type CheckLimitFn = (
 export function processTradesForOpen(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
 ): TradeProcessState {
-  return processTradesInternal(state, index, checkLimitIntersectionsForOpen);
+  return processTradesInternal(
+    state,
+    index,
+    chartVisualBarIndex,
+    checkLimitIntersectionsForOpen,
+  );
 }
 
 export function processTradesForBar(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
 ): TradeProcessState {
-  return processTradesInternal(state, index, checkLimitIntersectionsForBar);
+  return processTradesInternal(
+    state,
+    index,
+    chartVisualBarIndex,
+    checkLimitIntersectionsForBar,
+  );
 }
 
 function processTradesInternal(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   checkLimit: CheckLimitFn,
 ): TradeProcessState {
   let currentState = state;
@@ -51,6 +64,7 @@ function processTradesInternal(
     currentState = processTradeInternal(
       currentState,
       index,
+      chartVisualBarIndex,
       trade,
       tradesToRemove,
       checkLimit,
@@ -70,6 +84,7 @@ function processTradesInternal(
 function processTradeInternal(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   trade: ActiveTrade,
   tradesToRemove: Set<number>,
   checkLimit: CheckLimitFn,
@@ -95,7 +110,7 @@ function processTradeInternal(
     logEntry = {
       kind: 'stop-loss',
       time,
-      barIndex: index,
+      barIndex: chartVisualBarIndex,
       tradeId: trade.id,
       price,
     } as TradeLogEntryStopLoss;
@@ -103,7 +118,7 @@ function processTradeInternal(
     logEntry = {
       kind: 'limit',
       time,
-      barIndex: index,
+      barIndex: chartVisualBarIndex,
       tradeId: trade.id,
       price,
     } as TradeLogEntryLimit;

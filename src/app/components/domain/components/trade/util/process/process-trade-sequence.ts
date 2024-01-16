@@ -1,3 +1,4 @@
+import { barReplayMoveSubBar } from '../../../../util';
 import { TradeProcessState, TradingDataAndInputs } from '../../types';
 import {
   getManualTradeActionsByType,
@@ -10,12 +11,26 @@ import { processTradesForBar, processTradesForOpen } from './process-trades';
 export function processTradeSequence(
   input: TradingDataAndInputs,
 ): TradeProcessState {
-  const barIndex = input.barIndex;
+  const { fullData, barIndex } = input;
+  const { subBars } = fullData;
 
   let currentState = getInitialTradeProcessState(input);
 
+  let currentBarIndexes = barReplayMoveSubBar(subBars, 0, 0, 1);
+
   for (let i = 1; i <= barIndex; i++) {
-    currentState = processBar(currentState, i, barIndex);
+    currentState = processBar(
+      currentState,
+      i,
+      currentBarIndexes.barIndex,
+      barIndex,
+    );
+    currentBarIndexes = barReplayMoveSubBar(
+      subBars,
+      currentBarIndexes.barIndex,
+      currentBarIndexes.subBarIndex,
+      1,
+    );
   }
 
   return currentState;
@@ -47,6 +62,7 @@ function getInitialTradeProcessState(
 function processBar(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   lastReplayBarIndex: number,
 ): TradeProcessState {
   let currentState = state;
@@ -56,30 +72,39 @@ function processBar(
   const { open, amendOrder, cancelOrder, amendTrade, closeTrade } =
     getManualTradeActionsByType(currentBarActions);
 
-  currentState = processTradesForOpen(currentState, index);
+  currentState = processTradesForOpen(currentState, index, chartVisualBarIndex);
 
-  currentState = processManualTradeActionsByType(currentState, index, open);
   currentState = processManualTradeActionsByType(
     currentState,
     index,
+    chartVisualBarIndex,
+    open,
+  );
+  currentState = processManualTradeActionsByType(
+    currentState,
+    index,
+    chartVisualBarIndex,
     amendOrder,
   );
   currentState = processManualTradeActionsByType(
     currentState,
     index,
+    chartVisualBarIndex,
     cancelOrder,
   );
 
-  currentState = processOrders(currentState, index);
+  currentState = processOrders(currentState, index, chartVisualBarIndex);
 
   currentState = processManualTradeActionsByType(
     currentState,
     index,
+    chartVisualBarIndex,
     amendTrade,
   );
   currentState = processManualTradeActionsByType(
     currentState,
     index,
+    chartVisualBarIndex,
     closeTrade,
   );
 
@@ -89,7 +114,7 @@ function processBar(
     return currentState;
   }
 
-  currentState = processTradesForBar(currentState, index);
+  currentState = processTradesForBar(currentState, index, chartVisualBarIndex);
 
   return currentState;
 }

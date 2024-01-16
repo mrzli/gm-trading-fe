@@ -22,12 +22,18 @@ import { pipAdjust } from '../pip-adjust';
 export function processManualTradeActionsByType<T extends ManualTradeActionAny>(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   actions: readonly T[],
 ): TradeProcessState {
   let currentState = state;
 
   for (const action of actions) {
-    currentState = processManualTradeAction(currentState, index, action);
+    currentState = processManualTradeAction(
+      currentState,
+      index,
+      chartVisualBarIndex,
+      action,
+    );
   }
 
   return currentState;
@@ -36,25 +42,26 @@ export function processManualTradeActionsByType<T extends ManualTradeActionAny>(
 export function processManualTradeAction<T extends ManualTradeActionAny>(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   action: T,
 ): TradeProcessState {
   const { kind } = action;
 
   switch (kind) {
     case 'open': {
-      return processManualTradeActionOpen(state, index, action);
+      return processManualTradeActionOpen(state, index, chartVisualBarIndex, action);
     }
     case 'amend-order': {
-      return processManualTradeActionAmendOrder(state, index, action);
+      return processManualTradeActionAmendOrder(state, index, chartVisualBarIndex, action);
     }
     case 'cancel-order': {
-      return processManualTradeActionCancelOrder(state, index, action);
+      return processManualTradeActionCancelOrder(state, index, chartVisualBarIndex, action);
     }
     case 'amend-trade': {
-      return processManualTradeActionAmendTrade(state, index, action);
+      return processManualTradeActionAmendTrade(state, index, chartVisualBarIndex, action);
     }
     case 'close-trade': {
-      return processManualTradeActionCloseTrade(state, index, action);
+      return processManualTradeActionCloseTrade(state, index, chartVisualBarIndex, action);
     }
     default: {
       invariant(false, `Unknown action kind: '${kind}'.`);
@@ -65,6 +72,7 @@ export function processManualTradeAction<T extends ManualTradeActionAny>(
 function processManualTradeActionOpen(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   action: ManualTradeActionOpen,
 ): TradeProcessState {
   const { barData, tradingParams, activeOrders, tradeLog } = state;
@@ -93,7 +101,7 @@ function processManualTradeActionOpen(
   const logEntry: TradeLogEntryCreateOrder = {
     kind: 'create-order',
     time,
-    barIndex: index,
+    barIndex: chartVisualBarIndex,
     orderId: id,
     price,
     marketPrice: ohlc.o,
@@ -112,6 +120,7 @@ function processManualTradeActionOpen(
 function processManualTradeActionAmendOrder(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   action: ManualTradeActionAmendOrder,
 ): TradeProcessState {
   const { barData, tradingParams, activeOrders, tradeLog } = state;
@@ -154,7 +163,7 @@ function processManualTradeActionAmendOrder(
   const logEntry: TradeLogEntryAmendOrder = {
     kind: 'amend-order',
     time,
-    barIndex: index,
+    barIndex: chartVisualBarIndex,
     orderId: targetId,
     price,
     marketPrice: ohlc.o,
@@ -173,6 +182,7 @@ function processManualTradeActionAmendOrder(
 function processManualTradeActionCancelOrder(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   action: ManualTradeActionCancelOrder,
 ): TradeProcessState {
   const { barData, activeOrders, tradeLog } = state;
@@ -194,7 +204,7 @@ function processManualTradeActionCancelOrder(
   const logEntry: TradeLogEntryCancelOrder = {
     kind: 'cancel-order',
     time,
-    barIndex: index,
+    barIndex: chartVisualBarIndex,
     orderId: targetId,
   };
 
@@ -208,6 +218,7 @@ function processManualTradeActionCancelOrder(
 function processManualTradeActionAmendTrade(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   action: ManualTradeActionAmendTrade,
 ): TradeProcessState {
   const { barData, activeTrades, tradeLog } = state;
@@ -245,7 +256,7 @@ function processManualTradeActionAmendTrade(
   const logEntry: TradeLogEntryAmendTrade = {
     kind: 'amend-trade',
     time,
-    barIndex: index,
+    barIndex: chartVisualBarIndex,
     tradeId: targetId,
     stopLoss,
     limit,
@@ -261,6 +272,7 @@ function processManualTradeActionAmendTrade(
 function processManualTradeActionCloseTrade(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   action: ManualTradeActionCloseTrade,
 ): TradeProcessState {
   const { barData, tradingParams, activeTrades, completedTrades, tradeLog } =
@@ -298,7 +310,7 @@ function processManualTradeActionCloseTrade(
   const logEntry: TradeLogEntryCloseTrade = {
     kind: 'close-trade',
     time,
-    barIndex: index,
+    barIndex: chartVisualBarIndex,
     tradeId: targetId,
     price: ohlc.o,
   };

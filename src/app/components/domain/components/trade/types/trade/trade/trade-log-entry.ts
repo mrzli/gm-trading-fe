@@ -47,6 +47,7 @@ export interface TradeLogEntryFillOrder extends TradeLogEntryBase {
   readonly orderId: number;
   readonly tradeId: number;
   readonly price: number;
+  readonly amount: number;
   readonly stopLoss: number | undefined;
   readonly limit: number | undefined;
 }

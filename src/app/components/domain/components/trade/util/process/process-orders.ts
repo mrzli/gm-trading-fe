@@ -1,10 +1,16 @@
-import { ActiveOrder, ActiveTrade, TradeLogEntryFillOrder, TradeProcessState } from '../../types';
+import {
+  ActiveOrder,
+  ActiveTrade,
+  TradeLogEntryFillOrder,
+  TradeProcessState,
+} from '../../types';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
 
 export function processOrders(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
 ): TradeProcessState {
   let currentState = state;
 
@@ -13,7 +19,13 @@ export function processOrders(
   const ordersToRemove = new Set<number>();
 
   for (const order of activeOrders) {
-    currentState = processOrder(currentState, index, order, ordersToRemove);
+    currentState = processOrder(
+      currentState,
+      index,
+      chartVisualBarIndex,
+      order,
+      ordersToRemove,
+    );
   }
 
   const remainingOrders = activeOrders.filter(
@@ -29,6 +41,7 @@ export function processOrders(
 function processOrder(
   state: TradeProcessState,
   index: number,
+  chartVisualBarIndex: number,
   order: ActiveOrder,
   ordersToRemove: Set<number>,
 ): TradeProcessState {
@@ -55,9 +68,10 @@ function processOrder(
   const logEntry: TradeLogEntryFillOrder = {
     kind: 'fill-order',
     time,
-    barIndex: index,
+    barIndex: chartVisualBarIndex,
     orderId: order.id,
     tradeId: activeTrade.id,
+    amount: activeTrade.amount,
     price: fillPrice,
     stopLoss: activeTrade.stopLoss,
     limit: activeTrade.limit,
