@@ -194,7 +194,7 @@ function drawTradeLines(
     ctx.lineTo(x2, yCenter);
     ctx.stroke();
 
-    if (offset === 'mid' && (x1Uncropped >= 0 || x2Uncropped <= bitmapWidth)) {
+    if (offset === 'execution' && (x1Uncropped >= 0 || x2Uncropped <= bitmapWidth)) {
       ctx.setLineDash(SOLID_PATTERN);
       ctx.fillStyle = color;
       if (x1Uncropped >= 0) {
