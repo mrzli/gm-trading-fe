@@ -23,7 +23,7 @@ export function barReplayMoveSubBar(
     newBarIndex++;
   }
 
-  newBarIndex = clamp(newBarIndex, 1, subBars.length);
+  newBarIndex = clamp(newBarIndex, 0, subBars.length);
   newSubBarIndex =
     newBarIndex === subBars.length
       ? 0
