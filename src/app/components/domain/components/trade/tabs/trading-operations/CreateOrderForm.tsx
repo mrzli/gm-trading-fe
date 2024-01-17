@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,26 +23,40 @@ import {
 export interface CreateOrderFormProps {
   readonly tradingParams: TradingParameters;
   readonly onCreateOrder: (order: OrderInputs) => void;
+  readonly onProposedOrderChange: (order: OrderInputs | undefined) => void;
 }
 
 export function CreateOrderForm({
   tradingParams,
   onCreateOrder,
+  onProposedOrderChange,
 }: CreateOrderFormProps): React.ReactElement {
   const schema = useMemo(() => getSchema(tradingParams), [tradingParams]);
 
-  const { handleSubmit, control, formState } = useForm<CreateOrderFormInputs>({
-    defaultValues: {
-      direction: undefined,
-      price: '',
-      amount: '',
-      stopLossDistance: '',
-      limitDistance: '',
-    },
-    resolver: zodResolver(schema),
-  });
+  const { handleSubmit, control, formState, getValues } =
+    useForm<CreateOrderFormInputs>({
+      defaultValues: {
+        direction: undefined,
+        price: '',
+        amount: '',
+        stopLossDistance: '',
+        limitDistance: '',
+      },
+      resolver: zodResolver(schema),
+    });
 
   const { isValid } = formState;
+
+  const [isSubmitHover, setIsSubmitHover] = useState(false);
+
+  useEffect(() => {
+    if (!isSubmitHover || !isValid) {
+      onProposedOrderChange(undefined);
+      return;
+    }
+
+    onProposedOrderChange(toOrderInputs(getValues()));
+  }, [onProposedOrderChange, isSubmitHover, isValid, getValues]);
 
   const submitHandler: SubmitHandler<CreateOrderFormInputs> = useCallback(
     (inputs: CreateOrderFormInputs) => {
@@ -55,6 +69,14 @@ export function CreateOrderForm({
     () => handleSubmit(submitHandler),
     [handleSubmit, submitHandler],
   );
+
+  const handleSubmitMouseEnter = useCallback(() => {
+    setIsSubmitHover(true);
+  }, []);
+
+  const handleSubmitMouseLeave = useCallback(() => {
+    setIsSubmitHover(false);
+  }, []);
 
   return (
     <form onSubmit={triggerSubmit}>
@@ -116,6 +138,8 @@ export function CreateOrderForm({
         <Button
           type={'submit'}
           onClick={triggerSubmit}
+          onMouseEnter={handleSubmitMouseEnter}
+          onMouseLeave={handleSubmitMouseLeave}
           preventDefault={true}
           disabled={!isValid}
           content={'Submit'}

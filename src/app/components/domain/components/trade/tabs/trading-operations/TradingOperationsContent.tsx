@@ -24,6 +24,7 @@ export interface TradingOperationsContentProps {
   readonly onAmendOrder: (data: AmendOrderData) => void;
   readonly onCloseTrade: (id: number) => void;
   readonly onAmendTrade: (data: AmendTradeData) => void;
+  readonly onProposedOrderChange: (order: OrderInputs | undefined) => void;
 }
 
 export function TradingOperationsContent({
@@ -35,6 +36,7 @@ export function TradingOperationsContent({
   onAmendOrder,
   onCloseTrade,
   onAmendTrade,
+  onProposedOrderChange,
 }: TradingOperationsContentProps): React.ReactElement {
   const { settings, replayPosition, barData, barIndex } = dataAndInputs;
   const { timezone } = settings;
@@ -111,6 +113,7 @@ export function TradingOperationsContent({
           <CreateOrderForm
             tradingParams={tradingParams}
             onCreateOrder={handleCreateOrder}
+            onProposedOrderChange={onProposedOrderChange}
           />
           <ItemList
             title={'Active Orders'}

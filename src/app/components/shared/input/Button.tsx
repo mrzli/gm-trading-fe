@@ -7,6 +7,8 @@ export interface ButtonProps {
   readonly type?: ButtonType;
   readonly content: React.ReactNode;
   readonly onClick?: () => void;
+  readonly onMouseEnter?: () => void;
+  readonly onMouseLeave?: () => void;
   readonly preventDefault?: boolean;
   readonly disabled?: boolean;
   readonly width?: CSSProperties['width'];
@@ -17,6 +19,8 @@ export function Button({
   type,
   content,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
   preventDefault,
   disabled,
   width,
@@ -44,6 +48,8 @@ export function Button({
       style={{ width, height }}
       type={type}
       onClick={handleClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       disabled={disabled}
     >
       {content}

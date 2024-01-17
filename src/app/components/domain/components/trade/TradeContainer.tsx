@@ -28,6 +28,7 @@ import {
   createManualTradeActionCancelOrder,
   createManualTradeActionCloseTrade,
   calculateTradeLines,
+  proposedOrderToTradeLines,
 } from './util';
 import { BarReplayPosition, Bars, ChartSettings, TradeLine } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
@@ -74,6 +75,15 @@ export function TradeContainer({
       ),
     );
 
+  const [tradeLines, setTradeLines] = useState<readonly TradeLine[]>([]);
+  const [propsedOrderTradeLines, setProposedOrderTradeLines] = useState<
+    readonly TradeLine[]
+  >([]);
+
+  const [tradeState, setTradeState] = useState<TradeProcessState>(
+    getInitialTradeProcessState(tradingDataAndInputs),
+  );
+
   // reset data when instrument changes
   useEffect(
     () => {
@@ -101,6 +111,24 @@ export function TradeContainer({
       barIndex,
     }));
   }, [settings, fullData, replayPosition, barData, barIndex]);
+
+  useEffect(() => {
+    const state = processTradeSequence(tradingDataAndInputs);
+    setTradeState(state);
+  }, [onTradeLinesChange, tradingDataAndInputs]);
+
+  useEffect(() => {
+    const tradeLines = calculateTradeLines(tradeState);
+    setTradeLines(tradeLines);
+  }, [tradeState]);
+
+  useEffect(() => {
+    const allTradeLines: readonly TradeLine[] = [
+      ...tradeLines,
+      ...propsedOrderTradeLines,
+    ];
+    onTradeLinesChange(allTradeLines);
+  }, [onTradeLinesChange, propsedOrderTradeLines, tradeLines]);
 
   const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {
@@ -204,16 +232,22 @@ export function TradeContainer({
     [appendManualTradeAction, barData, barIndex, tradingDataAndInputs.inputs],
   );
 
-  const [tradeState, setTradeState] = useState<TradeProcessState>(
-    getInitialTradeProcessState(tradingDataAndInputs),
-  );
+  const handleProposedOrderChange = useCallback(
+    (order: OrderInputs | undefined) => {
+      if (order === undefined) {
+        setProposedOrderTradeLines([]);
+        return;
+      }
 
-  useEffect(() => {
-    const state = processTradeSequence(tradingDataAndInputs);
-    setTradeState(state);
-    const tradeLines = calculateTradeLines(state);
-    onTradeLinesChange(tradeLines);
-  }, [onTradeLinesChange, tradingDataAndInputs]);
+      const newProposedOrderTradeLines = proposedOrderToTradeLines(
+        tradeState,
+        order,
+      );
+
+      setProposedOrderTradeLines(newProposedOrderTradeLines);
+    },
+    [tradeState],
+  );
 
   const tabEntries = useMemo(
     () =>
@@ -227,6 +261,7 @@ export function TradeContainer({
         handleAmendOrder,
         handleCloseTrade,
         handleAmendTrade,
+        handleProposedOrderChange,
       ),
     [
       handleAmendOrder,
@@ -234,6 +269,7 @@ export function TradeContainer({
       handleCancelOrder,
       handleCloseTrade,
       handleCreateOrder,
+      handleProposedOrderChange,
       handleTradingInputsChange,
       onReplayPositionChange,
       tradeState,
@@ -260,6 +296,7 @@ function getTabEntries(
   handleAmendOrder: (data: AmendOrderData) => void,
   handleCloseTrade: (id: number) => void,
   handleAmendTrade: (data: AmendTradeData) => void,
+  handleProposedOrderChange: (order: OrderInputs | undefined) => void,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   const timezone = tradingDataAndInputs.settings.timezone;
 
@@ -288,6 +325,7 @@ function getTabEntries(
           onAmendOrder={handleAmendOrder}
           onCloseTrade={handleCloseTrade}
           onAmendTrade={handleAmendTrade}
+          onProposedOrderChange={handleProposedOrderChange}
         />
       ),
     },
