@@ -309,7 +309,7 @@ function getInitialChartSettings(
 }
 
 const INITIAL_CHART_ADDITIONAL_SETTINGS: ChartAdditionalSettings = {
-  highlightSession: false,
+  highlightSession: true,
 };
 
 function getInitialRightToolbarState(

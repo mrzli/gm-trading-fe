@@ -59,7 +59,7 @@ export const Primary: StoryObj<ChartToolbarProps> = {
       resolution: '5m',
       timezone: 'UTC',
       additional: {
-        highlightSession: false,
+        highlightSession: true,
       },
     });
 
