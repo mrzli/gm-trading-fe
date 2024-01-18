@@ -76,7 +76,7 @@ export function TradeContainer({
     );
 
   const [tradeLines, setTradeLines] = useState<readonly TradeLine[]>([]);
-  const [propsedOrderTradeLines, setProposedOrderTradeLines] = useState<
+  const [proposedOrderTradeLines, setProposedOrderTradeLines] = useState<
     readonly TradeLine[]
   >([]);
 
@@ -125,10 +125,10 @@ export function TradeContainer({
   useEffect(() => {
     const allTradeLines: readonly TradeLine[] = [
       ...tradeLines,
-      ...propsedOrderTradeLines,
+      ...proposedOrderTradeLines,
     ];
     onTradeLinesChange(allTradeLines);
-  }, [onTradeLinesChange, propsedOrderTradeLines, tradeLines]);
+  }, [onTradeLinesChange, proposedOrderTradeLines, tradeLines]);
 
   const handleTradingInputsChange = useCallback(
     (inputs: TradingInputs) => {
@@ -240,13 +240,14 @@ export function TradeContainer({
       }
 
       const newProposedOrderTradeLines = proposedOrderToTradeLines(
+        tradingDataAndInputs,
         tradeState,
         order,
       );
 
       setProposedOrderTradeLines(newProposedOrderTradeLines);
     },
-    [tradeState],
+    [tradingDataAndInputs, tradeState],
   );
 
   const tabEntries = useMemo(

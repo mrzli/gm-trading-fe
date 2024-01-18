@@ -24,6 +24,7 @@ import {
 import { ChartBars } from '../../types';
 import { TradeLine, TradeLineRepresentation } from '../../../../types';
 import { mapGetOrThrow } from '@gmjs/data-container-util';
+import { ensureNever } from '@gmjs/assert';
 
 export interface TradeLinesOptions {}
 
@@ -151,7 +152,7 @@ function drawTradeLines(
 
   // ctx.save();
   for (const tradeLine of tradeLines) {
-    const { startIndex, endIndex, price, offset } = tradeLine;
+    const { startIndex, endIndex, price, source, offset } = tradeLine;
 
     if (endIndex < visibleFrom || startIndex > visibleTo) {
       continue;
@@ -161,7 +162,12 @@ function drawTradeLines(
     const finalEndIndex = Math.min(endIndex, visibleTo + 1, data.length - 1);
 
     const px1 = timeScale.timeToCoordinate(data[finalStartIndex].time);
-    const px2 = timeScale.timeToCoordinate(data[finalEndIndex].time);
+    const px2 =
+      source === 'proposed-order'
+        ? px1 === null
+          ? null // eslint-disable-line unicorn/no-null
+          : px1 + PROPOSED_ORDER_LINE_LENGHT * horizontalPixelRatio
+        : timeScale.timeToCoordinate(data[finalEndIndex].time);
     const py = series.priceToCoordinate(price);
 
     if (px1 === null || px2 === null || py === null) {
@@ -194,7 +200,10 @@ function drawTradeLines(
     ctx.lineTo(x2, yCenter);
     ctx.stroke();
 
-    if (offset === 'execution' && (x1Uncropped >= 0 || x2Uncropped <= bitmapWidth)) {
+    if (
+      offset === 'execution' &&
+      (x1Uncropped >= 0 || x2Uncropped <= bitmapWidth)
+    ) {
       ctx.setLineDash(SOLID_PATTERN);
       ctx.fillStyle = color;
       if (x1Uncropped >= 0) {
@@ -232,17 +241,30 @@ function drawTradeLines(
 const LINE_WIDTH = 2;
 const LINE_END_RADIUS = 2;
 
+const PROPOSED_ORDER_LINE_LENGHT = 50;
+
 function getColor(tradeLine: TradeLine): string {
   const { source, direction } = tradeLine;
 
-  if (source === 'trade') {
-    return direction === 'buy'
-      ? `rgba(32, 178, 170, 1)`
-      : `rgba(220, 20, 60, 1)`;
-  } else {
-    return direction === 'buy'
-      ? `rgba(127, 127, 0, 1)`
-      : `rgba(127, 0, 127, 1)`;
+  switch (source) {
+    case 'proposed-order': {
+      return direction === 'buy'
+        ? `rgba(0, 0, 255, 1)`
+        : `rgba(80, 16, 120, 1)`;
+    }
+    case 'order': {
+      return direction === 'buy'
+        ? `rgba(127, 127, 0, 1)`
+        : `rgba(127, 0, 127, 1)`;
+    }
+    case 'trade': {
+      return direction === 'buy'
+        ? `rgba(32, 178, 170, 1)`
+        : `rgba(220, 20, 60, 1)`;
+    }
+    default: {
+      return ensureNever(source);
+    }
   }
 }
 

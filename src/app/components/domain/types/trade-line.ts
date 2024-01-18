@@ -1,4 +1,4 @@
-export const TYPES_OF_TRADE_LINE_SOURCES = ['order', 'trade'] as const;
+export const TYPES_OF_TRADE_LINE_SOURCES = ['proposed-order', 'order', 'trade'] as const;
 
 export type TradeLineSource = (typeof TYPES_OF_TRADE_LINE_SOURCES)[number];
 
