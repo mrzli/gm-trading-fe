@@ -1,17 +1,15 @@
 import { applyFn } from '@gmjs/apply-function';
+import { AmendOrderData, AmendTradeData, OrderInputs } from '../types';
+import { maxBy } from '@gmjs/value-transformers';
+import { Bars } from '../../../types';
 import {
-  AmendOrderData,
-  AmendTradeData,
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionAny,
   ManualTradeActionCancelOrder,
   ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
-  OrderInputs,
-} from '../types';
-import { maxBy } from '@gmjs/value-transformers';
-import { Bars } from '../../../types';
+} from '@gmjs/gm-trading-shared';
 
 export function getNextManualActionId(
   tradeActions: readonly ManualTradeActionAny[],

@@ -1,5 +1,7 @@
-import { ManualTradeActionAny } from './manual-trade-action';
-import { TradingParameters } from './trading-parameters';
+import {
+  ManualTradeActionAny,
+  TradingParameters,
+} from '@gmjs/gm-trading-shared';
 
 export interface TradingInputs {
   readonly params: TradingParameters;

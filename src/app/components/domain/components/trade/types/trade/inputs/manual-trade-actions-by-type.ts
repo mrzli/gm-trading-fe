@@ -4,7 +4,7 @@ import {
   ManualTradeActionCancelOrder,
   ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
-} from './manual-trade-action';
+} from '@gmjs/gm-trading-shared';
 
 export interface ManualTradeActionsByType {
   readonly open: readonly ManualTradeActionOpen[];

@@ -2,6 +2,13 @@ import React, { useCallback, useMemo } from 'react';
 import { invariant } from '@gmjs/assert';
 import { mdiClose } from '@mdi/js';
 import {
+  ValueDisplayDataAnyList,
+  ValueDisplayItem,
+  IconButton,
+} from '../../../shared';
+import { ChartTimezone } from '../../../../types';
+import { PRECISION_POINT } from '../../../../util';
+import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionAny,
@@ -9,14 +16,7 @@ import {
   ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
   TradingParameters,
-} from '../../types';
-import {
-  ValueDisplayDataAnyList,
-  ValueDisplayItem,
-  IconButton,
-} from '../../../shared';
-import { ChartTimezone } from '../../../../types';
-import { PRECISION_POINT } from '../../../../util';
+} from '@gmjs/gm-trading-shared';
 
 export interface ManualTradeActionItemProps {
   readonly timezone: ChartTimezone;

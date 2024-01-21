@@ -7,15 +7,15 @@ import {
   argTypeInlineRadio,
   decoratorPadding,
 } from '../../../../../../../storybook';
+import { DEFAULT_TRADING_PARAMS } from '../../util';
+import { TYPES_OF_CHART_TIMEZONES } from '../../../../types';
 import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionCancelOrder,
   ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
-} from '../../types';
-import { DEFAULT_TRADING_PARAMS } from '../../util';
-import { TYPES_OF_CHART_TIMEZONES } from '../../../../types';
+} from '@gmjs/gm-trading-shared';
 
 const STORY_META: Meta<ManualTradeActionItemProps> = {
   component: ManualTradeActionItem,

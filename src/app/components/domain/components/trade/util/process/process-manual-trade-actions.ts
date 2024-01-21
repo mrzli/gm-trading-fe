@@ -1,14 +1,8 @@
 import { invariant } from '@gmjs/assert';
 import {
   TradeProcessState,
-  ManualTradeActionOpen,
-  ManualTradeActionAmendOrder,
-  ManualTradeActionAmendTrade,
   ActiveOrder,
   ActiveTrade,
-  ManualTradeActionAny,
-  ManualTradeActionCloseTrade,
-  ManualTradeActionCancelOrder,
   TradeLogEntryCreateOrder,
   TradeLogEntryAmendOrder,
   TradeLogEntryCancelOrder,
@@ -18,6 +12,14 @@ import {
 import { activeTradeToCompletedTrade } from './shared';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
+import {
+  ManualTradeActionAmendOrder,
+  ManualTradeActionAmendTrade,
+  ManualTradeActionAny,
+  ManualTradeActionCancelOrder,
+  ManualTradeActionCloseTrade,
+  ManualTradeActionOpen,
+} from '@gmjs/gm-trading-shared';
 
 export function processManualTradeActionsByType<T extends ManualTradeActionAny>(
   state: TradeProcessState,
@@ -49,19 +51,44 @@ export function processManualTradeAction<T extends ManualTradeActionAny>(
 
   switch (kind) {
     case 'open': {
-      return processManualTradeActionOpen(state, index, chartVisualBarIndex, action);
+      return processManualTradeActionOpen(
+        state,
+        index,
+        chartVisualBarIndex,
+        action,
+      );
     }
     case 'amend-order': {
-      return processManualTradeActionAmendOrder(state, index, chartVisualBarIndex, action);
+      return processManualTradeActionAmendOrder(
+        state,
+        index,
+        chartVisualBarIndex,
+        action,
+      );
     }
     case 'cancel-order': {
-      return processManualTradeActionCancelOrder(state, index, chartVisualBarIndex, action);
+      return processManualTradeActionCancelOrder(
+        state,
+        index,
+        chartVisualBarIndex,
+        action,
+      );
     }
     case 'amend-trade': {
-      return processManualTradeActionAmendTrade(state, index, chartVisualBarIndex, action);
+      return processManualTradeActionAmendTrade(
+        state,
+        index,
+        chartVisualBarIndex,
+        action,
+      );
     }
     case 'close-trade': {
-      return processManualTradeActionCloseTrade(state, index, chartVisualBarIndex, action);
+      return processManualTradeActionCloseTrade(
+        state,
+        index,
+        chartVisualBarIndex,
+        action,
+      );
     }
     default: {
       invariant(false, `Unknown action kind: '${kind}'.`);

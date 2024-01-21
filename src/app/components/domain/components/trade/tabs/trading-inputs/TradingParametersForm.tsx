@@ -3,7 +3,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { parseFloatOrThrow } from '@gmjs/number-util';
-import { TradingParameters } from '../../types';
 import { Button, FormControlledTextInput } from '../../../../../shared';
 import {
   PRECISION_MONEY,
@@ -11,6 +10,7 @@ import {
   schemaStringDecimalInRange,
   schemaStringIntegerInRange,
 } from '../../../../util';
+import { TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface TradingParametersFormProps {
   readonly value: TradingParameters;

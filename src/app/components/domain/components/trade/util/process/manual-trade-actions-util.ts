@@ -8,6 +8,9 @@ import {
   toArray,
   toMap,
 } from '@gmjs/value-transformers';
+import { ManualTradeActionsByType } from '../../types';
+import { Bars } from '../../../../types';
+import { binarySearch } from '../../../../util';
 import {
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
@@ -16,10 +19,7 @@ import {
   ManualTradeActionCloseTrade,
   ManualTradeActionKind,
   ManualTradeActionOpen,
-  ManualTradeActionsByType,
-} from '../../types';
-import { Bars } from '../../../../types';
-import { binarySearch } from '../../../../util';
+} from '@gmjs/gm-trading-shared';
 
 export function groupManualTradeActionsByBar(
   actions: readonly ManualTradeActionAny[],

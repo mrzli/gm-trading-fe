@@ -1,5 +1,8 @@
+import {
+  ManualTradeActionAny,
+  TradingParameters,
+} from '@gmjs/gm-trading-shared';
 import { Bars } from '../../../../../types';
-import { ManualTradeActionAny, TradingParameters } from '../inputs';
 import {
   ActiveOrder,
   ActiveTrade,

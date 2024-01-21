@@ -12,13 +12,13 @@ import {
   OrderInputs,
   TYPES_OF_TRADE_DIRECTIONS,
   TradeDirection,
-  TradingParameters,
 } from '../../types';
 import { invariant } from '@gmjs/assert';
 import {
   SCHEMA_EMPTY_STRING,
   schemaStringDecimalInRange,
 } from '../../../../util';
+import { TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface CreateOrderFormProps {
   readonly tradingParams: TradingParameters;

@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react';
 import { TradingParametersForm } from './TradingParametersForm';
-import {
-  ManualTradeActionAny,
-  TradingInputs,
-  TradingParameters,
-} from '../../types';
+import { TradingInputs } from '../../types';
 import { ItemList } from '../../shared';
 import { Button } from '../../../../../shared';
 import { ManualTradeActionItem } from './ManualTradeActionItem';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { ChartTimezone } from '../../../../types';
 import { TradingInputsStorage } from './TradingInputsStorage';
+import {
+  ManualTradeActionAny,
+  TradingParameters,
+} from '@gmjs/gm-trading-shared';
 
 export interface TradingInputsContentProps {
   readonly timezone: ChartTimezone;

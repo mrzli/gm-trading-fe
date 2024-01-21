@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Instrument, ManualTradeActionAny, TradingParameters } from '@gmjs/gm-trading-shared';
 import { TabLayout, TabLayoutEntry } from '../../../shared';
 import {
   AmendOrderData,
   AmendTradeData,
-  ManualTradeActionAny,
   OrderInputs,
   TradeProcessState,
   TradeTabValue,
   TradingDataAndInputs,
   TradingInputs,
-  TradingParameters,
 } from './types';
 import { TradingOperationsContent } from './tabs/trading-operations/TradingOperationsContent';
 import { TradingInputsContent } from './tabs/trading-inputs/TradingInputsContent';
@@ -32,7 +31,6 @@ import {
 } from './util';
 import { BarReplayPosition, Bars, ChartSettings, TradeLine } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
-import { Instrument } from '@gmjs/gm-trading-shared';
 
 export interface TradeContainerProps {
   readonly settings: ChartSettings;
