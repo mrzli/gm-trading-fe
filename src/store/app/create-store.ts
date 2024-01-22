@@ -3,6 +3,7 @@ import {
   createStoreExample,
   createStoreInstrument,
   createStoreTickerData,
+  createStoreTrade,
 } from '../parts';
 import { AppStoreApi } from './app-store-api';
 
@@ -11,5 +12,6 @@ export function createAppStore(dependencies: AppDependencies): AppStoreApi {
     example: createStoreExample(dependencies),
     instrument: createStoreInstrument(dependencies),
     tickerData: createStoreTickerData(dependencies),
+    trade: createStoreTrade(dependencies),
   };
 }
