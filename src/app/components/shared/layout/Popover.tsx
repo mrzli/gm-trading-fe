@@ -9,6 +9,7 @@ import {
   useFloating,
   useInteractions,
 } from '@floating-ui/react';
+import { useElementRect } from '../../../util';
 
 export interface PopoverProps {
   readonly trigger: React.ReactNode;
@@ -42,6 +43,9 @@ export function Popover({
     middleware: [offset(2), flip({ padding: 10 })],
   });
 
+  const referenceRect = useElementRect(refs.domReference);
+  const { width: referenceWidth } = referenceRect;
+
   const click = useClick(context, { event: 'mousedown' });
   const dismiss = useDismiss(context);
 
@@ -64,7 +68,7 @@ export function Popover({
           <FloatingFocusManager context={context} modal={false}>
             <div
               ref={refs.setFloating}
-              style={floatingStyles}
+              style={{ ...floatingStyles, width: referenceWidth }}
               {...getFloatingProps()}
               className='outline-none z-20'
             >
