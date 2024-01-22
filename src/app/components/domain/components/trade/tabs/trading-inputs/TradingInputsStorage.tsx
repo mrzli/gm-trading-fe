@@ -1,22 +1,26 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { z } from 'zod';
 import { TradeState } from '@gmjs/gm-trading-shared';
-import { TradingDataAndInputs, TradingInputs } from '../../types';
-import { Button, SelectButton, TextInput } from '../../../../../shared';
-import { toSimpleSelectOption } from '../../../../util';
+import { TradingDataAndInputs } from '../../types';
+import {
+  Button,
+  SelectButton,
+  SelectOption,
+  TextInput,
+} from '../../../../../shared';
 
 export interface TradingInputsStorageProps {
   readonly tradeStates: readonly TradeState[];
   readonly onSaveTradeState: (tradeState: TradeState) => void;
+  readonly onLoadTradeState: (name: string) => void;
   readonly dataAndInputs: TradingDataAndInputs;
-  readonly onInputsLoaded: (value: TradingInputs) => void;
 }
 
 export function TradingInputsStorage({
   tradeStates,
   onSaveTradeState,
+  onLoadTradeState,
   dataAndInputs,
-  onInputsLoaded,
 }: TradingInputsStorageProps): React.ReactElement {
   const { settings, barIndex, inputs } = dataAndInputs;
   const { instrumentName, resolution, timezone } = settings;
@@ -31,7 +35,7 @@ export function TradingInputsStorage({
 
   const loadTradeStateOptions = useMemo(() => {
     return tradeStates.map((tradeState: TradeState) =>
-      toSimpleSelectOption(tradeState.saveName),
+      toLoadTradeStateSelectOption(tradeState),
     );
   }, [tradeStates]);
 
@@ -67,7 +71,13 @@ export function TradingInputsStorage({
     timezone,
   ]);
 
-  const handleLoadTradeState = useCallback(() => {}, []);
+  const handleLoadTradeState = useCallback(() => {
+    if (loadTradeStateSelectedValue === undefined) {
+      return;
+    }
+
+    onLoadTradeState(loadTradeStateSelectedValue);
+  }, [loadTradeStateSelectedValue, onLoadTradeState]);
 
   return (
     <div className='grid grid-cols-2 gap-2 items-end'>
@@ -100,3 +110,17 @@ export function TradingInputsStorage({
 }
 
 const SCHEMA_SAVE_NAME_INPUT = z.string().min(1).max(255);
+
+function toLoadTradeStateSelectOption(
+  tradeState: TradeState,
+): SelectOption<string> {
+  const { saveName, tickerDataSource, tickerName, tickerResolution } =
+    tradeState;
+
+  const label = `${saveName} (${tickerDataSource}, ${tickerName}, ${tickerResolution})`;
+
+  return {
+    value: saveName,
+    label,
+  };
+}

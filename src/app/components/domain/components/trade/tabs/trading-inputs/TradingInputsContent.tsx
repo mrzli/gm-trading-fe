@@ -15,6 +15,7 @@ import {
 export interface TradingInputsContentProps {
   readonly tradeStates: readonly TradeState[];
   readonly onSaveTradeState: (tradeState: TradeState) => void;
+  readonly onLoadTradeState: (name: string) => void;
   readonly dataAndInputs: TradingDataAndInputs;
   readonly value: TradingInputs;
   readonly onValueChange: (value: TradingInputs) => void;
@@ -23,6 +24,7 @@ export interface TradingInputsContentProps {
 export function TradingInputsContent({
   tradeStates,
   onSaveTradeState,
+  onLoadTradeState,
   dataAndInputs,
   value,
   onValueChange,
@@ -68,8 +70,8 @@ export function TradingInputsContent({
       <TradingInputsStorage
         tradeStates={tradeStates}
         onSaveTradeState={onSaveTradeState}
+        onLoadTradeState={onLoadTradeState}
         dataAndInputs={dataAndInputs}
-        onInputsLoaded={onValueChange}
       />
       <TradingParametersForm
         value={value.params}

@@ -48,7 +48,7 @@ export function TickerDataContainer({
   rawData,
   onRequestData,
   tradeStates,
-  onSaveTradeState
+  onSaveTradeState,
 }: TickerDataContainerProps): React.ReactElement {
   const [getTradingUiState, setTradingUiState] =
     useLocalStorageTradingUiStateAccessor();
@@ -118,6 +118,18 @@ export function TickerDataContainer({
   const fullData = useMemo(
     () => rawDataToFullBarData(rawData ?? [], resolution),
     [rawData, resolution],
+  );
+
+  const handleSettingsChange = useCallback(
+    (settings: ChartSettings) => {
+      const { instrumentName, resolution } = settings;
+
+      setSettings(settings);
+      setTradingUiState((prev) =>
+        prev ? { ...prev, instrumentName, resolution } : undefined,
+      );
+    },
+    [setTradingUiState],
   );
 
   const handleInstrumentChange = useCallback(
@@ -198,6 +210,27 @@ export function TickerDataContainer({
     [replayPosition],
   );
 
+  const handleLoadTradeState = useCallback(
+    (name: string) => {
+      const tradeState = tradeStates.find((ts) => ts.saveName === name);
+      if (!tradeState) {
+        return;
+      }
+
+      const { tickerName, tickerResolution, timezone, barIndex } = tradeState;
+
+      handleSettingsChange({
+        ...settings,
+        instrumentName: tickerName,
+        resolution: tickerResolution,
+        timezone: timezone as ChartTimezone,
+      });
+
+      setReplayPosition({ barIndex, subBarIndex: 0 });
+    },
+    [handleSettingsChange, settings, tradeStates],
+  );
+
   const handleTradeLinesChange = useCallback(
     (tradeLines: readonly TradeLine[]) => {
       setTradeLines(tradeLines);
@@ -252,6 +285,7 @@ export function TickerDataContainer({
         entries={getToolbarEntries(
           tradeStates,
           onSaveTradeState,
+          handleLoadTradeState,
           settings,
           instrument,
           fullData,
@@ -268,8 +302,9 @@ export function TickerDataContainer({
 }
 
 function getToolbarEntries(
-  tradeStates: readonly TradeState[],  
+  tradeStates: readonly TradeState[],
   handleSaveTradeState: (tradeState: TradeState) => void,
+  handleLoadTradeState: (name: string) => void,
   settings: ChartSettings,
   instrument: Instrument,
   fullData: FullBarData,
@@ -286,6 +321,7 @@ function getToolbarEntries(
           <TradeContainer
             tradeStates={tradeStates}
             onSaveTradeState={handleSaveTradeState}
+            onLoadTradeState={handleLoadTradeState}
             settings={settings}
             instrument={instrument}
             fullData={fullData}

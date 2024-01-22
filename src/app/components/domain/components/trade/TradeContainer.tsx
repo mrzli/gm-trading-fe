@@ -40,6 +40,7 @@ import { FullBarData } from '../ticker-data-container/types';
 export interface TradeContainerProps {
   readonly tradeStates: readonly TradeState[];
   readonly onSaveTradeState: (tradeState: TradeState) => void;
+  readonly onLoadTradeState: (name: string) => void;
   readonly settings: ChartSettings;
   readonly instrument: Instrument;
   readonly fullData: FullBarData;
@@ -51,6 +52,7 @@ export interface TradeContainerProps {
 export function TradeContainer({
   tradeStates,
   onSaveTradeState,
+  onLoadTradeState,
   settings,
   instrument,
   fullData,
@@ -257,36 +259,20 @@ export function TradeContainer({
     [tradingDataAndInputs, tradeState],
   );
 
-  const tabEntries = useMemo(
-    () =>
-      getTabEntries(
-        tradeStates,
-        onSaveTradeState,
-        tradingDataAndInputs,
-        handleTradingInputsChange,
-        tradeState,
-        onReplayPositionChange,
-        handleCreateOrder,
-        handleCancelOrder,
-        handleAmendOrder,
-        handleCloseTrade,
-        handleAmendTrade,
-        handleProposedOrderChange,
-      ),
-    [
-      handleAmendOrder,
-      handleAmendTrade,
-      handleCancelOrder,
-      handleCloseTrade,
-      handleCreateOrder,
-      handleProposedOrderChange,
-      handleTradingInputsChange,
-      onReplayPositionChange,
-      onSaveTradeState,
-      tradeState,
-      tradeStates,
-      tradingDataAndInputs,
-    ],
+  const tabEntries = getTabEntries(
+    tradeStates,
+    onSaveTradeState,
+    onLoadTradeState,
+    tradingDataAndInputs,
+    handleTradingInputsChange,
+    tradeState,
+    onReplayPositionChange,
+    handleCreateOrder,
+    handleCancelOrder,
+    handleAmendOrder,
+    handleCloseTrade,
+    handleAmendTrade,
+    handleProposedOrderChange,
   );
 
   return (
@@ -301,6 +287,7 @@ export function TradeContainer({
 function getTabEntries(
   tradeStates: readonly TradeState[],
   handleSaveTradeState: (tradeState: TradeState) => void,
+  handleLoadTradeState: (name: string) => void,
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
   tradingState: TradeProcessState,
@@ -320,6 +307,7 @@ function getTabEntries(
         <TradingInputsContent
           tradeStates={tradeStates}
           onSaveTradeState={handleSaveTradeState}
+          onLoadTradeState={handleLoadTradeState}
           dataAndInputs={tradingDataAndInputs}
           value={tradingDataAndInputs.inputs}
           onValueChange={handleTradingInputsChange}

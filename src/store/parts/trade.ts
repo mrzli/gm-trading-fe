@@ -22,7 +22,7 @@ const INITIAL_STATE: StateTradePlain = {
 export type StoreTrade = StoreApi<StateTrade>;
 
 export function createStoreTrade(dependencies: AppDependencies): StoreTrade {
-  return createStore<StateTrade>((setState, _getState, _store) => ({
+  return createStore<StateTrade>((setState, getState, _store) => ({
     ...INITIAL_STATE,
     getTradeStates(): void {
       (async (): Promise<void> => {
@@ -40,11 +40,30 @@ export function createStoreTrade(dependencies: AppDependencies): StoreTrade {
         setState({ isSavingTradeState: true });
         try {
           await dependencies.api.trade.saveTradeState(tradeState);
-          setState({ isSavingTradeState: false });
+          const newTradeStates = updateTradeStates(
+            getState().tradeStates ?? [],
+            tradeState,
+          );
+          setState({ isSavingTradeState: false, tradeStates: newTradeStates });
         } catch {
           setState({ isSavingTradeState: false });
         }
       })();
     },
   }));
+}
+
+function updateTradeStates(
+  tradeStates: readonly TradeState[],
+  tradeState: TradeState,
+): readonly TradeState[] {
+  const index = tradeStates.findIndex(
+    (item) =>
+      item.userId === tradeState.userId &&
+      item.saveName === tradeState.saveName,
+  );
+  if (index === -1) {
+    return [...tradeStates, tradeState];
+  }
+  return tradeStates.with(index, tradeState);
 }
