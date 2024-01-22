@@ -115,6 +115,7 @@ export function SelectButton<
       open={isOpen}
       onOpenChange={setIsOpen}
       disabled={disabled}
+      matchTriggerWidth={true}
     />
   );
 }

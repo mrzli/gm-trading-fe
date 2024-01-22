@@ -17,6 +17,7 @@ export interface PopoverProps {
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;
   readonly disabled?: boolean;
+  readonly matchTriggerWidth?: boolean;
 }
 
 export function Popover({
@@ -25,6 +26,7 @@ export function Popover({
   open,
   onOpenChange,
   disabled,
+  matchTriggerWidth,
 }: PopoverProps): React.ReactElement {
   const handleOpenChange = useCallback(
     (open: boolean) => {
@@ -68,7 +70,10 @@ export function Popover({
           <FloatingFocusManager context={context} modal={false}>
             <div
               ref={refs.setFloating}
-              style={{ ...floatingStyles, width: referenceWidth }}
+              style={{
+                ...floatingStyles,
+                width: matchTriggerWidth ? referenceWidth : undefined,
+              }}
               {...getFloatingProps()}
               className='outline-none z-20'
             >
