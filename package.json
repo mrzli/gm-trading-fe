@@ -35,7 +35,7 @@
     "@gmjs/data-container-util": "^0.0.1",
     "@gmjs/date-util": "^0.0.5",
     "@gmjs/generic-functions": "^0.0.1",
-    "@gmjs/gm-trading-shared": "^0.0.26",
+    "@gmjs/gm-trading-shared": "^0.0.27",
     "@gmjs/number-util": "^0.0.3",
     "@gmjs/type-checks": "^0.0.4",
     "@gmjs/value-generators": "^0.0.1",

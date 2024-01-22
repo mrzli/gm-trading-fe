@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Instrument, ManualTradeActionAny, TradingParameters } from '@gmjs/gm-trading-shared';
+import {
+  Instrument,
+  ManualTradeActionAny,
+  TradeState,
+  TradingParameters,
+} from '@gmjs/gm-trading-shared';
 import { TabLayout, TabLayoutEntry } from '../../../shared';
 import {
   AmendOrderData,
@@ -33,6 +38,8 @@ import { BarReplayPosition, Bars, ChartSettings, TradeLine } from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
 
 export interface TradeContainerProps {
+  readonly tradeStates: readonly TradeState[];
+  readonly onSaveTradeState: (tradeState: TradeState) => void;
   readonly settings: ChartSettings;
   readonly instrument: Instrument;
   readonly fullData: FullBarData;
@@ -42,6 +49,8 @@ export interface TradeContainerProps {
 }
 
 export function TradeContainer({
+  tradeStates,
+  onSaveTradeState,
   settings,
   instrument,
   fullData,
@@ -251,6 +260,8 @@ export function TradeContainer({
   const tabEntries = useMemo(
     () =>
       getTabEntries(
+        tradeStates,
+        onSaveTradeState,
         tradingDataAndInputs,
         handleTradingInputsChange,
         tradeState,
@@ -271,7 +282,9 @@ export function TradeContainer({
       handleProposedOrderChange,
       handleTradingInputsChange,
       onReplayPositionChange,
+      onSaveTradeState,
       tradeState,
+      tradeStates,
       tradingDataAndInputs,
     ],
   );
@@ -286,6 +299,8 @@ export function TradeContainer({
 }
 
 function getTabEntries(
+  tradeStates: readonly TradeState[],
+  handleSaveTradeState: (tradeState: TradeState) => void,
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
   tradingState: TradeProcessState,
@@ -297,15 +312,15 @@ function getTabEntries(
   handleAmendTrade: (data: AmendTradeData) => void,
   handleProposedOrderChange: (order: OrderInputs | undefined) => void,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
-  const timezone = tradingDataAndInputs.settings.timezone;
-
   return [
     {
       value: 'trading-inputs',
       tab: 'Inputs',
       content: (
         <TradingInputsContent
-          timezone={timezone}
+          tradeStates={tradeStates}
+          onSaveTradeState={handleSaveTradeState}
+          dataAndInputs={tradingDataAndInputs}
           value={tradingDataAndInputs.inputs}
           onValueChange={handleTradingInputsChange}
         />

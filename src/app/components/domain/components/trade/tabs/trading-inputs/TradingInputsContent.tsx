@@ -1,31 +1,37 @@
 import React, { useCallback } from 'react';
 import { TradingParametersForm } from './TradingParametersForm';
-import { TradingInputs } from '../../types';
+import { TradingDataAndInputs, TradingInputs } from '../../types';
 import { ItemList } from '../../shared';
 import { Button } from '../../../../../shared';
 import { ManualTradeActionItem } from './ManualTradeActionItem';
 import { ComponentStack } from '../../shared/ComponentStack';
-import { ChartTimezone } from '../../../../types';
 import { TradingInputsStorage } from './TradingInputsStorage';
 import {
   ManualTradeActionAny,
+  TradeState,
   TradingParameters,
 } from '@gmjs/gm-trading-shared';
 
 export interface TradingInputsContentProps {
-  readonly timezone: ChartTimezone;
+  readonly tradeStates: readonly TradeState[];
+  readonly onSaveTradeState: (tradeState: TradeState) => void;
+  readonly dataAndInputs: TradingDataAndInputs;
   readonly value: TradingInputs;
   readonly onValueChange: (value: TradingInputs) => void;
 }
 
 export function TradingInputsContent({
+  tradeStates,
+  onSaveTradeState,
+  dataAndInputs,
   value,
   onValueChange,
-  timezone,
 }: TradingInputsContentProps): React.ReactElement {
+  const { settings } = dataAndInputs;
+  const { timezone } = settings;
+
   const handleTradingParametersChange = useCallback(
     (params: TradingParameters): void => {
-      console.log(params);
       onValueChange({
         ...value,
         params,
@@ -59,7 +65,12 @@ export function TradingInputsContent({
 
   return (
     <ComponentStack className='mt-1'>
-      <TradingInputsStorage inputs={value} onInputsLoaded={onValueChange} />
+      <TradingInputsStorage
+        tradeStates={tradeStates}
+        onSaveTradeState={onSaveTradeState}
+        dataAndInputs={dataAndInputs}
+        onInputsLoaded={onValueChange}
+      />
       <TradingParametersForm
         value={value.params}
         onValueChange={handleTradingParametersChange}

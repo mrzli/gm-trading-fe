@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
+import {
+  Instrument,
+  TickerDataResolution,
+  TradeState,
+} from '@gmjs/gm-trading-shared';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import { rawDataToFullBarData } from './util';
@@ -34,6 +38,8 @@ export interface TickerDataContainerProps {
     name: string,
     resolution: TickerDataResolution,
   ) => void;
+  readonly tradeStates: readonly TradeState[];
+  readonly onSaveTradeState: (tradeState: TradeState) => void;
 }
 
 export function TickerDataContainer({
@@ -41,6 +47,8 @@ export function TickerDataContainer({
   isLoadingData,
   rawData,
   onRequestData,
+  tradeStates,
+  onSaveTradeState
 }: TickerDataContainerProps): React.ReactElement {
   const [getTradingUiState, setTradingUiState] =
     useLocalStorageTradingUiStateAccessor();
@@ -242,6 +250,8 @@ export function TickerDataContainer({
       <SideToolbar
         position={'right'}
         entries={getToolbarEntries(
+          tradeStates,
+          onSaveTradeState,
           settings,
           instrument,
           fullData,
@@ -258,6 +268,8 @@ export function TickerDataContainer({
 }
 
 function getToolbarEntries(
+  tradeStates: readonly TradeState[],  
+  handleSaveTradeState: (tradeState: TradeState) => void,
   settings: ChartSettings,
   instrument: Instrument,
   fullData: FullBarData,
@@ -272,6 +284,8 @@ function getToolbarEntries(
       content: (
         <div className='w-[680px] h-full'>
           <TradeContainer
+            tradeStates={tradeStates}
+            onSaveTradeState={handleSaveTradeState}
             settings={settings}
             instrument={instrument}
             fullData={fullData}

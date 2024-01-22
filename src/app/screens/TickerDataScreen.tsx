@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { TickerDataContainer } from '../components/domain/components/ticker-data-container/TickerDataContainer';
-import { useStoreInstrument, useStoreTickerData } from '../../store';
+import {
+  useStoreInstrument,
+  useStoreTickerData,
+  useStoreTrade,
+} from '../../store';
 import { LoadingDisplay } from '../components/shared';
-import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { TickerDataResolution, TradeState } from '@gmjs/gm-trading-shared';
 import { TICKER_DATA_SOURCE } from '../util';
 
 export function TickerDataScreen(): React.ReactElement {
@@ -12,9 +16,22 @@ export function TickerDataScreen(): React.ReactElement {
   const { isLoadingTickerData, tickerData, getTickerData } =
     useStoreTickerData();
 
-  useEffect(() => {
-    getAllInstruments();
-  }, [getAllInstruments]);
+  const {
+    // isLoadingTradeStates,
+    tradeStates,
+    // isSavingTradeState,
+    getTradeStates,
+    saveTradeState,
+  } = useStoreTrade();
+
+  useEffect(
+    () => {
+      getAllInstruments();
+      getTradeStates();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   const handleRequestData = useCallback(
     (name: string, resolution: TickerDataResolution) => {
@@ -27,9 +44,18 @@ export function TickerDataScreen(): React.ReactElement {
     [getTickerData],
   );
 
-  if (isLoadingAllInstruments || !allInstruments) {
+  const handleSaveTradeState = useCallback(
+    (tradeState: TradeState) => {
+      saveTradeState(tradeState);
+    },
+    [saveTradeState],
+  );
+
+  if (isLoadingAllInstruments || !allInstruments || !tradeStates) {
     return <LoadingDisplay />;
-  } else if (allInstruments.length === 0) {
+  }
+
+  if (allInstruments.length === 0) {
     return <div>No instruments found.</div>;
   }
 
@@ -39,6 +65,8 @@ export function TickerDataScreen(): React.ReactElement {
       isLoadingData={isLoadingTickerData}
       rawData={tickerData?.data}
       onRequestData={handleRequestData}
+      tradeStates={tradeStates}
+      onSaveTradeState={handleSaveTradeState}
     />
   );
 }
