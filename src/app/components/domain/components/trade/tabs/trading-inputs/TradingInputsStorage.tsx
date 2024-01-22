@@ -8,6 +8,7 @@ import {
   SelectOption,
   TextInput,
 } from '../../../../../shared';
+import { TICKER_DATA_SOURCE } from '../../../../../../util';
 
 export interface TradingInputsStorageProps {
   readonly tradeStates: readonly TradeState[];
@@ -50,7 +51,7 @@ export function TradingInputsStorage({
     const tradeState: TradeState = {
       userId: '1',
       saveName: saveNameInput,
-      tickerDataSource: 'td365',
+      tickerDataSource: TICKER_DATA_SOURCE,
       tickerName: instrumentName,
       tickerResolution: resolution,
       timezone,

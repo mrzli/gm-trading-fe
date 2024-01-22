@@ -242,6 +242,23 @@ export function TickerDataContainer({
     return <div>Instrument not found.</div>;
   }
 
+  const top = (
+    <>
+      <ChartToolbar
+        instrumentNames={instrumentNames}
+        bars={fullData.bars}
+        settings={settings}
+        onInstrumentChange={handleInstrumentChange}
+        onResolutionChange={handleResolutionChange}
+        onTimezoneChange={handleTimezoneChange}
+        logicalRange={logicalRange}
+        onLogicalRangeChange={handleChartTimeRangeChange}
+        onAdditionalSettingsChange={handleAdditionalSettingsChange}
+      />
+      {false && <PrettyDisplay content={settings} />}
+    </>
+  );
+
   const dataChartElement =
     !isLoadingData && rawData && rawData.length > 0 ? (
       <ChartContainer
@@ -260,23 +277,6 @@ export function TickerDataContainer({
     ) : (
       <div>Please load data...</div>
     );
-
-  const top = (
-    <>
-      <ChartToolbar
-        instrumentNames={instrumentNames}
-        bars={fullData.bars}
-        settings={settings}
-        onInstrumentChange={handleInstrumentChange}
-        onResolutionChange={handleResolutionChange}
-        onTimezoneChange={handleTimezoneChange}
-        logicalRange={logicalRange}
-        onLogicalRangeChange={handleChartTimeRangeChange}
-        onAdditionalSettingsChange={handleAdditionalSettingsChange}
-      />
-      {false && <PrettyDisplay content={settings} />}
-    </>
-  );
 
   const right =
     !isLoadingData && rawData && rawData.length > 0 ? (
