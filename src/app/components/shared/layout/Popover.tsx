@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   FloatingFocusManager,
   FloatingPortal,
@@ -15,6 +15,7 @@ export interface PopoverProps {
   readonly content: React.ReactNode;
   readonly open: boolean;
   readonly onOpenChange: (open: boolean) => void;
+  readonly disabled?: boolean;
 }
 
 export function Popover({
@@ -22,11 +23,22 @@ export function Popover({
   content,
   open,
   onOpenChange,
+  disabled,
 }: PopoverProps): React.ReactElement {
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (disabled) {
+        return;
+      }
+      onOpenChange(open);
+    },
+    [disabled, onOpenChange],
+  );
+
   const { refs, floatingStyles, context } = useFloating({
     placement: 'bottom-start',
     open,
-    onOpenChange,
+    onOpenChange: handleOpenChange,
     middleware: [offset(2), flip({ padding: 10 })],
   });
 
@@ -40,7 +52,11 @@ export function Popover({
 
   return (
     <div className='inline-flex'>
-      <div ref={refs.setReference} {...getReferenceProps()} className='inline-flex'>
+      <div
+        ref={refs.setReference}
+        {...getReferenceProps()}
+        className='inline-flex w-full'
+      >
         {trigger}
       </div>
       {open && (

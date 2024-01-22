@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
+import cls from 'classnames';
 import {
   TwSelectItemRenderer,
   SelectOption,
@@ -23,6 +24,7 @@ export interface SelectButtonProps<
   readonly selectItemRenderer?: TwSelectItemRenderer<TValue>;
   readonly selectionWidth?: CSSProperties['width'];
   readonly selectItemWidth?: CSSProperties['width'];
+  readonly disabled?: boolean;
 }
 
 export function SelectButton<
@@ -37,6 +39,7 @@ export function SelectButton<
   selectItemRenderer,
   selectionWidth,
   selectItemWidth,
+  disabled,
 }: SelectButtonProps<TValue, TAllowUndefined>): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -74,8 +77,17 @@ export function SelectButton<
     );
   }, [selectItemRenderer, selectItemWidth]);
 
+  const triggerClasses = cls(
+    'text-sm border rounded outline-none flex items-center min-h-[22px] w-full select-none',
+    { 'border-slate-400 bg-slate-100 cursor-pointer': !disabled },
+    {
+      'border-slate-200 bg-slate-100 text-gray-400 cursor-not-allowed':
+        disabled,
+    },
+  );
+
   const trigger = (
-    <div className='text-sm border rounded border-slate-400 bg-slate-100 cursor-pointer outline-none inline-flex items-center min-h-[24px] min-w-[24px] select-none'>
+    <div className={triggerClasses}>
       {finalSelectionRenderer(selectedOption)}
     </div>
   );
@@ -102,6 +114,7 @@ export function SelectButton<
       content={content}
       open={isOpen}
       onOpenChange={setIsOpen}
+      disabled={disabled}
     />
   );
 }
