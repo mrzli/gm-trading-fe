@@ -93,7 +93,12 @@ function processBar(
     cancelOrder,
   );
 
-  currentState = processOrders(currentState, index, chartVisualBarIndex);
+  // do not do normal order processing over the entire last replay bar
+  // (because replay is limited to the open of the last replay bar,
+  //   and previous bar close to current bar open is already processed)
+  if (index < lastReplayBarIndex) {
+     currentState = processOrders(currentState, index, chartVisualBarIndex);
+  }
 
   currentState = processManualTradeActionsByType(
     currentState,
@@ -108,13 +113,11 @@ function processBar(
     closeTrade,
   );
 
-  // do not check for lstop-loss limit over the entire last replay bar
+  // do not check for stop-loss/limit over the entire last replay bar
   // (because replay is limited to the open of the last replay bar)
-  if (index === lastReplayBarIndex) {
-    return currentState;
+  if (index < lastReplayBarIndex) {
+    currentState = processTradesForBar(currentState, index, chartVisualBarIndex);
   }
-
-  currentState = processTradesForBar(currentState, index, chartVisualBarIndex);
 
   return currentState;
 }
