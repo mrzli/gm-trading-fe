@@ -31,7 +31,7 @@ import { isBarReplayPositionEqual } from '../../util';
 import { useLocalStorageTradingUiStateAccessor } from '../../hooks';
 
 export interface TickerDataContainerProps {
-  readonly allInstruments: readonly Instrument[];
+  readonly instruments: readonly Instrument[];
   readonly isLoadingData: boolean;
   readonly rawData: readonly string[] | undefined;
   readonly onRequestData: (
@@ -43,7 +43,7 @@ export interface TickerDataContainerProps {
 }
 
 export function TickerDataContainer({
-  allInstruments,
+  instruments,
   isLoadingData,
   rawData,
   onRequestData,
@@ -61,12 +61,8 @@ export function TickerDataContainer({
     RightToolbarState | undefined
   >(getInitialRightToolbarState(tradingUiState));
 
-  const instrumentNames = useMemo(() => {
-    return allInstruments?.map((instrument) => instrument.name) ?? [];
-  }, [allInstruments]);
-
   const [settings, setSettings] = useState<ChartSettings>(
-    getInitialChartSettings(tradingUiState, instrumentNames[0]),
+    getInitialChartSettings(tradingUiState, instruments[0].name),
   );
 
   const { instrumentName, resolution, timezone } = settings;
@@ -110,10 +106,8 @@ export function TickerDataContainer({
   );
 
   const instrument = useMemo(() => {
-    return allInstruments.find(
-      (instrument) => instrument.name === instrumentName,
-    );
-  }, [allInstruments, instrumentName]);
+    return instruments.find((instrument) => instrument.name === instrumentName);
+  }, [instruments, instrumentName]);
 
   const fullData = useMemo(
     () => rawDataToFullBarData(rawData ?? [], resolution),
@@ -121,63 +115,35 @@ export function TickerDataContainer({
   );
 
   const handleSettingsChange = useCallback(
-    (settings: ChartSettings) => {
+    (newSettings: ChartSettings) => {
       const { instrumentName, resolution } = settings;
+      const { instrumentName: newInstrumentName, resolution: newResolution } =
+        newSettings;
 
-      setSettings(settings);
+      setSettings(newSettings);
       setTradingUiState((prev) =>
-        prev ? { ...prev, instrumentName, resolution } : undefined,
+        prev
+          ? {
+              ...prev,
+              instrumentName: newInstrumentName,
+              resolution: newResolution,
+            }
+          : undefined,
       );
+
+      if (
+        newInstrumentName !== instrumentName ||
+        newResolution !== resolution
+      ) {
+        onRequestData(newInstrumentName, newResolution);
+      }
     },
-    [setTradingUiState],
+    [onRequestData, setTradingUiState, settings],
   );
 
-  const handleInstrumentChange = useCallback(
-    (instrumentName: string) => {
-      setSettings((s) => ({
-        ...s,
-        instrumentName,
-      }));
-      setTradingUiState((prev) =>
-        prev ? { ...prev, instrumentName } : undefined,
-      );
-      onRequestData(instrumentName, resolution);
-    },
-    [onRequestData, resolution, setTradingUiState],
-  );
-
-  const handleResolutionChange = useCallback(
-    (resolution: TickerDataResolution) => {
-      setSettings((s) => ({
-        ...s,
-        resolution,
-      }));
-      setTradingUiState((prev) => (prev ? { ...prev, resolution } : undefined));
-      onRequestData(instrumentName, resolution);
-    },
-    [instrumentName, onRequestData, setTradingUiState],
-  );
-
-  const handleTimezoneChange = useCallback((timezone: ChartTimezone) => {
-    setSettings((s) => ({
-      ...s,
-      timezone,
-    }));
-  }, []);
-
-  const handleChartTimeRangeChange = useCallback<ChartTimeRangeChangeFn>(
+  const handleLogicalRangeChange = useCallback<ChartTimeRangeChangeFn>(
     (range) => {
       setLogicalRange(range);
-    },
-    [],
-  );
-
-  const handleAdditionalSettingsChange = useCallback(
-    (additionalSettings: ChartAdditionalSettings) => {
-      setSettings((s) => ({
-        ...s,
-        additional: additionalSettings,
-      }));
     },
     [],
   );
@@ -245,15 +211,12 @@ export function TickerDataContainer({
   const top = (
     <>
       <ChartToolbar
-        instrumentNames={instrumentNames}
+        instruments={instruments}
         bars={fullData.bars}
         settings={settings}
-        onInstrumentChange={handleInstrumentChange}
-        onResolutionChange={handleResolutionChange}
-        onTimezoneChange={handleTimezoneChange}
+        onSettingsChange={handleSettingsChange}
         logicalRange={logicalRange}
-        onLogicalRangeChange={handleChartTimeRangeChange}
-        onAdditionalSettingsChange={handleAdditionalSettingsChange}
+        onLogicalRangeChange={handleLogicalRangeChange}
       />
       {false && <PrettyDisplay content={settings} />}
     </>
@@ -267,7 +230,7 @@ export function TickerDataContainer({
         fullData={fullData}
         isTrading={rightToolbarState === 'trade'}
         logicalRange={logicalRange}
-        onLogicalRangeChange={handleChartTimeRangeChange}
+        onLogicalRangeChange={handleLogicalRangeChange}
         replayPosition={replayPosition}
         onReplayPositionChange={handleReplayPositionChange}
         tradeLines={tradeLines}

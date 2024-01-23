@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Bars,
   ChartSettings,
@@ -17,60 +17,92 @@ import {
 } from '../../../shared';
 import { toSimpleSelectOption } from '../../util';
 import { ChartToolbarAdditional } from './components/ChartToolbarAdditional';
-import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export interface ChartToolbarProps {
-  readonly instrumentNames: readonly string[];
+  readonly instruments: readonly Instrument[];
   readonly bars: Bars;
   readonly settings: ChartSettings;
-  readonly onInstrumentChange: (instrumentName: string) => void;
-  readonly onResolutionChange: (resolution: TickerDataResolution) => void;
-  readonly onTimezoneChange: (timezone: ChartTimezone) => void;
+  readonly onSettingsChange: (settings: ChartSettings) => void;
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
-  readonly onAdditionalSettingsChange: (
-    additionalSettings: ChartAdditionalSettings,
-  ) => void;
 }
 
 export function ChartToolbar({
-  instrumentNames,
+  instruments,
   bars,
   settings,
-  onInstrumentChange,
-  onResolutionChange,
-  onTimezoneChange,
+  onSettingsChange,
   logicalRange,
   onLogicalRangeChange,
-  onAdditionalSettingsChange,
 }: ChartToolbarProps): React.ReactElement {
   const { instrumentName, resolution, timezone, additional } = settings;
 
   const instrumentOptions = useMemo<readonly SelectOption<string>[]>(() => {
-    return instrumentNames.map((instrumentName) =>
-      toSimpleSelectOption(instrumentName),
+    return instruments.map((instrument) =>
+      toSimpleSelectOption(instrument.name),
     );
-  }, [instrumentNames]);
+  }, [instruments]);
+
+  const handleInstrumentChange = useCallback(
+    (instrumentName: string) => {
+      onSettingsChange({
+        ...settings,
+        instrumentName,
+      });
+    },
+    [settings, onSettingsChange],
+  );
+
+  const handleResolutionChange = useCallback(
+    (resolution: TickerDataResolution) => {
+      onSettingsChange({
+        ...settings,
+        resolution,
+      });
+    },
+    [settings, onSettingsChange],
+  );
+
+  const handleTimezoneChange = useCallback(
+    (timezone: ChartTimezone) => {
+      onSettingsChange({
+        ...settings,
+        timezone,
+      });
+    },
+    [settings, onSettingsChange],
+  );
+
+  const handleAdditionalSettingsChange = useCallback(
+    (additional: ChartAdditionalSettings) => {
+      onSettingsChange({
+        ...settings,
+        additional,
+      });
+    },
+    [settings, onSettingsChange],
+  );
 
   return (
     <div className='inline-flex flex-row gap-0.5'>
       <SelectButton<string, false>
         options={instrumentOptions}
         value={instrumentName}
-        onValueChange={onInstrumentChange}
+        onValueChange={handleInstrumentChange}
         selectionWidth={80}
         selectItemWidth={80}
       />
       <SelectButtonCentered<TickerDataResolution, false>
         options={RESOLUTION_OPTIONS}
         value={resolution}
-        onValueChange={onResolutionChange}
+        onValueChange={handleResolutionChange}
         width={32}
       />
       <SelectButton<ChartTimezone, false>
         options={TIMEZONE_OPTIONS}
         value={timezone}
-        onValueChange={onTimezoneChange}
+        onValueChange={handleTimezoneChange}
         selectionWidth={128}
         selectItemWidth={128}
       />
@@ -92,7 +124,7 @@ export function ChartToolbar({
       )}
       <ChartToolbarAdditional
         value={additional}
-        onValueChange={onAdditionalSettingsChange}
+        onValueChange={handleAdditionalSettingsChange}
       />
     </div>
   );

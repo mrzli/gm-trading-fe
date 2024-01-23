@@ -61,7 +61,7 @@ export function TickerDataScreen(): React.ReactElement {
 
   return (
     <TickerDataContainer
-      allInstruments={allInstruments}
+      instruments={allInstruments}
       isLoadingData={isLoadingTickerData}
       rawData={tickerData?.data}
       onRequestData={handleRequestData}
