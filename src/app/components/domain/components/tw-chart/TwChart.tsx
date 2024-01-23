@@ -16,6 +16,7 @@ export interface TwChartProps {
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  readonly onChartDoubleClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   readonly tradeLines: readonly TradeLine[];
 }
 
@@ -26,6 +27,7 @@ export function TwChart({
   logicalRange,
   onLogicalRangeChange,
   onChartKeyDown,
+  onChartDoubleClick,
   tradeLines,
 }: TwChartProps): React.ReactElement {
   const { timezone } = settings;
@@ -97,6 +99,7 @@ export function TwChart({
         tabIndex={0}
         className='h-full overflow-hidden'
         onKeyDown={onChartKeyDown}
+        onDoubleClick={onChartDoubleClick}
       />
     </div>
   );
