@@ -22,13 +22,11 @@ import {
   ChartRange,
   BarReplayPosition,
   RightToolbarState,
-  TradingUiState,
   ChartAdditionalSettings,
   TradeLine,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
-import { useLocalStorageTradingUiStateAccessor } from '../../hooks';
 
 export interface TickerDataContainerProps {
   readonly instruments: readonly Instrument[];
@@ -50,37 +48,15 @@ export function TickerDataContainer({
   tradeStates,
   onSaveTradeState,
 }: TickerDataContainerProps): React.ReactElement {
-  const [getTradingUiState, setTradingUiState] =
-    useLocalStorageTradingUiStateAccessor();
-
-  const tradingUiState = useMemo(() => {
-    return getTradingUiState();
-  }, [getTradingUiState]);
-
   const [rightToolbarState, setRightToolbarState] = useState<
     RightToolbarState | undefined
-  >(getInitialRightToolbarState(tradingUiState));
+  >(undefined);
 
   const [settings, setSettings] = useState<ChartSettings>(
-    getInitialChartSettings(tradingUiState, instruments[0].name),
+    getInitialChartSettings(instruments[0].name),
   );
 
-  const { instrumentName, resolution, timezone } = settings;
-
-  useEffect(() => {
-    setTradingUiState({
-      instrumentName,
-      resolution,
-      timezone,
-      rightToolbarState,
-    });
-  }, [
-    instrumentName,
-    resolution,
-    rightToolbarState,
-    setTradingUiState,
-    timezone,
-  ]);
+  const { instrumentName, resolution } = settings;
 
   const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>(
     undefined,
@@ -121,15 +97,6 @@ export function TickerDataContainer({
         newSettings;
 
       setSettings(newSettings);
-      setTradingUiState((prev) =>
-        prev
-          ? {
-              ...prev,
-              instrumentName: newInstrumentName,
-              resolution: newResolution,
-            }
-          : undefined,
-      );
 
       if (
         newInstrumentName !== instrumentName ||
@@ -138,7 +105,7 @@ export function TickerDataContainer({
         onRequestData(newInstrumentName, newResolution);
       }
     },
-    [onRequestData, setTradingUiState, settings],
+    [onRequestData, settings],
   );
 
   const handleLogicalRangeChange = useCallback<ChartTimeRangeChangeFn>(
@@ -157,12 +124,9 @@ export function TickerDataContainer({
         setReplayPosition({ barIndex: undefined, subBarIndex: 0 });
       }
 
-      setTradingUiState((prev) =>
-        prev ? { ...prev, rightToolbarState: value } : undefined,
-      );
       setRightToolbarState(value);
     },
-    [replayPosition, setTradingUiState],
+    [replayPosition],
   );
 
   const handleReplayPositionChange = useCallback(
@@ -298,25 +262,11 @@ function getToolbarEntries(
   ];
 }
 
-function getInitialChartSettings(
-  tradingUiState: TradingUiState | undefined,
-  firstInstrumentName: string,
-): ChartSettings {
-  if (!tradingUiState) {
-    return {
-      instrumentName: firstInstrumentName,
-      resolution: '5m',
-      timezone: 'UTC',
-      additional: INITIAL_CHART_ADDITIONAL_SETTINGS,
-    };
-  }
-
-  const { instrumentName, resolution, timezone } = tradingUiState;
-
+function getInitialChartSettings(firstInstrumentName: string): ChartSettings {
   return {
-    instrumentName,
-    resolution,
-    timezone,
+    instrumentName: firstInstrumentName,
+    resolution: '5m',
+    timezone: 'UTC',
     additional: INITIAL_CHART_ADDITIONAL_SETTINGS,
   };
 }
@@ -324,13 +274,3 @@ function getInitialChartSettings(
 const INITIAL_CHART_ADDITIONAL_SETTINGS: ChartAdditionalSettings = {
   highlightSession: true,
 };
-
-function getInitialRightToolbarState(
-  tradingUiState: TradingUiState | undefined,
-): RightToolbarState | undefined {
-  if (!tradingUiState) {
-    return undefined;
-  }
-
-  return tradingUiState.rightToolbarState;
-}

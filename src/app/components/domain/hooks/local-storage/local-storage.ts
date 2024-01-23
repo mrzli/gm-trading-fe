@@ -6,7 +6,6 @@ import {
   useLocalStorageAccessor,
 } from './local-storage-accessor';
 import { TradingInputs } from '../../components/trade/types';
-import { TradingUiState } from '../../types';
 
 export function useLocalStorage(): StorageWrapper<LocalStorageKeys> {
   const context = useAppContext();
@@ -15,8 +14,4 @@ export function useLocalStorage(): StorageWrapper<LocalStorageKeys> {
 
 export function useLocalStorageTradingInputsAccessor(): UseStorageValueAccessorResult<TradingInputs> {
   return useLocalStorageAccessor('trading-inputs');
-}
-
-export function useLocalStorageTradingUiStateAccessor(): UseStorageValueAccessorResult<TradingUiState> {
-  return useLocalStorageAccessor('trading-ui-state');
 }
