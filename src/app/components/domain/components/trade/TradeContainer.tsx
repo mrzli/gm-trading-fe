@@ -34,14 +34,20 @@ import {
   calculateTradeLines,
   proposedOrderToTradeLines,
 } from './util';
-import { BarReplayPosition, Bars, ChartSettings, TradeLine } from '../../types';
+import {
+  BarReplayPosition,
+  Bars,
+  ChartSettings,
+  ChartTimezone,
+  TradeLine,
+} from '../../types';
 import { FullBarData } from '../ticker-data-container/types';
+import { useStoreTrade } from '../../../../../store';
+import { TICKER_DATA_SOURCE } from '../../../../util';
 
 export interface TradeContainerProps {
-  readonly tradeStates: readonly TradeState[];
-  readonly onSaveTradeState: (tradeState: TradeState) => void;
-  readonly onLoadTradeState: (name: string) => void;
   readonly settings: ChartSettings;
+  readonly onSettingsChange: (settings: ChartSettings) => void;
   readonly instrument: Instrument;
   readonly fullData: FullBarData;
   readonly replayPosition: BarReplayPosition;
@@ -50,10 +56,8 @@ export interface TradeContainerProps {
 }
 
 export function TradeContainer({
-  tradeStates,
-  onSaveTradeState,
-  onLoadTradeState,
   settings,
+  onSettingsChange,
   instrument,
   fullData,
   replayPosition,
@@ -61,6 +65,22 @@ export function TradeContainer({
   onTradeLinesChange,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
+
+  const {
+    // isLoadingTradeStates,
+    tradeStates,
+    // isSavingTradeState,
+    getTradeStates,
+    saveTradeState,
+  } = useStoreTrade();
+
+  useEffect(
+    () => {
+      getTradeStates();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   const barData = useMemo<Bars>(
     () => flattenGroupedBars(fullData.subBars),
@@ -72,17 +92,47 @@ export function TradeContainer({
     [fullData, replayPosition],
   );
 
-  const [tradingDataAndInputs, setTradingDataAndInputs] =
-    useState<TradingDataAndInputs>(
-      getInitialTradingDataAndInputs(
-        settings,
-        instrument,
-        fullData,
-        replayPosition,
-        barData,
-        barIndex,
-      ),
-    );
+  const [tradingParameters, setTradingParameters] = useState<TradingParameters>(
+    getInitialTradingParameters(instrument),
+  );
+
+  const [manualTradeActions, setManualTradeActions] = useState<
+    readonly ManualTradeActionAny[]
+  >([]);
+
+  // // reset data when instrument changes
+  // useEffect(
+  //   () => {
+  //     setTradingParameters(getInitialTradingParameters(instrument));
+  //     setManualTradeActions([]);
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [instrument],
+  // );
+
+  const tradingDataAndInputs = useMemo<TradingDataAndInputs>(() => {
+    return {
+      settings,
+      instrument,
+      fullData,
+      replayPosition,
+      barData,
+      barIndex,
+      inputs: {
+        params: tradingParameters,
+        manualTradeActions,
+      },
+    };
+  }, [
+    settings,
+    instrument,
+    fullData,
+    replayPosition,
+    barData,
+    barIndex,
+    tradingParameters,
+    manualTradeActions,
+  ]);
 
   const [tradeLines, setTradeLines] = useState<readonly TradeLine[]>([]);
   const [proposedOrderTradeLines, setProposedOrderTradeLines] = useState<
@@ -92,34 +142,6 @@ export function TradeContainer({
   const [tradeState, setTradeState] = useState<TradeProcessState>(
     getInitialTradeProcessState(tradingDataAndInputs),
   );
-
-  // reset data when instrument changes
-  useEffect(
-    () => {
-      const dataAndInputs = getInitialTradingDataAndInputs(
-        settings,
-        instrument,
-        fullData,
-        replayPosition,
-        barData,
-        barIndex,
-      );
-      setTradingDataAndInputs(dataAndInputs);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [instrument],
-  );
-
-  useEffect(() => {
-    setTradingDataAndInputs((prev) => ({
-      ...prev,
-      settings,
-      fullData,
-      replayPosition,
-      barData,
-      barIndex,
-    }));
-  }, [settings, fullData, replayPosition, barData, barIndex]);
 
   useEffect(() => {
     const state = processTradeSequence(tradingDataAndInputs);
@@ -139,24 +161,83 @@ export function TradeContainer({
     onTradeLinesChange(allTradeLines);
   }, [onTradeLinesChange, proposedOrderTradeLines, tradeLines]);
 
-  const handleTradingInputsChange = useCallback(
-    (inputs: TradingInputs) => {
-      setTradingDataAndInputs((prev) => ({ ...prev, inputs }));
+  const handleLoadTradeState = useCallback(
+    (name: string) => {
+      const tradeState = tradeStates?.find((state) => state.saveName === name);
+      if (tradeState === undefined) {
+        return;
+      }
+
+      const {
+        tickerName,
+        tickerResolution,
+        timezone,
+        barIndex,
+        tradingParameters,
+        manualTradeActions,
+      } = tradeState;
+
+      const newSettings: ChartSettings = {
+        ...settings,
+        instrumentName: tickerName,
+        resolution: tickerResolution,
+        timezone: timezone as ChartTimezone,
+      };
+      onSettingsChange(newSettings);
+
+      const newReplayPosition: BarReplayPosition = {
+        barIndex,
+        subBarIndex: 0,
+      };
+      onReplayPositionChange(newReplayPosition);
+
+      setTradingParameters(tradingParameters);
+      setManualTradeActions(manualTradeActions);
     },
-    [setTradingDataAndInputs],
+    [onReplayPositionChange, onSettingsChange, settings, tradeStates],
   );
+
+  const handleSaveTradeState = useCallback(
+    (name: string) => {
+      const { instrumentName, resolution, timezone } = settings;
+      const { barIndex } = replayPosition;
+
+      if (barIndex === undefined) {
+        return;
+      }
+
+      const tradeState: TradeState = {
+        userId: '1',
+        saveName: name,
+        tickerDataSource: TICKER_DATA_SOURCE,
+        tickerName: instrumentName,
+        tickerResolution: resolution,
+        timezone,
+        barIndex,
+        tradingParameters,
+        manualTradeActions,
+      };
+      saveTradeState(tradeState);
+    },
+    [
+      manualTradeActions,
+      replayPosition,
+      saveTradeState,
+      settings,
+      tradingParameters,
+    ],
+  );
+
+  const handleTradingInputsChange = useCallback((inputs: TradingInputs) => {
+    setTradingParameters(inputs.params);
+    setManualTradeActions(inputs.manualTradeActions);
+  }, []);
 
   const appendManualTradeAction = useCallback(
     (action: ManualTradeActionAny) => {
       const { manualTradeActions } = tradingDataAndInputs.inputs;
 
-      setTradingDataAndInputs({
-        ...tradingDataAndInputs,
-        inputs: {
-          ...tradingDataAndInputs.inputs,
-          manualTradeActions: [...manualTradeActions, action],
-        },
-      });
+      setManualTradeActions([...manualTradeActions, action]);
     },
     [tradingDataAndInputs],
   );
@@ -260,9 +341,9 @@ export function TradeContainer({
   );
 
   const tabEntries = getTabEntries(
-    tradeStates,
-    onSaveTradeState,
-    onLoadTradeState,
+    tradeStates ?? [],
+    handleSaveTradeState,
+    handleLoadTradeState,
     tradingDataAndInputs,
     handleTradingInputsChange,
     tradeState,
@@ -286,7 +367,7 @@ export function TradeContainer({
 
 function getTabEntries(
   tradeStates: readonly TradeState[],
-  handleSaveTradeState: (tradeState: TradeState) => void,
+  handleSaveTradeState: (name: string) => void,
   handleLoadTradeState: (name: string) => void,
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
@@ -376,28 +457,6 @@ function getInitialTradeProcessState(
     activeTrades: [],
     completedTrades: [],
     tradeLog: [],
-  };
-}
-
-function getInitialTradingDataAndInputs(
-  settings: ChartSettings,
-  instrument: Instrument,
-  fullData: FullBarData,
-  replayPosition: BarReplayPosition,
-  barData: Bars,
-  barIndex: number,
-): TradingDataAndInputs {
-  return {
-    settings,
-    instrument,
-    fullData,
-    replayPosition,
-    barData,
-    barIndex,
-    inputs: {
-      params: getInitialTradingParameters(instrument),
-      manualTradeActions: [],
-    },
   };
 }
 

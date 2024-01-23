@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { TickerDataContainer } from '../components/domain/components/ticker-data-container/TickerDataContainer';
-import {
-  useStoreInstrument,
-  useStoreTickerData,
-  useStoreTrade,
-} from '../../store';
+import { useStoreInstrument, useStoreTickerData } from '../../store';
 import { LoadingDisplay } from '../components/shared';
-import { TickerDataResolution, TradeState } from '@gmjs/gm-trading-shared';
+import { TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { TICKER_DATA_SOURCE } from '../util';
 
 export function TickerDataScreen(): React.ReactElement {
@@ -16,18 +12,9 @@ export function TickerDataScreen(): React.ReactElement {
   const { isLoadingTickerData, tickerData, getTickerData } =
     useStoreTickerData();
 
-  const {
-    // isLoadingTradeStates,
-    tradeStates,
-    // isSavingTradeState,
-    getTradeStates,
-    saveTradeState,
-  } = useStoreTrade();
-
   useEffect(
     () => {
       getAllInstruments();
-      getTradeStates();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
@@ -44,14 +31,7 @@ export function TickerDataScreen(): React.ReactElement {
     [getTickerData],
   );
 
-  const handleSaveTradeState = useCallback(
-    (tradeState: TradeState) => {
-      saveTradeState(tradeState);
-    },
-    [saveTradeState],
-  );
-
-  if (isLoadingAllInstruments || !allInstruments || !tradeStates) {
+  if (isLoadingAllInstruments || !allInstruments) {
     return <LoadingDisplay />;
   }
 
@@ -65,8 +45,6 @@ export function TickerDataScreen(): React.ReactElement {
       isLoadingData={isLoadingTickerData}
       rawData={tickerData?.data}
       onRequestData={handleRequestData}
-      tradeStates={tradeStates}
-      onSaveTradeState={handleSaveTradeState}
     />
   );
 }

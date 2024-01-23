@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Instrument,
   TickerDataResolution,
-  TradeState,
 } from '@gmjs/gm-trading-shared';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
@@ -11,7 +10,6 @@ import { LoadingDisplay, PrettyDisplay } from '../../../shared';
 import { TickerDataLayout } from '../layout';
 import {
   ChartSettings,
-  ChartTimezone,
   ChartRange,
   BarReplayPosition,
   RightToolbarState,
@@ -30,8 +28,6 @@ export interface TickerDataContainerProps {
     name: string,
     resolution: TickerDataResolution,
   ) => void;
-  readonly tradeStates: readonly TradeState[];
-  readonly onSaveTradeState: (tradeState: TradeState) => void;
 }
 
 export function TickerDataContainer({
@@ -39,8 +35,6 @@ export function TickerDataContainer({
   isLoadingData,
   rawData,
   onRequestData,
-  tradeStates,
-  onSaveTradeState,
 }: TickerDataContainerProps): React.ReactElement {
   const [rightToolbarState, setRightToolbarState] = useState<
     RightToolbarState | undefined
@@ -133,27 +127,6 @@ export function TickerDataContainer({
     [replayPosition],
   );
 
-  const handleLoadTradeState = useCallback(
-    (name: string) => {
-      const tradeState = tradeStates.find((ts) => ts.saveName === name);
-      if (!tradeState) {
-        return;
-      }
-
-      const { tickerName, tickerResolution, timezone, barIndex } = tradeState;
-
-      handleSettingsChange({
-        ...settings,
-        instrumentName: tickerName,
-        resolution: tickerResolution,
-        timezone: timezone as ChartTimezone,
-      });
-
-      setReplayPosition({ barIndex, subBarIndex: 0 });
-    },
-    [handleSettingsChange, settings, tradeStates],
-  );
-
   const handleTradeLinesChange = useCallback(
     (tradeLines: readonly TradeLine[]) => {
       setTradeLines(tradeLines);
@@ -201,10 +174,8 @@ export function TickerDataContainer({
   const right =
     !isLoadingData && rawData && rawData.length > 0 ? (
       <TickerDataRightToolbar
-        tradeStates={tradeStates}
-        onSaveTradeState={onSaveTradeState}
-        onLoadTradeState={handleLoadTradeState}
         settings={settings}
+        onSettingsChange={handleSettingsChange}
         instrument={instrument}
         fullData={fullData}
         replayPosition={replayPosition}

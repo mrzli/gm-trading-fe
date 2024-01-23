@@ -1,32 +1,24 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { z } from 'zod';
 import { TradeState } from '@gmjs/gm-trading-shared';
-import { TradingDataAndInputs } from '../../types';
 import {
   Button,
   SelectButton,
   SelectOption,
   TextInput,
 } from '../../../../../shared';
-import { TICKER_DATA_SOURCE } from '../../../../../../util';
 
 export interface TradingInputsStorageProps {
   readonly tradeStates: readonly TradeState[];
-  readonly onSaveTradeState: (tradeState: TradeState) => void;
+  readonly onSaveTradeState: (name: string) => void;
   readonly onLoadTradeState: (name: string) => void;
-  readonly dataAndInputs: TradingDataAndInputs;
 }
 
 export function TradingInputsStorage({
   tradeStates,
   onSaveTradeState,
   onLoadTradeState,
-  dataAndInputs,
 }: TradingInputsStorageProps): React.ReactElement {
-  const { settings, barIndex, inputs } = dataAndInputs;
-  const { instrumentName, resolution, timezone } = settings;
-  const { params, manualTradeActions } = inputs;
-
   const [saveNameInput, setSaveNameInput] = useState('');
 
   const isSaveNameInputValid = useMemo(
@@ -48,29 +40,8 @@ export function TradingInputsStorage({
       return;
     }
 
-    const tradeState: TradeState = {
-      userId: '1',
-      saveName: saveNameInput,
-      tickerDataSource: TICKER_DATA_SOURCE,
-      tickerName: instrumentName,
-      tickerResolution: resolution,
-      timezone,
-      barIndex,
-      tradingParameters: params,
-      manualTradeActions: manualTradeActions,
-    };
-    onSaveTradeState(tradeState);
-  }, [
-    barIndex,
-    instrumentName,
-    isSaveNameInputValid,
-    manualTradeActions,
-    onSaveTradeState,
-    params,
-    resolution,
-    saveNameInput,
-    timezone,
-  ]);
+    onSaveTradeState(saveNameInput);
+  }, [isSaveNameInputValid, onSaveTradeState, saveNameInput]);
 
   const handleLoadTradeState = useCallback(() => {
     if (loadTradeStateSelectedValue === undefined) {

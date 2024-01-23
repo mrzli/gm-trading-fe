@@ -1,6 +1,6 @@
 import React from 'react';
 import { SideToolbar, SideToolbarEntry } from '../../../shared';
-import { TradeState, Instrument } from '@gmjs/gm-trading-shared';
+import { Instrument } from '@gmjs/gm-trading-shared';
 import {
   ChartSettings,
   BarReplayPosition,
@@ -11,10 +11,8 @@ import { FullBarData } from './types';
 import { TradeContainer } from '../trade/TradeContainer';
 
 export interface TickerDataRightToolbarProps {
-  readonly tradeStates: readonly TradeState[];
-  readonly onSaveTradeState: (tradeState: TradeState) => void;
-  readonly onLoadTradeState: (name: string) => void;
   readonly settings: ChartSettings;
+  readonly onSettingsChange: (value: ChartSettings) => void;
   readonly instrument: Instrument;
   readonly fullData: FullBarData;
   readonly replayPosition: BarReplayPosition;
@@ -27,10 +25,8 @@ export interface TickerDataRightToolbarProps {
 }
 
 export function TickerDataRightToolbar({
-  tradeStates,
-  onSaveTradeState,
-  onLoadTradeState,
   settings,
+  onSettingsChange,
   instrument,
   fullData,
   replayPosition,
@@ -46,9 +42,7 @@ export function TickerDataRightToolbar({
       content: (
         <div className='w-[680px] h-full'>
           <TradeContainer
-            tradeStates={tradeStates}
-            onSaveTradeState={onSaveTradeState}
-            onLoadTradeState={onLoadTradeState}
+            onSettingsChange={onSettingsChange}
             settings={settings}
             instrument={instrument}
             fullData={fullData}
