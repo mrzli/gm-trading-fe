@@ -7,15 +7,8 @@ import {
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import { rawDataToFullBarData } from './util';
-import {
-  LoadingDisplay,
-  PrettyDisplay,
-  SideToolbar,
-  SideToolbarEntry,
-} from '../../../shared';
-import { FullBarData } from './types';
+import { LoadingDisplay, PrettyDisplay } from '../../../shared';
 import { TickerDataLayout } from '../layout';
-import { TradeContainer } from '../trade/TradeContainer';
 import {
   ChartSettings,
   ChartTimezone,
@@ -27,6 +20,7 @@ import {
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
+import { TickerDataRightToolbar } from './TickerDataRightToolbar';
 
 export interface TickerDataContainerProps {
   readonly instruments: readonly Instrument[];
@@ -78,7 +72,7 @@ export function TickerDataContainer({
       onRequestData(instrumentName, resolution);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [onRequestData],
+    [],
   );
 
   const instrument = useMemo(() => {
@@ -92,7 +86,6 @@ export function TickerDataContainer({
 
   const handleSettingsChange = useCallback(
     (newSettings: ChartSettings) => {
-      const { instrumentName, resolution } = settings;
       const { instrumentName: newInstrumentName, resolution: newResolution } =
         newSettings;
 
@@ -105,7 +98,7 @@ export function TickerDataContainer({
         onRequestData(newInstrumentName, newResolution);
       }
     },
-    [onRequestData, settings],
+    [instrumentName, onRequestData, resolution],
   );
 
   const handleLogicalRangeChange = useCallback<ChartTimeRangeChangeFn>(
@@ -207,59 +200,22 @@ export function TickerDataContainer({
 
   const right =
     !isLoadingData && rawData && rawData.length > 0 ? (
-      <SideToolbar
-        position={'right'}
-        entries={getToolbarEntries(
-          tradeStates,
-          onSaveTradeState,
-          handleLoadTradeState,
-          settings,
-          instrument,
-          fullData,
-          replayPosition,
-          handleReplayPositionChange,
-          handleTradeLinesChange,
-        )}
-        value={rightToolbarState}
-        onValueChange={handleRightToolbarStateChange}
+      <TickerDataRightToolbar
+        tradeStates={tradeStates}
+        onSaveTradeState={onSaveTradeState}
+        onLoadTradeState={handleLoadTradeState}
+        settings={settings}
+        instrument={instrument}
+        fullData={fullData}
+        replayPosition={replayPosition}
+        onReplayPositionChange={handleReplayPositionChange}
+        onTradeLinesChange={handleTradeLinesChange}
+        rightToolbarState={rightToolbarState}
+        onRightToolbarStateChange={handleRightToolbarStateChange}
       />
     ) : undefined;
 
   return <TickerDataLayout main={dataChartElement} top={top} right={right} />;
-}
-
-function getToolbarEntries(
-  tradeStates: readonly TradeState[],
-  handleSaveTradeState: (tradeState: TradeState) => void,
-  handleLoadTradeState: (name: string) => void,
-  settings: ChartSettings,
-  instrument: Instrument,
-  fullData: FullBarData,
-  replayPosition: BarReplayPosition,
-  handleReplayPositionChange: (value: BarReplayPosition) => void,
-  handleTradeLinesChange: (tradeLines: readonly TradeLine[]) => void,
-): readonly SideToolbarEntry<RightToolbarState>[] {
-  return [
-    {
-      value: 'trade',
-      tab: 'Trade',
-      content: (
-        <div className='w-[680px] h-full'>
-          <TradeContainer
-            tradeStates={tradeStates}
-            onSaveTradeState={handleSaveTradeState}
-            onLoadTradeState={handleLoadTradeState}
-            settings={settings}
-            instrument={instrument}
-            fullData={fullData}
-            replayPosition={replayPosition}
-            onReplayPositionChange={handleReplayPositionChange}
-            onTradeLinesChange={handleTradeLinesChange}
-          />
-        </div>
-      ),
-    },
-  ];
 }
 
 function getInitialChartSettings(firstInstrumentName: string): ChartSettings {
