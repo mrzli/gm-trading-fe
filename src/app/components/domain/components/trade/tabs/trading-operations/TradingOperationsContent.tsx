@@ -1,4 +1,4 @@
-import React, { Component, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import {

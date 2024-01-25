@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
 import {
@@ -10,12 +10,23 @@ import {
   GroupedBars,
   TradeLine,
 } from '../../types';
-import { FullBarData } from './types';
+import {
+  CreateOrderActionType,
+  CreateOrderStateAny,
+  CreateOrderStateFinish,
+  FullBarData,
+} from './types';
 import { Key } from 'ts-key-enum';
 import { ChartTimeStep } from '../chart-toolbar/types';
 import { moveLogicalRange } from '../chart-toolbar/util';
-import { getChartData, toLogicalOffset } from './util';
+import {
+  getChartData,
+  toLogicalOffset,
+  transitionCreateOrderState,
+} from './util';
 import { barReplayMoveSubBar, isChartRangeEqual } from '../../util';
+import { ChartMouseClickData } from '../tw-chart/types';
+import { invariant } from '@gmjs/assert';
 
 export interface ChartContainerProps {
   readonly instrument: Instrument;
@@ -27,6 +38,7 @@ export interface ChartContainerProps {
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
   readonly tradeLines: readonly TradeLine[];
+  readonly onCreateOrder: (data: CreateOrderStateFinish) => void;
 }
 
 export function ChartContainer({
@@ -39,6 +51,7 @@ export function ChartContainer({
   replayPosition,
   onReplayPositionChange,
   tradeLines,
+  onCreateOrder,
 }: ChartContainerProps): React.ReactElement {
   const { resolution, timezone } = settings;
   const { subBars, bars } = fullData;
@@ -46,6 +59,28 @@ export function ChartContainer({
   const chartData = useMemo(() => {
     return getChartData(fullData, replayPosition, resolution);
   }, [fullData, replayPosition, resolution]);
+
+  const [createOrderState, setCreateOrderState] = useState<CreateOrderStateAny>(
+    { type: 'start' },
+  );
+
+  const handleChartClick = useCallback(
+    (data: ChartMouseClickData) => {
+      const { price } = data;
+
+      if (!isTrading || price === undefined) {
+        return;
+      }
+
+      const newCreateOrderState = transitionCreateOrderState(createOrderState, {
+        type: 'next-price',
+        price,
+      });
+
+      setCreateOrderState(newCreateOrderState);
+    },
+    [createOrderState, isTrading],
+  );
 
   const handleChartKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -70,12 +105,38 @@ export function ChartContainer({
           }
           break;
         }
+        case 'l':
+        case 'm':
+        case 'b':
+        case 's':
+        case ' ':
+        case Key.Enter:
+        case Key.Escape: {
+          if (!isTrading) {
+            break;
+          }
+
+          if (createOrderState.type === 'finish' && event.key === Key.Enter) {
+            onCreateOrder(createOrderState);
+          }
+
+          const newCreateOrderState = transitionCreateOrderState(
+            createOrderState,
+            {
+              type: keyToCreateOrderActionType(event.key),
+            },
+          );
+
+          setCreateOrderState(newCreateOrderState);
+        }
       }
     },
     [
       bars,
+      createOrderState,
       isTrading,
       logicalRange,
+      onCreateOrder,
       onLogicalRangeChange,
       onReplayPositionChange,
       replayPosition,
@@ -91,6 +152,7 @@ export function ChartContainer({
       data={chartData}
       logicalRange={logicalRange}
       onLogicalRangeChange={onLogicalRangeChange}
+      onChartClick={handleChartClick}
       onChartKeyDown={handleChartKeyDown}
       tradeLines={tradeLines}
     />
@@ -147,4 +209,35 @@ function keyboardNavigateReplay(
   };
 
   handleReplayPositionChange(newBarReplayPosition);
+}
+
+function keyToCreateOrderActionType(
+  key: string,
+): Exclude<CreateOrderActionType, 'next-price'> {
+  switch (key) {
+    case 'l': {
+      return 'order-limit';
+    }
+    case 'm': {
+      return 'order-market';
+    }
+    case 'b': {
+      return 'buy';
+    }
+    case 's': {
+      return 'sell';
+    }
+    case ' ': {
+      return 'skip';
+    }
+    case Key.Enter: {
+      return 'finish';
+    }
+    case Key.Escape: {
+      return 'cancel';
+    }
+    default: {
+      invariant(false, 'Unhandled key.');
+    }
+  }
 }

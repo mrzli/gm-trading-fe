@@ -1,10 +1,24 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { createChart } from 'lightweight-charts';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { Bars, ChartRange, ChartSettings, TradeLine } from '../../types';
-import { ChartBar, ChartBars, TwChartApi, TwInitInput } from './types';
+import {
+  ChartBar,
+  ChartBars,
+  ChartMouseClickData,
+  ChartMouseClickFn,
+  ChartMouseClickInternalData,
+  TwChartApi,
+  TwInitInput,
+} from './types';
 import { destroyChart, getChartBars, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
@@ -16,7 +30,8 @@ export interface TwChartProps {
   readonly logicalRange: ChartRange | undefined;
   readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
-  readonly onChartDoubleClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  readonly onChartClick?: (data: ChartMouseClickData) => void;
+  readonly onChartDoubleClick?: (data: ChartMouseClickData) => void;
   readonly tradeLines: readonly TradeLine[];
 }
 
@@ -27,6 +42,7 @@ export function TwChart({
   logicalRange,
   onLogicalRangeChange,
   onChartKeyDown,
+  onChartClick,
   onChartDoubleClick,
   tradeLines,
 }: TwChartProps): React.ReactElement {
@@ -41,14 +57,35 @@ export function TwChart({
 
   const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
 
+  const handleChartClick = useCallback<ChartMouseClickFn>(
+    (data) => {
+      onChartClick?.(toChartClickMouseData(data));
+    },
+    [onChartClick],
+  );
+
+  const handleChartDoubleClick = useCallback<ChartMouseClickFn>(
+    (data) => {
+      onChartDoubleClick?.(toChartClickMouseData(data));
+    },
+    [onChartDoubleClick],
+  );
+
+  const input = useMemo<TwInitInput>(
+    () =>
+      getTwInitInput(
+        precision,
+        setCurrCrosshairItem,
+        handleChartClick,
+        handleChartDoubleClick,
+        onLogicalRangeChange,
+      ),
+    [precision, handleChartClick, handleChartDoubleClick, onLogicalRangeChange],
+  );
+
   const chartBars = useMemo<ChartBars>(() => {
     return getChartBars(data, timezone);
   }, [data, timezone]);
-
-  const input = useMemo<TwInitInput>(
-    () => getTwInitInput(precision, setCurrCrosshairItem, onLogicalRangeChange),
-    [precision, onLogicalRangeChange],
-  );
 
   useEffect(() => {
     const c = chartElementRef.current
@@ -99,7 +136,6 @@ export function TwChart({
         tabIndex={0}
         className='h-full overflow-hidden'
         onKeyDown={onChartKeyDown}
-        onDoubleClick={onChartDoubleClick}
       />
     </div>
   );
@@ -120,4 +156,15 @@ function getOhlcLabelElement(
       <TwOhlcLabel o={open} h={high} l={low} c={close} precision={precision} />
     </div>
   );
+}
+
+function toChartClickMouseData(
+  input: ChartMouseClickInternalData,
+): ChartMouseClickData {
+  const { index, price } = input;
+
+  return {
+    barIndex: index,
+    price,
+  };
 }

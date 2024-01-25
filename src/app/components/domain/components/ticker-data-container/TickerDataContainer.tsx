@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  Instrument,
-  TickerDataResolution,
-} from '@gmjs/gm-trading-shared';
+import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import { rawDataToFullBarData } from './util';
@@ -19,6 +16,7 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
 import { TickerDataRightToolbar } from './TickerDataRightToolbar';
+import { CreateOrderStateFinish } from './types';
 
 export interface TickerDataContainerProps {
   readonly instruments: readonly Instrument[];
@@ -102,6 +100,10 @@ export function TickerDataContainer({
     [],
   );
 
+  const handleCreateOrder = useCallback((data: CreateOrderStateFinish) => {
+    console.log('Create order', data);
+  }, []);
+
   const handleRightToolbarStateChange = useCallback(
     (value: RightToolbarState | undefined) => {
       const { barIndex } = replayPosition;
@@ -164,6 +166,7 @@ export function TickerDataContainer({
         replayPosition={replayPosition}
         onReplayPositionChange={handleReplayPositionChange}
         tradeLines={tradeLines}
+        onCreateOrder={handleCreateOrder}
       />
     ) : isLoadingData ? (
       <LoadingDisplay />

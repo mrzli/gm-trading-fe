@@ -1,4 +1,10 @@
-import { IChartApi, ISeriesApi, ITimeScaleApi, Time } from 'lightweight-charts';
+import {
+  IChartApi,
+  ISeriesApi,
+  ITimeScaleApi,
+  MouseEventParams,
+  Time,
+} from 'lightweight-charts';
 import { ChartRange, ChartSettings } from '../../../types';
 import {
   CrosshairMoveFn,
@@ -10,6 +16,8 @@ import {
   GetTimeRangeFn,
   ChartBar,
   ChartBars,
+  ChartMouseClickFn,
+  ChartMouseClickInternalData,
 } from '../types';
 import {
   getChartOptions,
@@ -23,12 +31,16 @@ export function getTwInitInput(
   precision: number,
   // data: ChartBars,
   onCrosshairMove: CrosshairMoveFn,
+  onChartClick: ChartMouseClickFn,
+  onChartDoubleClick: ChartMouseClickFn,
   onChartTimeRangeChange: ChartTimeRangeChangeFn,
 ): TwInitInput {
   return {
     precision,
     // data,
     onCrosshairMove,
+    onChartClick,
+    onChartDoubleClick,
     onChartTimeRangeChange,
   };
 }
@@ -43,7 +55,13 @@ export function initChart(
     return undefined;
   }
 
-  const { precision, onCrosshairMove, onChartTimeRangeChange } = input;
+  const {
+    precision,
+    onCrosshairMove,
+    onChartClick,
+    onChartDoubleClick,
+    onChartTimeRangeChange,
+  } = input;
 
   const chartOptions = getChartOptions();
   chart.applyOptions(chartOptions);
@@ -72,6 +90,27 @@ export function initChart(
     onCrosshairMove(item as ChartBar);
   });
 
+  chart.subscribeClick((param) => {
+    const { logical, point } = param;
+    const data: ChartMouseClickInternalData = {
+      index: logical === undefined ? undefined : logical,
+      price:
+        point === undefined
+          ? undefined
+          : candlestickSeries.coordinateToPrice(point.y) ?? undefined,
+      point,
+    };
+    onChartClick(data);
+  });
+
+  chart.subscribeClick((param) => {
+    onChartClick(toChartMouseClickInternalData(candlestickSeries, param));
+  });
+
+  chart.subscribeDblClick((param) => {
+    onChartDoubleClick(toChartMouseClickInternalData(candlestickSeries, param));
+  });
+
   timeScale.subscribeVisibleLogicalRangeChange((param) => {
     if (!param) {
       onChartTimeRangeChange(undefined);
@@ -89,6 +128,21 @@ export function initChart(
     getTimeRange: createGetTimeRangeFn(timeScale),
     setTimeRange: createSetTimeRangeFn(timeScale),
     plugins: pluginsApi,
+  };
+}
+
+function toChartMouseClickInternalData(
+  candlestickSeries: ISeriesApi<'Candlestick'>,
+  param: MouseEventParams<Time>,
+): ChartMouseClickInternalData {
+  const { logical, point } = param;
+  return {
+    index: logical === undefined ? undefined : logical,
+    price:
+      point === undefined
+        ? undefined
+        : candlestickSeries.coordinateToPrice(point.y) ?? undefined,
+    point,
   };
 }
 
