@@ -32,7 +32,7 @@ export function TabLayout<TValue extends string = string>({
         )}
       </div>
       <hr />
-      <div className='overflow-y-auto'>{selectedEntry.content}</div>
+      {selectedEntry.content}
     </div>
   );
 }

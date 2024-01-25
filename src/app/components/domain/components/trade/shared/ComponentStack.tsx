@@ -12,7 +12,7 @@ export function ComponentStack({
 }: ComponentStackProps): React.ReactElement {
   const childrenArray = React.Children.toArray(children);
 
-  const classes = cls('flex flex-col gap-2 overflow-y-auto', className);
+  const classes = cls('flex flex-col gap-2', className);
 
   return (
     <div className={classes}>

@@ -11,6 +11,7 @@ import {
   TradeState,
   TradingParameters,
 } from '@gmjs/gm-trading-shared';
+import { ScrollYContainer } from '../../shared/ScrollYContainer';
 
 export interface TradingInputsContentProps {
   readonly tradeStates: readonly TradeState[];
@@ -66,7 +67,7 @@ export function TradingInputsContent({
   }, [onValueChange, value]);
 
   return (
-    <ComponentStack className='mt-1'>
+    <ComponentStack className='mt-1 overflow-hidden'>
       <TradingInputsStorage
         tradeStates={tradeStates}
         onSaveTradeState={onSaveTradeState}
@@ -76,27 +77,29 @@ export function TradingInputsContent({
         value={value.params}
         onValueChange={handleTradingParametersChange}
       />
-      <ItemList
-        title={'Manual Trade Actions'}
-        toolbar={
-          <Button
-            content={'Remove All'}
-            onClick={handleRemoveAllManualActions}
-          />
-        }
-        items={value.manualTradeActions}
-        itemRenderer={(manualTradeAction, index) => {
-          return (
-            <ManualTradeActionItem
-              key={index}
-              timezone={timezone}
-              tradingParams={value.params}
-              tradeAction={manualTradeAction}
-              onRemoveClick={handleRemoveManualActionItem}
+      <ScrollYContainer>
+        <ItemList
+          title={'Manual Trade Actions'}
+          toolbar={
+            <Button
+              content={'Remove All'}
+              onClick={handleRemoveAllManualActions}
             />
-          );
-        }}
-      />
+          }
+          items={value.manualTradeActions}
+          itemRenderer={(manualTradeAction, index) => {
+            return (
+              <ManualTradeActionItem
+                key={index}
+                timezone={timezone}
+                tradingParams={value.params}
+                tradeAction={manualTradeAction}
+                onRemoveClick={handleRemoveManualActionItem}
+              />
+            );
+          }}
+        />
+      </ScrollYContainer>
       {/* <div>
         {FORM_BUILDER.build({
           entries: [

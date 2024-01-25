@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { Component, useCallback, useState } from 'react';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import {
@@ -14,6 +14,7 @@ import { CompletedTradeItem } from './lists/CompletedTradeItem';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { BarReplayPosition } from '../../../../types';
 import { TradeStatusDisplay } from './TradeStatusDisplay';
+import { ScrollYContainer } from '../../shared/ScrollYContainer';
 
 export interface TradingOperationsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -102,7 +103,7 @@ export function TradingOperationsContent({
   );
 
   return (
-    <ComponentStack className='mt-1'>
+    <ComponentStack className='mt-1 overflow-hidden'>
       <TradeStatusDisplay
         dataAndInputs={dataAndInputs}
         state={state}
@@ -115,59 +116,63 @@ export function TradingOperationsContent({
             onCreateOrder={handleCreateOrder}
             onProposedOrderChange={onProposedOrderChange}
           />
-          <ItemList
-            title={'Active Orders'}
-            items={activeOrders}
-            itemRenderer={(item, index) => {
-              return (
-                <ActiveOrderItem
-                  key={index}
-                  timezone={timezone}
-                  tradingParams={tradingParams}
-                  item={item}
-                  isEditing={editOrderId === item.id}
-                  onEdit={handleOrderEdit}
-                  onCancel={onCancelOrder}
-                  onEditOk={handleOrderEditOk}
-                  onEditCancel={handleOrderEditCancel}
-                />
-              );
-            }}
-          />
-          <ItemList
-            title={'Active Trades'}
-            items={activeTrades}
-            itemRenderer={(item, index) => {
-              return (
-                <ActiveTradeItem
-                  key={index}
-                  timezone={timezone}
-                  tradingParams={tradingParams}
-                  bar={bar}
-                  item={item}
-                  isEditing={editTradeId === item.id}
-                  onEdit={handleTradeEdit}
-                  onClose={onCloseTrade}
-                  onEditOk={handleTradeEditOk}
-                  onEditCancel={handleTradeEditCancel}
-                />
-              );
-            }}
-          />
-          <ItemList
-            title={'Completed Trades'}
-            items={completedTrades}
-            itemRenderer={(item, index) => {
-              return (
-                <CompletedTradeItem
-                  key={index}
-                  timezone={timezone}
-                  tradingParams={tradingParams}
-                  item={item}
-                />
-              );
-            }}
-          />
+          <ScrollYContainer>
+            <ComponentStack>
+              <ItemList
+                title={'Active Orders'}
+                items={activeOrders}
+                itemRenderer={(item, index) => {
+                  return (
+                    <ActiveOrderItem
+                      key={index}
+                      timezone={timezone}
+                      tradingParams={tradingParams}
+                      item={item}
+                      isEditing={editOrderId === item.id}
+                      onEdit={handleOrderEdit}
+                      onCancel={onCancelOrder}
+                      onEditOk={handleOrderEditOk}
+                      onEditCancel={handleOrderEditCancel}
+                    />
+                  );
+                }}
+              />
+              <ItemList
+                title={'Active Trades'}
+                items={activeTrades}
+                itemRenderer={(item, index) => {
+                  return (
+                    <ActiveTradeItem
+                      key={index}
+                      timezone={timezone}
+                      tradingParams={tradingParams}
+                      bar={bar}
+                      item={item}
+                      isEditing={editTradeId === item.id}
+                      onEdit={handleTradeEdit}
+                      onClose={onCloseTrade}
+                      onEditOk={handleTradeEditOk}
+                      onEditCancel={handleTradeEditCancel}
+                    />
+                  );
+                }}
+              />
+              <ItemList
+                title={'Completed Trades'}
+                items={completedTrades}
+                itemRenderer={(item, index) => {
+                  return (
+                    <CompletedTradeItem
+                      key={index}
+                      timezone={timezone}
+                      tradingParams={tradingParams}
+                      item={item}
+                    />
+                  );
+                }}
+              />
+            </ComponentStack>
+          </ScrollYContainer>
         </>
       )}
     </ComponentStack>

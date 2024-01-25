@@ -42,7 +42,7 @@ export function SideToolbar<TValue extends string = string>({
     </div>
   );
   const space = <div className='w-2' />;
-  const content = <div className='overflow-y-auto'>{selectedContent}</div>;
+  const content = <div>{selectedContent}</div>;
 
   const classes = cls('flex h-full max-h-full', {
     'flex-row': position === 'left',
