@@ -7,7 +7,7 @@ import {
   TradeLine,
   RightToolbarState,
 } from '../../types';
-import { FullBarData } from './types';
+import { CreateOrderStateFinish, FullBarData } from './types';
 import { TradeContainer } from '../trade/TradeContainer';
 
 export interface TickerDataRightToolbarProps {
@@ -18,6 +18,7 @@ export interface TickerDataRightToolbarProps {
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
   readonly onTradeLinesChange: (tradeLines: readonly TradeLine[]) => void;
+  readonly createOrderData: CreateOrderStateFinish | undefined;
   readonly rightToolbarState: RightToolbarState | undefined;
   readonly onRightToolbarStateChange: (
     value: RightToolbarState | undefined,
@@ -32,6 +33,7 @@ export function TickerDataRightToolbar({
   replayPosition,
   onReplayPositionChange,
   onTradeLinesChange,
+  createOrderData,
   rightToolbarState,
   onRightToolbarStateChange,
 }: TickerDataRightToolbarProps): React.ReactElement {
@@ -49,6 +51,7 @@ export function TickerDataRightToolbar({
             replayPosition={replayPosition}
             onReplayPositionChange={onReplayPositionChange}
             onTradeLinesChange={onTradeLinesChange}
+            createOrderData={createOrderData}
           />
         </div>
       ),

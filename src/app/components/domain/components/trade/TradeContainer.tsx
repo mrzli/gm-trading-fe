@@ -41,7 +41,7 @@ import {
   ChartTimezone,
   TradeLine,
 } from '../../types';
-import { FullBarData } from '../ticker-data-container/types';
+import { CreateOrderStateFinish, FullBarData } from '../ticker-data-container/types';
 import { useStoreTrade } from '../../../../../store';
 import { TICKER_DATA_SOURCE } from '../../../../util';
 
@@ -53,6 +53,7 @@ export interface TradeContainerProps {
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
   readonly onTradeLinesChange: (tradeLines: readonly TradeLine[]) => void;
+  readonly createOrderData: CreateOrderStateFinish | undefined;
 }
 
 export function TradeContainer({
@@ -63,6 +64,7 @@ export function TradeContainer({
   replayPosition,
   onReplayPositionChange,
   onTradeLinesChange,
+  createOrderData,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
 
@@ -354,6 +356,7 @@ export function TradeContainer({
     handleCloseTrade,
     handleAmendTrade,
     handleProposedOrderChange,
+    createOrderData,
   );
 
   return (
@@ -379,6 +382,7 @@ function getTabEntries(
   handleCloseTrade: (id: number) => void,
   handleAmendTrade: (data: AmendTradeData) => void,
   handleProposedOrderChange: (order: OrderInputs | undefined) => void,
+  createOrderData: CreateOrderStateFinish | undefined,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
   return [
     {
@@ -409,6 +413,7 @@ function getTabEntries(
           onCloseTrade={handleCloseTrade}
           onAmendTrade={handleAmendTrade}
           onProposedOrderChange={handleProposedOrderChange}
+          createOrderData={createOrderData}
         />
       ),
     },

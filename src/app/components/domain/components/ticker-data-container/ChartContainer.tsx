@@ -60,6 +60,8 @@ export function ChartContainer({
     return getChartData(fullData, replayPosition, resolution);
   }, [fullData, replayPosition, resolution]);
 
+  const marketPrice = chartData.at(-1)!.open;
+
   const [createOrderState, setCreateOrderState] = useState<CreateOrderStateAny>(
     { type: 'start' },
   );
@@ -72,14 +74,18 @@ export function ChartContainer({
         return;
       }
 
-      const newCreateOrderState = transitionCreateOrderState(createOrderState, {
-        type: 'next-price',
-        price,
-      });
+      const newCreateOrderState = transitionCreateOrderState(
+        createOrderState,
+        marketPrice,
+        {
+          type: 'next-price',
+          price,
+        },
+      );
 
       setCreateOrderState(newCreateOrderState);
     },
-    [createOrderState, isTrading],
+    [createOrderState, isTrading, marketPrice],
   );
 
   const handleChartKeyDown = useCallback(
@@ -122,6 +128,7 @@ export function ChartContainer({
 
           const newCreateOrderState = transitionCreateOrderState(
             createOrderState,
+            marketPrice,
             {
               type: keyToCreateOrderActionType(event.key),
             },
@@ -136,6 +143,7 @@ export function ChartContainer({
       createOrderState,
       isTrading,
       logicalRange,
+      marketPrice,
       onCreateOrder,
       onLogicalRangeChange,
       onReplayPositionChange,
@@ -155,6 +163,7 @@ export function ChartContainer({
       onChartClick={handleChartClick}
       onChartKeyDown={handleChartKeyDown}
       tradeLines={tradeLines}
+      createOrderState={createOrderState}
     />
   );
 }

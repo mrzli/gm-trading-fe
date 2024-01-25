@@ -55,6 +55,10 @@ export function TickerDataContainer({
 
   const [tradeLines, setTradeLines] = useState<readonly TradeLine[]>([]);
 
+  const [createOrderData, setCreateOrderData] = useState<
+    CreateOrderStateFinish | undefined
+  >(undefined);
+
   // useEffect(() => {
   //   setTradeLines(EXAMPLE_TRADE_LINES);
   // }, []);
@@ -101,7 +105,7 @@ export function TickerDataContainer({
   );
 
   const handleCreateOrder = useCallback((data: CreateOrderStateFinish) => {
-    console.log('Create order', data);
+    setCreateOrderData(data);
   }, []);
 
   const handleRightToolbarStateChange = useCallback(
@@ -184,6 +188,7 @@ export function TickerDataContainer({
         replayPosition={replayPosition}
         onReplayPositionChange={handleReplayPositionChange}
         onTradeLinesChange={handleTradeLinesChange}
+        createOrderData={createOrderData}
         rightToolbarState={rightToolbarState}
         onRightToolbarStateChange={handleRightToolbarStateChange}
       />

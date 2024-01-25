@@ -15,25 +15,29 @@ import {
 } from '../../types';
 import { invariant } from '@gmjs/assert';
 import {
+  PRECISION_POINT,
   SCHEMA_EMPTY_STRING,
   schemaStringDecimalInRange,
 } from '../../../../util';
 import { TradingParameters } from '@gmjs/gm-trading-shared';
+import { CreateOrderStateFinish } from '../../../ticker-data-container/types';
 
 export interface CreateOrderFormProps {
   readonly tradingParams: TradingParameters;
+  readonly createOrderData: CreateOrderStateFinish | undefined;
   readonly onCreateOrder: (order: OrderInputs) => void;
   readonly onProposedOrderChange: (order: OrderInputs | undefined) => void;
 }
 
 export function CreateOrderForm({
   tradingParams,
+  createOrderData,
   onCreateOrder,
   onProposedOrderChange,
 }: CreateOrderFormProps): React.ReactElement {
   const schema = useMemo(() => getSchema(tradingParams), [tradingParams]);
 
-  const { handleSubmit, control, formState, getValues } =
+  const { handleSubmit, control, formState, getValues, setValue } =
     useForm<CreateOrderFormInputs>({
       defaultValues: {
         direction: undefined,
@@ -57,6 +61,30 @@ export function CreateOrderForm({
 
     onProposedOrderChange(toOrderInputs(getValues()));
   }, [onProposedOrderChange, isSubmitHover, isValid, getValues]);
+
+  useEffect(
+    () => {
+      if (!createOrderData) {
+        return;
+      }
+
+      const { priceDecimals } = tradingParams;
+
+      setValue('direction', createOrderData.direction);
+      setValue('price', createOrderData.price?.toFixed(priceDecimals) ?? '');
+      setValue('amount', '1');
+      setValue(
+        'stopLossDistance',
+        createOrderData.stopLossDistance?.toFixed(PRECISION_POINT) ?? '',
+      );
+      setValue(
+        'limitDistance',
+        createOrderData.limitDistance?.toFixed(PRECISION_POINT) ?? '',
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [createOrderData],
+  );
 
   const submitHandler: SubmitHandler<CreateOrderFormInputs> = useCallback(
     (inputs: CreateOrderFormInputs) => {

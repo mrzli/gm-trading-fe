@@ -41,7 +41,7 @@ export interface CreateOrderStateLimit extends CreateOrderStateBase {
   readonly limitOrMarket: CreateOrderLimitOrMarket;
   readonly direction: TradeDirection;
   readonly price: number | undefined;
-  readonly stopLoss: number | undefined;
+  readonly stopLossDistance: number | undefined;
 }
 
 export interface CreateOrderStateFinish extends CreateOrderStateBase {
@@ -49,8 +49,8 @@ export interface CreateOrderStateFinish extends CreateOrderStateBase {
   readonly limitOrMarket: CreateOrderLimitOrMarket;
   readonly direction: TradeDirection;
   readonly price: number | undefined;
-  readonly stopLoss: number | undefined;
-  readonly limit: number | undefined;
+  readonly stopLossDistance: number | undefined;
+  readonly limitDistance: number | undefined;
 }
 
 export type CreateOrderStateAny =

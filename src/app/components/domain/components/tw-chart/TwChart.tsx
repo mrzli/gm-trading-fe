@@ -22,6 +22,8 @@ import {
 import { destroyChart, getChartBars, getTwInitInput, initChart } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
+import { CreateOrderStateAny } from '../ticker-data-container/types';
+import { TwCreateOrderStateDisplay } from './components/TwCreateOrderStateDisplay';
 
 export interface TwChartProps {
   readonly settings: ChartSettings;
@@ -33,6 +35,7 @@ export interface TwChartProps {
   readonly onChartClick?: (data: ChartMouseClickData) => void;
   readonly onChartDoubleClick?: (data: ChartMouseClickData) => void;
   readonly tradeLines: readonly TradeLine[];
+  readonly createOrderState: CreateOrderStateAny;
 }
 
 export function TwChart({
@@ -45,6 +48,7 @@ export function TwChart({
   onChartClick,
   onChartDoubleClick,
   tradeLines,
+  createOrderState,
 }: TwChartProps): React.ReactElement {
   const { timezone } = settings;
   const { precision } = instrument;
@@ -129,7 +133,11 @@ export function TwChart({
   return (
     <div className='h-full overflow-hidden relative'>
       <div>
-        {getOhlcLabelElement(currCrosshairItem ?? chartBars.at(-1), precision)}
+        {getChartStatusDisplay(
+          currCrosshairItem ?? chartBars.at(-1),
+          precision,
+          createOrderState,
+        )}
       </div>
       <div
         ref={chartElementRef}
@@ -141,9 +149,10 @@ export function TwChart({
   );
 }
 
-function getOhlcLabelElement(
+function getChartStatusDisplay(
   currCrosshairItem: ChartBar | undefined,
   precision: number,
+  createOrderState: CreateOrderStateAny,
 ): React.ReactElement | undefined {
   if (!currCrosshairItem) {
     return undefined;
@@ -153,7 +162,18 @@ function getOhlcLabelElement(
 
   return (
     <div className='absolute top-1 left-1 z-10'>
-      <TwOhlcLabel o={open} h={high} l={low} c={close} precision={precision} />
+      <div className='flex flex-row gap-2'>
+        <TwOhlcLabel
+          o={open}
+          h={high}
+          l={low}
+          c={close}
+          precision={precision}
+        />
+        {createOrderState.type === 'start' ? undefined : (
+          <TwCreateOrderStateDisplay state={createOrderState} precision={precision} />
+        )}
+      </div>
     </div>
   );
 }

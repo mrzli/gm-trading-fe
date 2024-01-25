@@ -15,6 +15,7 @@ import { ComponentStack } from '../../shared/ComponentStack';
 import { BarReplayPosition } from '../../../../types';
 import { TradeStatusDisplay } from './TradeStatusDisplay';
 import { ScrollYContainer } from '../../shared/ScrollYContainer';
+import { CreateOrderStateFinish } from '../../../ticker-data-container/types';
 
 export interface TradingOperationsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -26,6 +27,7 @@ export interface TradingOperationsContentProps {
   readonly onCloseTrade: (id: number) => void;
   readonly onAmendTrade: (data: AmendTradeData) => void;
   readonly onProposedOrderChange: (order: OrderInputs | undefined) => void;
+  readonly createOrderData: CreateOrderStateFinish | undefined;
 }
 
 export function TradingOperationsContent({
@@ -38,6 +40,7 @@ export function TradingOperationsContent({
   onCloseTrade,
   onAmendTrade,
   onProposedOrderChange,
+  createOrderData,
 }: TradingOperationsContentProps): React.ReactElement {
   const { settings, replayPosition, barData, barIndex } = dataAndInputs;
   const { timezone } = settings;
@@ -113,6 +116,7 @@ export function TradingOperationsContent({
         <>
           <CreateOrderForm
             tradingParams={tradingParams}
+            createOrderData={createOrderData}
             onCreateOrder={handleCreateOrder}
             onProposedOrderChange={onProposedOrderChange}
           />
