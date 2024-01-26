@@ -2,22 +2,23 @@ import {
   IChartApi,
   ISeriesApi,
   ITimeScaleApi,
+  LogicalRangeChangeEventHandler,
+  MouseEventHandler,
   MouseEventParams,
   Time,
 } from 'lightweight-charts';
 import { ChartRange, ChartSettings } from '../../../types';
 import {
-  CrosshairMoveFn,
-  TwInitInput,
-  ChartTimeRangeChangeFn,
+  ChartInitInput,
   TwChartApi,
   SetTimeRangeFn,
   SetDataFn,
   GetTimeRangeFn,
   ChartBar,
   ChartBars,
-  ChartMouseClickFn,
   ChartMouseClickInternalData,
+  ChartSubscribeInput,
+  ChartSubscribeResult,
 } from '../types';
 import {
   getChartOptions,
@@ -27,41 +28,17 @@ import {
 import { applyPlugins } from './plugins';
 import { Instrument } from '@gmjs/gm-trading-shared';
 
-export function getTwInitInput(
-  precision: number,
-  // data: ChartBars,
-  onCrosshairMove: CrosshairMoveFn,
-  onChartClick: ChartMouseClickFn,
-  onChartDoubleClick: ChartMouseClickFn,
-  onChartTimeRangeChange: ChartTimeRangeChangeFn,
-): TwInitInput {
-  return {
-    precision,
-    // data,
-    onCrosshairMove,
-    onChartClick,
-    onChartDoubleClick,
-    onChartTimeRangeChange,
-  };
-}
-
 export function initChart(
   settings: ChartSettings,
   instrument: Instrument,
   chart: IChartApi | undefined,
-  input: TwInitInput,
+  input: ChartInitInput,
 ): TwChartApi | undefined {
   if (!chart) {
     return undefined;
   }
 
-  const {
-    precision,
-    onCrosshairMove,
-    onChartClick,
-    onChartDoubleClick,
-    onChartTimeRangeChange,
-  } = input;
+  const { precision } = input;
 
   const chartOptions = getChartOptions();
   chart.applyOptions(chartOptions);
@@ -80,7 +57,33 @@ export function initChart(
     candlestickSeries,
   );
 
-  chart.subscribeCrosshairMove((param) => {
+  return {
+    getChart: () => chart,
+    getSeries: () => candlestickSeries,
+    setData: createSetDataFn(candlestickSeries),
+    getTimeRange: createGetTimeRangeFn(timeScale),
+    setTimeRange: createSetTimeRangeFn(timeScale),
+    plugins: pluginsApi,
+  };
+}
+
+export function subscribeToChartEvents(
+  input: ChartSubscribeInput,
+  chartApi: TwChartApi,
+): ChartSubscribeResult {
+  const {
+    onCrosshairMove,
+    onChartClick,
+    onChartDoubleClick,
+    onChartTimeRangeChange,
+  } = input;
+
+  const chart = chartApi.getChart();
+  const candlestickSeries = chartApi.getSeries();
+
+  const timeScale = chart.timeScale();
+
+  const handleCrosshairMove: MouseEventHandler<Time> = (param) => {
     const item = param.seriesData.get(candlestickSeries);
     if (!item) {
       onCrosshairMove(undefined);
@@ -88,30 +91,25 @@ export function initChart(
     }
 
     onCrosshairMove(item as ChartBar);
-  });
+  };
 
-  chart.subscribeClick((param) => {
-    const { logical, point } = param;
-    const data: ChartMouseClickInternalData = {
-      index: logical === undefined ? undefined : logical,
-      price:
-        point === undefined
-          ? undefined
-          : candlestickSeries.coordinateToPrice(point.y) ?? undefined,
-      point,
-    };
-    onChartClick(data);
-  });
+  chart.subscribeCrosshairMove(handleCrosshairMove);
 
-  chart.subscribeClick((param) => {
+  const handleClick: MouseEventHandler<Time> = (param) => {
     onChartClick(toChartMouseClickInternalData(candlestickSeries, param));
-  });
+  };
 
-  chart.subscribeDblClick((param) => {
+  chart.subscribeClick(handleClick);
+
+  const handleDoubleClick: MouseEventHandler<Time> = (param) => {
     onChartDoubleClick(toChartMouseClickInternalData(candlestickSeries, param));
-  });
+  };
 
-  timeScale.subscribeVisibleLogicalRangeChange((param) => {
+  chart.subscribeDblClick(handleDoubleClick);
+
+  const handleVisibleLogicalRangeChange: LogicalRangeChangeEventHandler = (
+    param,
+  ) => {
     if (!param) {
       onChartTimeRangeChange(undefined);
       return;
@@ -121,13 +119,19 @@ export function initChart(
       from: param.from,
       to: param.to,
     });
-  });
+  };
+
+  timeScale.subscribeVisibleLogicalRangeChange(handleVisibleLogicalRangeChange);
 
   return {
-    setData: createSetDataFn(candlestickSeries),
-    getTimeRange: createGetTimeRangeFn(timeScale),
-    setTimeRange: createSetTimeRangeFn(timeScale),
-    plugins: pluginsApi,
+    unsubscribe: (): void => {
+      chart.unsubscribeCrosshairMove(handleCrosshairMove);
+      chart.unsubscribeClick(handleClick);
+      chart.unsubscribeDblClick(handleDoubleClick);
+      timeScale.unsubscribeVisibleLogicalRangeChange(
+        handleVisibleLogicalRangeChange,
+      );
+    },
   };
 }
 

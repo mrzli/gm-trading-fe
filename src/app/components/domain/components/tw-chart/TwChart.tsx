@@ -17,9 +17,15 @@ import {
   ChartMouseClickFn,
   ChartMouseClickInternalData,
   TwChartApi,
-  TwInitInput,
+  ChartInitInput,
+  ChartSubscribeInput,
 } from './types';
-import { destroyChart, getChartBars, getTwInitInput, initChart } from './util';
+import {
+  destroyChart,
+  getChartBars,
+  initChart,
+  subscribeToChartEvents,
+} from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { isChartRangeEqual } from '../../util';
 import { CreateOrderStateAny } from '../ticker-data-container/types';
@@ -75,17 +81,20 @@ export function TwChart({
     [onChartDoubleClick],
   );
 
-  const input = useMemo<TwInitInput>(
-    () =>
-      getTwInitInput(
-        precision,
-        setCurrCrosshairItem,
-        handleChartClick,
-        handleChartDoubleClick,
-        onLogicalRangeChange,
-      ),
-    [precision, handleChartClick, handleChartDoubleClick, onLogicalRangeChange],
-  );
+  const chartInitInput = useMemo<ChartInitInput>(() => {
+    return {
+      precision,
+    };
+  }, [precision]);
+
+  const chartSubscribeInput = useMemo<ChartSubscribeInput>(() => {
+    return {
+      onCrosshairMove: setCurrCrosshairItem,
+      onChartClick: handleChartClick,
+      onChartDoubleClick: handleChartDoubleClick,
+      onChartTimeRangeChange: onLogicalRangeChange,
+    };
+  }, [handleChartClick, handleChartDoubleClick, onLogicalRangeChange]);
 
   const chartBars = useMemo<ChartBars>(() => {
     return getChartBars(data, timezone);
@@ -95,13 +104,25 @@ export function TwChart({
     const c = chartElementRef.current
       ? createChart(chartElementRef.current)
       : undefined;
-    const chartApi = initChart(settings, instrument, c, input);
+    const chartApi = initChart(settings, instrument, c, chartInitInput);
     setChartApi(chartApi);
 
     return () => {
       destroyChart(c);
     };
-  }, [input, instrument, settings]);
+  }, [chartInitInput, instrument, settings]);
+
+  useEffect(() => {
+    if (!chartApi) {
+      return;
+    }
+
+    const result = subscribeToChartEvents(chartSubscribeInput, chartApi);
+
+    return () => {
+      result.unsubscribe();
+    };
+  }, [chartApi, chartSubscribeInput]);
 
   useEffect(() => {
     if (!logicalRange || !chartApi) {
@@ -171,7 +192,10 @@ function getChartStatusDisplay(
           precision={precision}
         />
         {createOrderState.type === 'start' ? undefined : (
-          <TwCreateOrderStateDisplay state={createOrderState} precision={precision} />
+          <TwCreateOrderStateDisplay
+            state={createOrderState}
+            precision={precision}
+          />
         )}
       </div>
     </div>
