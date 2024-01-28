@@ -1,28 +1,24 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import {
-  dateObjectTzToUnixSeconds,
-} from '@gmjs/date-util';
+import { dateObjectTzToUnixSeconds } from '@gmjs/date-util';
 import { TextInput } from '../../../../shared';
-import { ChartRange, Bars, ChartTimezone } from '../../../types';
-import { timeToLogical, logicalToLogicalRange } from '../util';
+import {
+  ChartTimezone,
+  ChartNavigatePayloadAny,
+  ChartNavigatePayloadGoTo,
+} from '../../../types';
 import {
   SCHEMA_DATE_FOR_INPUT,
   SCHEMA_DATE_INPUT,
   dateInputToDateObjectTz,
-  isChartRangeEqual,
 } from '../../../util';
 
 export interface ChartToolbarGoToProps {
   readonly timezone: ChartTimezone;
-  readonly data: Bars;
-  readonly logicalRange: ChartRange | undefined;
-  readonly onGoTo: (logicalRange: ChartRange) => void;
+  readonly onGoTo: (payload: ChartNavigatePayloadAny) => void;
 }
 
 export function ChartToolbarGoTo({
   timezone,
-  data,
-  logicalRange,
   onGoTo,
 }: ChartToolbarGoToProps): React.ReactElement {
   const [goToInput, setGoToInput] = useState('');
@@ -31,8 +27,8 @@ export function ChartToolbarGoTo({
     [goToInput],
   );
   const isGoToValid = useMemo(
-    () => SCHEMA_DATE_FOR_INPUT.safeParse(goToInput).success && data.length > 0,
-    [goToInput, data],
+    () => SCHEMA_DATE_FOR_INPUT.safeParse(goToInput).success,
+    [goToInput],
   );
 
   const handleGoToClick = useCallback(() => {
@@ -43,14 +39,14 @@ export function ChartToolbarGoTo({
     const time = dateObjectTzToUnixSeconds(
       dateInputToDateObjectTz(goToInput, timezone),
     );
-    const logical = timeToLogical(time, data);
-    const newRange = logicalToLogicalRange(logical, logicalRange, data.length);
-    if (isChartRangeEqual(newRange, logicalRange)) {
-      return;
-    }
 
-    onGoTo(newRange);
-  }, [isGoToValid, goToInput, timezone, data, logicalRange, onGoTo]);
+    const payload: ChartNavigatePayloadGoTo = {
+      type: 'go-to',
+      time,
+    };
+
+    onGoTo(payload);
+  }, [isGoToValid, goToInput, timezone, onGoTo]);
 
   const handleGoToInputKeyDown = useCallback(
     (event: React.KeyboardEvent) => {

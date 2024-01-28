@@ -1,8 +1,7 @@
 import { invariant } from '@gmjs/assert';
 import { clamp } from '@gmjs/number-util';
-import { ChartRange, Bars, ChartTimezone } from '../../../types';
+import { ChartRange, Bars, ChartTimezone, ChartTimeStep } from '../../../types';
 import { binarySearch } from '../../../util';
-import { ChartTimeStep } from '../types';
 import { Duration, unixSecondsAdd } from '@gmjs/date-util';
 
 const DEFAULT_SPAN = 60;

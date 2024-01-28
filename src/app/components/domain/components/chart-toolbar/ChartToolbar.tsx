@@ -4,8 +4,8 @@ import {
   ChartSettings,
   ChartTimezone,
   TYPES_OF_CHART_TIMEZONES,
-  ChartRange,
   ChartAdditionalSettings,
+  ChartNavigatePayloadAny,
 } from '../../types';
 import { RESOLUTION_OPTIONS } from './util';
 import { ChartToolbarGoTo } from './components/ChartToolbarGoTo';
@@ -24,8 +24,7 @@ export interface ChartToolbarProps {
   readonly bars: Bars;
   readonly settings: ChartSettings;
   readonly onSettingsChange: (settings: ChartSettings) => void;
-  readonly logicalRange: ChartRange | undefined;
-  readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
+  readonly onNavigate: (payload: ChartNavigatePayloadAny) => void;
 }
 
 export function ChartToolbar({
@@ -33,8 +32,7 @@ export function ChartToolbar({
   bars,
   settings,
   onSettingsChange,
-  logicalRange,
-  onLogicalRangeChange,
+  onNavigate,
 }: ChartToolbarProps): React.ReactElement {
   const { instrumentName, resolution, timezone, additional } = settings;
 
@@ -108,18 +106,8 @@ export function ChartToolbar({
       />
       {bars.length > 0 && (
         <>
-          <ChartToolbarNavigate
-            settings={settings}
-            data={bars}
-            logicalRange={logicalRange}
-            onNavigate={onLogicalRangeChange}
-          />
-          <ChartToolbarGoTo
-            timezone={timezone}
-            data={bars}
-            logicalRange={logicalRange}
-            onGoTo={onLogicalRangeChange}
-          />
+          <ChartToolbarNavigate onNavigate={onNavigate} />
+          <ChartToolbarGoTo timezone={timezone} onGoTo={onNavigate} />
         </>
       )}
       <ChartToolbarAdditional

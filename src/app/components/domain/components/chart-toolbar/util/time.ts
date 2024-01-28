@@ -1,11 +1,11 @@
 import { invariant } from '@gmjs/assert';
 import { parseIntegerOrThrow } from '@gmjs/number-util';
+import { TimeStepSelection } from '../types';
 import {
-  ChartTimeStepUnit,
-  TYPES_OF_CHART_TIME_STEP_UNITS,
   ChartTimeStep,
-  TimeStepSelection,
-} from '../types';
+  TYPES_OF_CHART_TIME_STEP_UNITS,
+  ChartTimeStepUnit,
+} from '../../../types';
 
 export function twTimeStepSelectionToTimeStep(
   timeStepSelection: TimeStepSelection,

@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Instrument, TickerDataResolution } from '@gmjs/gm-trading-shared';
-import { ChartTimeRangeChangeFn } from '../tw-chart/types';
 import { ChartToolbar } from '../chart-toolbar/ChartToolbar';
 import { rawDataToFullBarData } from './util';
 import { LoadingDisplay, PrettyDisplay } from '../../../shared';
 import { TickerDataLayout } from '../layout';
 import {
   ChartSettings,
-  ChartRange,
   BarReplayPosition,
   RightToolbarState,
   ChartAdditionalSettings,
   TradeLine,
+  ChartNavigatePayloadAny,
 } from '../../types';
 import { ChartContainer } from './ChartContainer';
 import { isBarReplayPositionEqual } from '../../util';
@@ -44,9 +43,9 @@ export function TickerDataContainer({
 
   const { instrumentName, resolution } = settings;
 
-  const [logicalRange, setLogicalRange] = useState<ChartRange | undefined>(
-    undefined,
-  );
+  const [navigatePayload, setNavigatePayload] = useState<
+    ChartNavigatePayloadAny | undefined
+  >(undefined);
 
   const [replayPosition, setReplayPosition] = useState<BarReplayPosition>({
     barIndex: undefined,
@@ -97,9 +96,9 @@ export function TickerDataContainer({
     [instrumentName, onRequestData, resolution],
   );
 
-  const handleLogicalRangeChange = useCallback<ChartTimeRangeChangeFn>(
-    (range) => {
-      setLogicalRange(range);
+  const handleChartNavigate = useCallback(
+    (payload: ChartNavigatePayloadAny) => {
+      setNavigatePayload(payload);
     },
     [],
   );
@@ -151,8 +150,7 @@ export function TickerDataContainer({
         bars={fullData.bars}
         settings={settings}
         onSettingsChange={handleSettingsChange}
-        logicalRange={logicalRange}
-        onLogicalRangeChange={handleLogicalRangeChange}
+        onNavigate={handleChartNavigate}
       />
       {false && <PrettyDisplay content={settings} />}
     </>
@@ -165,8 +163,8 @@ export function TickerDataContainer({
         settings={settings}
         fullData={fullData}
         isTrading={rightToolbarState === 'trade'}
-        logicalRange={logicalRange}
-        onLogicalRangeChange={handleLogicalRangeChange}
+        navigatePayload={navigatePayload}
+        onNavigate={handleChartNavigate}
         replayPosition={replayPosition}
         onReplayPositionChange={handleReplayPositionChange}
         tradeLines={tradeLines}

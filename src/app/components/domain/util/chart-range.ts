@@ -16,13 +16,3 @@ const EPSILON = 0.001;
 function equalEpsilon(a: number, b: number): boolean {
   return Math.abs(a - b) < EPSILON;
 }
-
-export function offsetChartRange(
-  range: ChartRange,
-  offset: number,
-): ChartRange {
-  return {
-    from: range.from + offset,
-    to: range.to + offset,
-  };
-}

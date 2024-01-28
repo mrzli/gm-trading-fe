@@ -2,25 +2,35 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useCallback, useEffect, useState } from 'react';
 import { Instrument } from '@gmjs/gm-trading-shared';
-import { Bars, ChartRange, ChartSettings, TradeLine } from '../../types';
+import {
+  Bars,
+  ChartNavigatePayloadAny,
+  ChartRange,
+  ChartSettings,
+  ChartTimezone,
+  TradeLine,
+} from '../../types';
 import { ChartBar, ChartBars, ChartMouseClickData } from './types';
 import {
+  logicalToLogicalRange,
+  moveLogicalRange,
+  timeToLogical,
   useChartBars,
   useTradeLines,
   useTwChart,
   useTwChartSubscribe,
 } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
-import { isChartRangeEqual, offsetChartRange } from '../../util';
+import { isChartRangeEqual } from '../../util';
 import { CreateOrderStateAny } from '../ticker-data-container/types';
 import { TwCreateOrderStateDisplay } from './components/TwCreateOrderStateDisplay';
+import { ensureNever } from '@gmjs/assert';
 
 export interface TwChartProps {
   readonly settings: ChartSettings;
   readonly instrument: Instrument;
   readonly data: Bars;
-  readonly logicalRange: ChartRange | undefined;
-  readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
+  readonly navigatePayload: ChartNavigatePayloadAny | undefined;
   readonly onChartKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
   readonly onChartClick?: (data: ChartMouseClickData) => void;
   readonly onChartDoubleClick?: (data: ChartMouseClickData) => void;
@@ -32,8 +42,7 @@ export function TwChart({
   settings,
   instrument,
   data,
-  logicalRange,
-  onLogicalRangeChange,
+  navigatePayload,
   onChartKeyDown,
   onChartClick,
   onChartDoubleClick,
@@ -48,13 +57,32 @@ export function TwChart({
 
   const handleLogicalRangeChange = useCallback(
     (logicalRange: ChartRange | undefined) => {
-      const finalLogicalRange =
-        logicalRange === undefined
-          ? undefined
-          : offsetChartRange(logicalRange, visibleBarsOffset);
-      onLogicalRangeChange(finalLogicalRange);
     },
-    [onLogicalRangeChange, visibleBarsOffset],
+    [],
+  );
+
+  useEffect(
+    () => {
+      if (!navigatePayload || !chartApi) {
+        return;
+      }
+
+      const currentLogicalRange = chartApi.getTimeRange();
+      const newLogicalRangeResult = getNewLogicalRange(
+        chartBars,
+        settings.timezone,
+        currentLogicalRange,
+        navigatePayload,
+      );
+      
+      const { type } = newLogicalRangeResult;
+      if (type === 'change') {
+        const { range } = newLogicalRangeResult;
+        chartApi.setTimeRange(range);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [navigatePayload],
   );
 
   const { currCrosshairItem } = useTwChartSubscribe(
@@ -89,23 +117,8 @@ export function TwChart({
       chartApi.setData(chartBars);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [chartBars, chartApi],
+    [chartBars, chartApi /*, visibleBarsOffset*/],
   );
-
-  useEffect(() => {
-    if (!logicalRange || !chartApi) {
-      return;
-    }
-
-    const adjustedNewLogicalRange = offsetChartRange(
-      logicalRange,
-      -visibleBarsOffset,
-    );
-    const currentLogicalRange = chartApi.getTimeRange();
-    if (!isChartRangeEqual(currentLogicalRange, adjustedNewLogicalRange)) {
-      chartApi.setTimeRange(adjustedNewLogicalRange);
-    }
-  }, [logicalRange, chartApi, visibleBarsOffset]);
 
   useTradeLines(chartApi, tradeLines);
 
@@ -158,6 +171,99 @@ function getChartStatusDisplay(
       </div>
     </div>
   );
+}
+
+interface NewLogicalRangeResultChange {
+  readonly type: 'change';
+  readonly range: ChartRange;
+}
+
+interface NewLogicalRangeResultNoChange {
+  readonly type: 'no-change';
+}
+
+type NewLogicalRangeResult =
+  | NewLogicalRangeResultChange
+  | NewLogicalRangeResultNoChange;
+
+function getNewLogicalRange(
+  data: Bars,
+  timezone: ChartTimezone,
+  currentLogicalRange: ChartRange | undefined,
+  payload: ChartNavigatePayloadAny,
+): NewLogicalRangeResult {
+  const { type } = payload;
+
+  switch (type) {
+    case 'start': {
+      const newLogicalRange = logicalToLogicalRange(
+        0,
+        currentLogicalRange,
+        data.length,
+      );
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    case 'end': {
+      const newLogicalRange = logicalToLogicalRange(
+        data.length - 1,
+        currentLogicalRange,
+        data.length,
+      );
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    case 'go-to': {
+      const { time } = payload;
+      const logical = timeToLogical(time, data);
+      const newLogicalRange = logicalToLogicalRange(
+        logical,
+        currentLogicalRange,
+        data.length,
+      );
+      if (isChartRangeEqual(newLogicalRange, currentLogicalRange)) {
+        return {
+          type: 'no-change',
+        };
+      }
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    case 'move-by': {
+      if (currentLogicalRange === undefined) {
+        return {
+          type: 'no-change',
+        };
+      }
+
+      const { timeStep } = payload;
+
+      const newLogicalRange = moveLogicalRange(
+        currentLogicalRange,
+        timeStep,
+        data,
+        timezone,
+      );
+      if (isChartRangeEqual(newLogicalRange, currentLogicalRange)) {
+        return {
+          type: 'no-change',
+        };
+      }
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    default: {
+      return ensureNever(type);
+    }
+  }
 }
 
 function getNewVisibleBarsOffset(

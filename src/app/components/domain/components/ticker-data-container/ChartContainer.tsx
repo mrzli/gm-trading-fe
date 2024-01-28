@@ -3,10 +3,10 @@ import { Instrument } from '@gmjs/gm-trading-shared';
 import { TwChart } from '../tw-chart/TwChart';
 import {
   BarReplayPosition,
-  Bars,
-  ChartRange,
+  ChartNavigatePayloadAny,
+  ChartNavigatePayloadMoveBy,
   ChartSettings,
-  ChartTimezone,
+  ChartTimeStep,
   GroupedBars,
   TradeLine,
 } from '../../types';
@@ -17,14 +17,12 @@ import {
   FullBarData,
 } from './types';
 import { Key } from 'ts-key-enum';
-import { ChartTimeStep } from '../chart-toolbar/types';
-import { moveLogicalRange } from '../chart-toolbar/util';
 import {
   getChartData,
   toLogicalOffset,
   transitionCreateOrderState,
 } from './util';
-import { barReplayMoveSubBar, isChartRangeEqual } from '../../util';
+import { barReplayMoveSubBar } from '../../util';
 import { ChartMouseClickData } from '../tw-chart/types';
 import { invariant } from '@gmjs/assert';
 
@@ -33,8 +31,8 @@ export interface ChartContainerProps {
   readonly settings: ChartSettings;
   readonly fullData: FullBarData;
   readonly isTrading: boolean;
-  readonly logicalRange: ChartRange | undefined;
-  readonly onLogicalRangeChange: (logicalRange: ChartRange | undefined) => void;
+  readonly navigatePayload: ChartNavigatePayloadAny | undefined;
+  readonly onNavigate: (payload: ChartNavigatePayloadAny) => void;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
   readonly tradeLines: readonly TradeLine[];
@@ -46,15 +44,15 @@ export function ChartContainer({
   settings,
   fullData,
   isTrading,
-  logicalRange,
-  onLogicalRangeChange,
+  navigatePayload,
+  onNavigate,
   replayPosition,
   onReplayPositionChange,
   tradeLines,
   onCreateOrder,
 }: ChartContainerProps): React.ReactElement {
-  const { resolution, timezone } = settings;
-  const { subBars, bars } = fullData;
+  const { resolution } = settings;
+  const { subBars } = fullData;
 
   const chartData = useMemo(() => {
     return getChartData(fullData, replayPosition, resolution);
@@ -101,13 +99,7 @@ export function ChartContainer({
               onReplayPositionChange,
             );
           } else {
-            keyboardNavigateChart(
-              event,
-              bars,
-              timezone,
-              logicalRange,
-              onLogicalRangeChange,
-            );
+            keyboardNavigateChart(event, onNavigate);
           }
           break;
         }
@@ -139,17 +131,14 @@ export function ChartContainer({
       }
     },
     [
-      bars,
       createOrderState,
       isTrading,
-      logicalRange,
       marketPrice,
       onCreateOrder,
-      onLogicalRangeChange,
+      onNavigate,
       onReplayPositionChange,
       replayPosition,
       subBars,
-      timezone,
     ],
   );
 
@@ -158,8 +147,7 @@ export function ChartContainer({
       settings={settings}
       instrument={instrument}
       data={chartData}
-      logicalRange={logicalRange}
-      onLogicalRangeChange={onLogicalRangeChange}
+      navigatePayload={navigatePayload}
       onChartClick={handleChartClick}
       onChartKeyDown={handleChartKeyDown}
       tradeLines={tradeLines}
@@ -170,24 +158,19 @@ export function ChartContainer({
 
 function keyboardNavigateChart(
   event: React.KeyboardEvent<HTMLDivElement>,
-  bars: Bars,
-  timezone: ChartTimezone,
-  logicalRange: ChartRange | undefined,
-  handleLogicalRangeChange: (logicalRange: ChartRange | undefined) => void,
+  onNavigate: (payload: ChartNavigatePayloadAny) => void,
 ): void {
   const offset = toLogicalOffset(event);
   const timeStep: ChartTimeStep = {
     unit: 'B',
     value: offset,
   };
-  const newLogicalRange = logicalRange
-    ? moveLogicalRange(logicalRange, timeStep, bars, timezone)
-    : undefined;
-  if (isChartRangeEqual(logicalRange, newLogicalRange)) {
-    return;
-  }
 
-  handleLogicalRangeChange(newLogicalRange);
+  const payload: ChartNavigatePayloadMoveBy = {
+    type: 'move-by',
+    timeStep,
+  };
+  onNavigate(payload);
 }
 
 function keyboardNavigateReplay(

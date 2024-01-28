@@ -5,69 +5,52 @@ import {
   mdiChevronLeft,
   mdiChevronRight,
 } from '@mdi/js';
-import { ChartRange, Bars, ChartSettings } from '../../../types';
 import {
-  logicalToLogicalRange,
-  moveLogicalRange,
-  twTimeStepSelectionToTimeStep,
-} from '../util';
+  ChartNavigatePayloadAny,
+  ChartNavigatePayloadMoveBy,
+} from '../../../types';
+import { twTimeStepSelectionToTimeStep } from '../util';
 import { TimeStepSelection, TYPES_OF_TIME_STEP_SELECTIONS } from '../types';
 import { SelectButtonCentered } from '../../../../shared';
 import { IconButton } from '../../shared';
 import { toSimpleSelectOption } from '../../../util';
 
 export interface ChartToolbarNavigateProps {
-  readonly settings: ChartSettings;
-  readonly data: Bars;
-  readonly logicalRange: ChartRange | undefined;
-  readonly onNavigate: (logicalRange: ChartRange) => void;
+  readonly onNavigate: (payload: ChartNavigatePayloadAny) => void;
 }
 
 export function ChartToolbarNavigate({
-  settings,
-  data,
-  logicalRange,
   onNavigate,
 }: ChartToolbarNavigateProps): React.ReactElement {
-  const { timezone } = settings;
-
   const [timeStepSelection, setTimeStepSelection] =
     useState<TimeStepSelection>('100B');
 
   const navigateToStart = useCallback(() => {
-    const newRange = logicalToLogicalRange(0, logicalRange, data.length);
-    onNavigate(newRange);
-  }, [data, logicalRange, onNavigate]);
+    onNavigate({
+      type: 'start',
+    });
+  }, [onNavigate]);
 
   const navigateToEnd = useCallback(() => {
-    const newRange = logicalToLogicalRange(
-      data.length - 1,
-      logicalRange,
-      data.length,
-    );
-    onNavigate(newRange);
-  }, [data, logicalRange, onNavigate]);
+    onNavigate({
+      type: 'end',
+    });
+  }, [onNavigate]);
 
   const navigateBackOrForward = useCallback(
     (isForward: boolean) => {
-      if (!logicalRange) {
-        return;
-      }
-
       const timeStep = twTimeStepSelectionToTimeStep(
         timeStepSelection,
         isForward,
       );
 
-      const newLogicalRange = moveLogicalRange(
-        logicalRange,
+      const payload: ChartNavigatePayloadMoveBy = {
+        type: 'move-by',
         timeStep,
-        data,
-        timezone,
-      );
-      onNavigate(newLogicalRange);
+      };
+      onNavigate(payload);
     },
-    [logicalRange, timeStepSelection, data, timezone, onNavigate],
+    [timeStepSelection, onNavigate],
   );
 
   const navigateBack = useCallback(
