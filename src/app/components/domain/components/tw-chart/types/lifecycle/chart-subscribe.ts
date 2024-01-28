@@ -3,8 +3,8 @@ import { ChartBar } from '../chart-bar';
 
 export interface ChartSubscribeInput {
   readonly onCrosshairMove: CrosshairMoveFn;
-  readonly onChartClick: ChartMouseClickFn;
-  readonly onChartDoubleClick: ChartMouseClickFn;
+  readonly onChartClick: ChartMouseClickInternalFn;
+  readonly onChartDoubleClick: ChartMouseClickInternalFn;
   readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
 }
 
@@ -20,7 +20,9 @@ export interface ChartMouseClickInternalData {
 }
 
 export type CrosshairMoveFn = (item: ChartBar | undefined) => void;
-export type ChartMouseClickFn = (data: ChartMouseClickInternalData) => void;
+export type ChartMouseClickInternalFn = (
+  data: ChartMouseClickInternalData,
+) => void;
 export type ChartTimeRangeChangeFn = (range: ChartRange | undefined) => void;
 
 export interface ChartSubscribeResult {

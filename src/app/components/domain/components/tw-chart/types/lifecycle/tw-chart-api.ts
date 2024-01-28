@@ -10,8 +10,14 @@ export interface TwChartApi {
   readonly getTimeRange: GetTimeRangeFn;
   readonly setTimeRange: SetTimeRangeFn;
   readonly plugins: TwPluginsApi;
+  readonly context: TwChartApiContext;
 }
 
 export type SetDataFn = (data: ChartBars) => void;
 export type GetTimeRangeFn = () => ChartRange | undefined;
 export type SetTimeRangeFn = (range: ChartRange) => void;
+
+export interface TwChartApiContext {
+  readonly setChartRangeUpdateEnabled: (enabled: boolean) => void;
+  readonly isChartRangeUpdateEnabled: () => boolean;
+}

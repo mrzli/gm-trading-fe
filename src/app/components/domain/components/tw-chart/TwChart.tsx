@@ -1,33 +1,17 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { createChart } from 'lightweight-charts';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Instrument } from '@gmjs/gm-trading-shared';
 import { Bars, ChartRange, ChartSettings, TradeLine } from '../../types';
+import { ChartBar, ChartBars, ChartMouseClickData } from './types';
 import {
-  ChartBar,
-  ChartBars,
-  ChartMouseClickData,
-  ChartMouseClickFn,
-  ChartMouseClickInternalData,
-  TwChartApi,
-  ChartInitInput,
-  ChartSubscribeInput,
-} from './types';
-import {
-  destroyChart,
-  getChartBars,
-  initChart,
-  subscribeToChartEvents,
+  useChartBars,
+  useTradeLines,
+  useTwChart,
+  useTwChartSubscribe,
 } from './util';
 import { TwOhlcLabel } from './components/TwOhlcLabel';
-import { isChartRangeEqual } from '../../util';
+import { isChartRangeEqual, offsetChartRange } from '../../util';
 import { CreateOrderStateAny } from '../ticker-data-container/types';
 import { TwCreateOrderStateDisplay } from './components/TwCreateOrderStateDisplay';
 
@@ -56,107 +40,81 @@ export function TwChart({
   tradeLines,
   createOrderState,
 }: TwChartProps): React.ReactElement {
-  const { timezone } = settings;
-  const { precision } = instrument;
+  const chartBars = useChartBars(data, settings.timezone);
 
-  const chartElementRef = useRef<HTMLDivElement>(null);
+  const [visibleBarsOffset, setVisibleBarsOffset] = useState<number>(0);
 
-  const [currCrosshairItem, setCurrCrosshairItem] = useState<
-    ChartBar | undefined
-  >(undefined);
+  const { chartElementRef, chartApi } = useTwChart(settings, instrument);
 
-  const [chartApi, setChartApi] = useState<TwChartApi | undefined>(undefined);
-
-  const handleChartClick = useCallback<ChartMouseClickFn>(
-    (data) => {
-      onChartClick?.(toChartClickMouseData(data));
+  const handleLogicalRangeChange = useCallback(
+    (logicalRange: ChartRange | undefined) => {
+      const finalLogicalRange =
+        logicalRange === undefined
+          ? undefined
+          : offsetChartRange(logicalRange, visibleBarsOffset);
+      onLogicalRangeChange(finalLogicalRange);
     },
-    [onChartClick],
+    [onLogicalRangeChange, visibleBarsOffset],
   );
 
-  const handleChartDoubleClick = useCallback<ChartMouseClickFn>(
-    (data) => {
-      onChartDoubleClick?.(toChartClickMouseData(data));
-    },
-    [onChartDoubleClick],
+  const { currCrosshairItem } = useTwChartSubscribe(
+    chartApi,
+    onChartClick,
+    onChartDoubleClick,
+    handleLogicalRangeChange,
   );
 
-  const chartInitInput = useMemo<ChartInitInput>(() => {
-    return {
-      precision,
-    };
-  }, [precision]);
+  useEffect(
+    () => {
+      if (!chartApi) {
+        return;
+      }
 
-  const chartSubscribeInput = useMemo<ChartSubscribeInput>(() => {
-    return {
-      onCrosshairMove: setCurrCrosshairItem,
-      onChartClick: handleChartClick,
-      onChartDoubleClick: handleChartDoubleClick,
-      onChartTimeRangeChange: onLogicalRangeChange,
-    };
-  }, [handleChartClick, handleChartDoubleClick, onLogicalRangeChange]);
+      // const newOffset = getNewVisibleBarsOffset(
+      //   chartBars,
+      //   logicalRange,
+      //   visibleBarsOffset,
+      // );
 
-  const chartBars = useMemo<ChartBars>(() => {
-    return getChartBars(data, timezone);
-  }, [data, timezone]);
+      // if (newOffset === visibleBarsOffset) {
+      //   return;
+      // }
 
-  useEffect(() => {
-    const c = chartElementRef.current
-      ? createChart(chartElementRef.current)
-      : undefined;
-    const chartApi = initChart(settings, instrument, c, chartInitInput);
-    setChartApi(chartApi);
+      // const visibleChartBars = chartBars.slice(
+      //   newOffset,
+      //   newOffset + VISIBLE_BARS_RANGE,
+      // );
 
-    return () => {
-      destroyChart(c);
-    };
-  }, [chartInitInput, instrument, settings]);
-
-  useEffect(() => {
-    if (!chartApi) {
-      return;
-    }
-
-    const result = subscribeToChartEvents(chartSubscribeInput, chartApi);
-
-    return () => {
-      result.unsubscribe();
-    };
-  }, [chartApi, chartSubscribeInput]);
+      // setVisibleBarsOffset(newOffset);
+      chartApi.setData(chartBars);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chartBars, chartApi],
+  );
 
   useEffect(() => {
     if (!logicalRange || !chartApi) {
       return;
     }
 
+    const adjustedNewLogicalRange = offsetChartRange(
+      logicalRange,
+      -visibleBarsOffset,
+    );
     const currentLogicalRange = chartApi.getTimeRange();
-    if (!isChartRangeEqual(currentLogicalRange, logicalRange)) {
-      chartApi.setTimeRange(logicalRange);
+    if (!isChartRangeEqual(currentLogicalRange, adjustedNewLogicalRange)) {
+      chartApi.setTimeRange(adjustedNewLogicalRange);
     }
-  }, [logicalRange, chartApi]);
+  }, [logicalRange, chartApi, visibleBarsOffset]);
 
-  useEffect(() => {
-    if (!chartApi) {
-      return;
-    }
-
-    chartApi.setData(chartBars);
-  }, [chartBars, chartApi]);
-
-  useEffect(() => {
-    if (!chartApi) {
-      return;
-    }
-
-    chartApi.plugins.setTradeLines(tradeLines);
-  }, [tradeLines, chartApi]);
+  useTradeLines(chartApi, tradeLines);
 
   return (
     <div className='h-full overflow-hidden relative'>
       <div>
         {getChartStatusDisplay(
           currCrosshairItem ?? chartBars.at(-1),
-          precision,
+          instrument.precision,
           createOrderState,
         )}
       </div>
@@ -202,13 +160,30 @@ function getChartStatusDisplay(
   );
 }
 
-function toChartClickMouseData(
-  input: ChartMouseClickInternalData,
-): ChartMouseClickData {
-  const { index, price } = input;
+function getNewVisibleBarsOffset(
+  chartBars: ChartBars,
+  logicalRange: ChartRange | undefined,
+  visibleBarsOffset: number,
+): number {
+  const from =
+    logicalRange === undefined
+      ? chartBars.length - 1
+      : Math.max(0, Math.floor(logicalRange.from));
 
-  return {
-    barIndex: index,
-    price,
-  };
+  const leftMargin = Math.max(0, from - VISIBLE_BARS_WINDOW_MARGIN);
+  const rightMargin = from + VISIBLE_BARS_WINDOW_MARGIN;
+
+  if (
+    visibleBarsOffset > leftMargin ||
+    visibleBarsOffset + VISIBLE_BARS_RANGE < rightMargin
+  ) {
+    const newOffset = Math.max(0, from - VISIBLE_BARS_HALF_RANGE);
+    return newOffset;
+  } else {
+    return visibleBarsOffset;
+  }
 }
+
+const VISIBLE_BARS_HALF_RANGE = 20_000;
+const VISIBLE_BARS_RANGE = VISIBLE_BARS_HALF_RANGE * 2;
+const VISIBLE_BARS_WINDOW_MARGIN = 5000;

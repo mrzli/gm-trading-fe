@@ -19,6 +19,7 @@ import {
   ChartMouseClickInternalData,
   ChartSubscribeInput,
   ChartSubscribeResult,
+  TwChartApiContext,
 } from '../types';
 import {
   getChartOptions,
@@ -57,6 +58,8 @@ export function initChart(
     candlestickSeries,
   );
 
+  const context = createTwChartApiContext();
+
   return {
     getChart: () => chart,
     getSeries: () => candlestickSeries,
@@ -64,6 +67,18 @@ export function initChart(
     getTimeRange: createGetTimeRangeFn(timeScale),
     setTimeRange: createSetTimeRangeFn(timeScale),
     plugins: pluginsApi,
+    context,
+  };
+}
+
+function createTwChartApiContext(): TwChartApiContext {
+  let isChartRangeUpdateEnabled = true;
+
+  return {
+    setChartRangeUpdateEnabled: (enabled: boolean): void => {
+      isChartRangeUpdateEnabled = enabled;
+    },
+    isChartRangeUpdateEnabled: () => isChartRangeUpdateEnabled,
   };
 }
 
@@ -110,6 +125,10 @@ export function subscribeToChartEvents(
   const handleVisibleLogicalRangeChange: LogicalRangeChangeEventHandler = (
     param,
   ) => {
+    if (!chartApi.context.isChartRangeUpdateEnabled()) {
+      return;
+    }
+
     if (!param) {
       onChartTimeRangeChange(undefined);
       return;
