@@ -5,12 +5,16 @@ import { Instrument } from '@gmjs/gm-trading-shared';
 import {
   Bars,
   ChartNavigatePayloadAny,
+  ChartRange,
   ChartSettings,
+  ChartTimezone,
   TradeLine,
 } from '../../types';
 import { ChartBar, ChartMouseClickData } from './types';
 import {
   logicalToLogicalRange,
+  moveLogicalRange,
+  timeToLogical,
   useChartBars,
   useTradeLines,
   useTwChart,
@@ -19,6 +23,8 @@ import {
 import { TwOhlcLabel } from './components/TwOhlcLabel';
 import { CreateOrderStateAny } from '../ticker-data-container/types';
 import { TwCreateOrderStateDisplay } from './components/TwCreateOrderStateDisplay';
+import { ensureNever } from '@gmjs/assert';
+import { isChartRangeEqual } from '../../util';
 
 export interface TwChartProps {
   readonly settings: ChartSettings;
@@ -43,12 +49,7 @@ export function TwChart({
   tradeLines,
   createOrderState,
 }: TwChartProps): React.ReactElement {
-  const {
-    chartBars,
-    visibleChartBars,
-    relativeRange,
-    handleRelativeRangeChange,
-  } = useChartBars(data, settings.timezone, navigatePayload);
+  const { chartBars } = useChartBars(data, settings.timezone);
 
   const { chartElementRef, chartApi } = useTwChart(settings, instrument);
 
@@ -56,44 +57,38 @@ export function TwChart({
     chartApi,
     onChartClick,
     onChartDoubleClick,
-    handleRelativeRangeChange,
+    undefined,
   );
 
   useEffect(() => {
-    if (!chartApi) {
+    if (!chartApi || !navigatePayload) {
       return;
     }
 
-    chartApi.context.setChartRangeUpdateEnabled(false);
-    chartApi.setData(visibleChartBars);
-    chartApi.context.setChartRangeUpdateEnabled(true);
-  }, [chartApi, visibleChartBars]);
+    const currentLogicalRange = chartApi.getTimeRange();
 
-  useEffect(() => {
-    if (!chartApi) {
-      return;
-    }
-
-    chartApi.context.setChartRangeUpdateEnabled(false);
-    chartApi.setTimeRange(
-      logicalToLogicalRange(chartBars.length - 1, undefined, chartBars.length),
+    const newLogicalRangeResult = chartNavigate(
+      data,
+      settings.timezone,
+      currentLogicalRange,
+      navigatePayload,
     );
-    chartApi.context.setChartRangeUpdateEnabled(true);
-  }, [chartBars, chartApi]);
 
-  useEffect(
-    () => {
-      if (!chartApi || !relativeRange) {
-        return;
-      }
+    if (
+      newLogicalRangeResult.type === 'change' &&
+      !isChartRangeEqual(newLogicalRangeResult.range, currentLogicalRange)
+    ) {
+      chartApi.setTimeRange(newLogicalRangeResult.range);
+    }
+  }, [chartApi, data, navigatePayload, settings.timezone]);
 
-      chartApi.context.setChartRangeUpdateEnabled(false);
-      chartApi.setTimeRange(relativeRange);
-      chartApi.context.setChartRangeUpdateEnabled(true);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [relativeRange],
-  );
+  useEffect(() => {
+    if (!chartApi) {
+      return;
+    }
+
+    chartApi.setData(chartBars);
+  }, [chartApi, chartBars]);
 
   useTradeLines(chartApi, tradeLines);
 
@@ -146,4 +141,97 @@ function getChartStatusDisplay(
       </div>
     </div>
   );
+}
+
+interface NewLogicalRangeResultChange {
+  readonly type: 'change';
+  readonly range: ChartRange;
+}
+
+interface NewLogicalRangeResultNoChange {
+  readonly type: 'no-change';
+}
+
+type NewLogicalRangeResult =
+  | NewLogicalRangeResultChange
+  | NewLogicalRangeResultNoChange;
+
+function chartNavigate(
+  data: Bars,
+  timezone: ChartTimezone,
+  currentLogicalRange: ChartRange | undefined,
+  payload: ChartNavigatePayloadAny,
+): NewLogicalRangeResult {
+  const { type } = payload;
+
+  switch (type) {
+    case 'start': {
+      const newLogicalRange = logicalToLogicalRange(
+        0,
+        currentLogicalRange,
+        data.length,
+      );
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    case 'end': {
+      const newLogicalRange = logicalToLogicalRange(
+        data.length - 1,
+        currentLogicalRange,
+        data.length,
+      );
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    case 'go-to': {
+      const { time } = payload;
+      const logical = timeToLogical(time, data);
+      const newLogicalRange = logicalToLogicalRange(
+        logical,
+        currentLogicalRange,
+        data.length,
+      );
+      if (isChartRangeEqual(newLogicalRange, currentLogicalRange)) {
+        return {
+          type: 'no-change',
+        };
+      }
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    case 'move-by': {
+      if (currentLogicalRange === undefined) {
+        return {
+          type: 'no-change',
+        };
+      }
+
+      const { timeStep } = payload;
+
+      const newLogicalRange = moveLogicalRange(
+        currentLogicalRange,
+        timeStep,
+        data,
+        timezone,
+      );
+      if (isChartRangeEqual(newLogicalRange, currentLogicalRange)) {
+        return {
+          type: 'no-change',
+        };
+      }
+      return {
+        type: 'change',
+        range: newLogicalRange,
+      };
+    }
+    default: {
+      return ensureNever(type);
+    }
+  }
 }

@@ -125,6 +125,10 @@ export function subscribeToChartEvents(
   const handleVisibleLogicalRangeChange: LogicalRangeChangeEventHandler = (
     param,
   ) => {
+    if (!onChartTimeRangeChange) {
+      return;
+    }
+
     if (!chartApi.context.isChartRangeUpdateEnabled()) {
       return;
     }

@@ -5,7 +5,7 @@ export interface ChartSubscribeInput {
   readonly onCrosshairMove: CrosshairMoveFn;
   readonly onChartClick: ChartMouseClickInternalFn;
   readonly onChartDoubleClick: ChartMouseClickInternalFn;
-  readonly onChartTimeRangeChange: ChartTimeRangeChangeFn;
+  readonly onChartTimeRangeChange?: ChartTimeRangeChangeFn;
 }
 
 export interface Point {
