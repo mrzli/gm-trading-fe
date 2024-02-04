@@ -21,10 +21,7 @@ export function TradingResultsContent({
     return calculateTradeResults(state, pipDigit);
   }, [pipDigit, state]);
 
-  const displayItems = useMemo(
-    () => getDisplayItems(result),
-    [result],
-  );
+  const displayItems = useMemo(() => getDisplayItems(result), [result]);
 
   return (
     <ComponentStack className='mt-1 p-4'>
@@ -37,9 +34,7 @@ export function TradingResultsContent({
   );
 }
 
-function getDisplayItems(
-  result: TradeResult,
-): ValueDisplayDataAnyList {
+function getDisplayItems(result: TradeResult): ValueDisplayDataAnyList {
   const {
     pnl,
     pnlPoints,
@@ -50,6 +45,8 @@ function getDisplayItems(
     lossFraction,
     avgWin,
     avgLoss,
+    avgWinPts,
+    avgLossPts,
     maxDrawdown,
   } = result;
 
@@ -123,8 +120,16 @@ function getDisplayItems(
       precision: PRECISION_MONEY,
     },
     {
-      kind: 'none',
-      colSpan: 2,
+      kind: 'decimal',
+      label: 'Avg Win Pts',
+      value: avgWinPts,
+      precision: PRECISION_POINT,
+    },
+    {
+      kind: 'decimal',
+      label: 'Avg Loss Pts',
+      value: avgLossPts,
+      precision: PRECISION_POINT,
     },
     {
       kind: 'decimal',

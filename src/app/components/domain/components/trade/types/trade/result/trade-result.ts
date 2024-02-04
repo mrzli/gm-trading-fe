@@ -8,5 +8,7 @@ export interface TradeResult {
   readonly lossFraction: number;
   readonly avgWin: number;
   readonly avgLoss: number;
+  readonly avgWinPts: number;
+  readonly avgLossPts: number;
   readonly maxDrawdown: number;
 }

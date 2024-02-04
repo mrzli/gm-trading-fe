@@ -29,15 +29,7 @@ export function calculateTradeResults(
     map((item) => getCompletedTradePnl(item, pipDigit)),
     toArray(),
   );
-
-  const pnlPointsList = applyFn(
-    completedTrades,
-    map((item) => getCompletedTradePnlPoints(item, pipDigit)),
-    toArray(),
-  );
-
   const pnl = applyFn(pnlList, sum());
-  const pnlPoints = applyFn(pnlPointsList, sum());
 
   const winPnlList = applyFn(
     pnlList,
@@ -46,6 +38,24 @@ export function calculateTradeResults(
   );
   const lossPnlList = applyFn(
     pnlList,
+    filter((v) => v <= 0),
+    toArray(),
+  );
+
+  const pnlPointsList = applyFn(
+    completedTrades,
+    map((item) => getCompletedTradePnlPoints(item, pipDigit)),
+    toArray(),
+  );
+  const pnlPoints = applyFn(pnlPointsList, sum());
+
+  const winPnlPointsList = applyFn(
+    pnlPointsList,
+    filter((v) => v > 0),
+    toArray(),
+  );
+  const lossPnlPointsList = applyFn(
+    pnlPointsList,
     filter((v) => v <= 0),
     toArray(),
   );
@@ -60,6 +70,9 @@ export function calculateTradeResults(
   const avgWin = applyFn(winPnlList, mean());
   const avgLoss = applyFn(lossPnlList, mean());
 
+  const avgWinPts = applyFn(winPnlPointsList, mean());
+  const avgLossPts = applyFn(lossPnlPointsList, mean());
+
   const maxDrawdown = applyFn(pnlList, cumSum(), min(), (v) => Math.min(0, v));
 
   return {
@@ -72,6 +85,8 @@ export function calculateTradeResults(
     lossFraction,
     avgWin,
     avgLoss,
+    avgWinPts,
+    avgLossPts,
     maxDrawdown,
   };
 }
