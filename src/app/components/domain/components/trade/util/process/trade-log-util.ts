@@ -2,6 +2,7 @@ import { ensureNever } from '@gmjs/assert';
 import {
   ActiveOrder,
   ActiveTrade,
+  Bar,
   CompletedTrade,
 } from '@gmjs/gm-trading-shared';
 import {
@@ -14,20 +15,18 @@ import {
   TradeLogEntryStopLoss,
   TradeLogEntryLimit,
   TradeLogEntryCloseTrade,
-  TradeProcessState,
 } from '../../types';
 import { pipAdjust } from '../pip-adjust';
 import { getOhlc } from '../ohlc';
 
 export function getMarketPrice(
-  state: TradeProcessState,
-  index: number,
+  currentBar: Bar,
+  pipDigit: number,
+  pointSpread: number,
   isBuy: boolean,
 ): number {
-  const { barData, tradingParams } = state;
-  const { pipDigit, spread: pointSpread } = tradingParams;
+  
   const spread = pipAdjust(pointSpread, pipDigit);
-  const currentBar = barData[index];
   const ohlc = getOhlc(currentBar, isBuy, spread);
   return ohlc.o;
 }

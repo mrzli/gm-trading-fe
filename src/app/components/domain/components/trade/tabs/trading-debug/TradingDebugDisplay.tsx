@@ -1,27 +1,24 @@
 import React, { useMemo } from 'react';
 import { round } from '@gmjs/number-util';
-import {
-  TradeProcessState,
-  TradeResult,
-  TradingDataAndInputs,
-} from '../../types';
+import { TradeResult, TradingDataAndInputs } from '../../types';
 import { PrettyDisplay } from '../../../../../shared';
 import { calculateTradeResults } from '../../util';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
+import { TradesCollection } from '@gmjs/gm-trading-shared';
 
 export interface TradingDebugDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
-  readonly state: TradeProcessState;
+  readonly tradesCollection: TradesCollection;
 }
 
 const MAX_BARS_TO_DISPLAY_IN_DEBUG = 2;
 
 export function TradingDebugDisplay({
   dataAndInputs,
-  state,
+  tradesCollection,
 }: TradingDebugDisplayProps): React.ReactElement {
-  const pipDigit = dataAndInputs.inputs.params.pipDigit
+  const pipDigit = dataAndInputs.inputs.params.pipDigit;
 
   const inputsContent = useMemo<TradingDataAndInputs>(() => {
     return {
@@ -42,8 +39,10 @@ export function TradingDebugDisplay({
   }, [dataAndInputs]);
 
   const result = useMemo(() => {
-    return cleanUpTradeResult(calculateTradeResults(state, pipDigit));
-  }, [pipDigit, state]);
+    return cleanUpTradeResult(
+      calculateTradeResults(tradesCollection, pipDigit),
+    );
+  }, [pipDigit, tradesCollection]);
 
   return (
     <ComponentStack className='mt-1'>

@@ -1,13 +1,16 @@
 import {
   ActiveOrder,
   ActiveTrade,
+  Bar,
   CompletedTrade,
+  ManualTradeActionAny,
+  TradesCollection,
+  TradingParameters,
 } from '@gmjs/gm-trading-shared';
 import { barReplayMoveSubBar } from '../../../../util';
 import {
   ProcessTradeSequenceResult,
   TradeLogEntryAny,
-  TradeProcessState,
   TradingDataAndInputs,
 } from '../../types';
 import {
@@ -23,26 +26,61 @@ import {
 } from './process-manual-trade-actions';
 import { processOrders } from './process-orders';
 import { processTradesForBar, processTradesForOpen } from './process-trades';
-import { getMarketPrice, getLogEntryCreateOrder, getLogEntryAmendOrder, getLogEntryCancelOrder, getLogEntryFillOrder, getLogEntryAmendTrade, getLogEntryCompleteTrade } from './trade-log-util';
+import {
+  getMarketPrice,
+  getLogEntryCreateOrder,
+  getLogEntryAmendOrder,
+  getLogEntryCancelOrder,
+  getLogEntryFillOrder,
+  getLogEntryAmendTrade,
+  getLogEntryCompleteTrade,
+} from './trade-log-util';
 
 export function processTradeSequence(
   input: TradingDataAndInputs,
 ): ProcessTradeSequenceResult {
-  const { fullData, barIndex } = input;
+  const { barData, fullData, barIndex, inputs } = input;
   const { subBars } = fullData;
+  const { params, manualTradeActions } = inputs;
+  const { pipDigit, spread: pointSpread } = params;
 
-  let currentState = getInitialTradeProcessState(input);
+  const manualTradeActionsByBar = groupManualTradeActionsByBar(
+    manualTradeActions,
+    barData,
+  );
+
+  const getManualTradeActionForBar = (
+    index: number,
+  ): readonly ManualTradeActionAny[] => {
+    return manualTradeActionsByBar.get(index) ?? [];
+  };
+
+  let currentTradesCollection: TradesCollection = {
+    activeOrders: [],
+    activeTrades: [],
+    completedTrades: [],
+  };
   const tradeLog: TradeLogEntryAny[] = [];
 
   let currentBarIndexes = barReplayMoveSubBar(subBars, 0, 0, 1);
 
   for (let i = 1; i <= barIndex; i++) {
-    currentState = processBar(
-      currentState,
-      i,
-      barIndex,
+    const currentBar = barData[i];
+    const eventHandlers = createProcessBarEventHandlers(
+      currentBar,
+      pipDigit,
+      pointSpread,
       currentBarIndexes.barIndex,
       tradeLog,
+    );
+    currentTradesCollection = processBar(
+      params,
+      currentTradesCollection,
+      barData,
+      i,
+      barIndex,
+      getManualTradeActionForBar,
+      eventHandlers,
     );
     currentBarIndexes = barReplayMoveSubBar(
       subBars,
@@ -53,96 +91,50 @@ export function processTradeSequence(
   }
 
   return {
-    state: currentState,
+    tradesCollection: currentTradesCollection,
     tradeLog,
   };
 }
 
-function getInitialTradeProcessState(
-  input: TradingDataAndInputs,
-): TradeProcessState {
-  const { barData, barIndex, inputs } = input;
-  const { manualTradeActions, params } = inputs;
-
-  const manualTradeActionsByBar = groupManualTradeActionsByBar(
-    manualTradeActions,
-    barData,
-  );
-
-  return {
-    barData,
-    barIndex,
-    tradingParams: params,
-    manualTradeActionsByBar,
-    activeOrders: [],
-    activeTrades: [],
-    completedTrades: [],
-  };
-}
-
 function processBar(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   lastProcessedIndex: number,
-  chartVisualBarIndex: number,
-  tradeLog: TradeLogEntryAny[],
-): TradeProcessState {
-  let currentState = state;
+  getManualTradeActionForBar: (
+    index: number,
+  ) => readonly ManualTradeActionAny[],
+  eventHandlers?: ProcessBarEventHandlers,
+): TradesCollection {
+  let currentTradesCollection = tradesCollection;
 
-  const currentBarActions =
-    currentState.manualTradeActionsByBar.get(index) ?? [];
+  const currentBarActions = getManualTradeActionForBar(index);
   const { open, amendOrder, cancelOrder, amendTrade, closeTrade } =
     getManualTradeActionsByType(currentBarActions);
 
-  const handleCreateOrder = (order: ActiveOrder): void => {
-    const marketPrice = getMarketPrice(state, index, order.amount > 0);
-    const logEntry = getLogEntryCreateOrder(
-      order,
-      marketPrice,
-      chartVisualBarIndex,
-    );
-    tradeLog.push(logEntry);
-  };
+  const {
+    handleCreateOrder,
+    handleAmendOrder,
+    handleCancelOrder,
+    handleFillOrder,
+    handleAmendTrade,
+    handleCompleteTrade,
+  } = eventHandlers ?? {};
 
-  const handleAmendOrder = (order: ActiveOrder): void => {
-    const time = state.barData[index].time;
-    const marketPrice = getMarketPrice(state, index, order.amount > 0);
-    const logEntry = getLogEntryAmendOrder(
-      order,
-      time,
-      marketPrice,
-      chartVisualBarIndex,
-    );
-    tradeLog.push(logEntry);
-  };
-
-  const handleCancelOrder = (order: ActiveOrder): void => {
-    const time = state.barData[index].time;
-    const logEntry = getLogEntryCancelOrder(order, time, chartVisualBarIndex);
-    tradeLog.push(logEntry);
-  };
-
-  const handleFillOrder = (order: ActiveOrder, trade: ActiveTrade): void => {
-    const logEntry = getLogEntryFillOrder(order, trade, chartVisualBarIndex);
-    tradeLog.push(logEntry);
-  };
-
-  const handleAmendTrade = (trade: ActiveTrade): void => {
-    const time = state.barData[index].time;
-    const logEntry = getLogEntryAmendTrade(trade, time, chartVisualBarIndex);
-    tradeLog.push(logEntry);
-  };
-
-  const handleCompleteTrade = (trade: CompletedTrade): void => {
-    const logEntry = getLogEntryCompleteTrade(trade, chartVisualBarIndex);
-    tradeLog.push(logEntry);
-  };
-
-  currentState = processTradesForOpen(currentState, index, handleCompleteTrade);
+  currentTradesCollection = processTradesForOpen(
+    tradingParameters,
+    currentTradesCollection,
+    data,
+    index,
+    handleCompleteTrade,
+  );
 
   for (const action of open) {
-    currentState = processManualTradeActionOpen(
-      currentState,
+    currentTradesCollection = processManualTradeActionOpen(
+      tradingParameters,
+      currentTradesCollection,
+      data,
       index,
       action,
       handleCreateOrder,
@@ -150,8 +142,10 @@ function processBar(
   }
 
   for (const action of amendOrder) {
-    currentState = processManualTradeActionAmendOrder(
-      currentState,
+    currentTradesCollection = processManualTradeActionAmendOrder(
+      tradingParameters,
+      currentTradesCollection,
+      data,
       index,
       action,
       handleAmendOrder,
@@ -159,8 +153,10 @@ function processBar(
   }
 
   for (const action of cancelOrder) {
-    currentState = processManualTradeActionCancelOrder(
-      currentState,
+    currentTradesCollection = processManualTradeActionCancelOrder(
+      tradingParameters,
+      currentTradesCollection,
+      data,
       index,
       action,
       handleCancelOrder,
@@ -171,12 +167,20 @@ function processBar(
   // (because replay is limited to the open of the last replay bar,
   //   and previous bar close to current bar open is already processed)
   if (index < lastProcessedIndex) {
-    currentState = processOrders(currentState, index, handleFillOrder);
+    currentTradesCollection = processOrders(
+      tradingParameters,
+      currentTradesCollection,
+      data,
+      index,
+      handleFillOrder,
+    );
   }
 
   for (const action of amendTrade) {
-    currentState = processManualTradeActionAmendTrade(
-      currentState,
+    currentTradesCollection = processManualTradeActionAmendTrade(
+      tradingParameters,
+      currentTradesCollection,
+      data,
       index,
       action,
       handleAmendTrade,
@@ -184,8 +188,10 @@ function processBar(
   }
 
   for (const action of closeTrade) {
-    currentState = processManualTradeActionCloseTrade(
-      currentState,
+    currentTradesCollection = processManualTradeActionCloseTrade(
+      tradingParameters,
+      currentTradesCollection,
+      data,
       index,
       action,
       handleCompleteTrade,
@@ -195,12 +201,82 @@ function processBar(
   // do not check for stop-loss/limit over the entire last replay bar
   // (because replay is limited to the open of the last replay bar)
   if (index < lastProcessedIndex) {
-    currentState = processTradesForBar(
-      currentState,
+    currentTradesCollection = processTradesForBar(
+      tradingParameters,
+      currentTradesCollection,
+      data,
       index,
       handleCompleteTrade,
     );
   }
 
-  return currentState;
+  return currentTradesCollection;
+}
+
+interface ProcessBarEventHandlers {
+  readonly handleCreateOrder?: (order: ActiveOrder) => void;
+  readonly handleAmendOrder?: (order: ActiveOrder) => void;
+  readonly handleCancelOrder?: (order: ActiveOrder) => void;
+  readonly handleFillOrder?: (order: ActiveOrder, trade: ActiveTrade) => void;
+  readonly handleAmendTrade?: (trade: ActiveTrade) => void;
+  readonly handleCompleteTrade?: (trade: CompletedTrade) => void;
+}
+
+function createProcessBarEventHandlers(
+  currentBar: Bar,
+  pipDigit: number,
+  pointSpread: number,
+  chartVisualBarIndex: number,
+  tradeLog: TradeLogEntryAny[],
+): ProcessBarEventHandlers {
+  return {
+    handleCreateOrder: (order: ActiveOrder): void => {
+      const marketPrice = getMarketPrice(
+        currentBar,
+        pipDigit,
+        pointSpread,
+        order.amount > 0,
+      );
+      const logEntry = getLogEntryCreateOrder(
+        order,
+        marketPrice,
+        chartVisualBarIndex,
+      );
+      tradeLog.push(logEntry);
+    },
+    handleAmendOrder: (order: ActiveOrder): void => {
+      const time = currentBar.time;
+      const marketPrice = getMarketPrice(
+        currentBar,
+        pipDigit,
+        pointSpread,
+        order.amount > 0,
+      );
+      const logEntry = getLogEntryAmendOrder(
+        order,
+        time,
+        marketPrice,
+        chartVisualBarIndex,
+      );
+      tradeLog.push(logEntry);
+    },
+    handleCancelOrder: (order: ActiveOrder): void => {
+      const time = currentBar.time;
+      const logEntry = getLogEntryCancelOrder(order, time, chartVisualBarIndex);
+      tradeLog.push(logEntry);
+    },
+    handleFillOrder: (order: ActiveOrder, trade: ActiveTrade): void => {
+      const logEntry = getLogEntryFillOrder(order, trade, chartVisualBarIndex);
+      tradeLog.push(logEntry);
+    },
+    handleAmendTrade: (trade: ActiveTrade): void => {
+      const time = currentBar.time;
+      const logEntry = getLogEntryAmendTrade(trade, time, chartVisualBarIndex);
+      tradeLog.push(logEntry);
+    },
+    handleCompleteTrade: (trade: CompletedTrade): void => {
+      const logEntry = getLogEntryCompleteTrade(trade, chartVisualBarIndex);
+      tradeLog.push(logEntry);
+    },
+  };
 }

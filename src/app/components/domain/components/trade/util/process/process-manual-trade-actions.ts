@@ -1,30 +1,34 @@
 import { invariant } from '@gmjs/assert';
-import { TradeProcessState } from '../../types';
-import { activeTradeToCompletedTrade } from './shared';
-import { getOhlc } from '../ohlc';
-import { pipAdjust } from '../pip-adjust';
 import {
   ActiveOrder,
   ActiveTrade,
+  Bar,
   CompletedTrade,
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionCancelOrder,
   ManualTradeActionCloseTrade,
   ManualTradeActionOpen,
+  TradesCollection,
+  TradingParameters,
 } from '@gmjs/gm-trading-shared';
+import { activeTradeToCompletedTrade } from './shared';
+import { getOhlc } from '../ohlc';
+import { pipAdjust } from '../pip-adjust';
 
 export function processManualTradeActionOpen(
-  state: TradeProcessState,
+  _tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   action: ManualTradeActionOpen,
   onCreateOrder?: (order: ActiveOrder) => void,
-): TradeProcessState {
-  const { barData, activeOrders } = state;
+): TradesCollection {
+  const { activeOrders } = tradesCollection;
 
   const { id, price, amount, stopLossDistance, limitDistance } = action;
 
-  const currentBar = barData[index];
+  const currentBar = data[index];
   const time = currentBar.time;
 
   const activeOrder: ActiveOrder = {
@@ -39,18 +43,20 @@ export function processManualTradeActionOpen(
   onCreateOrder?.(activeOrder);
 
   return {
-    ...state,
+    ...tradesCollection,
     activeOrders: [...activeOrders, activeOrder],
   };
 }
 
 export function processManualTradeActionAmendOrder(
-  state: TradeProcessState,
+  _tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   _index: number,
   action: ManualTradeActionAmendOrder,
   onAmendOrder?: (order: ActiveOrder) => void,
-): TradeProcessState {
-  const { activeOrders } = state;
+): TradesCollection {
+  const { activeOrders } = tradesCollection;
 
   const { targetId, price, amount, stopLossDistance, limitDistance } = action;
 
@@ -80,18 +86,20 @@ export function processManualTradeActionAmendOrder(
   onAmendOrder?.(updatedActiveOrder);
 
   return {
-    ...state,
+    ...tradesCollection,
     activeOrders: newActiveOrders,
   };
 }
 
 export function processManualTradeActionCancelOrder(
-  state: TradeProcessState,
+  _tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   _index: number,
   action: ManualTradeActionCancelOrder,
   onCancelOrder?: (order: ActiveOrder) => void,
-): TradeProcessState {
-  const { activeOrders } = state;
+): TradesCollection {
+  const { activeOrders } = tradesCollection;
 
   const { targetId } = action;
 
@@ -108,18 +116,20 @@ export function processManualTradeActionCancelOrder(
   onCancelOrder?.(activeOrder);
 
   return {
-    ...state,
+    ...tradesCollection,
     activeOrders: newActiveOrders,
   };
 }
 
 export function processManualTradeActionAmendTrade(
-  state: TradeProcessState,
+  _tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   _index: number,
   action: ManualTradeActionAmendTrade,
   onAmendTrade?: (trade: ActiveTrade) => void,
-): TradeProcessState {
-  const { activeTrades } = state;
+): TradesCollection {
+  const { activeTrades } = tradesCollection;
 
   const { targetId, stopLoss, limit } = action;
 
@@ -152,22 +162,24 @@ export function processManualTradeActionAmendTrade(
   onAmendTrade?.(updatedActiveTrade);
 
   return {
-    ...state,
+    ...tradesCollection,
     activeTrades: newActiveTrades,
   };
 }
 
 export function processManualTradeActionCloseTrade(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   action: ManualTradeActionCloseTrade,
   onCloseTrade?: (trade: CompletedTrade) => void,
-): TradeProcessState {
-  const { barData, tradingParams, activeTrades, completedTrades } = state;
+): TradesCollection {
+  const { activeTrades, completedTrades } = tradesCollection;
 
   const { targetId } = action;
 
-  const currentBar = barData[index];
+  const currentBar = data[index];
   const time = currentBar.time;
 
   const activeTrade = activeTrades.find((item) => item.id === targetId);
@@ -176,7 +188,7 @@ export function processManualTradeActionCloseTrade(
     `Could not find active trade with id: '${targetId}'.`,
   );
 
-  const { pipDigit, spread: pointSpread } = tradingParams;
+  const { pipDigit, spread: pointSpread } = tradingParameters;
   const spread = pipAdjust(pointSpread, pipDigit);
 
   const { id, amount } = activeTrade;
@@ -197,7 +209,7 @@ export function processManualTradeActionCloseTrade(
   onCloseTrade?.(completedTrade);
 
   return {
-    ...state,
+    ...tradesCollection,
     activeTrades: newActiveTrades,
     completedTrades: [...completedTrades, completedTrade],
   };

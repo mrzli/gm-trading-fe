@@ -8,16 +8,16 @@ import {
   sum,
   toArray,
 } from '@gmjs/value-transformers';
-import { TradeProcessState, TradeResult } from '../types';
+import { TradeResult } from '../types';
 import { getOhlc } from './ohlc';
 import { pipAdjustInverse } from '.';
-import { ActiveTrade, Bar, CompletedTrade } from '@gmjs/gm-trading-shared';
+import { ActiveTrade, Bar, CompletedTrade, TradesCollection } from '@gmjs/gm-trading-shared';
 
 export function calculateTradeResults(
-  state: TradeProcessState,
+  tradesCollection: TradesCollection,
   pipDigit: number,
 ): TradeResult {
-  const { completedTrades } = state;
+  const { completedTrades } = tradesCollection;
 
   const pnlList = applyFn(
     completedTrades,

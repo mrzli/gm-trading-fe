@@ -11,7 +11,6 @@ import {
   AmendTradeData,
   OrderInputs,
   ProcessTradeSequenceResult,
-  TradeProcessState,
   TradeTabValue,
   TradingDataAndInputs,
   TradingInputs,
@@ -146,7 +145,7 @@ export function TradeContainer({
   >([]);
 
   const [tradeResult, setTradeResult] = useState<ProcessTradeSequenceResult>(
-    getInitialTradeProcessResult(tradingDataAndInputs),
+    INITIAL_TRADE_PROCESS_RESULT,
   );
 
   useEffect(() => {
@@ -155,9 +154,13 @@ export function TradeContainer({
   }, [onTradeLinesChange, tradingDataAndInputs]);
 
   useEffect(() => {
-    const tradeLines = calculateTradeLines(tradeResult);
+    const tradeLines = calculateTradeLines(
+      tradingParameters,
+      barIndex,
+      tradeResult,
+    );
     setTradeLines(tradeLines);
-  }, [tradeResult]);
+  }, [tradingParameters, tradeResult, barIndex]);
 
   useEffect(() => {
     const allTradeLines: readonly TradeLine[] = [
@@ -388,7 +391,7 @@ function getTabEntries(
   handleProposedOrderChange: (order: OrderInputs | undefined) => void,
   createOrderData: CreateOrderStateFinish | undefined,
 ): readonly TabLayoutEntry<TradeTabValue>[] {
-  const { state: tradingState, tradeLog } = tradeResult;
+  const { tradesCollection, tradeLog } = tradeResult;
 
   return [
     {
@@ -411,7 +414,7 @@ function getTabEntries(
       content: (
         <TradingOperationsContent
           dataAndInputs={tradingDataAndInputs}
-          state={tradingState}
+          tradesCollection={tradesCollection}
           onReplayPositionChange={handleReplayPositionChange}
           onCreateOrder={handleCreateOrder}
           onCancelOrder={handleCancelOrder}
@@ -434,7 +437,7 @@ function getTabEntries(
       content: (
         <TradingResultsContent
           tradingParams={tradingDataAndInputs.inputs.params}
-          state={tradingState}
+          tradesCollection={tradesCollection}
         />
       ),
     },
@@ -444,34 +447,21 @@ function getTabEntries(
       content: (
         <TradingDebugDisplay
           dataAndInputs={tradingDataAndInputs}
-          state={tradingState}
+          tradesCollection={tradesCollection}
         />
       ),
     },
   ];
 }
 
-function getInitialTradeProcessResult(
-  dataAndInputs: TradingDataAndInputs,
-): ProcessTradeSequenceResult {
-  const { barData, barIndex, inputs } = dataAndInputs;
-  const { params } = inputs;
-
-  const state: TradeProcessState = {
-    barData,
-    barIndex,
-    tradingParams: params,
-    manualTradeActionsByBar: new Map(),
+const INITIAL_TRADE_PROCESS_RESULT: ProcessTradeSequenceResult = {
+  tradesCollection: {
     activeOrders: [],
     activeTrades: [],
     completedTrades: [],
-  };
-
-  return {
-    state,
-    tradeLog: [],
-  };
-}
+  },
+  tradeLog: [],
+};
 
 function getInitialTradingParameters(
   instrument: Instrument,

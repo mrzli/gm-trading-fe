@@ -4,7 +4,6 @@ import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import {
   AmendOrderData,
   AmendTradeData,
-  TradeProcessState,
   TradingDataAndInputs,
 } from '../../types';
 import { ItemList } from '../../shared';
@@ -16,10 +15,11 @@ import { BarReplayPosition } from '../../../../types';
 import { TradeStatusDisplay } from './TradeStatusDisplay';
 import { ScrollYContainer } from '../../shared/ScrollYContainer';
 import { CreateOrderStateFinish } from '../../../ticker-data-container/types';
+import { TradesCollection } from '@gmjs/gm-trading-shared';
 
 export interface TradingOperationsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
-  readonly state: TradeProcessState;
+  readonly tradesCollection: TradesCollection;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
   readonly onCreateOrder: (order: OrderInputs) => void;
   readonly onCancelOrder: (id: number) => void;
@@ -32,7 +32,7 @@ export interface TradingOperationsContentProps {
 
 export function TradingOperationsContent({
   dataAndInputs,
-  state,
+  tradesCollection,
   onReplayPositionChange,
   onCreateOrder,
   onCancelOrder,
@@ -42,9 +42,10 @@ export function TradingOperationsContent({
   onProposedOrderChange,
   createOrderData,
 }: TradingOperationsContentProps): React.ReactElement {
-  const { settings, replayPosition, barData, barIndex } = dataAndInputs;
+  const { settings, replayPosition, barData, barIndex, inputs } = dataAndInputs;
   const { timezone } = settings;
-  const { tradingParams, activeOrders, activeTrades, completedTrades } = state;
+  const { params } = inputs;
+  const { activeOrders, activeTrades, completedTrades } = tradesCollection;
 
   const isTradingActivated = replayPosition.barIndex !== undefined;
 
@@ -109,13 +110,13 @@ export function TradingOperationsContent({
     <ComponentStack className='mt-1 overflow-hidden'>
       <TradeStatusDisplay
         dataAndInputs={dataAndInputs}
-        state={state}
+        tradesCollection={tradesCollection}
         onReplayPositionChange={onReplayPositionChange}
       />
       {isTradingActivated && (
         <>
           <CreateOrderForm
-            tradingParams={tradingParams}
+            tradingParams={params}
             createOrderData={createOrderData}
             onCreateOrder={handleCreateOrder}
             onProposedOrderChange={onProposedOrderChange}
@@ -130,7 +131,7 @@ export function TradingOperationsContent({
                     <ActiveOrderItem
                       key={index}
                       timezone={timezone}
-                      tradingParams={tradingParams}
+                      tradingParams={params}
                       item={item}
                       isEditing={editOrderId === item.id}
                       onEdit={handleOrderEdit}
@@ -149,7 +150,7 @@ export function TradingOperationsContent({
                     <ActiveTradeItem
                       key={index}
                       timezone={timezone}
-                      tradingParams={tradingParams}
+                      tradingParams={params}
                       bar={bar}
                       item={item}
                       isEditing={editTradeId === item.id}
@@ -169,7 +170,7 @@ export function TradingOperationsContent({
                     <CompletedTradeItem
                       key={index}
                       timezone={timezone}
-                      tradingParams={tradingParams}
+                      tradingParams={params}
                       item={item}
                     />
                   );

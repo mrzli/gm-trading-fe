@@ -13,15 +13,14 @@ export function proposedOrderToTradeLines(
   tradeResult: ProcessTradeSequenceResult,
   order: OrderInputs,
 ): readonly TradeLine[] {
-  const { replayPosition } = tradingDataAndInputs;
+  const { barData, barIndex, replayPosition, inputs } = tradingDataAndInputs;
+  const { params } = inputs;
   const { barIndex: visualBarIndex } = replayPosition;
   if (visualBarIndex === undefined) {
     return [];
   }
 
-  const { state } = tradeResult;
-  const { barData, barIndex, tradingParams } = state;
-  const { pipDigit, spread: pointSpread } = tradingParams;
+  const { pipDigit, spread: pointSpread } = params;
   const spread = pipAdjust(pointSpread, pipDigit);
 
   const halfSpread = spread / 2;

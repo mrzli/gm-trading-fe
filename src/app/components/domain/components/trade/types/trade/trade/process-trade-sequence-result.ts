@@ -1,7 +1,7 @@
-import { TradeProcessState } from '../shared';
+import { TradesCollection } from '@gmjs/gm-trading-shared';
 import { TradeLogEntryAny } from './trade-log-entry';
 
 export interface ProcessTradeSequenceResult {
-  readonly state: TradeProcessState;
+  readonly tradesCollection: TradesCollection;
   readonly tradeLog: TradeLogEntryAny[];
 }

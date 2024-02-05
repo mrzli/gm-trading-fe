@@ -1,22 +1,31 @@
-import { ActiveOrder, ActiveTrade } from '@gmjs/gm-trading-shared';
-import { TradeProcessState } from '../../types';
+import {
+  ActiveOrder,
+  ActiveTrade,
+  Bar,
+  TradesCollection,
+  TradingParameters,
+} from '@gmjs/gm-trading-shared';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
 
 export function processOrders(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   onFillOrder?: (order: ActiveOrder, trade: ActiveTrade) => void,
-): TradeProcessState {
-  let currentState = state;
+): TradesCollection {
+  let currentTradesCollection = tradesCollection;
 
-  const { activeOrders } = currentState;
+  const { activeOrders } = currentTradesCollection;
 
   const ordersToRemove = new Set<number>();
 
   for (const order of activeOrders) {
-    currentState = processOrder(
-      currentState,
+    currentTradesCollection = processOrder(
+      tradingParameters,
+      tradesCollection,
+      data,
       index,
       order,
       ordersToRemove,
@@ -29,42 +38,39 @@ export function processOrders(
   );
 
   return {
-    ...currentState,
+    ...currentTradesCollection,
     activeOrders: remainingOrders,
   };
 }
 
 function processOrder(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   order: ActiveOrder,
   ordersToRemove: Set<number>,
   onFillOrder?: (order: ActiveOrder, trade: ActiveTrade) => void,
-): TradeProcessState {
-  const { barData, activeTrades } = state;
+): TradesCollection {
+  const { activeTrades } = tradesCollection;
 
-  const time = barData[index].time;
+  const time = data[index].time;
 
-  const checkFillResult = checkFillOrder(state, index, order);
+  const checkFillResult = checkFillOrder(tradingParameters, data, index, order);
   const { shouldFill, fillPrice } = checkFillResult;
 
   if (!shouldFill) {
-    return state;
+    return tradesCollection;
   }
 
-  const activeTrade = orderToTrade(
-    state,
-    order,
-    time,
-    fillPrice,
-  );
+  const activeTrade = orderToTrade(tradingParameters, order, time, fillPrice);
 
   ordersToRemove.add(order.id);
 
   onFillOrder?.(order, activeTrade);
 
   return {
-    ...state,
+    ...tradesCollection,
     activeTrades: [...activeTrades, activeTrade],
   };
 }
@@ -75,20 +81,19 @@ interface CheckFillOrderResult {
 }
 
 function checkFillOrder(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  data: readonly Bar[],
   index: number,
   order: ActiveOrder,
 ): CheckFillOrderResult {
-  const { barData, tradingParams } = state;
-
-  const { pipDigit, spread: pointSpread } = tradingParams;
+  const { pipDigit, spread: pointSpread } = tradingParameters;
   const spread = pipAdjust(pointSpread, pipDigit);
 
   const { time, price, amount } = order;
   const isBuy = amount > 0;
 
-  const previousBar = barData[index - 1];
-  const currentBar = barData[index];
+  const previousBar = data[index - 1];
+  const currentBar = data[index];
 
   const prevOhlc = getOhlc(previousBar, isBuy, spread);
   const ohlc = getOhlc(currentBar, isBuy, spread);
@@ -126,13 +131,12 @@ function isBetweenInclusive(value: number, v1: number, v2: number): boolean {
 }
 
 function orderToTrade(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
   order: ActiveOrder,
   openTime: number,
   openPrice: number,
 ): ActiveTrade {
-  const { tradingParams } = state;
-  const { pipDigit } = tradingParams;
+  const { pipDigit } = tradingParameters;
 
   const {
     id,

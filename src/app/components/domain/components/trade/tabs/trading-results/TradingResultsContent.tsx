@@ -1,25 +1,25 @@
 import React, { useMemo } from 'react';
-import { TradeProcessState, TradeResult } from '../../types';
+import { TradeResult } from '../../types';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { calculateTradeResults } from '../../util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
-import { TradingParameters } from '@gmjs/gm-trading-shared';
+import { TradesCollection, TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface TradingResultsContentProps {
   readonly tradingParams: TradingParameters;
-  readonly state: TradeProcessState;
+  readonly tradesCollection: TradesCollection;
 }
 
 export function TradingResultsContent({
   tradingParams,
-  state,
+  tradesCollection,
 }: TradingResultsContentProps): React.ReactElement {
   const pipDigit = tradingParams.pipDigit;
 
   const result = useMemo(() => {
-    return calculateTradeResults(state, pipDigit);
-  }, [pipDigit, state]);
+    return calculateTradeResults(tradesCollection, pipDigit);
+  }, [pipDigit, tradesCollection]);
 
   const displayItems = useMemo(() => getDisplayItems(result), [result]);
 

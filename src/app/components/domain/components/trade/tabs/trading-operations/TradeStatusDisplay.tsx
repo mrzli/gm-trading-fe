@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { BarReplayPosition } from '../../../../types';
-import { TradeProcessState, TradingDataAndInputs } from '../../types';
+import { TradingDataAndInputs } from '../../types';
 import { BarReplay } from './bar-replay/BarReplay';
 import {
   DateValueDisplay,
@@ -22,16 +22,17 @@ import {
   PRECISION_POINT,
   createAfterLastBar,
 } from '../../../../util';
+import { TradesCollection } from '@gmjs/gm-trading-shared';
 
 export interface TradeStatusDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
-  readonly state: TradeProcessState;
+  readonly tradesCollection: TradesCollection;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
 }
 
 export function TradeStatusDisplay({
   dataAndInputs,
-  state,
+  tradesCollection,
   onReplayPositionChange,
 }: TradeStatusDisplayProps): React.ReactElement {
   const {
@@ -48,7 +49,7 @@ export function TradeStatusDisplay({
   const { priceDecimals, spread: pointSpread, pipDigit } = params;
   const spread = pipAdjust(pointSpread, pipDigit);
 
-  const { activeTrades, completedTrades } = state;
+  const { activeTrades, completedTrades } = tradesCollection;
 
   const bar =
     barIndex === barData.length

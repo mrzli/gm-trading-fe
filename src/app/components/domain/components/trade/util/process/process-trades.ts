@@ -1,9 +1,14 @@
 import { invariant } from '@gmjs/assert';
-import { TradeProcessState } from '../../types';
+import {
+  ActiveTrade,
+  Bar,
+  CompletedTrade,
+  TradesCollection,
+  TradingParameters,
+} from '@gmjs/gm-trading-shared';
 import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
 import { pipAdjust } from '../pip-adjust';
-import { ActiveTrade, CompletedTrade } from '@gmjs/gm-trading-shared';
 
 type LimitIntersectionType = 'none' | 'stop-loss' | 'limit';
 
@@ -13,18 +18,23 @@ interface LimitIntersectionsResult {
 }
 
 type CheckLimitFn = (
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  data: readonly Bar[],
   index: number,
   trade: ActiveTrade,
 ) => LimitIntersectionsResult;
 
 export function processTradesForOpen(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   onCompleteTrade?: (trade: CompletedTrade) => void,
-): TradeProcessState {
+): TradesCollection {
   return processTradesInternal(
-    state,
+    tradingParameters,
+    tradesCollection,
+    data,
     index,
     checkLimitIntersectionsForOpen,
     onCompleteTrade,
@@ -32,12 +42,16 @@ export function processTradesForOpen(
 }
 
 export function processTradesForBar(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   onCompleteTrade?: (trade: CompletedTrade) => void,
-): TradeProcessState {
+): TradesCollection {
   return processTradesInternal(
-    state,
+    tradingParameters,
+    tradesCollection,
+    data,
     index,
     checkLimitIntersectionsForBar,
     onCompleteTrade,
@@ -45,20 +59,24 @@ export function processTradesForBar(
 }
 
 function processTradesInternal(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   checkLimit: CheckLimitFn,
   onCompleteTrade?: (trade: CompletedTrade) => void,
-): TradeProcessState {
-  let currentState = state;
+): TradesCollection {
+  let currentTradesCollection = tradesCollection;
 
-  const { activeTrades } = currentState;
+  const { activeTrades } = currentTradesCollection;
 
   const tradesToRemove = new Set<number>();
 
   for (const trade of activeTrades) {
-    currentState = processTradeInternal(
-      currentState,
+    currentTradesCollection = processTradeInternal(
+      tradingParameters,
+      tradesCollection,
+      data,
       index,
       trade,
       tradesToRemove,
@@ -72,27 +90,34 @@ function processTradesInternal(
   );
 
   return {
-    ...currentState,
+    ...currentTradesCollection,
     activeTrades: remainingTrades,
   };
 }
 
 function processTradeInternal(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  tradesCollection: TradesCollection,
+  data: readonly Bar[],
   index: number,
   trade: ActiveTrade,
   tradesToRemove: Set<number>,
   checkLimit: CheckLimitFn,
   onCompleteTrade?: (trade: CompletedTrade) => void,
-): TradeProcessState {
-  const { barData, completedTrades } = state;
+): TradesCollection {
+  const { completedTrades } = tradesCollection;
 
-  const time = barData[index].time;
+  const time = data[index].time;
 
-  const limitIntersectionsResult = checkLimit(state, index, trade);
+  const limitIntersectionsResult = checkLimit(
+    tradingParameters,
+    data,
+    index,
+    trade,
+  );
   const { intesectionType, price } = limitIntersectionsResult;
   if (intesectionType === 'none') {
-    return state;
+    return tradesCollection;
   }
 
   const completedTrade = activeTradeToCompletedTrade(
@@ -107,26 +132,25 @@ function processTradeInternal(
   tradesToRemove.add(trade.id);
 
   return {
-    ...state,
+    ...tradesCollection,
     completedTrades: [...completedTrades, completedTrade],
   };
 }
 
 function checkLimitIntersectionsForOpen(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  data: readonly Bar[],
   index: number,
   trade: ActiveTrade,
 ): LimitIntersectionsResult {
-  const { barData, tradingParams } = state;
-
-  const { pipDigit, spread: pointSpread } = tradingParams;
+  const { pipDigit, spread: pointSpread } = tradingParameters;
   const spread = pipAdjust(pointSpread, pipDigit);
 
   const { amount, stopLoss, limit } = trade;
 
   const isBuy = amount > 0;
 
-  const currentBar = barData[index];
+  const currentBar = data[index];
 
   // ohlc for closing the trade, which is the opposite of the trade direction
   const ohlc = getOhlc(currentBar, !isBuy, spread);
@@ -156,20 +180,19 @@ function checkLimitIntersectionsForOpen(
 }
 
 function checkLimitIntersectionsForBar(
-  state: TradeProcessState,
+  tradingParameters: TradingParameters,
+  data: readonly Bar[],
   index: number,
   trade: ActiveTrade,
 ): LimitIntersectionsResult {
-  const { barData, tradingParams } = state;
-
-  const { pipDigit, spread: pointSpread } = tradingParams;
+  const { pipDigit, spread: pointSpread } = tradingParameters;
   const spread = pipAdjust(pointSpread, pipDigit);
 
   const { amount, stopLoss, limit } = trade;
 
   const isBuy = amount > 0;
 
-  const currentBar = barData[index];
+  const currentBar = data[index];
 
   // ohlc for closing the trade, which is the opposite of the trade direction
   const ohlc = getOhlc(currentBar, !isBuy, spread);

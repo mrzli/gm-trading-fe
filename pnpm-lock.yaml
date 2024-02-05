@@ -36,8 +36,8 @@ dependencies:
     specifier: ^0.0.1
     version: 0.0.1
   '@gmjs/gm-trading-shared':
-    specifier: ^0.0.30
-    version: 0.0.30
+    specifier: ^0.0.31
+    version: 0.0.31
   '@gmjs/number-util':
     specifier: ^0.0.3
     version: 0.0.3
@@ -2489,8 +2489,8 @@ packages:
     dependencies:
       tslib: 2.6.2
 
-  /@gmjs/gm-trading-shared@0.0.30:
-    resolution: {integrity: sha512-nP4SLPqGKa79Xzb58AGKiW2QMXtoQpDHKlcCB7tr8GfnyjzhSWNDFv+yltJpVLh39d739FGMXfGz9k5M4DgKpA==}
+  /@gmjs/gm-trading-shared@0.0.31:
+    resolution: {integrity: sha512-ynHjIr6RIFAv4CHkgoEPug0mLQrfLGnVewiQAQMD0Er2TtSN9HJ7izuktz+PD/AQnzwgbTZO83KOQkg/GT+w9A==}
     engines: {node: '>=18.17.0'}
     dependencies:
       tslib: 2.6.2
@@ -5772,7 +5772,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /bundle-name@3.0.0:
@@ -7114,7 +7114,7 @@ packages:
       is-core-module: 2.13.1
       minimatch: 3.1.2
       resolve: 1.22.8
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /eslint-plugin-prettier@5.1.2(@types/eslint@8.56.0)(eslint-config-prettier@9.1.0)(eslint@8.56.0)(prettier@3.1.1):
@@ -10691,6 +10691,14 @@ packages:
 
   /semver@7.5.4:
     resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      lru-cache: 6.0.0
+    dev: true
+
+  /semver@7.6.0:
+    resolution: {integrity: sha512-EnwXhrlwXMk9gKu5/flx5sv/an57AkRplG3hTK68W7FRDN+k+OWBj65M7719OkA82XLBxrcX0KSHj+X5COhOVg==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
