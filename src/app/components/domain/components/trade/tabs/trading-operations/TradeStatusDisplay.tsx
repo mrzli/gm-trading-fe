@@ -7,14 +7,6 @@ import {
   DecimalValueDisplay,
   getPnlColor,
 } from '../../../shared';
-import { getOhlc } from '../../util/ohlc';
-import {
-  getActiveTradePnl,
-  getActiveTradePnlPoints,
-  getCompletedTradePnl,
-  getCompletedTradePnlPoints,
-  pipAdjust,
-} from '../../util';
 import { applyFn } from '@gmjs/apply-function';
 import { map, sum } from '@gmjs/value-transformers';
 import {
@@ -22,7 +14,15 @@ import {
   PRECISION_POINT,
   createAfterLastBar,
 } from '../../../../util';
-import { TradesCollection } from '@gmjs/gm-trading-shared';
+import {
+  TradesCollection,
+  getActiveTradePnl,
+  getActiveTradePnlPoints,
+  getCompletedTradePnl,
+  getCompletedTradePnlPoints,
+  getOhlc,
+  pipAdjust,
+} from '@gmjs/gm-trading-shared';
 
 export interface TradeStatusDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;

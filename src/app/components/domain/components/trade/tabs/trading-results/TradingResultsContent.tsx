@@ -1,10 +1,13 @@
 import React, { useMemo } from 'react';
-import { TradeResult } from '../../types';
 import { ComponentStack } from '../../shared/ComponentStack';
-import { calculateTradeResults } from '../../util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
-import { TradesCollection, TradingParameters } from '@gmjs/gm-trading-shared';
+import {
+  TradeResult,
+  TradesCollection,
+  TradingParameters,
+  calculateTradeResults,
+} from '@gmjs/gm-trading-shared';
 
 export interface TradingResultsContentProps {
   readonly tradingParams: TradingParameters;

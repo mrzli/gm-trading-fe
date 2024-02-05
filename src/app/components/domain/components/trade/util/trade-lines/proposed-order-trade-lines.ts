@@ -1,10 +1,10 @@
+import { pipAdjust } from '@gmjs/gm-trading-shared';
 import { TradeLine } from '../../../../types';
 import {
   OrderInputs,
   ProcessTradeSequenceResult,
   TradingDataAndInputs,
 } from '../../types';
-import { pipAdjust } from '../pip-adjust';
 
 const PROPOSED_ORDER_TRAD_LINE_LENGTH = 5;
 

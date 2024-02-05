@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react';
 import { round } from '@gmjs/number-util';
-import { TradeResult, TradingDataAndInputs } from '../../types';
+import { TradingDataAndInputs } from '../../types';
 import { PrettyDisplay } from '../../../../../shared';
-import { calculateTradeResults } from '../../util';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
-import { TradesCollection } from '@gmjs/gm-trading-shared';
+import { TradeResult, TradesCollection, calculateTradeResults } from '@gmjs/gm-trading-shared';
 
 export interface TradingDebugDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;

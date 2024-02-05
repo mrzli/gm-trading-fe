@@ -1,24 +1,11 @@
 import { invariant } from '@gmjs/assert';
 import { applyFn } from '@gmjs/apply-function';
-import {
-  filterWithGuard,
-  groupBy,
-  map,
-  sort,
-  toArray,
-  toMap,
-} from '@gmjs/value-transformers';
-import { ManualTradeActionsByType } from '../../types';
+import { groupBy, map, sort, toArray, toMap } from '@gmjs/value-transformers';
 import { Bars } from '../../../../types';
 import { binarySearch } from '../../../../util';
 import {
-  ManualTradeActionAmendOrder,
-  ManualTradeActionAmendTrade,
   ManualTradeActionAny,
-  ManualTradeActionCancelOrder,
-  ManualTradeActionCloseTrade,
   ManualTradeActionKind,
-  ManualTradeActionOpen,
 } from '@gmjs/gm-trading-shared';
 
 export function groupManualTradeActionsByBar(
@@ -31,56 +18,6 @@ export function groupManualTradeActionsByBar(
     map(([key, value]) => [key, normalizeManualTradeActions(value)] as const),
     toMap(),
   );
-}
-
-export function getManualTradeActionsByType(
-  actions: readonly ManualTradeActionAny[],
-): ManualTradeActionsByType {
-  const open = applyFn(
-    actions,
-    filterWithGuard(
-      (action): action is ManualTradeActionOpen => action.kind === 'open',
-    ),
-    toArray(),
-  );
-
-  const amendOrder = applyFn(
-    actions,
-    filterWithGuard(
-      (action): action is ManualTradeActionAmendOrder =>
-        action.kind === 'amend-order',
-    ),
-    toArray(),
-  );
-
-  const amendTrade = applyFn(
-    actions,
-    filterWithGuard(
-      (action): action is ManualTradeActionAmendTrade =>
-        action.kind === 'amend-trade',
-    ),
-    toArray(),
-  );
-
-  const cancelOrder = applyFn(
-    actions,
-    filterWithGuard(
-      (action): action is ManualTradeActionCancelOrder =>
-        action.kind === 'cancel-order',
-    ),
-    toArray(),
-  );
-
-  const closeTrade = applyFn(
-    actions,
-    filterWithGuard(
-      (action): action is ManualTradeActionCloseTrade =>
-        action.kind === 'close-trade',
-    ),
-    toArray(),
-  );
-
-  return { open, amendOrder, cancelOrder, amendTrade, closeTrade };
 }
 
 function getBarIndex(action: ManualTradeActionAny, bars: Bars): number {

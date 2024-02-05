@@ -4,6 +4,8 @@ import {
   ActiveTrade,
   Bar,
   CompletedTrade,
+  getOhlc,
+  pipAdjust,
 } from '@gmjs/gm-trading-shared';
 import {
   TradeLogEntryAny,
@@ -16,8 +18,6 @@ import {
   TradeLogEntryLimit,
   TradeLogEntryCloseTrade,
 } from '../../types';
-import { pipAdjust } from '../pip-adjust';
-import { getOhlc } from '../ohlc';
 
 export function getMarketPrice(
   currentBar: Bar,
@@ -25,7 +25,6 @@ export function getMarketPrice(
   pointSpread: number,
   isBuy: boolean,
 ): number {
-  
   const spread = pipAdjust(pointSpread, pipDigit);
   const ohlc = getOhlc(currentBar, isBuy, spread);
   return ohlc.o;

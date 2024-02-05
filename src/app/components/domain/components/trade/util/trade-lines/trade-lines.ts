@@ -1,7 +1,6 @@
-import { TradingParameters } from '@gmjs/gm-trading-shared';
+import { TradingParameters, pipAdjust } from '@gmjs/gm-trading-shared';
 import { TradeLine } from '../../../../types';
 import { ProcessTradeSequenceResult } from '../../types';
-import { pipAdjust } from '../pip-adjust';
 import { getOrderTradeLines } from './orders';
 import { getTradeTradeLines } from './trades';
 

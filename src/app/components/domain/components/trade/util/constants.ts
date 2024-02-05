@@ -1,5 +1,4 @@
-import { TradingParameters } from '@gmjs/gm-trading-shared';
-import { TradeResult } from '../types';
+import { TradeResult, TradingParameters } from '@gmjs/gm-trading-shared';
 
 export const DEFAULT_TRADING_PARAMS: TradingParameters = {
   initialBalance: 10_000,

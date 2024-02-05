@@ -4,8 +4,9 @@ import {
   Bar,
   CompletedTrade,
   ManualTradeActionAny,
+  ProcessBarEventHandlers,
   TradesCollection,
-  TradingParameters,
+  processBarForTrade,
 } from '@gmjs/gm-trading-shared';
 import { barReplayMoveSubBar } from '../../../../util';
 import {
@@ -13,19 +14,7 @@ import {
   TradeLogEntryAny,
   TradingDataAndInputs,
 } from '../../types';
-import {
-  getManualTradeActionsByType,
-  groupManualTradeActionsByBar,
-} from './manual-trade-actions-util';
-import {
-  processManualTradeActionAmendOrder,
-  processManualTradeActionAmendTrade,
-  processManualTradeActionCancelOrder,
-  processManualTradeActionCloseTrade,
-  processManualTradeActionOpen,
-} from './process-manual-trade-actions';
-import { processOrders } from './process-orders';
-import { processTradesForBar, processTradesForOpen } from './process-trades';
+import { groupManualTradeActionsByBar } from './manual-trade-actions-util';
 import {
   getMarketPrice,
   getLogEntryCreateOrder,
@@ -73,7 +62,7 @@ export function processTradeSequence(
       currentBarIndexes.barIndex,
       tradeLog,
     );
-    currentTradesCollection = processBar(
+    currentTradesCollection = processBarForTrade(
       params,
       currentTradesCollection,
       barData,
@@ -94,132 +83,6 @@ export function processTradeSequence(
     tradesCollection: currentTradesCollection,
     tradeLog,
   };
-}
-
-function processBar(
-  tradingParameters: TradingParameters,
-  tradesCollection: TradesCollection,
-  data: readonly Bar[],
-  index: number,
-  lastProcessedIndex: number,
-  getManualTradeActionForBar: (
-    index: number,
-  ) => readonly ManualTradeActionAny[],
-  eventHandlers?: ProcessBarEventHandlers,
-): TradesCollection {
-  let currentTradesCollection = tradesCollection;
-
-  const currentBarActions = getManualTradeActionForBar(index);
-  const { open, amendOrder, cancelOrder, amendTrade, closeTrade } =
-    getManualTradeActionsByType(currentBarActions);
-
-  const {
-    handleCreateOrder,
-    handleAmendOrder,
-    handleCancelOrder,
-    handleFillOrder,
-    handleAmendTrade,
-    handleCompleteTrade,
-  } = eventHandlers ?? {};
-
-  currentTradesCollection = processTradesForOpen(
-    tradingParameters,
-    currentTradesCollection,
-    data,
-    index,
-    handleCompleteTrade,
-  );
-
-  for (const action of open) {
-    currentTradesCollection = processManualTradeActionOpen(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      action,
-      handleCreateOrder,
-    );
-  }
-
-  for (const action of amendOrder) {
-    currentTradesCollection = processManualTradeActionAmendOrder(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      action,
-      handleAmendOrder,
-    );
-  }
-
-  for (const action of cancelOrder) {
-    currentTradesCollection = processManualTradeActionCancelOrder(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      action,
-      handleCancelOrder,
-    );
-  }
-
-  // do not do normal order processing over the entire last replay bar
-  // (because replay is limited to the open of the last replay bar,
-  //   and previous bar close to current bar open is already processed)
-  if (index < lastProcessedIndex) {
-    currentTradesCollection = processOrders(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      handleFillOrder,
-    );
-  }
-
-  for (const action of amendTrade) {
-    currentTradesCollection = processManualTradeActionAmendTrade(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      action,
-      handleAmendTrade,
-    );
-  }
-
-  for (const action of closeTrade) {
-    currentTradesCollection = processManualTradeActionCloseTrade(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      action,
-      handleCompleteTrade,
-    );
-  }
-
-  // do not check for stop-loss/limit over the entire last replay bar
-  // (because replay is limited to the open of the last replay bar)
-  if (index < lastProcessedIndex) {
-    currentTradesCollection = processTradesForBar(
-      tradingParameters,
-      currentTradesCollection,
-      data,
-      index,
-      handleCompleteTrade,
-    );
-  }
-
-  return currentTradesCollection;
-}
-
-interface ProcessBarEventHandlers {
-  readonly handleCreateOrder?: (order: ActiveOrder) => void;
-  readonly handleAmendOrder?: (order: ActiveOrder) => void;
-  readonly handleCancelOrder?: (order: ActiveOrder) => void;
-  readonly handleFillOrder?: (order: ActiveOrder, trade: ActiveTrade) => void;
-  readonly handleAmendTrade?: (trade: ActiveTrade) => void;
-  readonly handleCompleteTrade?: (trade: CompletedTrade) => void;
 }
 
 function createProcessBarEventHandlers(
