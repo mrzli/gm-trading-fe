@@ -10,9 +10,8 @@ import {
 } from '@gmjs/value-transformers';
 import { TradeProcessState, TradeResult } from '../types';
 import { getOhlc } from './ohlc';
-import { Bar } from '../../../types';
 import { pipAdjustInverse } from '.';
-import { ActiveTrade, CompletedTrade } from '@gmjs/gm-trading-shared';
+import { ActiveTrade, Bar, CompletedTrade } from '@gmjs/gm-trading-shared';
 
 export function calculateTradeResults(
   state: TradeProcessState,

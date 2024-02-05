@@ -6,7 +6,7 @@ import {
   ValueDisplayDataAnyList,
   ValueDisplayItem,
 } from '../../../../shared';
-import { Bar, ChartTimezone } from '../../../../../types';
+import { ChartTimezone } from '../../../../../types';
 import {
   getActiveTradePnl,
   getActiveTradePnlPoints,
@@ -16,7 +16,7 @@ import {
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../../util';
-import { ActiveTrade, TradingParameters } from '@gmjs/gm-trading-shared';
+import { ActiveTrade, Bar, TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface ActiveTradeItemProps {
   readonly timezone: ChartTimezone;

@@ -1,7 +1,8 @@
 import { applyFn } from '@gmjs/apply-function';
 import { flatten, toArray } from '@gmjs/value-transformers';
-import { GroupedBars, Bars, Bar, BarReplayPosition } from '../../../../types';
+import { GroupedBars, Bars, BarReplayPosition } from '../../../../types';
 import { FullBarData } from '../../../ticker-data-container/types';
+import { Bar } from '@gmjs/gm-trading-shared';
 
 export function flattenGroupedBars(data: GroupedBars): Bars {
   return applyFn(data, flatten<Bar>(), toArray());

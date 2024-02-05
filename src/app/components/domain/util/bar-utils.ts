@@ -1,6 +1,5 @@
-import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { Bar, TickerDataResolution } from '@gmjs/gm-trading-shared';
 import { resolutionToSeconds } from './resolution';
-import { Bar } from '../types';
 
 export function createAfterLastBar(
   lastBar: Bar,

@@ -1,9 +1,9 @@
 import { parseIntegerOrThrow, parseFloatOrThrow } from '@gmjs/number-util';
-import { GroupedBars, Bar, Bars } from '../../../types';
+import { GroupedBars, Bars } from '../../../types';
 import { invariant } from '@gmjs/assert';
 import { DAY_TO_SECONDS } from '../../../../../util';
 import { resolutionToSeconds } from '../../../util';
-import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { Bar, TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function toBars(lines: readonly string[]): Bars {
   return lines.map((element) => toBar(element));

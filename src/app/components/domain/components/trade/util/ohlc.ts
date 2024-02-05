@@ -1,4 +1,4 @@
-import { Bar } from '../../../types';
+import { Bar } from '@gmjs/gm-trading-shared';
 import { Ohlc } from '../types';
 
 export function getOhlc(bar: Bar, isBuy: boolean, spread: number): Ohlc {

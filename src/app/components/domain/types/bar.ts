@@ -1,10 +1,4 @@
-export interface Bar {
-  readonly time: number;
-  readonly open: number;
-  readonly high: number;
-  readonly low: number;
-  readonly close: number;
-}
+import { Bar } from '@gmjs/gm-trading-shared';
 
 export type Bars = readonly Bar[];
 

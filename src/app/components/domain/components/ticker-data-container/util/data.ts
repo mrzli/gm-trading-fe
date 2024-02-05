@@ -5,9 +5,9 @@ import {
   aggregateBars,
 } from './process-chart-data';
 import { FullBarData } from '../types';
-import { Bar, BarReplayPosition, Bars } from '../../../types';
+import { BarReplayPosition, Bars } from '../../../types';
 import { createAfterLastBar } from '../../../util';
-import { TickerDataResolution } from '@gmjs/gm-trading-shared';
+import { Bar, TickerDataResolution } from '@gmjs/gm-trading-shared';
 
 export function rawDataToFullBarData(
   rawData: readonly string[] | undefined,
