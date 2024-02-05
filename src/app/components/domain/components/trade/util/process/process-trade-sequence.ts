@@ -6,15 +6,7 @@ import {
 import { barReplayMoveSubBar } from '../../../../util';
 import {
   ProcessTradeSequenceResult,
-  TradeLogEntryAmendOrder,
-  TradeLogEntryAmendTrade,
   TradeLogEntryAny,
-  TradeLogEntryCancelOrder,
-  TradeLogEntryCloseTrade,
-  TradeLogEntryCreateOrder,
-  TradeLogEntryFillOrder,
-  TradeLogEntryLimit,
-  TradeLogEntryStopLoss,
   TradeProcessState,
   TradingDataAndInputs,
 } from '../../types';
@@ -31,9 +23,7 @@ import {
 } from './process-manual-trade-actions';
 import { processOrders } from './process-orders';
 import { processTradesForBar, processTradesForOpen } from './process-trades';
-import { pipAdjust } from '../pip-adjust';
-import { getOhlc } from '../ohlc';
-import { ensureNever } from '@gmjs/assert';
+import { getMarketPrice, getLogEntryCreateOrder, getLogEntryAmendOrder, getLogEntryCancelOrder, getLogEntryFillOrder, getLogEntryAmendTrade, getLogEntryCompleteTrade } from './trade-log-util';
 
 export function processTradeSequence(
   input: TradingDataAndInputs,
@@ -50,8 +40,8 @@ export function processTradeSequence(
     currentState = processBar(
       currentState,
       i,
-      currentBarIndexes.barIndex,
       barIndex,
+      currentBarIndexes.barIndex,
       tradeLog,
     );
     currentBarIndexes = barReplayMoveSubBar(
@@ -93,8 +83,8 @@ function getInitialTradeProcessState(
 function processBar(
   state: TradeProcessState,
   index: number,
+  lastProcessedIndex: number,
   chartVisualBarIndex: number,
-  lastReplayBarIndex: number,
   tradeLog: TradeLogEntryAny[],
 ): TradeProcessState {
   let currentState = state;
@@ -180,7 +170,7 @@ function processBar(
   // do not do normal order processing over the entire last replay bar
   // (because replay is limited to the open of the last replay bar,
   //   and previous bar close to current bar open is already processed)
-  if (index < lastReplayBarIndex) {
+  if (index < lastProcessedIndex) {
     currentState = processOrders(currentState, index, handleFillOrder);
   }
 
@@ -204,7 +194,7 @@ function processBar(
 
   // do not check for stop-loss/limit over the entire last replay bar
   // (because replay is limited to the open of the last replay bar)
-  if (index < lastReplayBarIndex) {
+  if (index < lastProcessedIndex) {
     currentState = processTradesForBar(
       currentState,
       index,
@@ -213,148 +203,4 @@ function processBar(
   }
 
   return currentState;
-}
-
-function getMarketPrice(
-  state: TradeProcessState,
-  index: number,
-  isBuy: boolean,
-): number {
-  const { barData, tradingParams } = state;
-  const { pipDigit, spread: pointSpread } = tradingParams;
-  const spread = pipAdjust(pointSpread, pipDigit);
-  const currentBar = barData[index];
-  const ohlc = getOhlc(currentBar, isBuy, spread);
-  return ohlc.o;
-}
-
-function getLogEntryCreateOrder(
-  order: ActiveOrder,
-  marketPrice: number,
-  chartVisualBarIndex: number,
-): TradeLogEntryAny {
-  const logEntry: TradeLogEntryCreateOrder = {
-    kind: 'create-order',
-    time: order.time,
-    barIndex: chartVisualBarIndex,
-    orderId: order.id,
-    price: order.price,
-    marketPrice,
-    amount: order.amount,
-    stopLossDistance: order.stopLossDistance,
-    limitDistance: order.limitDistance,
-  };
-  return logEntry;
-}
-
-function getLogEntryAmendOrder(
-  order: ActiveOrder,
-  time: number,
-  marketPrice: number,
-  chartVisualBarIndex: number,
-): TradeLogEntryAny {
-  const logEntry: TradeLogEntryAmendOrder = {
-    kind: 'amend-order',
-    time,
-    barIndex: chartVisualBarIndex,
-    orderId: order.id,
-    price: order.price,
-    marketPrice,
-    amount: order.amount,
-    stopLossDistance: order.stopLossDistance,
-    limitDistance: order.limitDistance,
-  };
-  return logEntry;
-}
-
-function getLogEntryCancelOrder(
-  order: ActiveOrder,
-  time: number,
-  chartVisualBarIndex: number,
-): TradeLogEntryAny {
-  const logEntry: TradeLogEntryCancelOrder = {
-    kind: 'cancel-order',
-    time,
-    barIndex: chartVisualBarIndex,
-    orderId: order.id,
-  };
-  return logEntry;
-}
-
-function getLogEntryFillOrder(
-  order: ActiveOrder,
-  trade: ActiveTrade,
-  chartVisualBarIndex: number,
-): TradeLogEntryAny {
-  const logEntry: TradeLogEntryFillOrder = {
-    kind: 'fill-order',
-    time: trade.openTime,
-    barIndex: chartVisualBarIndex,
-    orderId: order.id,
-    tradeId: trade.id,
-    amount: trade.amount,
-    price: trade.openPrice,
-    stopLoss: trade.stopLoss,
-    limit: trade.limit,
-  };
-  return logEntry;
-}
-
-function getLogEntryAmendTrade(
-  trade: ActiveTrade,
-  time: number,
-  chartVisualBarIndex: number,
-): TradeLogEntryAny {
-  const logEntry: TradeLogEntryAmendTrade = {
-    kind: 'amend-trade',
-    time,
-    barIndex: chartVisualBarIndex,
-    tradeId: trade.id,
-    stopLoss: trade.stopLoss,
-    limit: trade.limit,
-  };
-  return logEntry;
-}
-
-function getLogEntryCompleteTrade(
-  trade: CompletedTrade,
-  chartVisualBarIndex: number,
-): TradeLogEntryAny {
-  const { id, closeTime, closePrice, closeReason } = trade;
-
-  switch (closeReason) {
-    case 'stop-loss': {
-      const logEntry: TradeLogEntryStopLoss = {
-        kind: 'stop-loss',
-        time: closeTime,
-        barIndex: chartVisualBarIndex,
-        tradeId: id,
-        price: closePrice,
-      };
-      return logEntry;
-    }
-    case 'limit': {
-      const logEntry: TradeLogEntryLimit = {
-        kind: 'limit',
-        time: closeTime,
-        barIndex: chartVisualBarIndex,
-        tradeId: id,
-        price: closePrice,
-      };
-      return logEntry;
-    }
-    case 'manual': {
-      const logEntry: TradeLogEntryCloseTrade = {
-        kind: 'close-trade',
-        time: closeTime,
-        barIndex: chartVisualBarIndex,
-        tradeId: id,
-        price: closePrice,
-      }
-      return logEntry;
-    }
-    default: {
-      return ensureNever(closeReason);
-    }
-  }
 }
