@@ -1,7 +1,7 @@
 import { TradeLine } from '../../../../types';
 import {
   OrderInputs,
-  TradeProcessState,
+  ProcessTradeSequenceResult,
   TradingDataAndInputs,
 } from '../../types';
 import { pipAdjust } from '../pip-adjust';
@@ -10,7 +10,7 @@ const PROPOSED_ORDER_TRAD_LINE_LENGTH = 5;
 
 export function proposedOrderToTradeLines(
   tradingDataAndInputs: TradingDataAndInputs,
-  state: TradeProcessState,
+  tradeResult: ProcessTradeSequenceResult,
   order: OrderInputs,
 ): readonly TradeLine[] {
   const { replayPosition } = tradingDataAndInputs;
@@ -19,6 +19,7 @@ export function proposedOrderToTradeLines(
     return [];
   }
 
+  const { state } = tradeResult;
   const { barData, barIndex, tradingParams } = state;
   const { pipDigit, spread: pointSpread } = tradingParams;
   const spread = pipAdjust(pointSpread, pipDigit);

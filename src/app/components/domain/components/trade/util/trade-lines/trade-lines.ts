@@ -1,13 +1,14 @@
 import { TradeLine } from '../../../../types';
-import { TradeProcessState } from '../../types';
+import { ProcessTradeSequenceResult } from '../../types';
 import { pipAdjust } from '../pip-adjust';
 import { getOrderTradeLines } from './orders';
 import { getTradeTradeLines } from './trades';
 
 export function calculateTradeLines(
-  state: TradeProcessState,
+  tradeResult: ProcessTradeSequenceResult,
 ): readonly TradeLine[] {
-  const { barIndex, tradingParams, tradeLog } = state;
+  const { state, tradeLog } = tradeResult;
+  const { barIndex, tradingParams } = state;
   const { pipDigit, spread: pointSpread } = tradingParams;
   const spread = pipAdjust(pointSpread, pipDigit);
 

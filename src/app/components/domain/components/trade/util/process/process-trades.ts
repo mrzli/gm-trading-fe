@@ -1,13 +1,9 @@
-import { ensureNever, invariant } from '@gmjs/assert';
-import {
-  TradeLogEntryLimit,
-  TradeLogEntryStopLoss,
-  TradeProcessState,
-} from '../../types';
+import { invariant } from '@gmjs/assert';
+import { TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
 import { pipAdjust } from '../pip-adjust';
-import { ActiveTrade } from '@gmjs/gm-trading-shared';
+import { ActiveTrade, CompletedTrade } from '@gmjs/gm-trading-shared';
 
 type LimitIntersectionType = 'none' | 'stop-loss' | 'limit';
 
@@ -25,34 +21,34 @@ type CheckLimitFn = (
 export function processTradesForOpen(
   state: TradeProcessState,
   index: number,
-  chartVisualBarIndex: number,
+  onCompleteTrade?: (trade: CompletedTrade) => void,
 ): TradeProcessState {
   return processTradesInternal(
     state,
     index,
-    chartVisualBarIndex,
     checkLimitIntersectionsForOpen,
+    onCompleteTrade,
   );
 }
 
 export function processTradesForBar(
   state: TradeProcessState,
   index: number,
-  chartVisualBarIndex: number,
+  onCompleteTrade?: (trade: CompletedTrade) => void,
 ): TradeProcessState {
   return processTradesInternal(
     state,
     index,
-    chartVisualBarIndex,
     checkLimitIntersectionsForBar,
+    onCompleteTrade,
   );
 }
 
 function processTradesInternal(
   state: TradeProcessState,
   index: number,
-  chartVisualBarIndex: number,
   checkLimit: CheckLimitFn,
+  onCompleteTrade?: (trade: CompletedTrade) => void,
 ): TradeProcessState {
   let currentState = state;
 
@@ -64,10 +60,10 @@ function processTradesInternal(
     currentState = processTradeInternal(
       currentState,
       index,
-      chartVisualBarIndex,
       trade,
       tradesToRemove,
       checkLimit,
+      onCompleteTrade,
     );
   }
 
@@ -84,12 +80,12 @@ function processTradesInternal(
 function processTradeInternal(
   state: TradeProcessState,
   index: number,
-  chartVisualBarIndex: number,
   trade: ActiveTrade,
   tradesToRemove: Set<number>,
   checkLimit: CheckLimitFn,
+  onCompleteTrade?: (trade: CompletedTrade) => void,
 ): TradeProcessState {
-  const { barData, completedTrades, tradeLog } = state;
+  const { barData, completedTrades } = state;
 
   const time = barData[index].time;
 
@@ -98,6 +94,7 @@ function processTradeInternal(
   if (intesectionType === 'none') {
     return state;
   }
+
   const completedTrade = activeTradeToCompletedTrade(
     trade,
     time,
@@ -105,33 +102,13 @@ function processTradeInternal(
     intesectionType,
   );
 
-  let logEntry: TradeLogEntryStopLoss | TradeLogEntryLimit | undefined;
-  if (intesectionType === 'stop-loss') {
-    logEntry = {
-      kind: 'stop-loss',
-      time,
-      barIndex: chartVisualBarIndex,
-      tradeId: trade.id,
-      price,
-    } as TradeLogEntryStopLoss;
-  } else if (intesectionType === 'limit') {
-    logEntry = {
-      kind: 'limit',
-      time,
-      barIndex: chartVisualBarIndex,
-      tradeId: trade.id,
-      price,
-    } as TradeLogEntryLimit;
-  } else {
-    ensureNever(intesectionType);
-  }
+  onCompleteTrade?.(completedTrade);
 
   tradesToRemove.add(trade.id);
 
   return {
     ...state,
     completedTrades: [...completedTrades, completedTrade],
-    tradeLog: [...tradeLog, logEntry],
   };
 }
 

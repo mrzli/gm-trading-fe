@@ -6,7 +6,6 @@ import {
   TradingParameters,
 } from '@gmjs/gm-trading-shared';
 import { Bars } from '../../../../../types';
-import { TradeLogEntryAny } from '../trade';
 
 export interface TradeProcessState {
   readonly barData: Bars;
@@ -19,5 +18,4 @@ export interface TradeProcessState {
   readonly activeOrders: readonly ActiveOrder[];
   readonly activeTrades: readonly ActiveTrade[];
   readonly completedTrades: readonly CompletedTrade[];
-  readonly tradeLog: readonly TradeLogEntryAny[];
 }

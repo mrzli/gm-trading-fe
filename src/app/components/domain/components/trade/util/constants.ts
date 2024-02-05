@@ -21,5 +21,7 @@ export const EMPTY_TRADE_RESULTS: TradeResult = {
   lossFraction: 0,
   avgWin: 0,
   avgLoss: 0,
+  avgWinPts: 0,
+  avgLossPts: 0,
   maxDrawdown: 0,
 };

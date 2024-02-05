@@ -1,12 +1,12 @@
 import { ActiveOrder, ActiveTrade } from '@gmjs/gm-trading-shared';
-import { TradeLogEntryFillOrder, TradeProcessState } from '../../types';
+import { TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
 
 export function processOrders(
   state: TradeProcessState,
   index: number,
-  chartVisualBarIndex: number,
+  onFillOrder?: (order: ActiveOrder, trade: ActiveTrade) => void,
 ): TradeProcessState {
   let currentState = state;
 
@@ -18,9 +18,9 @@ export function processOrders(
     currentState = processOrder(
       currentState,
       index,
-      chartVisualBarIndex,
       order,
       ordersToRemove,
+      onFillOrder,
     );
   }
 
@@ -37,11 +37,11 @@ export function processOrders(
 function processOrder(
   state: TradeProcessState,
   index: number,
-  chartVisualBarIndex: number,
   order: ActiveOrder,
   ordersToRemove: Set<number>,
+  onFillOrder?: (order: ActiveOrder, trade: ActiveTrade) => void,
 ): TradeProcessState {
-  const { barData, activeTrades, tradeLog } = state;
+  const { barData, activeTrades } = state;
 
   const time = barData[index].time;
 
@@ -55,28 +55,17 @@ function processOrder(
   const activeTrade = orderToTrade(
     state,
     order,
-    barData[index].time,
+    time,
     fillPrice,
   );
 
   ordersToRemove.add(order.id);
 
-  const logEntry: TradeLogEntryFillOrder = {
-    kind: 'fill-order',
-    time,
-    barIndex: chartVisualBarIndex,
-    orderId: order.id,
-    tradeId: activeTrade.id,
-    amount: activeTrade.amount,
-    price: fillPrice,
-    stopLoss: activeTrade.stopLoss,
-    limit: activeTrade.limit,
-  };
+  onFillOrder?.(order, activeTrade);
 
   return {
     ...state,
     activeTrades: [...activeTrades, activeTrade],
-    tradeLog: [...tradeLog, logEntry],
   };
 }
 
