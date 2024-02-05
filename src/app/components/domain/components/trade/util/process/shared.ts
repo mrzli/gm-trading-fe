@@ -1,4 +1,4 @@
-import { ActiveTrade, TradeCloseReason, CompletedTrade } from '../../types';
+import { ActiveTrade, CompletedTrade, TradeCloseReason } from '@gmjs/gm-trading-shared';
 
 export function activeTradeToCompletedTrade(
   trade: ActiveTrade,

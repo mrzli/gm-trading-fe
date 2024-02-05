@@ -1,8 +1,6 @@
 import { invariant } from '@gmjs/assert';
 import {
   TradeProcessState,
-  ActiveOrder,
-  ActiveTrade,
   TradeLogEntryCreateOrder,
   TradeLogEntryAmendOrder,
   TradeLogEntryCancelOrder,
@@ -13,6 +11,8 @@ import { activeTradeToCompletedTrade } from './shared';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
 import {
+  ActiveOrder,
+  ActiveTrade,
   ManualTradeActionAmendOrder,
   ManualTradeActionAmendTrade,
   ManualTradeActionAny,

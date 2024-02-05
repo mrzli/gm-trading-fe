@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { mdiCancel, mdiCheck, mdiClose, mdiPencil } from '@mdi/js';
-import { ActiveTrade, AmendTradeData } from '../../../types';
+import { AmendTradeData } from '../../../types';
 import {
   IconButton,
   ValueDisplayDataAnyList,
@@ -16,7 +16,7 @@ import {
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../../util';
-import { TradingParameters } from '@gmjs/gm-trading-shared';
+import { ActiveTrade, TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface ActiveTradeItemProps {
   readonly timezone: ChartTimezone;

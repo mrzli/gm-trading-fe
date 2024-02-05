@@ -1,14 +1,12 @@
 import {
+  ActiveOrder,
+  ActiveTrade,
+  CompletedTrade,
   ManualTradeActionAny,
   TradingParameters,
 } from '@gmjs/gm-trading-shared';
 import { Bars } from '../../../../../types';
-import {
-  ActiveOrder,
-  ActiveTrade,
-  CompletedTrade,
-  TradeLogEntryAny,
-} from '../trade';
+import { TradeLogEntryAny } from '../trade';
 
 export interface TradeProcessState {
   readonly barData: Bars;

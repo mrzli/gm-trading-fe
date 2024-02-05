@@ -6,9 +6,10 @@ import {
   disableControl,
 } from '../../../../../../../../storybook';
 import { DEFAULT_TRADING_PARAMS } from '../../../util';
-import { ActiveOrder, AmendOrderData } from '../../../types';
+import { AmendOrderData } from '../../../types';
 import { TYPES_OF_CHART_TIMEZONES } from '../../../../../types';
 import { useState } from 'react';
+import { ActiveOrder } from '@gmjs/gm-trading-shared';
 
 const STORY_META: Meta<ActiveOrderItemProps> = {
   component: ActiveOrderItem,

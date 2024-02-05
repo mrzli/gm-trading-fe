@@ -1,9 +1,5 @@
-import {
-  ActiveOrder,
-  ActiveTrade,
-  TradeLogEntryFillOrder,
-  TradeProcessState,
-} from '../../types';
+import { ActiveOrder, ActiveTrade } from '@gmjs/gm-trading-shared';
+import { TradeLogEntryFillOrder, TradeProcessState } from '../../types';
 import { getOhlc } from '../ohlc';
 import { pipAdjust } from '../pip-adjust';
 

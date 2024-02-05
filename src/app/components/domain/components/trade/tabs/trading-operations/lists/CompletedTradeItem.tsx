@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { mapGetOrThrow } from '@gmjs/data-container-util';
-import { CompletedTrade, TradeCloseReason } from '../../../types';
 import {
   getCompletedTradePnl,
   getCompletedTradePnlPoints,
@@ -8,7 +7,7 @@ import {
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../../shared';
 import { ChartTimezone } from '../../../../../types';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../../util';
-import { TradingParameters } from '@gmjs/gm-trading-shared';
+import { CompletedTrade, TradeCloseReason, TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface CompletedTradeItemProps {
   readonly timezone: ChartTimezone;

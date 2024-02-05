@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActiveOrder, AmendOrderData } from '../../../types';
+import { AmendOrderData } from '../../../types';
 import { mdiCancel, mdiCheck, mdiClose, mdiPencil } from '@mdi/js';
 import {
   IconButton,
@@ -10,7 +10,7 @@ import { ChartTimezone } from '../../../../../types';
 import { parseFloatOrThrow } from '@gmjs/number-util';
 import { TextInput } from '../../../../../../shared';
 import { PRECISION_POINT } from '../../../../../util';
-import { TradingParameters } from '@gmjs/gm-trading-shared';
+import { ActiveOrder, TradingParameters } from '@gmjs/gm-trading-shared';
 
 export interface ActiveOrderItemProps {
   readonly timezone: ChartTimezone;

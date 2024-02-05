@@ -8,8 +8,8 @@ import {
   decoratorPadding,
 } from '../../../../../../../../storybook';
 import { DEFAULT_TRADING_PARAMS } from '../../../util';
-import { CompletedTrade } from '../../../types';
 import { TYPES_OF_CHART_TIMEZONES } from '../../../../../types';
+import { CompletedTrade } from '@gmjs/gm-trading-shared';
 
 const STORY_META: Meta<CompletedTradeItemProps> = {
   component: CompletedTradeItem,

@@ -6,10 +6,11 @@ import {
   disableControl,
 } from '../../../../../../../../storybook';
 import { DEFAULT_TRADING_PARAMS } from '../../../util';
-import { ActiveTrade, AmendTradeData } from '../../../types';
+import { AmendTradeData } from '../../../types';
 import { TYPES_OF_CHART_TIMEZONES } from '../../../../../types';
 import { useState } from 'react';
 import { TEST_TICKER_BARS_MINUTE } from '../../../../../data';
+import { ActiveTrade } from '@gmjs/gm-trading-shared';
 
 const BAR = TEST_TICKER_BARS_MINUTE[10];
 

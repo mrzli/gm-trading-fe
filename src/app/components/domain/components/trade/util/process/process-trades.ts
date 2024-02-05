@@ -1,6 +1,5 @@
 import { ensureNever, invariant } from '@gmjs/assert';
 import {
-  ActiveTrade,
   TradeLogEntryLimit,
   TradeLogEntryStopLoss,
   TradeProcessState,
@@ -8,6 +7,7 @@ import {
 import { getOhlc } from '../ohlc';
 import { activeTradeToCompletedTrade } from './shared';
 import { pipAdjust } from '../pip-adjust';
+import { ActiveTrade } from '@gmjs/gm-trading-shared';
 
 type LimitIntersectionType = 'none' | 'stop-loss' | 'limit';
 
