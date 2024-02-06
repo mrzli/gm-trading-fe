@@ -2,10 +2,10 @@ import { invariant } from '@gmjs/assert';
 import { applyFn } from '@gmjs/apply-function';
 import { groupBy, map, sort, toArray, toMap } from '@gmjs/value-transformers';
 import { Bars } from '../../../../types';
-import { binarySearch } from '../../../../util';
 import {
   ManualTradeActionAny,
   ManualTradeActionKind,
+  binarySearch,
 } from '@gmjs/gm-trading-shared';
 
 export function groupManualTradeActionsByBar(

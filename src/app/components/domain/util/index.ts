@@ -1,7 +1,6 @@
 export * from './bar-replay';
 export * from './bar-utils';
 export * from './base-validations';
-export * from './binary-search';
 export * from './chart-range';
 export * from './constants';
 export * from './date';

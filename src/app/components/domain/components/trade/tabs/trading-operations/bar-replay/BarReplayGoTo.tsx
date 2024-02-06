@@ -7,7 +7,6 @@ import {
 import {
   SCHEMA_DATE_INPUT,
   SCHEMA_DATE_FOR_INPUT,
-  binarySearch,
   toSimpleSelectOption,
   dateInputToDateObjectTz,
 } from '../../../../../util';
@@ -18,6 +17,7 @@ import {
   TYPES_OF_CHART_TIMEZONES,
 } from '../../../../../types';
 import { dateObjectTzToUnixSeconds } from '@gmjs/date-util';
+import { binarySearch } from '@gmjs/gm-trading-shared';
 
 export interface BarReplayGoToProps {
   readonly timezone: ChartTimezone;

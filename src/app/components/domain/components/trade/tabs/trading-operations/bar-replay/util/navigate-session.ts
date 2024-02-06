@@ -4,12 +4,11 @@ import {
   DateObjectTz,
   dateObjectTzToUnixSeconds,
 } from '@gmjs/date-util';
-import { Instrument } from '@gmjs/gm-trading-shared';
+import { Instrument, binarySearch } from '@gmjs/gm-trading-shared';
 import { Bars } from '../../../../../../types';
 import {
   getHourMinute,
   dateObjectTzToWeekday,
-  binarySearch,
 } from '../../../../../../util';
 
 type ChangeDirection = 'prev' | 'next';
