@@ -13,8 +13,8 @@ export function rawDataToFullBarData(
   rawData: readonly string[] | undefined,
   resolution: TickerDataResolution,
 ): FullBarData {
-  const nonAggregatedBarss = toBars(rawData ?? []);
-  const subBars = groupDataBars(nonAggregatedBarss, resolution);
+  const nonAggregatedBars = toBars(rawData ?? []);
+  const subBars = groupDataBars(nonAggregatedBars, resolution);
   const bars = aggregateGroupedDataBars(subBars);
   return {
     subBars,
