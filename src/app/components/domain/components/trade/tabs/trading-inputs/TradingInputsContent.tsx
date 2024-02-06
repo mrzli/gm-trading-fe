@@ -12,6 +12,7 @@ import {
   TradingParameters,
 } from '@gmjs/gm-trading-shared';
 import { ScrollYContainer } from '../../shared/ScrollYContainer';
+import { TradingStrategyRunner } from './TradingStrategyRunner';
 
 export interface TradingInputsContentProps {
   readonly tradeStates: readonly TradeState[];
@@ -20,6 +21,7 @@ export interface TradingInputsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
   readonly value: TradingInputs;
   readonly onValueChange: (value: TradingInputs) => void;
+  readonly onRunStrategy: () => void;
 }
 
 export function TradingInputsContent({
@@ -29,6 +31,7 @@ export function TradingInputsContent({
   dataAndInputs,
   value,
   onValueChange,
+  onRunStrategy,
 }: TradingInputsContentProps): React.ReactElement {
   const { settings } = dataAndInputs;
   const { timezone } = settings;
@@ -77,6 +80,7 @@ export function TradingInputsContent({
         value={value.params}
         onValueChange={handleTradingParametersChange}
       />
+      <TradingStrategyRunner onRunStrategyClick={onRunStrategy} />
       <ScrollYContainer>
         <ItemList
           title={'Manual Trade Actions'}

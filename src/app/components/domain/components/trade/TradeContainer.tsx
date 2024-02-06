@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Instrument,
   ManualTradeActionAny,
+  RunStrategyRequest,
   TradeState,
   TradingParameters,
 } from '@gmjs/gm-trading-shared';
@@ -45,7 +46,7 @@ import {
   CreateOrderStateFinish,
   FullBarData,
 } from '../ticker-data-container/types';
-import { useStoreTrade } from '../../../../../store';
+import { useStoreStrategy, useStoreTrade } from '../../../../../store';
 import { TICKER_DATA_SOURCE } from '../../../../util';
 
 export interface TradeContainerProps {
@@ -70,6 +71,8 @@ export function TradeContainer({
   createOrderData,
 }: TradeContainerProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TradeTabValue>('trading-inputs');
+
+  const { runStrategyData, runStrategy } = useStoreStrategy();
 
   const {
     // isLoadingTradeStates,
@@ -242,6 +245,29 @@ export function TradeContainer({
     setManualTradeActions(inputs.manualTradeActions);
   }, []);
 
+  const handleRunStrategy = useCallback(() => {
+    const { resolution } = settings;
+    const { name } = instrument;
+
+    const input: RunStrategyRequest = {
+      instrumentSource: TICKER_DATA_SOURCE,
+      instrumentName: name,
+      instrumentResolution: resolution,
+      tradingParameters,
+    };
+    runStrategy(input);
+  }, [instrument, runStrategy, settings, tradingParameters]);
+
+  useEffect(() => {
+    if (runStrategyData === undefined) {
+      return;
+    }
+
+    const { params, actions } = runStrategyData;
+    setTradingParameters(params);
+    setManualTradeActions(actions);
+  }, [runStrategyData]);
+
   const appendManualTradeAction = useCallback(
     (action: ManualTradeActionAny) => {
       const { manualTradeActions } = tradingDataAndInputs.inputs;
@@ -355,6 +381,7 @@ export function TradeContainer({
     handleLoadTradeState,
     tradingDataAndInputs,
     handleTradingInputsChange,
+    handleRunStrategy,
     tradeResult,
     onReplayPositionChange,
     handleCreateOrder,
@@ -381,6 +408,7 @@ function getTabEntries(
   handleLoadTradeState: (name: string) => void,
   tradingDataAndInputs: TradingDataAndInputs,
   handleTradingInputsChange: (value: TradingInputs) => void,
+  handleRunStrategy: () => void,
   tradeResult: ProcessTradeSequenceResult,
   handleReplayPositionChange: (value: BarReplayPosition) => void,
   handleCreateOrder: (order: OrderInputs) => void,
@@ -405,6 +433,7 @@ function getTabEntries(
           dataAndInputs={tradingDataAndInputs}
           value={tradingDataAndInputs.inputs}
           onValueChange={handleTradingInputsChange}
+          onRunStrategy={handleRunStrategy}
         />
       ),
     },
