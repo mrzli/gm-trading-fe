@@ -5,6 +5,7 @@ import { AppStoreApi } from './app-store-api';
 import {
   StateExample,
   StateInstrument,
+  StateStrategy,
   StateTickerData,
   StateTrade,
 } from '../parts';
@@ -21,6 +22,11 @@ export function useStoreExample(): StateExample {
 export function useStoreInstrument(): StateInstrument {
   const store = useAppStore();
   return useStore(store.instrument);
+}
+
+export function useStoreStrategy(): StateStrategy {
+  const store = useAppStore();
+  return useStore(store.strategy);
 }
 
 export function useStoreTickerData(): StateTickerData {
