@@ -66,6 +66,7 @@ export function ChartContainer({
 
   const handleChartClick = useCallback(
     (data: ChartMouseClickData) => {
+      const { pipDigit } = instrument;
       const { price } = data;
 
       if (!isTrading || price === undefined) {
@@ -74,6 +75,7 @@ export function ChartContainer({
 
       const newCreateOrderState = transitionCreateOrderState(
         createOrderState,
+        pipDigit,
         marketPrice,
         {
           type: 'next-price',
@@ -83,11 +85,13 @@ export function ChartContainer({
 
       setCreateOrderState(newCreateOrderState);
     },
-    [createOrderState, isTrading, marketPrice],
+    [createOrderState, instrument, isTrading, marketPrice],
   );
 
   const handleChartKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const { pipDigit } = instrument;
+
       switch (event.key) {
         case Key.ArrowLeft:
         case Key.ArrowRight: {
@@ -120,6 +124,7 @@ export function ChartContainer({
 
           const newCreateOrderState = transitionCreateOrderState(
             createOrderState,
+            pipDigit,
             marketPrice,
             {
               type: keyToCreateOrderActionType(event.key),
@@ -132,6 +137,7 @@ export function ChartContainer({
     },
     [
       createOrderState,
+      instrument,
       isTrading,
       marketPrice,
       onCreateOrder,

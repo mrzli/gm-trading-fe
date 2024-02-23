@@ -25,7 +25,21 @@ export function proposedOrderToTradeLines(
 
   const halfSpread = spread / 2;
 
-  const { price, direction, limitDistance, stopLossDistance } = order;
+  const {
+    price,
+    direction,
+    limitDistance: pointLimitDistance,
+    stopLossDistance: pointStopLossDistance,
+  } = order;
+
+  const stopLossDistance =
+    pointStopLossDistance === undefined
+      ? undefined
+      : pipAdjust(pointStopLossDistance, pipDigit);
+  const limitDistance =
+    pointLimitDistance === undefined
+      ? undefined
+      : pipAdjust(pointLimitDistance, pipDigit);
 
   const lines: TradeLine[] = [];
 

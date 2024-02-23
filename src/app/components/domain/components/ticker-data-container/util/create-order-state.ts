@@ -1,8 +1,10 @@
 import { ensureNever } from '@gmjs/assert';
 import { CreateOrderActionAny, CreateOrderStateAny } from '../types';
+import { pipAdjustInverse } from '@gmjs/gm-trading-shared';
 
 export function transitionCreateOrderState(
   state: CreateOrderStateAny,
+  pipDigit: number,
   marketPrice: number,
   action: CreateOrderActionAny,
 ): CreateOrderStateAny {
@@ -75,12 +77,15 @@ export function transitionCreateOrderState(
               return state;
             }
 
+            const priceStopLossDistance = Math.abs(currentPrice - action.price);
+            const stopLossDistance = pipAdjustInverse(priceStopLossDistance, pipDigit);
+
             return {
               type: 'limit',
               limitOrMarket: state.limitOrMarket,
               direction: state.direction,
               price: state.price,
-              stopLossDistance: Math.abs(currentPrice - action.price),
+              stopLossDistance,
             };
           }
           case 'limit': {
@@ -92,13 +97,16 @@ export function transitionCreateOrderState(
               return state;
             }
 
+            const priceLimitDistance = Math.abs(action.price - currentPrice);
+            const limitDistance = pipAdjustInverse(priceLimitDistance, pipDigit);
+
             return {
               type: 'finish',
               limitOrMarket: state.limitOrMarket,
               direction: state.direction,
               price: state.price,
               stopLossDistance: state.stopLossDistance,
-              limitDistance: Math.abs(action.price - currentPrice),
+              limitDistance,
             };
           }
           default: {
