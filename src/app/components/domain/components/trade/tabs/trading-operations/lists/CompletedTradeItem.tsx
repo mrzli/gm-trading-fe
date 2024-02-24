@@ -3,22 +3,39 @@ import { mapGetOrThrow } from '@gmjs/data-container-util';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../../shared';
 import { ChartTimezone } from '../../../../../types';
 import { PRECISION_MONEY, PRECISION_POINT } from '../../../../../util';
-import { CompletedTrade, TradeCloseReason, TradingParameters, getCompletedTradePnl, getCompletedTradePnlPoints } from '@gmjs/gm-trading-shared';
+import {
+  CompletedTrade,
+  TradeCloseReason,
+  TradingParameters,
+  getCompletedTradePnl,
+  getCompletedTradePnlPoints,
+} from '@gmjs/gm-trading-shared';
 
 export interface CompletedTradeItemProps {
   readonly timezone: ChartTimezone;
   readonly tradingParams: TradingParameters;
   readonly item: CompletedTrade;
+  readonly onOpenTimeClick?: (time: number) => void;
+  readonly onCloseTimeClick?: (time: number) => void;
 }
 
 export function CompletedTradeItem({
   timezone,
   tradingParams,
   item,
+  onOpenTimeClick,
+  onCloseTimeClick,
 }: CompletedTradeItemProps): React.ReactElement {
   const displayItems = useMemo(
-    () => getDisplayItems(timezone, tradingParams, item),
-    [timezone, tradingParams, item],
+    () =>
+      getDisplayItems(
+        timezone,
+        tradingParams,
+        item,
+        onOpenTimeClick,
+        onCloseTimeClick,
+      ),
+    [timezone, tradingParams, item, onOpenTimeClick, onCloseTimeClick],
   );
 
   return (
@@ -34,6 +51,8 @@ function getDisplayItems(
   timezone: ChartTimezone,
   tradingParams: TradingParameters,
   item: CompletedTrade,
+  onOpenTimeClick: ((time: number) => void) | undefined,
+  onCloseTimeClick: ((time: number) => void) | undefined,
 ): ValueDisplayDataAnyList {
   const { priceDecimals, pipDigit } = tradingParams;
 
@@ -62,6 +81,7 @@ function getDisplayItems(
       fontSize: 10,
       value: openTime,
       timezone,
+      onClick: onOpenTimeClick,
     },
     {
       kind: 'decimal',
@@ -77,6 +97,7 @@ function getDisplayItems(
       fontSize: 10,
       value: closeTime,
       timezone,
+      onClick: onCloseTimeClick,
     },
     {
       kind: 'decimal',

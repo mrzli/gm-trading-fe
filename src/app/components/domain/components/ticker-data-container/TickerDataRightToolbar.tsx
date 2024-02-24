@@ -15,6 +15,7 @@ export interface TickerDataRightToolbarProps {
   readonly onSettingsChange: (value: ChartSettings) => void;
   readonly instrument: Instrument;
   readonly fullData: FullBarData;
+  readonly onNavigateToTime: (time: number) => void;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
   readonly onTradeLinesChange: (tradeLines: readonly TradeLine[]) => void;
@@ -30,6 +31,7 @@ export function TickerDataRightToolbar({
   onSettingsChange,
   instrument,
   fullData,
+  onNavigateToTime,
   replayPosition,
   onReplayPositionChange,
   onTradeLinesChange,
@@ -48,6 +50,7 @@ export function TickerDataRightToolbar({
             settings={settings}
             instrument={instrument}
             fullData={fullData}
+            onNavigateToTime={onNavigateToTime}
             replayPosition={replayPosition}
             onReplayPositionChange={onReplayPositionChange}
             onTradeLinesChange={onTradeLinesChange}

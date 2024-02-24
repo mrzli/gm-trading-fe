@@ -22,6 +22,7 @@ import { unixSecondsToIsoDate } from '@gmjs/date-util';
 export interface TradingOperationsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
   readonly tradesCollection: TradesCollection;
+  readonly onNavigateToTime: (time: number) => void;
   readonly onReplayPositionChange: (position: BarReplayPosition) => void;
   readonly onCreateOrder: (order: OrderInputs) => void;
   readonly onCancelOrder: (id: number) => void;
@@ -35,6 +36,7 @@ export interface TradingOperationsContentProps {
 export function TradingOperationsContent({
   dataAndInputs,
   tradesCollection,
+  onNavigateToTime,
   onReplayPositionChange,
   onCreateOrder,
   onCancelOrder,
@@ -174,6 +176,8 @@ export function TradingOperationsContent({
                       timezone={timezone}
                       tradingParams={params}
                       item={item}
+                      onOpenTimeClick={onNavigateToTime}
+                      onCloseTimeClick={onNavigateToTime}
                     />
                   );
                 }}

@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useCallback } from 'react';
 import { ValueDisplay } from '../../../../../../shared';
 import { filterOutNullish } from '@gmjs/array-transformers';
 
@@ -10,6 +10,7 @@ export interface DecimalValueDisplayProps {
   readonly precision: number;
   readonly prefix?: string;
   readonly suffix?: string;
+  readonly onClick?: (value: number | undefined) => void;
 }
 
 export function DecimalValueDisplay({
@@ -20,11 +21,18 @@ export function DecimalValueDisplay({
   precision,
   prefix,
   suffix,
+  onClick,
 }: DecimalValueDisplayProps): React.ReactElement {
   const valueString =
     value === undefined
       ? '-'
       : getValueString(value, precision, prefix, suffix);
+
+  const handleClick = useCallback(() => {
+    if (onClick) {
+      onClick(value);
+    }
+  }, [onClick, value]);
 
   return (
     <ValueDisplay
@@ -32,6 +40,7 @@ export function DecimalValueDisplay({
       fontSize={fontSize}
       color={color}
       value={valueString}
+      onClick={handleClick}
     />
   );
 }

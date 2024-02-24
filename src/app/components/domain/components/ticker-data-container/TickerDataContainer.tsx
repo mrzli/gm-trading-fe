@@ -47,6 +47,13 @@ export function TickerDataContainer({
     ChartNavigatePayloadAny | undefined
   >(undefined);
 
+  const handleNavigateToTime = useCallback(
+    (time: number) => {
+      setNavigatePayload({ type: 'go-to', time });
+    },
+    [setNavigatePayload],
+  );
+
   const [replayPosition, setReplayPosition] = useState<BarReplayPosition>({
     barIndex: undefined,
     subBarIndex: 0,
@@ -183,6 +190,7 @@ export function TickerDataContainer({
         onSettingsChange={handleSettingsChange}
         instrument={instrument}
         fullData={fullData}
+        onNavigateToTime={handleNavigateToTime}
         replayPosition={replayPosition}
         onReplayPositionChange={handleReplayPositionChange}
         onTradeLinesChange={handleTradeLinesChange}

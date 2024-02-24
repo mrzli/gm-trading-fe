@@ -26,6 +26,7 @@ export interface ValueDisplayDataNone extends ValueDisplayDataBase {
 export interface ValueDisplayDataString extends ValueDisplayDataBase {
   readonly kind: 'string';
   readonly value: string;
+  readonly onClick?: (value: string) => void;
 }
 
 export interface ValueDisplayDataDecimal extends ValueDisplayDataBase {
@@ -34,18 +35,21 @@ export interface ValueDisplayDataDecimal extends ValueDisplayDataBase {
   readonly precision: number;
   readonly prefix?: string;
   readonly suffix?: string;
+  readonly onClick?: (value: number | undefined) => void;
 }
 
 export interface ValueDisplayDataDate extends ValueDisplayDataBase {
   readonly kind: 'date';
   readonly value: number;
   readonly timezone: string;
+  readonly onClick?: (value: number) => void;
 }
 
 export interface ValueDisplayDataPnl extends ValueDisplayDataBase {
   readonly kind: 'pnl';
   readonly value: number | undefined;
   readonly precision: number;
+  readonly onClick?: (value: number | undefined) => void;
 }
 
 export type ValueDisplayDataAny =

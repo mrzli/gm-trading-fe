@@ -39,33 +39,42 @@ function getValueDisplayItemContent(
       return <>&nbsp;</>;
     }
     case 'string': {
-      const { value } = item;
-      return <ValueDisplay label={label} fontSize={fontSize} value={value} />;
+      const { value, onClick } = item;
+      return (
+        <ValueDisplay
+          label={label}
+          fontSize={fontSize}
+          value={value}
+          onClick={onClick}
+        />
+      );
     }
     case 'decimal': {
-      const { value, precision } = item;
+      const { value, precision, onClick } = item;
       return (
         <DecimalValueDisplay
           label={label}
           fontSize={fontSize}
           value={value}
           precision={precision}
+          onClick={onClick}
         />
       );
     }
     case 'date': {
-      const { value, timezone } = item;
+      const { value, timezone, onClick } = item;
       return (
         <DateValueDisplay
           label={label}
           fontSize={fontSize}
           value={value}
           timezone={timezone}
+          onClick={onClick}
         />
       );
     }
     case 'pnl': {
-      const { value, precision } = item;
+      const { value, precision, onClick } = item;
       return (
         <DecimalValueDisplay
           label={label}
@@ -73,6 +82,7 @@ function getValueDisplayItemContent(
           color={getPnlColor(value)}
           value={value}
           precision={precision}
+          onClick={onClick}
         />
       );
     }

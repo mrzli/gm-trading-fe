@@ -54,6 +54,7 @@ export interface TradeContainerProps {
   readonly onSettingsChange: (settings: ChartSettings) => void;
   readonly instrument: Instrument;
   readonly fullData: FullBarData;
+  readonly onNavigateToTime: (time: number) => void;
   readonly replayPosition: BarReplayPosition;
   readonly onReplayPositionChange: (value: BarReplayPosition) => void;
   readonly onTradeLinesChange: (tradeLines: readonly TradeLine[]) => void;
@@ -65,6 +66,7 @@ export function TradeContainer({
   onSettingsChange,
   instrument,
   fullData,
+  onNavigateToTime,
   replayPosition,
   onReplayPositionChange,
   onTradeLinesChange,
@@ -376,6 +378,7 @@ export function TradeContainer({
   );
 
   const tabEntries = getTabEntries(
+    onNavigateToTime,
     tradeStates ?? [],
     handleSaveTradeState,
     handleLoadTradeState,
@@ -403,6 +406,7 @@ export function TradeContainer({
 }
 
 function getTabEntries(
+  handleNavigateToTime: (time: number) => void,
   tradeStates: readonly TradeState[],
   handleSaveTradeState: (name: string) => void,
   handleLoadTradeState: (name: string) => void,
@@ -444,6 +448,7 @@ function getTabEntries(
         <TradingOperationsContent
           dataAndInputs={tradingDataAndInputs}
           tradesCollection={tradesCollection}
+          onNavigateToTime={handleNavigateToTime}
           onReplayPositionChange={handleReplayPositionChange}
           onCreateOrder={handleCreateOrder}
           onCancelOrder={handleCancelOrder}
