@@ -154,7 +154,7 @@ export function TradeContainer({
   useEffect(() => {
     const tradeResult = processTradeSequence(tradingDataAndInputs);
     setTradeResult(tradeResult);
-  }, [onTradeLinesChange, tradingDataAndInputs]);
+  }, [tradingDataAndInputs]);
 
   useEffect(() => {
     const tradeLines = calculateTradeLines(

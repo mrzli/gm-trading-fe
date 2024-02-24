@@ -18,6 +18,7 @@ import {
   TradeLogEntryAny,
 } from '../../types';
 import { TradeLine } from '../../../../types';
+import { pipAdjust } from '@gmjs/gm-trading-shared';
 
 type TradeLogEntryForTrade =
   | TradeLogEntryFillOrder
@@ -43,8 +44,11 @@ interface TradeLineTradeData {
 export function getTradeTradeLines(
   tradeLog: readonly TradeLogEntryAny[],
   barIndex: number,
-  spread: number,
+  pipDigit: number,
+  pointSpread: number,
 ): readonly TradeLine[] {
+  const spread = pipAdjust(pointSpread, pipDigit);
+
   const trades = getTradeLineTradeData(tradeLog);
   const halfSpread = spread / 2;
   return trades.flatMap((trade) =>

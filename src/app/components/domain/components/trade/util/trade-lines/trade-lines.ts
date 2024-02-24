@@ -1,4 +1,4 @@
-import { TradingParameters, pipAdjust } from '@gmjs/gm-trading-shared';
+import { TradingParameters } from '@gmjs/gm-trading-shared';
 import { TradeLine } from '../../../../types';
 import { ProcessTradeSequenceResult } from '../../types';
 import { getOrderTradeLines } from './orders';
@@ -11,10 +11,9 @@ export function calculateTradeLines(
 ): readonly TradeLine[] {
   const { tradeLog } = tradeResult;
   const { pipDigit, spread: pointSpread } = tradingParameters;
-  const spread = pipAdjust(pointSpread, pipDigit);
 
-  const orders = getOrderTradeLines(tradeLog, barIndex, spread);
-  const trades = getTradeTradeLines(tradeLog, barIndex, spread);
+  const orders = getOrderTradeLines(tradeLog, barIndex, pipDigit, pointSpread);
+  const trades = getTradeTradeLines(tradeLog, barIndex, pipDigit, pointSpread);
 
   return [...orders, ...trades];
 }

@@ -17,6 +17,7 @@ import {
   TradeLogEntryAny,
 } from '../../types';
 import { TradeLine } from '../../../../types';
+import { pipAdjust } from '@gmjs/gm-trading-shared';
 
 type TradeLogEntryForOrder =
   | TradeLogEntryCreateOrder
@@ -40,12 +41,15 @@ interface TradeLineOrderData {
 export function getOrderTradeLines(
   tradeLog: readonly TradeLogEntryAny[],
   barIndex: number,
-  spread: number,
+  pipDigit: number,
+  pointSpread: number,
 ): readonly TradeLine[] {
+  const spread = pipAdjust(pointSpread, pipDigit);
+
   const orders = getTradeLineOrderData(tradeLog);
   const halfSpread = spread / 2;
   return orders.flatMap((order) =>
-    orderToTradeLines(order, barIndex, halfSpread),
+    orderToTradeLines(order, barIndex, pipDigit, halfSpread),
   );
 }
 
@@ -123,6 +127,7 @@ function createTradeLineOrderDataItem(
 function orderToTradeLines(
   order: TradeLineOrderData,
   barIndex: number,
+  pipDigit: number,
   halfSpread: number,
 ): readonly TradeLine[] {
   const { create, amend, finalization } = order;
@@ -140,6 +145,7 @@ function orderToTradeLines(
     const linesForSection = getOrderSectionTradeLines(
       lineStartEntry,
       lineEndEntry.barIndex,
+      pipDigit,
       halfSpread,
     );
 
@@ -150,6 +156,7 @@ function orderToTradeLines(
   const linesForLastSection = getOrderSectionTradeLines(
     lastNontTerminalEntry,
     finalization === undefined ? barIndex : finalization.barIndex,
+    pipDigit,
     halfSpread,
   );
   lines.push(...linesForLastSection);
@@ -160,14 +167,24 @@ function orderToTradeLines(
 function getOrderSectionTradeLines(
   lineStartEntry: TradeLogEntryCreateOrder | TradeLogEntryAmendOrder,
   endBarIndex: number,
+  pipDigit: number,
   halfSpread: number,
 ): readonly TradeLine[] {
   const {
     barIndex: startBarIndex,
     amount,
-    limitDistance,
-    stopLossDistance,
+    stopLossDistance: pointStopLossDistance,
+    limitDistance: pointLimitDistance,
   } = lineStartEntry;
+
+  const stopLossDistance =
+    pointStopLossDistance === undefined
+      ? undefined
+      : pipAdjust(pointStopLossDistance, pipDigit);
+  const limitDistance =
+    pointLimitDistance === undefined
+      ? undefined
+      : pipAdjust(pointLimitDistance, pipDigit);
 
   const lines: TradeLine[] = [];
 
