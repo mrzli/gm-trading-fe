@@ -175,6 +175,7 @@ export function TradingOperationsContent({
                     />
                   );
                 }}
+                itemSeparator={() => <div className='border-t border-gray-200' />}
               />
             </ComponentStack>
           </ScrollYContainer>

@@ -5,6 +5,7 @@ export interface ItemListProps<TItem> {
   readonly toolbar?: React.ReactNode;
   readonly items: readonly TItem[];
   readonly itemRenderer: (item: TItem, index: number) => React.ReactNode;
+  readonly itemSeparator?: (item: TItem, index: number) => React.ReactNode;
 }
 
 export function ItemList<TItem>({
@@ -12,6 +13,7 @@ export function ItemList<TItem>({
   toolbar,
   items,
   itemRenderer,
+  itemSeparator,
 }: ItemListProps<TItem>): React.ReactElement {
   return (
     <div className='flex flex-col gap-1'>
@@ -21,7 +23,14 @@ export function ItemList<TItem>({
       </div>
       <div className='flex flex-col gap-2'>
         {items.length > 0 ? (
-          items.map((item, index) => itemRenderer(item, index))
+          items.map((item, index) => (
+            <React.Fragment key={index}>
+              {itemRenderer(item, index)}
+              {index < items.length - 1 && itemSeparator
+                ? itemSeparator(item, index)
+                : undefined}
+            </React.Fragment>
+          ))
         ) : (
           <div className='text-gray-400'>No items</div>
         )}
