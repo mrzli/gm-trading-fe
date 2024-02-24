@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ComponentStack } from '../../shared/ComponentStack';
 import { ValueDisplayDataAnyList, ValueDisplayItem } from '../../../shared';
-import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
+import { PRECISION_MONEY, PRECISION_POINT, PRECISION_RATIO } from '../../../../util';
 import {
   TradeResult,
   TradesCollection,
@@ -52,25 +52,11 @@ function getDisplayItems(result: TradeResult): ValueDisplayDataAnyList {
     avgLossPts,
     maxDrawdown,
     maxDrawdownPts,
+    pnlToDrawdownRatio,
+    pnlToDrawdownRatioPts,
   } = result;
 
   return [
-    {
-      kind: 'pnl',
-      label: 'P&L',
-      value: pnl,
-      precision: PRECISION_MONEY,
-    },
-    {
-      kind: 'pnl',
-      label: 'P&L Points',
-      value: pnlPoints,
-      precision: PRECISION_POINT,
-    },
-    {
-      kind: 'none',
-      colSpan: 2,
-    },
     {
       kind: 'decimal',
       label: 'Win',
@@ -136,6 +122,22 @@ function getDisplayItems(result: TradeResult): ValueDisplayDataAnyList {
       precision: PRECISION_POINT,
     },
     {
+      kind: 'pnl',
+      label: 'P&L',
+      value: pnl,
+      precision: PRECISION_MONEY,
+    },
+    {
+      kind: 'pnl',
+      label: 'P&L Points',
+      value: pnlPoints,
+      precision: PRECISION_POINT,
+    },
+    {
+      kind: 'none',
+      colSpan: 2,
+    },
+    {
       kind: 'decimal',
       label: 'Max Drawdown',
       value: maxDrawdown,
@@ -146,6 +148,18 @@ function getDisplayItems(result: TradeResult): ValueDisplayDataAnyList {
       label: 'Max Draw Pts',
       value: maxDrawdownPts,
       precision: PRECISION_POINT,
+    },
+    {
+      kind: 'decimal',
+      label: 'P&L / DD',
+      value: pnlToDrawdownRatio,
+      precision: PRECISION_RATIO,
+    },
+    {
+      kind: 'decimal',
+      label: 'P&L / DD (Pts)',
+      value: pnlToDrawdownRatioPts,
+      precision: PRECISION_RATIO,
     },
   ];
 }

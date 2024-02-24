@@ -3,8 +3,16 @@ import { round } from '@gmjs/number-util';
 import { TradingDataAndInputs } from '../../types';
 import { PrettyDisplay } from '../../../../../shared';
 import { ComponentStack } from '../../shared/ComponentStack';
-import { PRECISION_MONEY, PRECISION_POINT } from '../../../../util';
-import { TradeResult, TradesCollection, calculateTradeResults } from '@gmjs/gm-trading-shared';
+import {
+  PRECISION_MONEY,
+  PRECISION_POINT,
+  PRECISION_RATIO,
+} from '../../../../util';
+import {
+  TradeResult,
+  TradesCollection,
+  calculateTradeResults,
+} from '@gmjs/gm-trading-shared';
 
 export interface TradingDebugDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -53,6 +61,8 @@ export function TradingDebugDisplay({
 
 function cleanUpTradeResult(result: TradeResult): TradeResult {
   const {
+    tradePnl,
+    tradePnlPoints,
     pnl,
     pnlPoints,
     totalCount,
@@ -66,9 +76,13 @@ function cleanUpTradeResult(result: TradeResult): TradeResult {
     avgLossPts,
     maxDrawdown,
     maxDrawdownPts,
+    pnlToDrawdownRatio,
+    pnlToDrawdownRatioPts,
   } = result;
 
   return {
+    tradePnl: tradePnl.map((v) => round(v, PRECISION_MONEY)),
+    tradePnlPoints: tradePnlPoints.map((v) => round(v, PRECISION_POINT)),
     pnl: round(pnl, PRECISION_MONEY),
     pnlPoints: round(pnlPoints, PRECISION_POINT),
     totalCount,
@@ -82,5 +96,7 @@ function cleanUpTradeResult(result: TradeResult): TradeResult {
     avgLossPts: round(avgLossPts, PRECISION_POINT),
     maxDrawdown: round(maxDrawdown, PRECISION_MONEY),
     maxDrawdownPts: round(maxDrawdownPts, PRECISION_POINT),
+    pnlToDrawdownRatio: round(pnlToDrawdownRatio, PRECISION_RATIO),
+    pnlToDrawdownRatioPts: round(pnlToDrawdownRatioPts, PRECISION_RATIO),
   };
 }
