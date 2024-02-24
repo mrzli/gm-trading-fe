@@ -65,6 +65,7 @@ function cleanUpTradeResult(result: TradeResult): TradeResult {
     avgWinPts,
     avgLossPts,
     maxDrawdown,
+    maxDrawdownPts,
   } = result;
 
   return {
@@ -80,5 +81,6 @@ function cleanUpTradeResult(result: TradeResult): TradeResult {
     avgWinPts: round(avgWinPts, PRECISION_POINT),
     avgLossPts: round(avgLossPts, PRECISION_POINT),
     maxDrawdown: round(maxDrawdown, PRECISION_MONEY),
+    maxDrawdownPts: round(maxDrawdownPts, PRECISION_POINT),
   };
 }

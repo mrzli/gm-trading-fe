@@ -51,6 +51,7 @@ function getDisplayItems(result: TradeResult): ValueDisplayDataAnyList {
     avgWinPts,
     avgLossPts,
     maxDrawdown,
+    maxDrawdownPts,
   } = result;
 
   return [
@@ -139,6 +140,12 @@ function getDisplayItems(result: TradeResult): ValueDisplayDataAnyList {
       label: 'Max Drawdown',
       value: maxDrawdown,
       precision: PRECISION_MONEY,
+    },
+    {
+      kind: 'decimal',
+      label: 'Max Draw Pts',
+      value: maxDrawdownPts,
+      precision: PRECISION_POINT,
     },
   ];
 }
