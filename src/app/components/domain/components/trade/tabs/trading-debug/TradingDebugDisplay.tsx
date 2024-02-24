@@ -13,6 +13,7 @@ import {
   TradesCollection,
   calculateTradeResults,
 } from '@gmjs/gm-trading-shared';
+import { CopyDisplay } from '../../../../../shared/display/CopyDisplay';
 
 export interface TradingDebugDisplayProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -55,6 +56,8 @@ export function TradingDebugDisplay({
     <ComponentStack className='mt-1'>
       <PrettyDisplay content={inputsContent} />
       <PrettyDisplay content={result} />
+      <CopyDisplay content={JSON.stringify(result.tradePnl)} />
+      <CopyDisplay content={JSON.stringify(result.tradePnlPoints)} />
     </ComponentStack>
   );
 }
