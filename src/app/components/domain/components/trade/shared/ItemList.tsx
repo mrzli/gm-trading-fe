@@ -5,7 +5,11 @@ export interface ItemListProps<TItem> {
   readonly toolbar?: React.ReactNode;
   readonly items: readonly TItem[];
   readonly itemRenderer: (item: TItem, index: number) => React.ReactNode;
-  readonly itemSeparator?: (item: TItem, index: number) => React.ReactNode;
+  readonly itemSeparator?: (
+    item: TItem,
+    index: number,
+    nextItem: TItem | undefined,
+  ) => React.ReactNode;
 }
 
 export function ItemList<TItem>({
@@ -27,7 +31,7 @@ export function ItemList<TItem>({
             <React.Fragment key={index}>
               {itemRenderer(item, index)}
               {index < items.length - 1 && itemSeparator
-                ? itemSeparator(item, index)
+                ? itemSeparator(item, index, items[index + 1])
                 : undefined}
             </React.Fragment>
           ))

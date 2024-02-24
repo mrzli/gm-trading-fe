@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import cls from 'classnames';
 import { CreateOrderForm } from './CreateOrderForm';
 import { OrderInputs } from '../../types/trade/trade/order-inputs';
 import {
@@ -16,6 +17,7 @@ import { TradeStatusDisplay } from './TradeStatusDisplay';
 import { ScrollYContainer } from '../../shared/ScrollYContainer';
 import { CreateOrderStateFinish } from '../../../ticker-data-container/types';
 import { TradesCollection } from '@gmjs/gm-trading-shared';
+import { unixSecondsToIsoDate } from '@gmjs/date-util';
 
 export interface TradingOperationsContentProps {
   readonly dataAndInputs: TradingDataAndInputs;
@@ -175,7 +177,23 @@ export function TradingOperationsContent({
                     />
                   );
                 }}
-                itemSeparator={() => <div className='border-t border-gray-200' />}
+                itemSeparator={(item, _index, nextItem) => {
+                  const currentDateObject = unixSecondsToIsoDate(
+                    item.closeTime,
+                    { timezone },
+                  );
+                  const nextDateObject = nextItem
+                    ? unixSecondsToIsoDate(nextItem.closeTime, { timezone })
+                    : undefined;
+                  const isDayChange =
+                    nextDateObject !== undefined &&
+                    currentDateObject !== nextDateObject;
+                  const classes = cls('border-t', {
+                    'border-gray-200': !isDayChange,
+                    'border-gray-800': isDayChange,
+                  });
+                  return <div className={classes} />;
+                }}
               />
             </ComponentStack>
           </ScrollYContainer>
