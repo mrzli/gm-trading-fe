@@ -7,6 +7,7 @@ export const TYPES_OF_CHART_TIME_STEP_UNITS = [
   'B',
   'h',
   'D',
+  'WD',
   'W',
   'M',
 ] as const;

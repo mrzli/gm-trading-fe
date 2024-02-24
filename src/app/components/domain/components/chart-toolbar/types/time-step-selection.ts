@@ -6,6 +6,7 @@ export const TYPES_OF_TIME_STEP_SELECTIONS = [
   '1h',
   '4h',
   '1D',
+  '1WD',
   '1W',
   '1M',
 ] as const;

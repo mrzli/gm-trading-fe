@@ -1,23 +1,20 @@
 import { invariant } from '@gmjs/assert';
 import { parseIntegerOrThrow } from '@gmjs/number-util';
 import { TimeStepSelection } from '../types';
-import {
-  ChartTimeStep,
-  TYPES_OF_CHART_TIME_STEP_UNITS,
-  ChartTimeStepUnit,
-} from '../../../types';
+import { ChartTimeStep, ChartTimeStepUnit } from '../../../types';
 
 export function twTimeStepSelectionToTimeStep(
   timeStepSelection: TimeStepSelection,
   isForward: boolean,
 ): ChartTimeStep {
-  const value = parseIntegerOrThrow(timeStepSelection.slice(0, -1));
-  const unit = timeStepSelection.slice(-1);
-
+  const match = timeStepSelection.match(/(\d+)(B|h|D|WD|W|M)/) ?? undefined;
   invariant(
-    TYPES_OF_CHART_TIME_STEP_UNITS.includes(unit as ChartTimeStepUnit),
-    `Invalid time step unit: '${unit}'.`,
+    match !== undefined,
+    `Invalid time step selection: '${timeStepSelection}'.`,
   );
+
+  const value = parseIntegerOrThrow(match[1]);
+  const unit = match[2];
 
   return { unit: unit as ChartTimeStepUnit, value: isForward ? value : -value };
 }

@@ -3,6 +3,7 @@ import { clamp } from '@gmjs/number-util';
 import { binarySearch } from '@gmjs/gm-trading-shared';
 import { ChartRange, Bars, ChartTimezone, ChartTimeStep } from '../../../types';
 import { Duration, unixSecondsAdd } from '@gmjs/date-util';
+import { unixSecondsToWeekday } from '../../../util';
 
 const DEFAULT_SPAN = 60;
 
@@ -72,11 +73,15 @@ function moveTime(
   timezone: ChartTimezone,
   timeStep: ChartTimeStep,
 ): number {
-  const amount = timeStepToDuration(timeStep);
+  const amount = timeStepToDuration(currTime, timezone, timeStep);
   return unixSecondsAdd(currTime, timezone, amount);
 }
 
-function timeStepToDuration(timeStep: ChartTimeStep): Duration {
+function timeStepToDuration(
+  currTime: number,
+  timezone: ChartTimezone,
+  timeStep: ChartTimeStep,
+): Duration {
   const { unit, value } = timeStep;
 
   switch (unit) {
@@ -88,6 +93,13 @@ function timeStepToDuration(timeStep: ChartTimeStep): Duration {
     case 'D': {
       return {
         days: value,
+      };
+    }
+    case 'WD': {
+      const jump = workdayStepToDayStep(currTime, timezone, value);
+      console.log('jump', jump);
+      return {
+        days: workdayStepToDayStep(currTime, timezone, value),
       };
     }
     case 'W': {
@@ -107,6 +119,26 @@ function timeStepToDuration(timeStep: ChartTimeStep): Duration {
       );
     }
   }
+}
+
+const WORKDAYS = 5;
+
+function workdayStepToDayStep(
+  currTime: number,
+  timezone: ChartTimezone,
+  amount: number,
+): number {
+  const numWeeks = Math.floor(amount / WORKDAYS);
+  const numWorkdays = (amount % WORKDAYS + WORKDAYS) % WORKDAYS;
+
+  const weekday = unixSecondsToWeekday(currTime, timezone);
+  const unadjustedNewWeekday = weekday + numWorkdays;
+  const finalNumDays =
+    unadjustedNewWeekday <= 5 ? numWorkdays : numWorkdays + 2;
+
+  const dayAmount = numWeeks * 7 + finalNumDays;
+
+  return dayAmount;
 }
 
 function logicalRangeToLogical(logicalRange: ChartRange): number {
